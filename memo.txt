@@ -1,0 +1,11 @@
+
+Memory Models: A Case for Rethinking Parallel Languages and Hardware by Sarita V. Adve and Hans-J. Boehm
+
+
+やっぱあれですね。data-race freeならばsequential consistencyとかそういうやつですね。
+
+これに勝つですよ。つまりもっときわどいことをやろう
+
+
+
+
