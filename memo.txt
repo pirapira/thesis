@@ -1,3 +1,5 @@
+むつおばあちゃんに献呈しよう．
+
 
 Memory Models: A Case for Rethinking Parallel Languages and Hardware by Sarita V. Adve and Hans-J. Boehm
 
@@ -9,3 +11,23 @@ Memory Models: A Case for Rethinking Parallel Languages and Hardware by Sarita V
 
 
 
+
+comonadであることに気付いたひとびと
+
+Eddy Westbrook has pointed out that 'a chr seems to be a co-monad: one may extract the value from the any 'a chr expression (by using the polymorphicfunction force, aka extract). There is, however, no polymorphic injection function'a -> 'a chr -- there is no return.
+chourai
+
+
+Typed Staged FutureThe key insights are treating remote execution as a form of staging (meta-programming)
+
+すべての場合を尽くすのにかかる時間、テストでは　とか書こうぜ博士論文に
+
+
+博士論文の先の章では，まじめに様相をつけずにおいて，あとの章で様相をまじめにつけることにしてはどうか．
+
+
+
+--
+
+Truth theoryにおけるintermediate logicの使い方とかも，どうせだから記載しようぜ．
+つまり，そのたの使いみちというやつだな．
