@@ -1,6 +1,142 @@
 \documentclass[doctor]{iscs-thesis}
 
+\newcommand{\fix}[1]{\fbox{ #1 }}
+
+\bibliographystyle{splncs03}
+
+\newcommand{\nat}{\mathbb{N}}
+\newcommand{\steps}[2]{Steps_{#1}\left({#2}\right)}
+
+\newcommand{\hypc}[2]{{\mathcal{C}#1}\left[{#2}\right]}
+\newcommand{\hyper}{\mathcal{H}}
+\newcommand{\hypert}{\mathcal{O}}
+\newcommand{\hmid}{\ \ \rule[-1.7px]{2px}{10px}\ \ }
+
+\newcommand{\tr}{\vartriangleright}
+\newcommand{\update}{\vartriangleleft}
+
+\newcommand{\elim}{\mathcal E}
+\newcommand{\intro}{\mathcal I}
+
+\newcommand{\coml}{\leftarrow_{\mathrm g}}
+\newcommand{\comr}{\leftarrow_{\mathrm d}}
+
+\newcommand{\reduce}{\rightsquigarrow}
+\newcommand{\reduction}{\reduce^\ast}
+\newcommand{\processes}{\mathbb{P}}
+\newcommand{\ProV}{\mathbf{ProV}}
+\newcommand{\p}[1]{\texttt{#1}}
+\newcommand{\tuple}[1]{\langle{#1}\rangle}
+
+%% terms
+\newcommand{\g} [0]{\mathsf{g}}
+\newcommand{\spair} [1]{\langle{#1}\rangle^{\square}}
+\newcommand{\lpair} [1]{\langle{#1}\rangle}
+\newcommand{\gpair} [1]{\langle{#1}\rangle^{\g}}
+\newcommand{\cotuple}[1]{[{#1}]}
+\newcommand{\ev}[1]{\mathsf{ev}\left({#1}\right)}
+
+\newcommand{\ginl}[1]{\mathsf{inl}^{\g}\left({#1}\right)}
+\newcommand{\linl}[1]{\mathsf{inl}\left({#1}\right)}
+\newcommand{\sinl}[1]{\mathsf{inl}^{\square}\left({#1}\right)}
+\newcommand{\bsinl}[1]{\mathsf{inl}^{\blacksquare}\left({#1}\right)}
+
+\newcommand{\ginr}[1]{\mathsf{inr}^{\g}\left({#1}\right)}
+\newcommand{\linr}[1]{\mathsf{inr}\left({#1}\right)}
+\newcommand{\sinr}[1]{\mathsf{inr}^{\square}\left({#1}\right)}
+\newcommand{\bsinr}[1]{\mathsf{inr}^{\blacksquare}\left({#1}\right)}
+
+\newcommand{\gpil}[1]{\pi^{\g}_{\mathrm l}\left({#1}\right)}
+\newcommand{\lpil}[1]{\pi_{\mathrm l}\left({#1}\right)}
+\newcommand{\spil}[1]{\pi^{\square}_{\mathrm l}\left({#1}\right)}
+
+\newcommand{\gpir}[1]{\pi^{\g}_{\mathrm r}\left({#1}\right)}
+\newcommand{\lpir}[1]{\pi_{\mathrm r}\left({#1}\right)}
+\newcommand{\spir}[1]{\pi^{\square}_{\mathrm r}\left({#1}\right)}
+
+\newcommand{\vg}[2]{{#1}_{#2, \mathrm g}}
+\newcommand{\vd}[2]{{#1}_{#2, \mathrm d}}
+
+
+\newcommand{\gmat}[5]{\mathsf{match}^{\g}\,{#1}\,\mathsf{of}\, \ginl{#2}. {#3}/
+\ginr{#4}. {#5}}
+\newcommand{\lmat}[5]{\mathsf{match}\,{#1}\,\mathsf{of}\, \linl{#2}. {#3}/
+\linr{#4}. {#5}}
+\newcommand{\smat}[5]{\mathsf{match}^{\square}\,{#1}\,\mathsf{of}\, \sinl{#2}. {#3}/
+\sinr{#4}. {#5}}
+\newcommand{\bsmat}[5]{\mathsf{match}^{\blacksquare}\,{#1}\,\mathsf{of}\, \bsinl{#2}. {#3}/
+\bsinr{#4}. {#5}}
+
+\newcommand{\ifte}[3]{\mathsf{If}\, {#1}\, \mathsf{then}\, {#2}\, \mathsf{else}\, {#3}}
+
+\newcommand{\ltor}[4]{\overrightarrow{{#2}^{#1}_{#3}} \left({#4}\right)}
+\newcommand{\rtol}[4]{ \overleftarrow{{#2}^{#1}_{#3}} \left({#4}\right)}
+\newcommand{\abort}{\mathsf{abort\,}}
+
+\newcommand{\compare}[2]{{#1} == {#2}}
+
+\newcommand{\term} [0]{\mathcal{T}}
+\newcommand{\lterm}[0]{\mathcal{T}^-}
+\newcommand{\val}  [0]{\mathcal{V}}
+\newcommand{\lval} [0]{\mathcal{V}^-}
+\newcommand{\tj}   [2]{ {#1} \colon{#2} }
+
+\newcommand{\Nat}{\mathsf{Nat}}
+\newcommand{\Id}{\mathsf{Id}}
+\newcommand{\lgd}{$\lambda$-GD}
+
+%% configuration
+\newcommand{\lstore}{{\sigma}}
+\newcommand{\rstore}{{\tau}}
+\newcommand{\conf}[3]{(\lstore{#1},\rstore{#2},{#3})}
+\newcommand{\confwithcontext}[3]{\conf{#1}{#2}{\hypert\hmid C[{{#3}}]\hmid\hypert'}}
+\newcommand{\concreteconf}[3]{({#1},{#2},{#3})}
+
+%% reductions and the like
+\newcommand{\breduce}{\reduce_{\mathrm B}}
+\newcommand{\areduce}{\reduce_{\mathrm A}}
+\newcommand{\wreduce}{\reduce_{\mathrm W}}
+\newcommand{\rreduce}{\reduce_{\mathrm R}}
+\newcommand{\preduce}{\reduce_{\mathrm P}}
+\newcommand{\bpreduce}{\reduce_{\mathrm{B/P}}}
+
+%% logical rules
+\newcommand{\UnaryRule}[3]{ \AxiomC{#1}
+\LeftLabel{#2}
+\UnaryInfC{#3} \DisplayProof} 
+\newcommand{\BinaryRule}[4]{ \AxiomC{#1} \AxiomC{#2}
+\LeftLabel{#3}
+\BinaryInfC{#4}\DisplayProof}
+\newcommand{\TrinaryRule}[5]{ \AxiomC{#1} \AxiomC{#2}
+\AxiomC{#3} \LeftLabel{#4}
+\TrinaryInfC{#5} \DisplayProof}
+
+%% investi
+\newcommand{\inv}[1]{{#1}^{\mathsf i}}
+
+\newcommand{\fix}[1]{\fbox{ #1 }}
+
+\newcommand{\rightlocal}{\rightsquigarrow_{\beta{\mathrm l}}}
+\newcommand{\rightcomm}{\rightsquigarrow_{\beta{\mathrm c}}}
+\newcommand{\rightdist}{\rightsquigarrow_{\beta{\mathrm d}}}
+\newcommand{\id}[1]{\mathsf{id}_{#1}}
+\newcommand{\dist}[2]{[{#1}; {#2}]}
+
+\newcommand{\interpret}[1]{\llbracket {#1} \rrbracket}
+
+\newcommand{\memory}{{\mathrm m}}
+\newcommand{\process}{p}
+\newcommand{\contex}[1]{\mathcal C[{#1}]}
+\newcommand{\sem}[1]{\llbracket{#1}\rrbracket}
+\newcommand{\semi}[1]{\llparenthesis{#1}\rrparenthesis}
+
+\newcommand{\wwedge}{\operatorname*{\bigwedge\kern -8pt \bigwedge}}
+
+
 \begin{document}
+
+Many of the contents also appear in the author's Master's Thesis \fix{cite}.
+
 \chapter{Introduction}
 
 We extended the Curry--Howard correspondence to G\"odel--Dummett logic.
@@ -16,6 +152,21 @@ logic and $(\varphi\supset\psi)\vee(\psi\supset\varphi)$ is not a
 theorem in intuitionistic logic.
 
 Without modalities.
+
+
+In terms of Kripke semantics, the axiom is sound and complete for
+requiring that the models are linearly ordered.
+In terms of algebraic semantics, the axiom is sound and complete for
+requiring that the truth values are linearly ordered.  \fix{ is this
+usage of ``truth values'' correct? }
+In terms of computation, what is it?
+
+
+who said logic is about temporality.
+Waitfreedom is a kind of temporality appeared in computer science.
+This research shows that the proof theory is not only about abstract notions of temporality, but also about concrete notions of temporality appearing in computer science.
+
+
 
 \section{Curry--Howard Correspondence for Different Logics}
 
@@ -1342,6 +1493,1416 @@ We prove completeness via
  with $\bar M,\bar w\not\models \varphi$.
  This witnesses $\not\modelsR\varphi$.
 \end{proof}
+
+
+\let\accentvec\vec
+\documentclass{llncs}
+\let\spvec\vec
+\let\vec\accentvec
+\usepackage{bussproofs, amsmath, stmaryrd, rotating, amssymb,
+setspace, float}
+% \usepackage[numbers]{natbib}
+
+% \doublespacing
+
+
+\begin{abstract}
+We propose a typed lambda calculus based on Avron's hypersequent
+calculus for G\"odel--Dummett logic.  This calculus turns out to model
+waitfree computation.
+Besides strong normalization and non-abortfullness, 
+we give soundness and completeness of
+the calculus against the typed version of waitfree protocols.
+The calculus is not only proof theoretically interesting,
+but also valuable as a basis for distributed programming languages.
+\end{abstract}
+
+\section{Introduction}
+
+The Curry--Howard isomorphism~\cite{curryhoward} is surprising because the same
+method works for two different purposes: a logical purpose of
+removing redundancy from proofs and a computational purpose of finding a
+class of terminating programs.
+We extend
+this surprise to G\"odel--Dummett logic and
+waitfreedom.
+G\"odel--Dummett logic~\cite{dummett59}
+is one of the intermediate logics
+between classical and intuitionistic logics.
+Waitfreedom~\cite{Herlihy88,Saks:1993vq} is a class of distributed
+computation without synchronization among processes.
+
+We connect G\"odel--Dummett logic and waitfreedom using
+Avron's hypersequent calculus~\cite{avron91}.
+We respond to his suggestion:
+\begin{quote}
+it seems to us extremely important to determine the exact
+       computational content of them~[intermediate logics] ---
+       and {to develop corresponding `$\lambda$-calculi'}
+       ---Avron~\cite{avron91}. 
+\end{quote}
+Differently from intuitionistic logic, G\"odel--Dummett logic validates
+all formulae of the form
+ $(\varphi\supset\psi)\vee(\psi\supset\varphi)$.
+Our aim is building a typed lambda calculus
+with some terms witnessing those formulae.
+Such a term
+$\tj{M}{(\varphi\supset\psi)\vee(\psi\supset\varphi)}$ must choose 
+$M\reduction \linl\cdots$ or $M\reduction \linr\cdots$.
+We devise a nondeterministic $\lambda$-calculus in Sect.~\ref{lgd}.
+
+Waitfreedom is a class of distributed computation where
+processes cannot wait for other processes.  When two processes try to
+exchange information, the faster process can pass information to the
+slower one, but not always vice versa because the slower process might
+start after the faster one finishes.
+So, the computation is nondeterministic.
+The contribution of this paper is capturing
+this nondeterminism using the nondeterministic $\lambda$-calculus for
+G\"odel--Dummett logic: in Sect.~\ref{comparison}, we show that the
+$\lambda$-terms in the calculus can solve a typed input-output
+problems if and only if it is waitfreely solvable.
+
+\section{\lgd}
+\label{lgd}
+
+We first present a proof system for G\"odel--Dummet logic.
+Then we turn the proof system into typing rules for $\lambda$-terms
+of~\lgd, give a set of reductions and prove strong-normalization and
+non-abortfullness.
+
+\subsection{Logic}
+
+\newcommand{\m}[1]{{#1}^+}
+
+Let us assume a countably infinite set of \textit{propositional variables}.
+We define \textit{local formulae} $\varphi, \psi$ by the following BNF,
+where $I$ is a
+propositional variable%
+\footnote{We include $\bot$ because G\"odel--Dummett logic has it
+although $\bot$ is not necessary for us to encode waitfree computation.}%
+:
+\[
+ \varphi,\psi ::= \bot \mid I \mid (\varphi\supset\psi) \mid (\varphi\wedge\psi) \mid
+ (\varphi\vee\psi)\enspace.
+\]
+Further, we define \textit{global formulae} $\m\varphi, \m\psi$ with the following
+BNF:
+\[
+ \m\varphi,\m\psi :: = [i]\varphi \mid
+ (\m\varphi\wedge\m\psi)\mid (\m\varphi\vee\m\psi)
+\]
+where $i$ is a natural number (representing a process).  The unary operators $[0],
+[1],\ldots$ are called \textit{modalities}.
+We omit parentheses following the usual convention.
+Informally, the local formulae describe datatypes used by each process.
+The global formulae describe inputs or outputs of all
+processes together.
+
+A \textit{context} (denoted by $\Gamma$ and $\Delta$ possibly
+subscripted) is a potentially empty
+finite sequence of global formulae.
+A \textit{sequent}~$\Gamma\vdash\m\varphi$ is a pair of a context and a
+global formula.
+A \textit{hypersequent} is a finite sequence of sequents.
+
+The underlying logic has the derivation rules in Fig.~\ref{logic}.  If
+we omit all the modalities, these rules characterize
+G\"odel--Dummett logic.
+However, the modalities have at least some sense: while
+$([0]\varphi\supset[0]\psi)\vee([1]\psi\supset[1]\varphi)$ is provable,
+$([0]\varphi\supset[1]\psi)\vee([0]\psi\supset[1]\varphi)$ is not.
+A semantics will be given in Sect.~\ref{comparison}.
+
+\begin{figure}
+ \small
+  \begin{center}
+\textbf{External Rules}
+   \vskip 2mm
+%% communication
+   \BinaryRule
+   {$\hyper\hmid\Gamma,\Delta\vdash[i]\varphi$}
+   {$\hyper\hmid\Gamma,\Delta\vdash[j]\psi$}
+   {com'}
+   {$\hyper\hmid\Gamma\vdash[i]\psi\hmid\Delta\vdash[j]\varphi$}
+  \hfill
+%% external structural   
+ \UnaryRule
+ {$\hyper^+$}
+ {EW}
+ {$\hyper^+\hmid\Gamma\vdash \m\varphi$}
+ \vskip 2mm
+ \UnaryRule
+ {$\hyper\hmid\Gamma\vdash \m\varphi\hmid\Gamma\vdash \m\varphi$}
+ {EC}
+ {$\hyper\hmid\Gamma\vdash \m\varphi$}
+ \hfill
+ \UnaryRule
+ {$\hyper\hmid\Gamma\vdash \m\varphi\hmid\Delta\vdash \m\psi\hmid \hyper'$}
+ {EE}
+ {$\hyper\hmid\Delta\vdash \m\psi   \hmid\Gamma\vdash \m\varphi\hmid
+   \hyper'$}
+ \vskip 2mm
+\textbf{Inner Global Rules}
+\vskip 2mm
+%% structural
+   \UnaryRule{$\hyper\hmid\Gamma,\m\varphi,\m\psi,\Delta\vdash\m\theta$}
+   {IE}
+   {$\hyper\hmid\Gamma,\m\psi,\m\varphi,\Delta\vdash \m\theta$}
+   \hfill
+   \UnaryRule{$\hyper\hmid\Gamma\vdash\m\varphi$}
+   {IW}
+   {$\hyper\hmid\m\psi,\Gamma\vdash\m\varphi$}
+   \hfill
+   \UnaryRule{$\hyper\hmid\m\psi,\m\psi,\Gamma\vdash\m\varphi$}
+   {IC}
+   {$\hyper\hmid\m\psi,\Gamma\vdash\m\varphi$}
+   \vskip 2mm
+%% local conj intro
+  \BinaryRule
+   {$\hyper\hmid\Gamma\vdash \m\varphi$}
+   {$\hyper\hmid\Gamma\vdash \m\psi$}
+   {$\wedge\intro$}
+   {$\hyper\hmid\Gamma\vdash \m\varphi\wedge\m\psi$}
+   \vskip 2mm
+%% local conj elim
+  \UnaryRule
+   {$\hyper\hmid\Gamma\vdash \m\varphi\wedge\m\psi$}
+   {$\wedge\elim_0$}
+   {$\hyper\hmid\Gamma\vdash \m\varphi$}
+   \hfill
+  \UnaryRule
+   {$\hyper\hmid\Gamma\vdash\m\varphi\wedge\m\psi$}
+   {$\wedge\elim_1$}
+   {$\hyper\hmid\Gamma\vdash\m\psi$}
+\vskip 2mm
+%% local disj intro
+  \UnaryRule
+   {$\hyper\hmid\Gamma\vdash\m\varphi$}
+   {$\vee\intro_0$}
+   {$\hyper\hmid\Gamma\vdash\m\varphi\vee\m\psi$}
+   \hfill
+  \UnaryRule
+   {$\hyper\hmid\Gamma\vdash\m\psi$}
+   {$\vee\intro_1$}
+   {$\hyper\hmid\Gamma\vdash\m\varphi\vee\m\psi$}
+\vskip 2mm
+%% local disj elim
+   \TrinaryRule
+   {$\hyper\hmid\Gamma\vdash           \m\varphi\vee\m\psi$}
+   {$\hyper\hmid\m\varphi, \Gamma\vdash\m\theta$}
+   {$\hyper\hmid\m\psi,    \Gamma\vdash\m\theta$}
+   {$\vee\elim$}
+   {$\hyper\hmid         \Gamma\vdash\m\theta$}
+\vskip 2mm
+\textbf{Inner Local Rules}
+\vskip 2mm
+%% axiom
+  \UnaryRule{}{$[i]$Ax}
+   {$[i]\varphi,\Gamma\vdash [i]\varphi$}
+   \hfill
+%% bot elim   
+ \UnaryRule{$\hyper\hmid\Gamma\vdash[i]\bot$}
+   {$[i]\bot\elim$}
+   {$\hyper\hmid\Gamma\vdash[i]\varphi$}
+   \vskip 2mm
+%% local imp intro
+  \UnaryRule{$\hyper\hmid[i]\varphi,\Gamma\vdash [i]\psi$}
+  {$[i]\supset\intro$}
+  {$\hyper\hmid\Gamma\vdash [i](\varphi\supset \psi)$}
+  \hfill
+%% local imp elim   
+  \BinaryRule
+  {$\hyper\hmid\Gamma\vdash [i](\varphi\supset\psi)$}
+  {$\hyper\hmid\Gamma\vdash [i]\varphi$}
+  {$[i]\supset\elim$}
+  {$\hyper\hmid\Gamma\vdash [i]\psi$}
+   \vskip 2mm
+%% local conj intro
+  \BinaryRule{$\hyper\hmid\Gamma\vdash [i]\varphi$}
+   {$\hyper\hmid\Gamma\vdash [i]\psi$}
+   {$[i]\wedge\intro$}
+   {$\hyper\hmid\Gamma\vdash [i](\varphi\wedge\psi)$}
+   \vskip 2mm
+%% local conj elim
+  \UnaryRule{$\hyper\hmid\Gamma\vdash [i](\varphi\wedge\psi)$}
+   {$[i]\wedge\elim_0$}
+   {$\hyper\hmid\Gamma\vdash[i]\varphi$}
+   \hfill
+  \UnaryRule{$\hyper\hmid\Gamma\vdash[i](\varphi\wedge\psi)$}
+   {$[i]\wedge\elim_1$}
+   {$\hyper\hmid\Gamma\vdash[i]\psi$}
+\vskip 2mm
+%% local disj intro
+  \UnaryRule
+   {$\hyper\hmid\Gamma\vdash[i]\varphi$}
+   {$[i]\vee\intro_0$}
+   {$\hyper\hmid\Gamma\vdash[i](\varphi\vee\psi)$}
+   \hfill
+  \UnaryRule{$\hyper\hmid\Gamma\vdash[i]\psi$}
+   {$[i]\vee\intro_1$}
+   {$\hyper\hmid\Gamma\vdash[i](\varphi\vee\psi)$}
+\vskip 2mm
+%% local disj elim
+   \TrinaryRule
+   {$\hyper\hmid\Gamma\vdash[i](\varphi\vee\psi)$}
+   {$\hyper\hmid[i]\varphi, \Gamma\vdash[i]\theta$}
+   {$\hyper\hmid[i]\psi,    \Gamma\vdash[i]\theta$}
+   {$[i]\vee\elim$}
+   {$\hyper\hmid         \Gamma\vdash[i]\theta$}
+\vskip 2mm
+\end{center}
+\caption{The underlying logic.
+ Metavariables~$i$ and $j$ stand for a process.
+ $\hyper$ stands for a
+ hypersequent.
+ $\hyper^+$ stands for a nonempty hypersequent.
+ $\Gamma$ and $\Delta$ stand for possibly empty contexts.
+ The most important com' rule is based on a rule by
+ Avron~\cite{avron96}.
+ }
+\label{logic}
+\end{figure}
+
+\subsection{Term Assignment}
+\label{term}
+
+We assume distinct, countably infinite sets of \textit{variables},
+\textit{locations}
+and
+\textit{processes}.
+Locations are denoted by~$l$; process~$i,j, \ldots$ and variables~$x,
+y, \ldots$.
+Later, locations will be used to specify a pair of stores
+holding terms.  
+Like in the $\lambda$-calculus, some terms reduces to other
+terms, but in this calculus, terms may interact with the store (like
+a program written in Haskell or OCaml does with an i-var).
+This behavior will be shown later in the definition of reductions.
+
+We define \textit{terms}~$\term$ by the BNF
+where $\Gamma$ is a sequence of variables:
+\begin{align*}
+\term ::=&\,
+ x\mid \ltor i l \Gamma \term \mid \rtol i l \Gamma \term \mid
+ \gpair {\term,\term}\mid
+ \gpil \term \mid \gpir \term \mid
+ \ginl\term \mid
+ \ginr\term \mid \\ & \gmat \term x\term y \term \mid 
+ \cotuple{\term,\term} \mid \abort \mid
+  \lpil \term \mid \lpir \term \mid
+ \lpair {\term,\term}\mid \\&
+  \linl \term \mid  \linr \term \mid
+ \lambda x.\term\mid (\term \term)
+\mid \lmat \term x\term y \term \enspace.
+\end{align*}
+All variable occurrences (including those in $\Gamma$)
+except the first clause are
+binding.
+The constructs with a~$\g$ represent the global rules and the
+constructs without a~$\g$ represent the local rules.
+
+We extend a \textit{sequent}
+to $\Gamma\tr \tj M{\m \varphi}$, where $\Gamma$ is
+a sequence like $\tj{x}{\m\psi}, \tj{y}{\m\theta}$ and $M$ is a term.
+In a sequent $\Gamma\tr\tj{M}{\m\varphi}$, we require the variables in
+$\Gamma$ to be distinct from each other.
+A \textit{contexted type}
+ $\Gamma\tr\m\varphi$ is a sequent without a term but with variables in
+ $\Gamma$.
+A \textit{hypersequent} is a finite sequence of sequents (called
+\textit{components})
+where the same
+variable has the same type even if it appears in different components.
+The typing rules for the terms are given in Fig.~\ref{termassign}.
+
+\begin{figure}[p]
+ \small
+  \begin{center}
+\textbf{External Rules}
+\vskip 2mm
+%% communication
+\BinaryRule
+   {$\hypert_0\hmid\Gamma,\Delta\tr\tj{M}{[i]\varphi}$}
+   {$\hypert_1\hmid\Gamma,\Delta\tr\tj{N}{[j]\psi}$}
+   {}
+   {$\cotuple{\hypert_0,\hypert_1}\hmid\Gamma\tr\tj{\ltor i{l}\Delta{M}}{[i]\psi}\hmid
+   \Delta\tr\tj{\rtol j{l}\Gamma {N}}{[j]\varphi}$}
+\hfill
+%% external structural   
+ \UnaryRule
+ {$\hypert^+$}
+ {}
+ {$\hypert^+\hmid\Gamma\tr \tj \abort {\m\varphi}$}
+\vskip 2mm
+ \UnaryRule
+ {$\hypert\hmid\Gamma\tr\tj M {\m\varphi}\hmid\Gamma\tr \tj N {\m\varphi}$}
+ {}
+ {$\hypert\hmid\Gamma\tr \tj {\cotuple{M,N}}{\m\varphi}$}
+\hfill
+ \UnaryRule
+ {$\hypert\hmid\Gamma\tr M\colon\m\varphi\hmid\Delta\tr N\colon \m\psi\hmid \hypert'$}
+ {}
+ {$\hypert\hmid\Delta\tr N\colon\m\psi   \hmid\Gamma\tr M\colon \m\varphi\hmid \hypert'$}
+ \vskip 2mm
+\textbf{Inner Global Rules}
+   \vskip 2mm
+   \UnaryRule
+   {$\hypert\hmid \Gamma\tr\tj M {\m\varphi}$}
+   {}
+   {$\hypert\hmid \tj x {\m\psi}, \Gamma\tr \tj{M}{\m\varphi}$}
+   \hfill
+   \UnaryRule
+   {$\hypert\hmid \tj{x}{\m\varphi}, \tj{y}{\m\varphi}, \Gamma\tr \tj
+   M{\m\psi}$}
+   {}
+   {$\hypert \hmid \tj{x}{\m\varphi}, \Gamma\tr \tj{M[x/y]}{\m\psi}$}
+\vskip 2mm
+\UnaryRule
+   {$\hypert\hmid\Gamma,\tj x{\m\varphi},\tj y{\m\psi},\Delta\tr
+   \tj M{\m\theta}$}{}
+   {$\hypert\hmid\Gamma,\tj y{\m\psi},\tj x{\m\varphi},\Delta\tr \tj M{\m\theta}$} %IE
+\hfill
+%% conj intro
+\BinaryRule
+   {$\hypert_0\hmid\Gamma\tr \tj M{\m\varphi}$}
+   {$\hypert_1\hmid\Gamma\tr \tj N{\m\psi}$}
+   {}
+   {$\cotuple{\hypert_0,\hypert_1}\hmid\Gamma\tr
+     \tj{\gpair{M,N}}{\m\varphi\wedge\m\psi}$}
+   \vskip 2mm
+%% conj elim
+  \UnaryRule
+   {$\hypert\hmid\Gamma\tr M\colon\m\varphi\wedge\m\psi$}
+   {}
+   {$\hypert\hmid\Gamma\tr \gpil{M}\colon\m\varphi$}
+   \hfill
+  \UnaryRule
+   {$\hypert\hmid\Gamma\tr M\colon\m\varphi\wedge\m\psi$}
+   {}
+   {$\hypert\hmid\Gamma\tr\gpir M\colon\m\psi$}
+\vskip 2mm
+%% disj intro
+  \UnaryRule
+   {$\hypert\hmid\Gamma\tr M\colon\m\varphi$}
+   {}
+   {$\hypert\hmid\Gamma\tr\ginl{M}\colon\m\varphi\vee\m\psi$}
+   \hfill
+  \UnaryRule
+   {$\hypert\hmid\Gamma\tr M\colon\m\psi$}
+   {}
+   {$\hypert\hmid\Gamma\tr \ginr{M}\colon\m\varphi\vee\m\psi$}
+\vskip 2mm
+%% disj elim
+\TrinaryRule
+   {$\hypert_0\hmid\Gamma\tr \tj M {\m\varphi\vee\m\psi}$}
+   {$\hypert_1\hmid\tj x{\m\varphi},\Gamma\tr \tj {N_0}{\m\theta}$}
+   {$\hypert_2\hmid\tj y{\m\psi},   \Gamma\tr \tj {N_1}{\m\theta}$}
+   {}
+   {$\cotuple{\cotuple{\hypert_0,\hypert_1},\hypert_2}\hmid\Gamma \tr \tj{\gmat M x {N_0} y {N_1}}{\m\theta}$}
+\vskip 2mm
+\textbf{Inner Local Rules}
+\vskip 2mm
+%% axiom   
+  \UnaryRule{}{}{$\tj x{[i]\varphi}, \Gamma\tr \tj x{[i]\varphi}$}
+                       \hfill
+%% bot elim   
+ \UnaryRule
+   {$\hypert\hmid\Gamma\tr \tj M{[i]\bot}$} {}
+   {$\hypert\hmid\Gamma\tr \tj{\abort}{[i]\varphi}$}
+   \vskip 2mm
+%% local imp intro
+  \UnaryRule
+   {$\hypert\hmid\tj x{[i]\varphi},\Gamma\tr \tj M{[i]\psi}$}
+   {}
+   {$\hypert\hmid\Gamma\tr \tj{\lambda x.M}{[i](\varphi\supset\psi)}$}
+                       \hfill
+%% local imp elim
+  \BinaryRule{$\hypert_0\hmid\Gamma \tr \tj M{[i](\varphi\supset \psi)}$}
+  {$\hypert_1\hmid\Gamma\tr \tj N{[i]\varphi}$}
+  {}
+  {$\cotuple{\hypert_0,\hypert_1}\hmid\Gamma\tr \tj{MN}{[i]\psi}$}
+                       \vskip 2mm
+%% local conj intro
+\BinaryRule{$\hypert_0\hmid\Gamma\tr \tj M{[i]\varphi}$}
+   {$\hypert_1\hmid\Gamma\tr \tj N{[i]\psi}$}
+   {}
+   {$\cotuple{\hypert_0,\hypert_1}\hmid\Gamma\tr
+     \tj{\lpair {M,N}}{[i](\varphi\wedge\psi)}$}
+   \vskip 2mm
+%% local conj elim
+  \UnaryRule
+   {$\hypert\hmid\Gamma\tr M\colon[i](\varphi\wedge\psi)$}
+   {}
+   {$\hypert\hmid\Gamma\tr \lpil{M}\colon[i]\varphi$}
+   \hfill
+  \UnaryRule
+   {$\hypert\hmid\Gamma\tr M\colon[i](\varphi\wedge\psi)$}
+   {}
+   {$\hypert\hmid\Gamma\tr\lpir M\colon[i]\psi$}
+\vskip 2mm
+%% local disj intro
+  \UnaryRule
+   {$\hypert\hmid\Gamma\tr M\colon[i]\varphi$}
+   {}
+   {$\hypert\hmid\Gamma\tr\linl {M}\colon[i](\varphi\vee\psi)$}
+   \hfill
+  \UnaryRule
+   {$\hypert\hmid\Gamma\tr M\colon[i]\psi$}
+   {}
+   {$\hypert\hmid\Gamma\tr \linr{M}\colon[i](\varphi\vee\psi)$}
+\vskip 2mm
+%% local disj elim
+\TrinaryRule
+   {$\hypert_0\hmid\Gamma\tr \tj M {[i](\varphi\vee\psi)}$}
+   {$\hypert_1\hmid\tj x{[i]\varphi},\Gamma\tr \tj {N_0}{[i]\theta}$}
+   {$\hypert_2\hmid\tj y{[i]\psi},   \Gamma\tr \tj {N_1}{[i]\theta}$}
+   {}
+   {$\cotuple{\cotuple{\hypert_0,\hypert_1},\hypert_2}\hmid\Gamma \tr \tj{\lmat M x {N_0} y {N_1}}{[i]\theta}$}
+\vskip 2mm
+\end{center}
+ \caption{Term assignment.
+ $\hypert$ stands for
+ a possibly empty hypersequent (with possible subscripts).
+ $\hypert^+$ stands for a non-empty hypersequent.
+ Within each rule, $\hypert_0$, $\hypert_1$ and $\hypert_2$ have the
+ same length and the same type so that $\cotuple{\hypert_0,\hypert_1}$
+ can be defined as
+ the elementwise application of $\cotuple{\term,\term}$.
+ }
+ \label{termassign}
+\end{figure}
+
+\subsection{Reduction}
+
+A term~$M$ is \textit{of} type~$\m\varphi$ iff there is a derivation of
+$\Gamma\tr
+\tj{M}{\m\varphi}$.
+A \textit{local} term is a term without $\overleftarrow l$,
+$\overrightarrow l$ or any $\g$ constructs.
+A \textit{hyperterm}~$\hypert$ is a nonempty sequence of terms.
+A \textit{store} maps a location to a
+local term or $\epsilon$.
+For a store~$\sigma$, the updated store $\sigma[l\mapsto x]$ maps $l$ to
+$x$ and $l'$ to $\sigma(l')$ if $l'$ is different from~$l$.
+A \textit{configuration} is a triple $\conf{}{}\hypert$ of two
+stores $\lstore, \rstore$ and a hyperterm~$\hypert$.
+
+To complete the definition of \lgd,
+ we define the \textit{reductions} $\reduce_\clubsuit$ of
+ configurations for $\clubsuit\in\{\mathrm B, \mathrm W, \mathrm R, \mathrm A,
+ \mathrm P\}$.
+ We consider terms up to $\alpha$-equivalence and implicitly
+ require all instances
+ of $\rightsquigarrow_\clubsuit$ to avoid free variable captures.
+ Below, $\square$ and $\blacksquare$ match $\g$ or nothing.
+
+\begin{definition}[Basic Reduction]
+ The basic reduction $\breduce$ is the smallest congruence containing
+ the followings:
+ \begin{itemize}
+  \item  $\conf{}{}{(\lambda x.M)O}\breduce
+ \conf{}{}{M[O/x]}$
+  \item $\conf{}{}{\spil{\spair{M,N}}} \breduce
+	 \conf{}{}{           M   }$
+  \item $\conf{}{}{\spir{\spair{M,N}}} \breduce
+	 \conf{}{}{             N }$
+  \item $\conf{}{}{\smat{\sinl M}x N y O} \breduce
+	 \conf{}{}{              N[M/x]}$
+  \item $\conf{}{}{\smat{\sinr M}x N y O} \breduce
+	 \conf{}{}{                  O[M/y]}$
+ \end{itemize}
+\end{definition}
+
+There are two sorts of reductions that interact with the store.
+In summary, $\rtol i l \Gamma N$ tries to write to the right store and read from
+the left store of the configuration.
+If a term tries to read from an empty location of a store,
+the term changes into $\abort$.  If a term writes to a full location of
+a store, it does not abort but the store is not updated.
+The formal definition follows.
+\begin{definition}[Write Reduction]
+ The write reduction $\wreduce$ is the smallest congruence
+ containing the followings where $M$ is a local term:
+ \begin{itemize}
+  \item $\conf{}{[l\mapsto\epsilon]}{\rtol i l \Gamma M}
+	\wreduce
+	\conf{}{[l\mapsto M]}{\rtol i l \Gamma M}
+	$\enspace,
+  \item $\conf{[l\mapsto\epsilon]}{}{\ltor j l \Delta M}
+	\wreduce
+	\conf{[l\mapsto M]}{}{\ltor j l \Delta M}
+	$\enspace.
+ \end{itemize}
+\end{definition}
+
+\begin{definition}[Read Reduction]
+ \label{read}
+ The read reduction $\rreduce$ is the smallest congruence
+ containing the
+ followings:
+\begin{itemize}
+ \item  $\conf{[l\mapsto {N}]}{[l\mapsto M']}{\rtol i l\Gamma M}\rreduce
+	\conf{[l\mapsto {N}]}{[l\mapsto M']}{N}$
+ \item  $\conf{[l\mapsto \epsilon]}
+	{[l\mapsto M']}{\rtol i l\Gamma M}\rreduce
+	\conf{[l\mapsto \epsilon]}{[l\mapsto M']}{\abort}$
+ \item  $\conf{[l\mapsto M']}{[l\mapsto {N}]}{\ltor i l \Delta M}\rreduce
+	\conf{[l\mapsto M']}{[l\mapsto {N}]}{N}$
+ \item  $\conf{[l\mapsto M']}{[l\mapsto \epsilon]}{\ltor i l \Delta M}\rreduce
+	 \conf{[l\mapsto M']}{[l\mapsto \epsilon]}{\abort}$\enspace .
+\end{itemize}
+\end{definition}
+
+\begin{definition}[Abort Propagation Reduction]
+ The abort propagation reduction $\areduce$ is the smallest
+ congruence containing the
+ followings:
+\begin{itemize}
+ \item  $\conf{}{}{\cotuple{\abort, M}}\areduce
+ \conf{}{}{M}$, and
+   $\conf{}{}{\cotuple{M,\abort}}\areduce
+ \conf{}{}{M}$
+ \item  $\conf{}{}{C[\abort]}\areduce
+ \conf{}{}{\abort}$
+\end{itemize}
+ where $C[\bullet]$ is 
+$\bullet N$, 
+${M \bullet}$,
+$\ltor i l \Delta \bullet$,
+$\rtol i l \Gamma \bullet$,
+$\sinl \bullet$,
+$\sinr \bullet$,
+$\spair {\bullet, N}$,
+$\spair {M, \bullet}$,
+$\pi^\square_i \bullet$.
+$\smat M x N y \bullet$,
+$\smat  \bullet x N y O$, or  \\
+$\smat  M x \bullet y O$ 
+\end{definition}
+In order to obtain subformula property
+ via proof normalization
+we add yet another kind of reduction rules.
+\begin{definition}[Permutative Reduction]
+ The permutative reduction~$\preduce$ is the smallest congruence
+ containing the followings:
+\begin{itemize}
+ \small
+ \item $\conf{}{}{ \left(\smat  M x N y O\right) P }\preduce$ \\
+       $\conf{}{}{ \smat M x {N P} y {O P} }$
+ \item $\conf{}{}{ \pi^\square_d \left(\bsmat M x N y
+       O\right)}\preduce$\\
+       $\conf{}{}{ \bsmat M x
+       {\pi^\square_d N} y {\pi^\square_d O} }$
+ \item {
+       $\conf{}{}{ \smat
+                          {\left(\bsmat  M x N y O\right)}
+                          u P v Q
+                      }\preduce$ \\
+       $(\lstore, \rstore, 
+        \mathsf{match}^{\blacksquare}\,{M}\,\mathsf{of}\, \bsinl{x}. {
+                          {\left(\smat N u P v Q\right)}
+       } /$ \\ \phantom{mmmmmmmmmmm}$
+       \bsinr{y}. {\left(\smat  O u P v Q\right)}
+                      )
+       $}
+ \item $\conf{}{}{ \cotuple{M, N} P }\preduce
+        \conf{}{}{ \cotuple{MP, NP} }$
+ \item $\conf{}{}{ \pi^\square_d\cotuple{M,N} }\preduce
+        \conf{}{}{ \cotuple{\pi^\square_d M, \pi^\square_d N} }$
+ \item $\conf{}{}{ \smat {\cotuple{M,N}} x P y Q }\preduce$\\
+       $\conf{}{}{ \cotuple{
+                          \smat  M x P y Q,
+                          \smat N x P y Q
+                        } }$
+\end{itemize}
+\end{definition}
+
+We define $\reduce$ to be the union of $\breduce$, $\wreduce$, $\rreduce$,
+$\areduce$ and $\preduce$.
+The reflexive transitive closure of $\reduce$ is
+written as~$\reduction$.
+A \textit{redex} is a subterm that can be rewritten by a reduction.
+A configuration~$\mathcal{C}$ is \textit{normal} when there is no configuration
+$\mathcal{D}$ with $\mathcal{C}\reduce \mathcal{D}$.
+A term~$M$ is \textit{normal} when the configuration $\conf{}{}{M}$ is
+normal (the choice of $\lstore$ and $\rstore$ is irrelevant).
+
+\subsection{Properties}
+
+An important property of
+\lgd is \textit{strong normalization}:
+every typed hyperterm has a maximal number of reductions it can
+take.
+Another is \textit{non-abortfullness}: although some reductions yield
+$\abort$ terms, a typed hyperterm never reduces to a hyperterm that only
+contains $\abort$'s.  We show this first for its simpler proof.
+
+\begin{theorem}[Non-abortfullness]
+ \label{nab}
+ All normal forms of a typed configuration contain at least one term
+ that is not $\abort$.
+\end{theorem}
+\begin{proof}
+ When a reduction sequence is fixed, for any location~$l$, depending on
+ whether the right or the left store is filled first, 
+ either:
+ (i) no ${\ltor i l \Delta M} \reduce {\abort}$ occurs for any~$i$, or
+ (ii) no ${\rtol i l\Gamma M} \reduce {\abort}$ occurs for any~$i$.
+
+If the former is the case, we can rewrite
+a communication rule occurrence
+\begin{center}
+ \BinaryRule
+ {$\hypert_0\hmid  \Gamma,\Delta\tr \tj M{[i]\psi}$}
+ {$\hypert_1\hmid \Gamma,\Delta\tr \tj N{[j]\tau}$}
+ {}
+ {$\cotuple{\hypert_0,\hypert_1}\hmid \Gamma\tr \tj
+   {\ltor i l \Delta M}{[i]\tau}\hmid
+   \Delta\tr \tj{\rtol i l\Gamma N}{[j]\psi}$}
+\end{center}
+into successive external weakening occurrences
+\begin{center}
+ \AxiomC
+ {$\hypert_0\hmid  \Gamma^j, \Delta^j\tr \tj M{[j]\psi}$}
+\doubleLine
+ \UnaryInfC
+ {$\hypert_0\hmid \tr \tj \abort
+ {[i]\tau}\hmid
+   \Gamma^j,\Delta^j\tr \tj{M}{[j]\psi}$}
+ \DisplayProof
+\end{center}
+ where $\Gamma^j$ and $\Delta^j$ can be obtained from the originals
+ by changing every
+ modality~$[k]$ to $[j]$.
+In the lattar case, we can do the symmetric.
+
+After these rewritings for all appearing locations,
+we obtain a derivation not containing
+$\overrightarrow{l}$ or $\overleftarrow{l}$.
+Moreover, the end hypersequent of the resulting derivation has a component
+not containing $\abort$.
+The reductions of the original hyperterm can be simulated by the
+resulting hyperterm.  And, even after reductions, the resulting
+hyperterm has a component not containing $\abort$.
+\end{proof}
+
+\begin{theorem}[Strong Normalization]
+ \lgd\, is strongly normalizing.
+\end{theorem}
+\begin{proof}
+For proving this, we consider the \textit{local fragment} that does not contain
+$\ltor i l \Delta M$, $\rtol j l\Gamma N$ or any construct with $\g$.
+We first reduce the strong
+normalization of the \lgd\, to that of the local fragment, and 
+ultimately to that of de Groote's
+natural deduction with permutation-conversion~\cite{Philippe2002js}%
+\footnote{
+To the 
+same effect, we might be able to use other strong normalization
+ results for lambda calculi with commutative conversions, like Balat,
+ Di~Cosmo
+ and Fiore~\cite{bdf}.
+}%
+.
+
+We assume an infinite sequence of reductions
+$
+\conf{_0}{_0}{\hypert_0}
+\reduce
+\conf{_1}{_1}{\hypert_1}
+\reduce
+\conf{_2}{_2}{\hypert_2}
+\reduce\cdots 
+$.  From this, we are going to construct an infinite sequence of
+reductions in the local fragment.
+
+For that, we first
+build an infinite reduction sequence with constant stores. 
+Using the original infinite sequence, we define a pair of stores called the
+\textit{store prophecy} $(\lstore_\infty, \rstore_\infty)$ where
+$ \lstore_\infty(l)= \epsilon$ if $\lstore_k(l)=\epsilon$ for all
+ $k\in\omega$ and
+$ \lstore_\infty(l)=M $ if $\lstore_k(l)=M$ for some $k\in\omega$
+; and $\rstore_\infty(l)$ is symmetrically defined.
+Since store contents are never overwritten,
+$\lstore_\infty$ and $\rstore_\infty$ are well-defined.
+Moreover,
+$\lstore_i(l)$ and $\lstore_\infty(l)$ coincide unless
+$\lstore_i(l)=\epsilon$.
+
+We build another reduction sequence
+$
+\conf{_\infty}{_\infty}{\hypert_0}
+\reduce^\ast
+\conf{_\infty}{_\infty}{\hypert'_1}
+\reduce^\ast
+\conf{_\infty}{_\infty}{\hypert'_2}
+\reduce^\ast\cdots
+$
+with the following invariant:
+$\mathcal M'_i$ can be obtained by replacing some $\abort$ occurrences
+in $\mathcal M_i$ with some terms.
+More specifically, we translate each reduction as follows, keeping the
+invariant inductively on the number of steps
+(the base case is satisfied by $\mathcal M'_0 = \mathcal M_0$ immediately):
+\begin{itemize}
+ \item a read reduction $\conf{_k}{_k}{\hypc{}{\rtol i l\Delta M}}
+       \rreduce
+       \conf{_{k+1}}{_{k+1}}{\hypc{}{O}}$ is translated into
+       $\conf{_\infty}{_\infty}{\hypc'{\rtol i l\Delta M}} \rreduce
+       \conf{_{k+1}}{_{k+1}}{\hypc'{O'}}$.
+       If $\lstore_i(l)$ is a term,
+       $\lstore_\infty(l)$ and $O'$ are also identical to the term.
+       Otherwise, $O'$ must be $\abort$.
+       Thus, the invariant
+       holds for $k+1$.
+ \item a write reduction disappears;
+ \item an $\abort$ propagation
+       $\hypc{}{C[\abort]} \areduce \hypc{}{\abort}$ can be translated
+       either to a similar reduction or no reduction if the $\abort$ in
+       the redex is replaced by another term in the $\mathcal{M'}_k$.
+       Note that even in that case, the result $\mathcal{M'}_{k+1}$ can
+       be obtained by replacing some $\abort$ occurrences in
+       $\mathcal{M}_{k+1}$ with other terms;
+ \item any other reduction $\conf{_k}{_k}{\hypc{}{M}} \bpreduce
+       \conf{_{k+1}}{_{k+1}}{\hypc{}{N}}$
+       is translated into one similar reduction
+       $\conf{_\infty}{_\infty}{\hypc{'}{M'}}\bpreduce
+        \conf{_\infty}{_\infty}{\hypc{'}{N'}}$.
+\end{itemize}
+Here, we have to show that the translated sequence is infinite.
+For that, we can use the facts that
+ there are only finite
+number of usedlocations each of which allows only one write, and that
+an $\abort$ propagation always
+strictly shortens the term under operation. 
+ 
+ After that, we can replace
+ every ${\rtol i l\Gamma M}$ with
+ $\rstore_\infty(l)$.
+ Since $\rtol i l\Gamma M$ either reduces to $\rstore_\infty(l)$ or $\abort$,
+ replacing it with $\rstore_\infty(l)$ will only ``shorten'' the reduction
+ sequence for at most one read step.
+ We can do the same for $\ltor j l \Gamma N$.
+ Replacing every such occurrences
+ makes an infinite reduction sequence where every occurring term is
+ in the local fragment.
+ Moreover, 
+ the result of the translation is also well-typed.
+ A typing derivation of the resulting hyperterm can be obtained by
+ replacing com' rules with EW rules and changing the process number in
+ types of some variables (c.f. the proof of Thm.~\ref{nab}).
+
+We are aiming at reducing the problem to the strong normalization result
+by de Groote~\cite{Philippe2002js}.
+Since we have eliminated $\ltor i l \Delta M$ or $\rtol i l\Gamma N$ occurrences,
+the remaining difference is small: some $\abort$ propagation reductions
+ and some permutative reductions involving $\cotuple{\term,\term'}$.
+We just have to make sure that there are no infinite reduction sequences
+that consist of these two kinds of reductions only.
+We can deal with the permutative reductions following de
+ Groote~\cite{Philippe2002js}'s strategy for introducing~$\bot$.
+For $\abort$ propagation, we can apply the previous argument.
+\end{proof}
+
+\section{Typed Waitfreedom}
+\label{waitfreedom}
+
+Waitfreedom~\cite{Herlihy88,Saks:1993vq} is a class of protocols
+that can solve
+some of the input-output problems~\cite{Moran:1987ep,Biran:1988hh}.
+We define the typed version of waitfreedom.
+
+\subsection{Typed Input-Output Problem}
+
+Saks and Zaharoglou~\cite{Saks:1993vq} formulated waitfreedom as a class
+of input-output
+problems.
+Given inputs for all processes and outputs of all
+processes, an input-output problem decides whether the processes have
+succeeded or not.
+We change the standard definition and have typed terms as inputs and
+outputs.
+
+For that, we let $\lterm(\varphi)$ denote the set of closed, local terms of
+type~$\varphi$,
+and $\lval(\varphi)$ denote the set of normal terms in $\lterm(\varphi)$.
+For a finite set of processes~$\processes$, 
+a \textit{typed input-output problem} consists of each process's input type
+$(\iota_i)_{i\in \processes}$, each process's output type $(o_i)_{i\in
+\processes}$, and a
+task $R\subseteq \prod_{i\in \processes}\left(\lterm(\iota_i)\right)\times
+ \prod_{i\in \processes}\left(\lval(o_i)\right)$.
+
+\subsection{Typed Protocol}
+
+We assume a finite set~$\processes$
+of processes and a countably infinite
+set of program variables $\ProV =\{\p x, \p y, \p z, \ldots\}$.
+We assume an injection from variables to program variables $x\mapsto
+\p{x}_x$, whose image leaves infinitely many unused program variables.
+
+A \textit{program} is defined by BNF:
+\[
+ p ::= \epsilon\mid
+ \p x\leftarrow E; p \mid
+ l \leftarrow E; p
+\]
+where an \textit{expression} is
+\begin{align*}
+ E
+ ::=\,\,
+ &x\mid \p x \mid l \mid (EE)\mid \lambda
+ x.E\mid \tuple{E,E}\mid \linl{E}\mid \linr{E}\mid \\
+ &\lpil{E}\mid\lpir{E}\mid  \lmat E x {E} y {E}\mid \epsilon\enspace.
+\end{align*}
+
+\newcommand{\Wg}{W_{\mathrm g}}
+\newcommand{\Wd}{W_{\mathrm d}}
+A program is \textit{well-formed} when
+a program variable (resp. location) first appears in a $\p x\leftarrow E$
+(resp. $l\leftarrow E$)
+sentence, and
+after that, only appears in expressions.
+For a contexted type $t = (\Gamma\tr\m\varphi)$,
+we write $\tj{M}{t}$ for
+$\Gamma\tr\tj{M}{\m\varphi}$.
+For input types $(\iota_i)_{i\in\processes}$
+and output types $(o_i)_{i\in\processes}$, 
+a \textit{typed protocol} has:
+\begin{itemize}
+ \item two program variables
+      $\p i_i$ and $\p o_i$ for each process~$i$;
+ \item a finite set of locations~$L$;
+ \item two functions $g\colon L\rightarrow \processes$
+       and $d\colon L\rightarrow
+       \processes$ (specifying the left side writer and the right side writer of
+       each location);
+       $g(l)$ might read what $d(l)$ writes and vice versa;
+ \item $\Wg, \Wd$: each maps a location in $L$ to a contexted type;
+       $g(l)$ writes a term of $\Wg(l)$ and $d(l)$ writes a term of $\Wd(l)$;
+ \item a function $t_i$ for each $i\in \processes$;
+       that maps a program variable to a contexted type
+       $(\tj{x_k}{\varphi_k})_k \tr[i]\varphi$ with a special condition
+       $t_i(\p i_i)= \iota_i$;
+ \item a typed program~$p_i$ for each $i\in \processes$,
+       where
+a \textit{typed program} is a well-formed program where all
+sentences are typed according to $(t,g,d,i,\Wg, \Wd)$.
+A sentence $\p x \leftarrow E$ is typed  iff $E\colon t(\p x)$ is derivable with
+assumptions of the form $\tr\tj{\p y}{t(\p y)}$,\quad
+$\tr\tj{l}{W_{\mathrm d}}(l)$ and
+$\tr\tj{l}{W_{\mathrm g}}(l)$.
+\end{itemize}
+
+\subsection{Typed Waitfree Computation}
+
+We define when a protocol solves a typed
+input-output problem.
+These definitions are transferred from \cite{Saks:1993vq}.
+
+Let $\processes$ be $\{0,\ldots, n-1\}$ and fix
+a typed protocol.
+A \textit{program variable content} $m$ for $i\in\processes$ is a
+partial
+function
+that maps a program variable to a term of $t_i(\p x)$.
+A term~$M$ \textit{is of} a contexted type $\Gamma\tr\varphi$ when
+$\Gamma\tr
+\tj M\varphi$ is derivable.
+A \textit{process snapshot} of $i\in\processes$ is a tuple
+$\tuple{p,m}$ where $p$ is either a program or $\abort$ and $m$ is a
+program variable content for $i$.
+We let $S_i$ denote the set of process snapshots for~$i$.
+A \textit{system snapshot}
+is a pair $\tuple{\vec s, \vec v}$, where $\vec s = \tuple{s_0,
+{s_1,{\ldots,s_{n-1}}}} \in
+\prod_{i\in \processes}\left(S_i\right)
+$
+and
+$\vec v =
+\left(\tuple{\vg{v}{l}, \vd{v}{l}}\right)_{l\in L} \in \prod_{l\in
+L}\left((\val(\Wg(l))\cup\{\epsilon\})\times (\val(\Wd(l))\cup\{\epsilon\})\right)
+$.
+
+For a nonempty subset~$J$ of $\processes$, we define an operator $\update J$ that
+takes a system snapshot and produces a system snapshot.
+This operator depicts a computation step where the processes in~$J$
+are fired.
+
+We define $
+(\vec s, \vec v) \update J = (\vec u, \vec m)
+$ by defining
+$u_i$ and $m_i$
+where $s_i = \tuple{p,x}$:
+\begin{align*}
+ u_i & =
+ \begin{cases}
+ \tuple{p',x}  & (\text{if } p = l
+ \leftarrow E; p' \text{ and }\sem{E}_{x,\vec v} \neq \epsilon)
+ \\
+ \tuple{\epsilon,x}  & (\text{if } p = l
+ \leftarrow E; p' \text{ and }\sem{E}_{x,\vec v} = \epsilon)
+ \\
+ \tuple{p', x[\p x \mapsto \sem{E}_{x, \vec v}]}&
+                       (\text{if } p = \p x \leftarrow E; p', \quad
+ x(\p x) = \epsilon  \text{ and } \sem{E}_{x, \vec v} \neq \epsilon) \\
+ \tuple{\epsilon, x}&
+                      (\text{if } p = \p x \leftarrow E; p',  \quad
+ x(\p x) = \epsilon  \text{ and } \sem{E}_{x, \vec v} = \epsilon) \\
+ \tuple{\epsilon, x} & (\text{if } p = \p x \leftarrow E; p' \text{
+ and }
+ x(\p x) \neq \epsilon) \\
+ s_i & (\text{if } p = \epsilon)
+ \end{cases}\\
+ \vg m l & =
+ \begin{cases}
+ \sem{E}_{x, \vec v} & (\text{if } p = l \leftarrow E; p',\quad g(l)= i \text{
+ and } \vg v l = \epsilon) \\
+ \vg v l &(\text{otherwise})
+ \end{cases}\\
+ \vd m l &=
+ \begin{cases}
+\sem{E}_{x, \vec v} &
+  (\text{if } p = l \leftarrow E; p',\quad d(l)= i \text{
+ and } \vd v l = \epsilon) \\
+ \vd v l &(\text{otherwise})
+ \end{cases}
+\end{align*}
+with the following notations.
+We let $i(l)$ to be $\vg v l$ if $d(l)=i$ and
+$\vd v l$ if $g(l) = i$.
+The term
+$\sem{E}_{x, \vec v}$ is defined as the unique normal form
+%{show, show, show}
+of $E[x(\vec{\p y}) / \vec{\p y}][\vec{i(l)}/\vec l]$, where
+every program variable~$\p y$ is replaced by $x(\p y)$ and the
+uniqueness is guaranteed by the absence of $\overleftarrow l$ or
+$\overrightarrow l$.
+If any of the substitutes is $\epsilon$,
+$\sem{E}_{x, \vec v}$ is $\epsilon$.
+
+A \textit{schedule} is an infinite sequence of nonempty subsets of~$\processes$,
+which looks like $\sigma = \sigma_0\sigma_1\sigma_2\cdots$.
+We say $i$ is \textit{nonfaulty} in $\sigma$
+if it appears infinitely often.
+When every process is nonfaulty, the schedule is \textit{fair}.
+
+A \textit{run} is a triple $\tuple{\Pi, \vec x, \sigma}$,
+where $\Pi$ is a typed protocol,
+$\vec x \in \prod_{i\in \processes} \lterm(\iota_i)$ is the input,
+and $\sigma$ is a schedule.
+The \textit{execution} associated to the run
+is defined as the infinite sequence of system snapshots
+$C_0C_1C_2\cdots$, where $C_0 = \tuple{\vec{s^0}, \vec{v^0}}$ is
+defined by $\vec{s^0_i} = \tuple{p_i, [\p i_i\mapsto x_i]}$ and
+$\vg v l  = \vd v l = \epsilon$,
+and $C_{k+1} = C_{k}\update
+\sigma_{i+1}$.
+
+Process~$i$'s \textit{output}~$\hat{o_k}$ at step~$k$ is
+$M$ if the $i$-th process snapshot of $C_k$ is
+$(p, x)$ and the $x[\p{o}_i] = M$, which can be $\epsilon$.
+The decision value of $i$ on the run $\tuple{\Pi,\vec x,\sigma}$,
+denoted~$d_i \in \lval(o_i)\cup\{\epsilon\}$
+ is the first non-$\epsilon$ element in the sequence
+ $\left(\hat{o_k}\right)_{k\in\omega}$,
+ or
+$\epsilon$ if such element does not exist.
+The $n$-tuple~$\vec d$ is defined by $d_i$'s.
+
+A vector $\vec b\in \prod_{i\in \processes}(\lval(o_i))$
+is \textit{compatible with} $\vec d \in \prod_{i\in
+\processes}\left(\lval(o_i)\cup\{\epsilon\}\right)$ iff
+$d_i = b_i$ or $d_i = \epsilon$ holds for any process~$i$.
+An input~$\vec x\in \prod_{i\in \processes}\lterm(\iota_i)$
+is \linebreak[2] $R$-\textit{permissible} iff there is at least one
+vector $\vec d\in \prod_{i\in \processes}(\lval(o_i))$ with $(\vec x, \vec b)\in R$.
+A typed protocol~$\Pi$ \textit{solves} the typed input-output problem
+  $\tuple{(\iota_i)_{i\in \processes}, (o_i)_{i\in \processes}, R}$ on
+schedule~$\sigma$ iff for all $R$-permissible inputs~$\vec x$ and a
+schedule~$\sigma$,
+ the decision value of every nonfaulty process~$i$ is a term
+       $M$ not $\epsilon$, and
+ there is a vector $\vec b\in \prod_{i\in \processes}(\lval (o_i))$
+with $\tuple{\vec x, \vec b} \in R$ which is compatible with the
+ decision vector~$\vec d$.
+A typed protocol is \textit{waitfree} iff it solves
+the problem on every schedule $\sigma$.
+In that case, the typed input-output problem is 
+\textit{waitfreely solvable}.
+
+\section{Characterization of Waitfreedom and \lgd}
+\label{comparison}
+
+We compare the ability of the waitfree protocols and \lgd\,.
+\begin{definition}
+ A typed input-output problem
+ $\tuple{(\iota_i)_{i\in \processes}, (o_i)_{i\in \processes}, R}$ is
+ solvable by a term
+ $M$ of contexted type
+ $\left(\tj{x_i}{[i]\iota_i}\right)_{i\in\processes}
+ \tr\left(\wwedge_{i\in
+ \processes}[i]o_i\right)$ 
+ iff
+ for any closed $(N_i)_{i\in \processes}$ of $\iota_i$,
+ all normal forms of $M[\vec{N_i}/\vec{x_i}]$
+ are in the form
+ $\tuple{{V_0}, \tuple{{V_1},
+ \cdots\tuple{{V_{n-2}},\tuple{{V_{n-1}},\bullet}}\cdots}}$
+ where $\tuple{(N_i)_{i\in \processes}, (V_i)_{i\in \processes}}\in R$.
+ % looks like we assume subformula property
+\end{definition}
+
+\begin{theorem}[Soundness]
+If a typed input-output problem is solvable by a term,
+there exists a typed protocol that solves the problem.
+\end{theorem}
+
+We are going to translate a typed hyperterm into a protocol inductively
+on the type derivation.
+To make induction work, we use the following auxiliary notions.
+An \textit{investigator} $\tuple{i, \p x}$ is a pair of a process and a program
+variable.
+For a local formula~$\varphi$, a system snapshot $\tuple{\vec s,\vec v}$
+satisfies
+$\tuple{i,\p x}(\varphi)$ iff
+$s_i(\p x)$ is an expression of $\varphi$.
+For a set of investigators~$I$,
+a system snapshot satisfies
+$I([i]\varphi)$ iff it satisfies
+$\tuple{i, \p x}(\varphi)$ for some $\p x$ with
+$\tuple{i,\p x}\in I$.
+This can be extended to all global formulae, as
+$I(\m\varphi\wedge\m\psi)$ iff $I(\m\varphi)$ and $I(\m\psi)$;
+$I(\m\varphi\vee\m\psi)$ iff $I(\m\varphi)$ or $I(\m\psi)$.
+A \textit{system snapshot satisfies a global formula}~$\m\varphi$
+iff there exists a
+finite set of
+investigators~$I$ such that the system snapshot satisfies $I(\m\varphi)$.
+A \textit{system snapshot satisfies a context} iff it
+satisfies every global formula in the context.
+A \textit{protocol} $p$ \textit{realizes a hypersequent}~$
+\left(\Gamma_0\vdash
+\m\varphi_0 \hmid \cdots\hmid\Gamma_{k}\vdash \m\varphi_{k}\right)$
+iff
+for any initial system snapshot satisfying
+every~$\Gamma_{k'}$,
+there exists a family of investigator sets
+$(I_{k'})_{k'\in\{0,\ldots,k\}}$ and,
+when $p$ is executed with any fair schedule,
+the resulting system snapshots eventually always satisfies at least one of
+$\varphi_{k'}^+$.
+
+For a typed 
+hyperterm~$\hypert$,
+we will give $\sem{\hypert}$, which is a tuple of programs indexed
+by~$\processes$.
+Also, we define $\semi{\hypert}$ at the same time as
+$\sem{\hypert}$, where
+$\semi{\hypert}$ is a sequence of finite sets of investigators whose
+length is the same as that of $\hypert$.
+We refer to the last element of $\semi{\hypert\hmid M}$ as
+$\semi{\hypert\hmid \hat{M}}$, the second to last element of
+$\semi{\hypert\hmid M\hmid N}$ as 
+$\semi{\hypert\hmid \hat M\hmid N}$ and so on.
+We denote the right projection of $\semi{\hypert\hmid \hat{M}}$ as
+$\semi{\hypert\hmid \hat{M}}'$.
+If two sequents of investigator sets $\semi{\hypert}$ and $\semi{\hypert'}$
+have the same length, we define $\semi{\hypert}\cup \semi{\hypert'}$ to
+be the elementwise union.
+
+We let $\epsilon$ denote $(p_i)_{i\in\processes}$ where $p_i=\epsilon$
+for all $i\in\processes$.
+Also, $(p_i)_{i\in\processes}; (q_i)_{i\in\processes}$ denotes
+$(p_i; q_i)_{i\in\processes}$ where the
+same program variable does not have multiple substitutions
+(we rename variables in the original typing derivation to satisfy this).
+And $(p)_j$ denotes $(q_i)_{i\in\processes}$ where $q_j = p$ and $q_i =
+\epsilon$ for all $i\neq j$.
+Below, we always choose fresh program variables.
+The definition is inductive over the type derivation.
+{\footnotesize
+\begin{align*}
+ \sem{\cotuple{\hypert_0,\hypert_1}\hmid \ltor j l \Delta M\hmid \rtol i l\Gamma N}
+ =& \sem{\hypert_0\hmid M};
+ \sem{\hypert_1\hmid N};\\
+ &(l\leftarrow \semi{\hypert_0\hmid\hat M}'; \p
+ y\leftarrow l;)_j; \\
+ &(l\leftarrow \semi{\hypert_1\hmid\hat N}'; \p
+ x\leftarrow l;)_i\enspace,\\
+ \semi{\cotuple{\hypert_0,\hypert_1}\hmid\ltor j l \Delta M\hmid \rtol i l\Gamma N} =&
+ \semi{\hat \hypert_0\hmid M} \cup \semi{\hat \hypert_1\hmid N} \hmid\\& \tuple{\{j,\p
+ y\}}\hmid \{\tuple{i,\p x}\}\enspace,\\
+ \sem{\hypert\hmid \abort}=\sem{\hypert}\enspace,\quad
+ \semi{\hypert\hmid\abort}=&\semi{\hypert}\hmid \emptyset\enspace,\quad
+ \sem{x}= \epsilon \enspace,\\
+ \semi{x}=& \{\tuple{i,\p x_x}\} \text{ where $[i]\varphi$ is the type
+ of $x$}\enspace,\\
+ \sem{\hypert\hmid \gpair{M,N}}=&
+ \sem{\hypert\hmid M}; \sem{\hypert\hmid N}\enspace,\\
+ \semi{\hypert\hmid \gpair{M,N}} =&
+ \semi{\hypert\hmid M}\cup \semi{\hypert\hmid N}\enspace,\\
+ \sem{\hypert\hmid \pi_a^\g(M)}=&\sem{\hypert\hmid M}\enspace,\\
+ \semi{\hypert\hmid\pi_a^\g(M)}=&\semi{\hypert\hmid M}\enspace,\\
+  \sem{\cotuple{\cotuple{\hypert_0,\hypert_1},\hypert_2}\hmid
+   \gmat  M x {N_0} y {N_1}}
+ =&\sem{\hypert_0\hmid M}; \\
+  \p{x}_x \leftarrow \lmat {\semi{\hypert_0\hmid \hat M}'} {x} {x} {y} {\epsilon}; &\sem{\hypert_1 \hmid N_0}; \\
+  \p{x}_y \leftarrow \lmat {\semi{\hypert_0\hmid \hat M}'} {x} {\epsilon} {y} {y}; &\sem{\hypert_2 \hmid N_1}\enspace,\\
+  \semi{\cotuple{\cotuple{\hypert_0,\hypert_1},\hypert_2}\hmid \gmat  M x {N_0} y {N_1}}
+ =&\semi{\hypert_1 \hmid N_0}\cup \semi{\hypert_2 \hmid N_1}\enspace,\\
+ \sem{\hypert\hmid \lambda x.M}=& \sem{\hypert\hmid M}; \p z\leftarrow
+ \lambda x. \semi{\hypert\hmid\hat M}' \enspace,\\
+ \sem{\cotuple{\hypert_0,\hypert_1}\hmid MN}=& \sem{\hypert_0\hmid M}; \sem{\hypert_1\hmid N}; \\&
+ \p z\leftarrow \semi{\hypert_0\hmid \hat M}'\semi{\hypert_1\hmid \hat N}'\enspace,\\
+ \semi{\cotuple{\hypert_0,\hypert_1}\hmid MN} =& (\semi{\hat \hypert_0 \hmid M}\cup
+ \semi{\hat\hypert_1\hmid N})\hmid \{\tuple{i,\p z}\}\enspace, \\
+ \sem{\hypert\hmid \lpil M} =& \sem{\hypert\hmid M}; \p z \leftarrow
+ \semi{\hypert\hmid\hat M}'\enspace, \\
+ \semi{\hypert\hmid \lpil M}=& \semi{\hat \hypert\hmid M}\hmid
+ \{\tuple{i, \p z}\}\enspace.
+\end{align*} }
+We omitted translations of some constructs $\pi_{\mathrm r}$, $\mathsf{inl}$,
+$\mathsf{inr}$, but they are defined in the same way
+as $\pi_{\mathrm
+l}$ case.
+When $(\tj{x_i}{[i]\iota_i})_{i\in\processes}
+\tr\tj{M}(\wwedge_{i\in \processes}[i]o_i)$ is
+derivable,
+we can define a protocol using the above translation.
+We set $\mathtt i_i$ to be ${\p x}_{x_i}$, ${\p o}_i$ to be arbitrarily
+chosen fresh program variables, $L$ to be the set of locations
+occurring in the derivation, we set the family of programs to be
+$\sem{M}; ({\p o}_i\leftarrow \pi_i(\semi{\hat M}'))_{i\in\processes}$,
+where $\pi_i$ is obtained by composing $i$~times $\pi_{\mathrm r}$ to
+$\pi_{\mathrm l}$.
+We set $g,d,t_i$ accordingly so that the program is typed.
+We can simulate a reduction sequence of
+the hyperterm using a fair execution of the protocol.
+
+
+And, since the protocol solves a problem for any fair schedule, it 
+solves the problem waitfreely.
+If we deny the claim, there must be an execution where a nonfaulty
+process
+either (a)~gives a
+wrong answer or
+ (b)~never gives an answer.
+ Either case, there is a step~$k$ when
+ such a failure is inevitable.
+We can modify the schedule after step $k$ to a fair one,
+keeeping the failing behavior of
+the process.
+
+\begin{theorem}[Completeness]
+If there exists a typed protocol that solves a typed input-output
+ problem, 
+the problem is solvable by a term.
+\end{theorem}
+
+Saks and Zaharoglou~\cite{Saks:1993vq} showed that a finite repetition of the participating set
+problem universally solves any waitfreely solvable problem.
+Also, $n$-party participating problem can be solved by a tournament of
+the two-party participating set problem.
+It suffices to show a \lgd\, term solving the two-party problem.
+
+
+In the \textit{participating set problem}~\cite{borowsky},
+each process~$i$ receives an id $c_i$ and
+returns a set of id's $S_i$.
+The outputs must satisfy (i)~$i\in S_i$; (ii)~either $S_i\subseteq S_j$
+or $S_j\subseteq S_i$; and (iii)~$S_i\subseteq S_j$  if $i\in S_j$ for any
+$i,j\in\processes$.
+For two processes,
+$\tuple{S_0, S_1}$ can be $\tuple{\{c_0\}, \{c_0, c_1\}}$, $\tuple{\{c_0, c_1\}, \{c_1\}}$
+or
+$\tuple{\{c_0, c_1\}, \{c_0, c_1\}}$.
+
+We are going to encode the participating set problem in \lgd.
+For this, we introduce a base type called $\Id$ for process id's.
+Let there be an injection that maps a natural number~$i$ to a constant
+$C_i\colon\Id$.
+The additional typing rules involving $\Id$ are as follows, where $2 = (\bot\supset\bot)\vee(\bot\supset\bot)$:
+\begin{center}
+ \UnaryRule{}{}
+ {$\tr \tj{c_n}{[i]\Id}$}
+ \hfill
+ \BinaryRule
+ {$\Gamma\tr \tj{M_0}[i]\Id$}
+ {$\Gamma\tr \tj{M_1}[i]\Id$}
+ {}
+ {$\Gamma \tr \tj{\compare{M_0}{M_1}}{[i]2}$}\enspace.
+\end{center}
+The additional reduction is
+\[
+ c_m == c_n \reduce 
+\begin{cases}
+ \linl{\lambda x.x}& (\text{if } m = n)\\
+ \linr{\lambda x.x}& (\text{otherwise})\enspace.
+\end{cases}
+\]
+Also, 
+${\ifte M {N_0} {N_1}}$
+is an abbreviation for
+${\lmat M x {N_0} y {N_1}}$.
+
+We represent a finite set of id's as a
+typed lambda term, whose type is $[i](\Id\supset 2)$.  Intuitively, a
+set takes an id and decides whether it is \textit{in} or \textit{out}.
+The emptyset is represented by a term $\lambda x. \linr {\bullet}$.  
+When a finite set~$S$ is represented by a term~$M$,
+the set $S \cup \{c\}$ is represented by a term
+$\lambda x.\left(\ifte{x==c}{\linl {\bullet}}{Mx}\right)$.
+With the above construction, we define abbreviations
+like $\{c_0, c_1, c_2\}$.
+
+Now, we are ready to construct a hyperterm solving the two-party
+participating set problem.
+We can  obtain a derivation of:
+\begin{center}
+ \small
+$
+ \tj{x}{[0]\Id},
+ \tj{y}{[1]\Id}
+ \tr
+ \tj{\cotuple{\gpair{\{\ltor 0 l \epsilon x, x\}, \{y\}},
+ \gpair{\{x\}, \{\rtol 1 l\epsilon y, y\}}
+ }}
+ {[0](\Id\supset 2)\wedge ([1](\Id\supset 2))}\enspace.$
+\end{center}
+
+One possible reduction sequence is as follows:
+\begin{align*}
+ & \concreteconf{[]}{[]}{\cotuple{\gpair{\{\ltor 0 l \epsilon {c_0}, {c_0}\}, \{{c_1}\}},
+ \gpair {\{{c_0}\}, \{\rtol 1 l\epsilon {c_1}, {c_1}\}}}} \\
+ \reduction &
+ \concreteconf{[\l\mapsto {c_0}]}{[]}{
+ \cotuple{
+ \gpair{\{\abort, {c_0}\}, \{{c_1}\}},
+ \gpair{\{{c_0}\}, \{\rtol 1 l\epsilon {c_1}, {c_1}\}}
+ }
+ }
+ \\
+ \reduction &
+ \concreteconf{[l\mapsto {c_0}]}{[l\mapsto {c_1}]}{\gpair{\{{c_0}\}, \{c_0, c_1\}}}\enspace.
+\end{align*}
+Moreover, the same initial configuration can reduce to
+\begin{equation*}
+ \concreteconf{[l\mapsto c_0]}{[l\mapsto c_1]}{\gpair{\{c_1,c_0\},
+ \{c_1\}}}\text{ or }
+ \concreteconf{[l\mapsto c_0]}{[l\mapsto c_1]}{\gpair{\{c_1,c_0\},
+ \{c_0, c_1\}}}\enspace. 
+\end{equation*}
+There are no other normal forms.
+These three normal forms correspond to the three answers for the
+two-party participating set problem.
+
+\section{Related Work}
+\label{related}
+Avron~\cite{avron91} formulates a
+hypersequent calculus for G\"odel--Dummett logic and proves
+cut-elimination theorem using a method
+similar to Gentzen~\cite{gentzen}.
+Also, he explains the intuition behind the communication rule as
+``the inputs through the ports in $\Gamma_2'$ are transmitted to the
+component with output of type $A_1.$  The inputs through $\Gamma_1'$ are
+treated similarly.''  He did not mention the possibility of
+any transmission failures, which we exploited
+in order to characterize waitfreedom.
+Ciabattoni, Galatos and Terui~\cite{alg} gives a class of logics
+that have
+hypersequent calculi with
+cut-elimination.
+Their cut-elimination proof is general but it does not
+obviously reveal the computational content.
+
+Baaz, Ciabattoni and Ferm\"uller~\cite{natural} propose a 
+hypersequent-style natural deduction for G\"odel--Dummett logic, but
+did not define reduction.
+Ferm\"uller~\cite{parallel} gives a game semantics for G\"odel--Dummett
+logic, which is based on Lorenzen game~\cite{curryhoward} and essentially
+proof searching bottom-to-up.
+
+Among numerous typed programming languages with parallelism,
+to our knowledge, none exhibits
+the connection of G\"odel--Dummett logic and waitfreedom.
+Abramsky~\cite{abramsky1993computational}'s calculus $\mathsf{PE}_2$
+for classical linear logic is
+deterministic
+\cite[Theorem~7.9]{abramsky1993computational} so that it is
+impossible to model
+waitfreedom using $\mathsf{PE}_2$.
+The $\pi$-calculus~\cite{milner1999communicating}, 
+Join calculus~\cite{join},
+and even asynchronous
+$\pi$-calculus \cite{hondatokoro}
+have too strong synchronization abilities to model waitfreedom because
+a process can wait for an input.
+
+Hirai~\cite{hirailpar} compares the temporal order of waitfree
+computation and the Kripke models of a modal logic similar to
+G\"odel--Dummett logic.  The current
+work witnesses the constructive content of
+his model theoretic comparison.
+
+\section{Future Work}
+\label{future}
+
+As a programming language, \lgd\, allows efficient execution because it
+requires no synchronization among processes.
+We implemented a calculus similar to \lgd\, in a programming language
+Haskell%
+\footnote{Given Haskell Platform, a command \texttt{cabal
+waitfree} installs the implementation.}.
+A possible extension is adding synchronization primitives.
+It would be interesting to compare different synchronization primitives
+and different intermediate logics, generalizing waitfreedom and
+G\"odel--Dummett logic.
+
+We are also planning to develop a waitfree protocol verification mechanism in Coq
+because it is valuable to
+remove unnecessary synchronization while keeping the program correct
+in high performance computing.
+
+An anonymous refree pointed out that the introduction of
+modalities is interesting on its own.
+We have not investigated the semantics of these modalities.
+
+In \lgd, the source of nondeterminism can be explicitly expressed as the
+store prophecy.
+If we can find a semantic counterpart $\mathsf{Sch}$ of the store
+prophecy, possibly, we
+can obtain a denotation $\mathcal{D}^\mathsf{Sch}$ of terms
+using a denotation $\mathcal{D}$ for normal forms.
+If that succeeds for classical logic, it will be interesting%
+\footnote{Kazushige Terui suggested the potential impact for classical logic.}%
+.
+
+\section{Conclusion}
+\label{conc}
+We proposed \lgd, a lambda calculus
+based on hypersequent calculus of 
+G\"odel--Dummett logic.
+We proved normalization and non-abortfullness.
+The calculus characterizes
+the typed version of waitfree computation.
+Our result 
+hints broader correspondence between
+proof theory and distributed computation.
+
+
+\paragraph{Acknowledgement.}
+This work is encouraged by feedbacks from ACAN (Algebraic and
+Coalgebraic
+Approaches to
+Non-Classical Logics Workshop) and OPLSS'11 participants,
+supported by Grant-in-Aid for JSPS Fellows 23-6978,
+and partly prepared during the author's stay in
+ILPS, the University of Amsterdam.
+\bibliography{lambda}
+
 
 
 \end{document}
