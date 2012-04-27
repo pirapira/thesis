@@ -17,6 +17,7 @@
 ########################################################################
 # The standard OMakefile.
 # You will usually need to modify this file for your project.
+.PHONY: all install clean
 LATEX = platex
 DVIPDFM = dvipdfm
 
@@ -25,12 +26,13 @@ LaTeXDocument(hirai-thesis, hirai-thesis)
 .DEFAULT: hirai-thesis.pdf
         cp ./hirai-thesis.pdf ~/Dropbox/hirai-thesis.pdf
 
+clean: 
+	rm -f hirai-thesis.dvi hirai-thesis.pdf hirai-thesis.aux hirai-thesis.bbl
 
 ########################################################################
 # Phony targets are scoped, so you probably want to declare them first.
 #
 
-# .PHONY: all install clean
 
 ########################################################################
 # Subdirectories.

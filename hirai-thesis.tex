@@ -1,8 +1,23 @@
 \documentclass[doctor]{iscs-thesis}
 
-\newcommand{\fix}[1]{\fbox{ #1 }}
+\usepackage{amsmath, stmaryrd, rotating, amssymb,
+setspace, float, amsthm}
+\usepackage{bussproofs}
 
-\bibliographystyle{splncs03}
+\newcommand{\R}[1]{{#1}^{\mathsf R}}
+\newcommand{\vdashR}{\vdash}
+\newcommand{\vdashRLB}{\vdash}
+\newcommand{\ruleskip}{\vskip 5mm}
+
+
+\newtheorem{proposition}{Proposition}
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{theorem}{Theorem}
+
+
+
+\newcommand{\fix}[1]{\fbox{ #1 }}
 
 \newcommand{\nat}{\mathbb{N}}
 \newcommand{\steps}[2]{Steps_{#1}\left({#2}\right)}
@@ -10,7 +25,7 @@
 \newcommand{\hypc}[2]{{\mathcal{C}#1}\left[{#2}\right]}
 \newcommand{\hyper}{\mathcal{H}}
 \newcommand{\hypert}{\mathcal{O}}
-\newcommand{\hmid}{\ \ \rule[-1.7px]{2px}{10px}\ \ }
+\newcommand{\hmid}{\mid\mid\mid}
 
 \newcommand{\tr}{\vartriangleright}
 \newcommand{\update}{\vartriangleleft}
@@ -25,6 +40,7 @@
 \newcommand{\reduction}{\reduce^\ast}
 \newcommand{\processes}{\mathbb{P}}
 \newcommand{\ProV}{\mathbf{ProV}}
+\newcommand{\LB}{\textbf{LB}}
 \newcommand{\p}[1]{\texttt{#1}}
 \newcommand{\tuple}[1]{\langle{#1}\rangle}
 
@@ -70,7 +86,7 @@
 \newcommand{\ifte}[3]{\mathsf{If}\, {#1}\, \mathsf{then}\, {#2}\, \mathsf{else}\, {#3}}
 
 \newcommand{\ltor}[4]{\overrightarrow{{#2}^{#1}_{#3}} \left({#4}\right)}
-\newcommand{\rtol}[4]{ \overleftarrow{{#2}^{#1}_{#3}} \left({#4}\right)}
+\newcommand{\rtol}[4]{\overleftarrow{{#2}^{#1}_{#3}} \left({#4}\right)}
 \newcommand{\abort}{\mathsf{abort\,}}
 
 \newcommand{\compare}[2]{{#1} == {#2}}
@@ -82,6 +98,12 @@
 \newcommand{\tj}   [2]{ {#1} \colon{#2} }
 
 \newcommand{\Nat}{\mathsf{Nat}}
+\newcommand{\pvar}{\mathsf{Pvar}}
+\newcommand{\wvar}{\mathsf{Wvar}}
+\newcommand{\wor}{\mathsf{{or}}}
+\newcommand{\agents}{\mathsf{A}}
+\newcommand{\fml}{\mathsf{Fml}}
+
 \newcommand{\Id}{\mathsf{Id}}
 \newcommand{\lgd}{$\lambda$-GD}
 
@@ -114,8 +136,6 @@
 %% investi
 \newcommand{\inv}[1]{{#1}^{\mathsf i}}
 
-\newcommand{\fix}[1]{\fbox{ #1 }}
-
 \newcommand{\rightlocal}{\rightsquigarrow_{\beta{\mathrm l}}}
 \newcommand{\rightcomm}{\rightsquigarrow_{\beta{\mathrm c}}}
 \newcommand{\rightdist}{\rightsquigarrow_{\beta{\mathrm d}}}
@@ -132,8 +152,21 @@
 
 \newcommand{\wwedge}{\operatorname*{\bigwedge\kern -8pt \bigwedge}}
 
+\etitle{A Computational Interpretation of G\"odel--Dummett Logic}
+
 
 \begin{document}
+
+\paragraph{Acknowledgement.}
+The work about Hyper $\lambda$ calculus is encouraged by feedbacks from
+ACAN (Algebraic and
+Coalgebraic
+Approaches to
+Non-Classical Logics Workshop) and OPLSS'11 participants,
+supported by Grant-in-Aid for JSPS Fellows 23-6978,
+and partly prepared during the author's stay in
+ILPS, the University of Amsterdam.
+
 
 Many of the contents also appear in the author's Master's Thesis \fix{cite}.
 
@@ -194,15 +227,10 @@ apply hypersequents to solve distributed computational difficulties.
 
 \section{Finite Model Property}
 
-just put NASSLLI paper here.
+\fix{just put NASSLLI paper here.}
 
 \chapter{Waitfree Protocols in Logical Form}
 
-modification of \citet{sakszaharoglou1999} \fix{cite properly}.
-
-\begin{enumerate}
- \item 
-\end{enumerate}
 
 \section{Introduction}
 
@@ -214,7 +242,7 @@ set of restrictions.  Each restriction is a disjunction of some
 inequalities posing restrictions on the shape of the frame.
 
 The target class of intermediate modal logics is a generalization of
-intuitionistic epistemic logic proposed by Hirai~\cite{lpar-hirai}.
+intuitionistic epistemic logic proposed by Hirai~\cite{hirailpar}.
 He used intuitionistic epistemic logic in order to model shared memory
 consistencies, which are criteria that guarantees levels of
 synchronization among different processes.
@@ -259,7 +287,7 @@ The class of logics that we consider is a generalization of
 intuitionistic propositional logic.
 The class of logics also contains G\"{o}del--Dummett logic~\cite{dummett59}
 and the intuitionistic epistemic logic proposed by 
-Hirai~\cite{lpar-hirai}.
+Hirai~\cite{hirailpar}.
 Let us assume that
 there are a countably infinite set~$\pvar$ of \textit{propositional variables} and a 
 finite set~$\agents$ of \textit{agents}. 
@@ -274,7 +302,7 @@ We define the set~$\fml$ of formulas by BNF:
  and $I$ is a propositional variable in~$\pvar$.
 \end{definition}
 
-For a set of formulas $\Gamma$\!, notation $K_a\Gamma$ denotes the set
+For a set of formulas $\Gamma\!$, notation $K_a\Gamma$ denotes the set
 $\{K_a\varphi\mid\varphi\in\Gamma\}$\enspace.
 
 \begin{definition}[Kripke frame]
@@ -291,7 +319,7 @@ A \textit{model} $\tuple{W,\preceq, (f_a)_{a\in \agents},\rho}$ is a tuple where
 \begin{itemize}
  \item $\tuple{W,\preceq,(f_a)_{a\in \agents}}$ is a frame, and
  \item $\rho\colon \pvar\rightarrow 2^W$ is a function that maps every
-       propositional variable to a upward-closed subset of $W$\!.
+       propositional variable to a upward-closed subset of $W\!$.
 \end{itemize} 
 \end{definition}
 
@@ -558,7 +586,7 @@ $\mathbf{Ax}(\mathsf R) = \{(K_{\mathsf m}\varphi\supset K_{\mathsf
 m}\psi)\vee(K_{\mathsf m}\psi\supset K_{\mathsf m}\varphi)\mid \varphi,
 \psi\colon\mbox{formula}\}$
  axiomatizes sequential consistency logic,
-which is proposed by Hirai~\cite{lpar-hirai} for modeling a shared memory consistency called sequential consistency.
+which is proposed by Hirai~\cite{hirailpar} for modeling a shared memory consistency called sequential consistency.
 
 
 \section{Finite Model Property}
@@ -1260,13 +1288,9 @@ class of logics considered in this paper.
 We have extended Waaler and Wallen's tableau method~\cite{waaler1999tableaux} for intuitionistic
 logic in two ways: adding functional modalities, and adding restrictions on the Kripke frames.
 This resulted in the finite model property of sequential consistency
-logic~\cite{lpar-hirai} and a class of intermediate logics with
+logic~\cite{hirailpar} and a class of intermediate logics with
 functional modalities.
 
-\bibliographystyle{splncs03}
-\bibliography{hirai}
-
-\appendix
 \section{Proof of Thm.~\ref{sound-comp-nat-kripke}}
 \label{app}
 \subsection{Soundness}
@@ -1344,7 +1368,7 @@ on the definition of $\Gamma\vdashR\varphi$.
 We prove completeness via
   adaptation of the standard saturated set construction (see Troelstra
   and van Dalen~\cite[Ch.~2]{troelstra1988constructivism}).
-  Hirai~\cite{lpar-hirai} contains a similar proof for a special case of
+  Hirai~\cite{hirailpar} contains a similar proof for a special case of
   sequential consistency logic.
 
 \begin{definition}
@@ -1367,7 +1391,7 @@ We prove completeness via
  $\Gamma\subseteq \Gamma^{\omega}$.
 \end{lemma}
 \begin{proof}
- Exactly the same as Lemma~2.10 in Hirai~\cite{lpar-hirai}.
+ Exactly the same as Lemma~2.10 in Hirai~\cite{hirailpar}.
 \end{proof}
 
 
@@ -1387,7 +1411,7 @@ We prove completeness via
  The tuple $\R M$ is a model.
 \end{lemma}
 \begin{proof}
- Exactly the same as Lemma~2.11 in Hirai~\cite{lpar-hirai}.
+ Exactly the same as Lemma~2.11 in Hirai~\cite{hirailpar}.
 \end{proof}
 
 \begin{proposition}
@@ -1397,7 +1421,7 @@ We prove completeness via
  $\varphi\in\Gamma\Leftrightarrow \R M,\Gamma\models\varphi$ holds.
 \end{proposition}
 \begin{proof}
- Exactly the same as Lemma~2.13 in Hirai~\cite{lpar-hirai}.
+ Exactly the same as Lemma~2.13 in Hirai~\cite{hirailpar}.
 \end{proof}
 
 \begin{definition}
@@ -1494,19 +1518,8 @@ We prove completeness via
  This witnesses $\not\modelsR\varphi$.
 \end{proof}
 
+\chapter{A Hyper $\lambda$-Calculus for G\"odel--Dummett Logic}
 
-\let\accentvec\vec
-\documentclass{llncs}
-\let\spvec\vec
-\let\vec\accentvec
-\usepackage{bussproofs, amsmath, stmaryrd, rotating, amssymb,
-setspace, float}
-% \usepackage[numbers]{natbib}
-
-% \doublespacing
-
-
-\begin{abstract}
 We propose a typed lambda calculus based on Avron's hypersequent
 calculus for G\"odel--Dummett logic.  This calculus turns out to model
 waitfree computation.
@@ -1515,7 +1528,6 @@ we give soundness and completeness of
 the calculus against the typed version of waitfree protocols.
 The calculus is not only proof theoretically interesting,
 but also valuable as a basis for distributed programming languages.
-\end{abstract}
 
 \section{Introduction}
 
@@ -1606,7 +1618,7 @@ A \textit{sequent}~$\Gamma\vdash\m\varphi$ is a pair of a context and a
 global formula.
 A \textit{hypersequent} is a finite sequence of sequents.
 
-The underlying logic has the derivation rules in Fig.~\ref{logic}.  If
+The underlying logic has the derivation rules in Fig.~\ref{fig:logic}.  If
 we omit all the modalities, these rules characterize
 G\"odel--Dummett logic.
 However, the modalities have at least some sense: while
@@ -1617,9 +1629,9 @@ A semantics will be given in Sect.~\ref{comparison}.
 \begin{figure}
  \small
   \begin{center}
-\textbf{External Rules}
+  \textbf{External Rules}
    \vskip 2mm
-%% communication
+%%communication
    \BinaryRule
    {$\hyper\hmid\Gamma,\Delta\vdash[i]\varphi$}
    {$\hyper\hmid\Gamma,\Delta\vdash[j]\psi$}
@@ -1761,7 +1773,7 @@ A semantics will be given in Sect.~\ref{comparison}.
  The most important com' rule is based on a rule by
  Avron~\cite{avron96}.
  }
-\label{logic}
+\label{fig:logic}
 \end{figure}
 
 \subsection{Term Assignment}
@@ -2775,10 +2787,12 @@ $
 
 One possible reduction sequence is as follows:
 \begin{align*}
- & \concreteconf{[]}{[]}{\cotuple{\gpair{\{\ltor 0 l \epsilon {c_0}, {c_0}\}, \{{c_1}\}},
+ & \conf{[]}{[]}
+ {\cotuple{\gpair{\{\ltor 0 l \epsilon {c_0}, {c_0}\}, \{{c_1}\}},
  \gpair {\{{c_0}\}, \{\rtol 1 l\epsilon {c_1}, {c_1}\}}}} \\
  \reduction &
- \concreteconf{[\l\mapsto {c_0}]}{[]}{
+ \conf{[l\mapsto {c_0}]}{[]}
+ {
  \cotuple{
  \gpair{\{\abort, {c_0}\}, \{{c_1}\}},
  \gpair{\{{c_0}\}, \{\rtol 1 l\epsilon {c_1}, {c_1}\}}
@@ -2894,15 +2908,11 @@ proof theory and distributed computation.
 
 
 \paragraph{Acknowledgement.}
-This work is encouraged by feedbacks from ACAN (Algebraic and
-Coalgebraic
-Approaches to
-Non-Classical Logics Workshop) and OPLSS'11 participants,
-supported by Grant-in-Aid for JSPS Fellows 23-6978,
-and partly prepared during the author's stay in
-ILPS, the University of Amsterdam.
-\bibliography{lambda}
 
+\appendix
 
+\bibliographystyle{plain}
+\bibliography{hirai-thesis}
+     
 
 \end{document}
