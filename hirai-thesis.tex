@@ -9,6 +9,7 @@ setspace, float, amsthm}
 \usepackage{rotating}
 
 \usepackage{bussproofs,stmaryrd, amssymb, amsmath, amsthm, showlabels}
+\newcommand{\ruleT}[1]{\LeftLabel{(T)}\UnaryInfC{${#1}$}}
 \newcommand{\powerset}[1]{{\mathcal P({#1})}}
 \newcommand{\proj}[0]{\operatorname{proj}}
 \newcommand{\len}[0]{\operatorname{len}}
@@ -31,7 +32,6 @@ setspace, float, amsthm}
 \newcommand{\veeir}[1]{\LeftLabel{($\vee$-I$_1$)}\UnaryInfC{${#1}$}}
 \newcommand{\veee}[1]{\LeftLabel{($\vee$-E)}\TrinaryInfC{${#1}$}}
 \newcommand{\weaken}[1]{\LeftLabel{(w)}\UnaryInfC{${#1}$}}
-\newcommand{\T}[1]{\LeftLabel{(T)}\UnaryInfC{${#1}$}}
 \newcommand{\be}[1]{\LeftLabel{($\bot$-E)}\UnaryInfC{${#1}$}}
 \newcommand{\ax}[1]{	     \AxiomC{}
 	     \LeftLabel{(ax)}
@@ -48,10 +48,39 @@ setspace, float, amsthm}
 
 %%% end from master thesis
 
-\newcommand{\R}[1]{{#1}^{\mathsf R}}
-\newcommand{\vdashR}{\vdash}
-\newcommand{\vdashRLB}{\vdash}
+%%% from haskell symposium submitted paper
+\usepackage{graphicx}
+\usepackage{bussproofs}
+\usepackage{amsmath,amssymb}
+%\usepackage{showlabels}
+
+\usepackage{setspace}
+
+%\doublespacing
+
+\newcommand{\Nat}{{\mathbb N}}
+\newcommand{\Real}{{\mathbb R}}
+\newcommand{\pvar}{\mathcal V_P}
+\newcommand{\agents}{\mathcal A}
+\newcommand{\wvar}{\mathcal V_W}
+
+\newcommand{\tuple}[1]{\langle{#1}\rangle}
+\newcommand{\fix}[1]{[FIX \fbox{#1}]}
+\newcommand{\fml}{\operatorname{Fml}}
+\newcommand{\id}{\operatorname{id}}
+\newcommand{\kv}{$\mathbf K \vee$}
+\newcommand{\vdashR}{\vdash_{\mathsf R}}
+
+\newcommand{\vdashRLB}{\vdashR^{\mbox{\tiny \LB}}}
+
+\newcommand{\T}{\mathbf T}
+\newcommand{\memory}{{\sf m}}
 \newcommand{\ruleskip}{\vskip 5mm}
+
+%%% 
+
+\newcommand{\R}[1]{{#1}^{\mathsf R}}
+\newcommand{\modelsR}{\models_{\mathsf R}}
 
 
 \newtheorem{notation}{Notation}
@@ -62,8 +91,6 @@ setspace, float, amsthm}
 \newtheorem{theorem}{Theorem}
 
 
-
-\newcommand{\fix}[1]{\fbox{ #1 }}
 
 \newcommand{\nat}{\mathbb{N}}
 \newcommand{\steps}[2]{Steps_{#1}\left({#2}\right)}
@@ -88,7 +115,6 @@ setspace, float, amsthm}
 \newcommand{\ProV}{\mathbf{ProV}}
 \newcommand{\LB}{\textbf{LB}}
 \newcommand{\p}[1]{\texttt{#1}}
-\newcommand{\tuple}[1]{\langle{#1}\rangle}
 
 %% terms
 \newcommand{\g} [0]{\mathsf{g}}
@@ -143,12 +169,7 @@ setspace, float, amsthm}
 \newcommand{\lval} [0]{\mathcal{V}^-}
 \newcommand{\tj}   [2]{ {#1} \colon{#2} }
 
-\newcommand{\Nat}{\mathsf{Nat}}
-\newcommand{\pvar}{\mathsf{Pvar}}
-\newcommand{\wvar}{\mathsf{Wvar}}
 \newcommand{\wor}{\mathsf{{or}}}
-\newcommand{\agents}{\mathsf{A}}
-\newcommand{\fml}{\mathsf{Fml}}
 
 \newcommand{\Id}{\mathsf{Id}}
 \newcommand{\lgd}{$\lambda$-GD}
@@ -185,12 +206,10 @@ setspace, float, amsthm}
 \newcommand{\rightlocal}{\rightsquigarrow_{\beta{\mathrm l}}}
 \newcommand{\rightcomm}{\rightsquigarrow_{\beta{\mathrm c}}}
 \newcommand{\rightdist}{\rightsquigarrow_{\beta{\mathrm d}}}
-\newcommand{\id}[1]{\mathsf{id}_{#1}}
 \newcommand{\dist}[2]{[{#1}; {#2}]}
 
 \newcommand{\interpret}[1]{\llbracket {#1} \rrbracket}
 
-\newcommand{\memory}{{\mathrm m}}
 \newcommand{\process}{p}
 \newcommand{\contex}[1]{\mathcal C[{#1}]}
 \newcommand{\sem}[1]{\llbracket{#1}\rrbracket}
@@ -394,7 +413,7 @@ waitfree主張と呼ばれる論理式たちと，
 
 \mainmatter
 
-\chapter{Introduction}
+\section{Introduction}
 
 In this thesis, we show that
 formal constructive reasoning is
@@ -417,7 +436,7 @@ At the same time,
 an extension to BHK-interpretation reveals that asynchronous
 communication is implicit in the formal definition.
 
-\section{The Reason for Another Logic}
+\subsection{The Reason for Another Logic}
 
 \paragraph{Motivation: reasoning about concurrent systems}
 We give a formal deduction system for reasoning about
@@ -480,7 +499,7 @@ makes formal reasoning unnecessarily complicated:
 we propose a formal deduction system whose semantics does not contain the notion of
 a global clock anywhere.
 
-\section{Intuitionistic Epistemic Logic}
+\subsection{Intuitionistic Epistemic Logic}
 
 The main contribution of this thesis is giving definition of
 intuitionistic epistemic logic (\iec\, for short) and investigating it.
@@ -625,7 +644,7 @@ strong completeness
 (Theorem~\ref{strong-completeness}), finite model property
  (Theorem~\ref{fmp}) and decidability (Theorem~\ref{decidability}).
 
-\section{Application to Wait-free Communication}
+\subsection{Application to Wait-free Communication}
 
 Since the semantics for \iec\, is inspired by the topological characterisation of wait-free
 computation given by Herlihy and Shavit~\cite{herlihy1999topological},
@@ -682,18 +701,7 @@ we can characterise waitfreely available communication logically (Theorem~\ref{s
 and 
 it is decidable whether a task is waitfreely solvable or not (Theorem~\ref{wf-dec}).
 
-\section{Structure of the Paper}
-The rest of the paper is mostly in the bottom-to-top order.
-In Chapter~\ref{iec}, we define and examine the syntax and semantics of
-intuitionistic epistemic logic.
- In~Chapter~\ref{sc}, we characterise sequential consistency of shared memory in \iec.
- In~Chapter~\ref{wf}, we characterise waitfree communication under sequential
- consistency.
- Chapter~\ref{related} compares our work with others.
- In Chapter~\ref{conclusion}, we summarise our achievements.
- In Chapter~\ref{discuss}, we treat issues including informal speculation and future work.
-
-\section{Preliminaries and Notations}
+\subsection{Preliminaries and Notations}
 
 We assume inductive definitions using BNF and coinductive definition.
 $\powerset X$ denotes the powerset of $X$.
@@ -701,10 +709,10 @@ For a symbol or a sequence of symbols $p$,
 $p^+$ denotes repetition of $p$ more than zero times and
 $p^*$ denotes repetition of $p$ more than or equal to zero times.
 
-\chapter{Intuitionistic Epistemic Logic}
+\section{Intuitionistic Epistemic Logic}
 \label{iec}
 
-In this chapter, we give a logic called intuitionistic epistemic logic.
+In this section, we give a logic called intuitionistic epistemic logic.
 The logic has epistemic modality $K_a$ in addition to ordinary logical connectives
 $(\wedge, \vee, \supset, \bot)$ of propositional logic.
 We explain the meaning of the new modality $K_a$ informally, by extending 
@@ -713,7 +721,7 @@ connectives, which dates back to 1930's
  (Heyting~\cite{heyting1930formalen, heyting1931intuitionistische}
  are cited by Troelstra et al.~\cite{troelstra1988constructivism}).
 
-\section{Formulas}
+\subsection{Formulas}
 
 We fix a countably infinite set of propositional symbols
 $PVar$ and a finite set of agents $A$.
@@ -735,7 +743,7 @@ The notation $(\neg \varphi)$ stands for $(\varphi\supset \bot)$.
 For a sequence of formula $\Gamma = (\varphi_i)$, the notation $K_a \Gamma$ stands for
 the sequence $(K_a \varphi_i)$.
 
-\section{Informal Explanation by BHK-Interpretation}
+\subsection{Informal Explanation by BHK-Interpretation}
 \label{bhk}
 
 Intuitionistic meanings for logical connectives
@@ -774,7 +782,7 @@ describes knowledge of agent~$a$.
 The formalisation of knowledge is different from that in classical epistemic logic, where
 knowledge is described as a limitation on the ability to distinguish possible worlds.
 
-\section{Deduction System}
+\subsection{Deduction System}
 
 \noindent The unary operators connect more strongly than the binary operators.
 We sometimes omit the parentheses when no confusion occurs. We use $=$ for syntactic
@@ -899,7 +907,7 @@ to define the meaning of the $K_a$ modality.
 While the rules (T), (ispec) and (nec) are admissible in classical epistemic logic,
 we have an additional rule ($\vee K$) which needs explanation.
 In this paragraph, we are going to give a rationale for the rule ($\vee K$) with the help
-of BHK-interpretation given in Section~\ref{bhk}.
+of BHK-interpretation given in Subsection~\ref{bhk}.
 A proof for the premise of the rule ($\vee K$) is a construction that witnesses agent~$a$'s
 acknowledgement of a proof of $\varphi\vee\psi$.
 Since a proof of $\varphi\vee\psi$ is either a proof of $\varphi$ or a proof of $psi$,
@@ -923,7 +931,7 @@ there is such a~finite sequence~$\Gamma_0$ that
 $\Gamma_0\vdash
 \varphi$ is deducible and that $\Gamma_0$ contains only formulas in $\Gamma$.
 
-\section{Semantics}
+\subsection{Semantics}
 We define validity of a~formula on a~state in a~model.
 A~model is a~Kripke model for propositional intuitionistic logic
 equipped with an additional
@@ -940,7 +948,7 @@ is
 $f_b(f_a(w))\in W$\kern -2pt.
 This model is an abstraction of Herlihy and Shavit's model of waitfree
 computation~\cite{herlihy1999topological}.
-See Section~\ref{Shavit} for details.
+See Subsection~\ref{Shavit} for details.
 
 \newcommand{\model}[1]{\tuple{W#1, \preceq#1, (f_a#1)_{a\in A}, \rho#1}}
 \begin{definition}
@@ -1037,7 +1045,7 @@ We introduce some notations which look similar to the judgements appearing in th
 deduction
 system.
 Being aware of the different definitions of $\vdash$ and $\models$, we are going to
-compare the two relations $\vdash$ and $\models$ in the next sections.
+compare the two relations $\vdash$ and $\models$ in the next subsections.
 
 \begin{notation}
 For a~model~$M$ and a~state~$w$ of the model,
@@ -1068,7 +1076,7 @@ sake of brevity.
  A set of formulas $\Gamma$ is consistent if and only if $\Gamma\not\models \bot$.
 \end{definition}
 
-\section{Soundness}
+\subsection{Soundness}
 
 Soundness is the single most important feature of a formal deductive system because the
 main reason for using a formal deductive system is it ensures correct reasoning.
@@ -1140,13 +1148,13 @@ We prove soundness with induction on the definition of $\vdash$.
 \end{proof}
 
 
-\section{Disjunction Property}
+\subsection{Disjunction Property}
 
 We modify Aczel's slash and prove disjunction property.
 We referred Troelstra and van Dalen's textbook~\cite[3.5]{troelstra1988constructivism}
 for the proof of disjunction property of intuitionistic propositional logic.
 
-The main originality of this section is the following definition of the function $f_a$.
+The main originality of this subsection is the following definition of the function $f_a$.
 Informally, for a set $\Gamma$ of formulas,  $f_a(\Gamma)$ is agent~$a$'s view of the
 set~$\Gamma$.
 \begin{definition}
@@ -1161,11 +1169,11 @@ set~$\Gamma$.
  where $(K_a)^+$ denotes a finite repetition of at least one $(K_a)$.
 \end{definition}
 
-\subsection{Properties of the Auxiliary Functions}
+\subsubsection{Properties of the Auxiliary Functions}
 
 Since the definition for the auxiliary function~$f_a$ is not very straightforward,
 it is worthwhile checking some properties of it like monotonicity and idempotency.
-Actually, in the next section, a variant of this function $f_a$ will be used for
+Actually, in the next subsection, a variant of this function $f_a$ will be used for
 constructing a model so that its monotonicity and idempotency are necessary.
 
 \begin{proposition}
@@ -1268,7 +1276,7 @@ constructing a model so that its monotonicity and idempotency are necessary.
  $f_a(\Gamma) = \fml = f_a(f_a(\Gamma))$.
 \end{proof}
 
-\subsection{The Slash Relation}
+\subsubsection{The Slash Relation}
 
 \newcommand{\aslash}[0]{\mathbin{\mid}}
 We use $f_a$ defined above to extend Aczel's slash relation to the language of \iec.
@@ -1519,7 +1527,7 @@ $f_b(\Gamma)$ is not hereditary $f$-closed
  By the form of the definition of the slash relation $\aslash$.
 \end{proof}
 
-\subsection{Disjunction Property}
+\subsubsection{Disjunction Property}
 
 The standard proof for disjunction property is extended to the logic \iec.
 
@@ -1634,9 +1642,9 @@ which is the standard for constructive logic.
  By Lemma~\ref{ssound}, either $\vdash\varphi$ or $\vdash\psi$ holds.
 \end{proof}
 
-\section{Strong Completeness and Finite Model Property}
+\subsection{Strong Completeness and Finite Model Property}
 
-In this section, we show strong completeness and finite model property.
+In this subsection, we show strong completeness and finite model property.
 Since both proofs contain model construction,
 most parts of both proofs can be written in the same lemmas.
  This utilisation of similarity of finite model property and strong completeness 
@@ -1644,7 +1652,7 @@ is originally the idea of
 Sato~\cite{sato13study}.
 
 \begin{definition}
-We modify $f_a$ introduced in the last section (Definition~\ref{gafa}) and define $f'_a$ as:
+We modify $f_a$ introduced in the last subsection (Definition~\ref{gafa}) and define $f'_a$ as:
  \[
   f'_a(\Gamma) = g_a(\Gamma) \cup K_ag_a(\Gamma).
  \]
@@ -1949,7 +1957,7 @@ We check each condition in Definition~\ref{model} to
  Now we have shown the lemma.
 \end{proof}
 
-\subsection{Strong Completeness}
+\subsubsection{Strong Completeness}
 
 \begin{theorem}[Strong completeness]
  \label{strong-completeness}
@@ -1979,7 +1987,7 @@ We check each condition in Definition~\ref{model} to
  $\Gamma$ is consistent.
 \end{proof}
 
-\subsection{Finite Model Property}
+\subsubsection{Finite Model Property}
 
 \begin{definition}
  We define the length of a formula $\varphi$ inductively on $\varphi$:
@@ -2068,7 +2076,7 @@ We check each condition in Definition~\ref{model} to
  the set of theorems of \iec\,is recursively decidable.
 \end{proof}
 
-\section{Adding Double Negation Elimination}
+\subsection{Adding Double Negation Elimination}
 A simple way to obtain a classical modal logic from \iec\,adding a deduction rule called
 double negation elimination (in short DN).
 
@@ -2110,7 +2118,7 @@ the meaning of the modality $K_a$.
  \ax{K_a\varphi}
  \weaken{K_a\varphi, \varphi\vdash K_a\varphi}
  \ax{K_a\neg\varphi}
- \T{K_a\neg\varphi\vdash\neg\varphi}
+ \ruleT{K_a\neg\varphi\vdash\neg\varphi}
  \ax{\varphi}
  \supsete{K_a\neg\varphi,\varphi\vdash\bot}
  \be{K_a\neg\varphi,\varphi\vdash K_a\varphi}
@@ -2125,7 +2133,7 @@ the meaning of the modality $K_a$.
 \end{sidewaysfigure}
 
 
-\section{Conservativity over the Fragment without Disjunction}
+\subsection{Conservativity over the Fragment without Disjunction}
 
 We give a validity preserving translation from the classical modal logic  multiple S4
 modalities to $\iec$.
@@ -2138,7 +2146,7 @@ using conservativity for this fragment simplifies the task.
 \newcommand{\iecn}{\iec_{\kern -1pt\mathbf f}}
 
 We consider a fragment $\iecn$ where $\vee$ is missing.
-The aim of this section is to prove the conservativity.
+The aim of this subsection is to prove the conservativity.
 
 We prove conservativity through completeness of $\iecn$ and soundness of $\iec$ for the same
 semantics.
@@ -2340,13 +2348,13 @@ We can prove strong completeness for $\iecn$~(Theorem~\ref{veelesscomp}) at last
  This denies $\Gamma\models\varphi$. 
 \end{proof}
 
-\section{Formula Translation from Classical S4}
+\subsection{Formula Translation from Classical S4}
 \label{ftfcs}
 
 Although simply adding the double negation eliminiation makes \iec\,degenerate into
 classical propositional logic, there is a connection between classical modal logic
 $\mathbf{S4}$ and \iec.
-In this section, we show a connection between classical multi modal $\mathbf{S4}$ logc and
+In this subsection, we show a connection between classical multi modal $\mathbf{S4}$ logc and
 \iec by extending G\"{o}del translation of classical propositional logic into
 intuitionistic propositional logic.
 
@@ -2611,9 +2619,9 @@ We use G\"{o}del translation to translate classical epistemic formula into $\iec
  \caption{($\vee$-E) case in the proof of Theorem~\ref{translation}.} 
 \end{sidewaysfigure}
 
-\section{Model Translation}
+\subsection{Model Translation}
 
-In Section~\ref{ftfcs},
+In Subsection~\ref{ftfcs},
  we considered a translation from a formula interpreted
 in $\ckv$\,into a formula interpreted in \iec.
 It is natural to ask for an adjoint model translation that translates a model of
@@ -2713,7 +2721,7 @@ Now, we define the translation of models.
 \end{itemize}
 \end{proof}
 
-Now we can show the main result of this section.
+Now we can show the main result of this subsection.
 The translation of formulas from $\ckv$ to \iec\,is
 beautifully combined with
 the translation of models from \iec\,to $\ckv$.
@@ -2828,9 +2836,9 @@ Theorem~\ref{translation} and Theorem~\ref{modeltrans}
 and then find duality among them.
 
 
-\section{Comparison with Creative Subject Argument}
+\subsection{Comparison with Creative Subject Argument}
 
-Dummet~\cite[Section 6.3]{dummett2000elements} gives an axiom candidate
+Dummet~\cite[Subsection 6.3]{dummett2000elements} gives an axiom candidate
 \[
  \forall n (\vdash_n (\varphi\vee \psi)) \supset (\vdash_n \varphi)\wedge (\vdash_n \psi)
 \]
@@ -2847,7 +2855,7 @@ Also, the creative subject argument only involves a single agent so that it can 
 regarded as a special
 case of the model of \iec.
 
-\section{Future Work}
+\subsection{Future Work}
 
 When we consider reduction of proofs, we speculate that we can find an upper bound of the
 computational complexity of the decision of whether a formula is theorem or not.
@@ -2862,7 +2870,7 @@ gave an intuitionistic proof of completeness of intuitionistic predicate logic.
 It remains open whether the classical epistemic logic can be interpreted in \iec\,
 in the spirit of Prawitz's reductive proof theory~\cite{prawitz1971ideas}.
 
-\chapter{Axiom Type for Sequential Consistency}
+\section{Axiom Type for Sequential Consistency}
 \label{sc}
 
 A schedule determines temporal partial order of events such as
@@ -2874,7 +2882,7 @@ correctly.  This is analogous to the fact
 that when a stronger condition
 is posed upon models, more formulas become valid.
 
-In this section, we characterise sequential consistency with a set of axioms.
+In this subsection, we characterise sequential consistency with a set of axioms.
 Sequential consistency defined by Lamport~\cite{lamport1979make} is essentially a condition requiring the states of memory lined up
 in a total order.
 We define a deduction system $\vdash_{SC}$ by adding an axiom type to \iec\, and
@@ -2883,7 +2891,7 @@ characterise sequential consistency.
 Henceforth, we assume $A = \{\memory\}\cup P\quad (\memory\notin P)$, where $P$ is the
 set of processes and $\memory$ represents the shared memory.
 
-\section{Definitions}
+\subsection{Definitions}
 
 Sequential consistency requires
 the memory states to line up in a total order.
@@ -2926,7 +2934,7 @@ We define $\Gamma\vdash_{SC}\varphi$ in the same way as $\Gamma\vdash\varphi$.
 to classical logic is meaningless.
 This is the merit of using intuitionistic logic rather than classical logic.
 
-\section{Soundness}
+\subsection{Soundness}
 \begin{lemma}
  \label{sc-sound}
  $\vdash_{SC} \varphi \Rightarrow M\models\varphi$ for any sequential model~$M$.
@@ -2944,7 +2952,7 @@ This is the merit of using intuitionistic logic rather than classical logic.
 \end{description}
 Other cases are the same as Lemma~\ref{soundness}.
 \end{proof}
-\section{Strong Completeness}
+\subsection{Strong Completeness}
 \begin{definition}
  A set of formulas $\Gamma$ is \textit{SC-saturated} if and only if all of these
  conditions are satisfied:
@@ -3159,10 +3167,10 @@ $
 \end{sidewaysfigure}
 
 
-\chapter{Waitfree Computation}
+\section{Waitfree Computation}
 \label{wf}
 
-\section{Problem Domain}
+\subsection{Problem Domain}
 
 A distributed program assigns a program to each process.
 When we execute a distributed program,
@@ -3181,12 +3189,12 @@ the process~$q$ cannot do anything in those first $k$~steps while the process~$p
 for the process~$q$ to do that something, thus breaking the wait-free condition.
 
 Some tasks can be solved by a waitfree distributed program while others cannot.
-In this chapter, we consider the problem of
+In this section, we consider the problem of
 distinguishing the waitfreely solvables task and the waitfreely unsolvable ones.
 Although this problem is undecidable in general~\cite{gafni1999three},
 we find an approximation problem that is decidable.
 
-\section{Logical Representation of the Problem}
+\subsection{Logical Representation of the Problem}
 
 While sequential consistency is a restriction on schedules,
 wait-freedom is a restriction on distributed programs.
@@ -3199,8 +3207,8 @@ This form of definition is similar to that of validity of logical a formula:
 a valid logical formula is a formula which is satisfied by any model.
 We consider the schedule v.s. distributed program relation is similar to
 the formula v.s. model relation.
-In Chapter~\ref{sc},
-in this chapter, we express wait-freedom as a class of formulas.
+In Section~\ref{sc},
+in this section, we express wait-freedom as a class of formulas.
 
 A distributed program specifies
 from which process, to which process, and in what order
@@ -3286,7 +3294,7 @@ where $a$ stands for a process in $P$.
  waitfree protocol description and $\psi$ is a waitfree task specification.
 \end{definition}
 
-\section{Representation of Schedules as Models}
+\subsection{Representation of Schedules as Models}
 
 \begin{definition}
  A partial schedule $(\sigma_i)_{i\in I}$ is a finite sequence of
@@ -3492,7 +3500,7 @@ Any models induced by a partial schedule is finite.  For a waitfree assertion $\
 it is decidable whether $\vdashsc \varphi$ holds or not.
 
 
-\section{Decidability of Solvability of Waitfree Task Specification}
+\subsection{Decidability of Solvability of Waitfree Task Specification}
 
 \begin{definition}
  A waitfree task specification $\psi$ is solvable if there is such a
@@ -3529,7 +3537,7 @@ the tasks involving making agreements among processes, where
 whether an output value is allowed or not depends on other processes'
 output values.  Waitfree task specifications cannot describe such tasks.
 
-\chapter{Related Work}
+\section{Related Work}
 \label{related}
 
 Van Benthem~\cite{van2009information} investigates the connection between
@@ -3583,7 +3591,7 @@ We argue such instantaneous change of the whole world it is
 not a natural description of asynchronous communication.
 
 
-\chapter{Conclusion}
+\section{Conclusion}
 \label{conclusion}
 
 We defined an intuitionistic modal logic called intuitionistic epistemic logic (\iec\,for
@@ -3627,10 +3635,10 @@ waitfree task specification,
 an assertion that a waitfree protocol meets a specification.
 
 
-\chapter{Discussion}
+\section{Discussion}
 \label{discuss}
 
-\section{Waitfree Computation}
+\subsection{Waitfree Computation}
 \label{Shavit}
 The G\"{o}del Prize in 2004 was given to Herlihy and Shavit~\cite{herlihy1999topological}
 and
@@ -3671,7 +3679,7 @@ connection with the formal theory of distributed
 knowledge.'' This work is following their remark in treating waitfree communication in a
 formal way, especially using a logic with epistemic modality.
 
-\section{Sequential Consistency or Linearizability}
+\subsection{Sequential Consistency or Linearizability}
 
 Attiya and Welch~\cite{attiya1994sequential} pointed out that 
 sequential consistency~\cite{lamport1979make} and
@@ -3693,14 +3701,14 @@ the~\textit{mixed} axiom type $(K_{\memory'} \varphi\supset K_{\memory}
 \psi)\vee (K_{\memory} \psi\supset K_{\memory'}\varphi)$ is not derivable. This shows
 the characterised property is not local.
 
-\section{Other Consistency Models}
+\subsection{Other Consistency Models}
 
 Steinke and Nutt~\cite{steinke2004unified} gave a lattice of consistency properties
 including: sequential consistency, causal consistency, processor consistency, PRAM
 consistency, cache consistency, slow consistency and local consistency.
 It is our future work modelling other consistency properties.
 
-\section{The Cost of Monotonic Reasoning: Latency versus Throughput}
+\subsection{The Cost of Monotonic Reasoning: Latency versus Throughput}
 
 The logic \iec\,is more suitable in a situation where latency is more important than throughput.
 Since we consider time as the partial order of intuitionistic Kripke models,
@@ -3719,12 +3727,12 @@ task.  We plan to investigate network protocols with \iec.
 We speculate that replacing intuitionistic modalities with
 linear modalities might enable us to deal with throughput oriented properties.
 
-\section{$\lambda$-calculus} 
+\subsection{$\lambda$-calculus} 
 
 It would be interesting to consider reduction of proofs
 because it leads to typed programming language for asynchronous communication.
 
-\section{Disjunction Distribution Over $K$~Modality}
+\subsection{Disjunction Distribution Over $K$~Modality}
 
 Since the semantics for modalities is defined by functions on Kripke frames,
 the disjunction distributes modalities in \iec.
@@ -3746,7 +3754,7 @@ intuitionistic predicate logic with constant domain.
 This fact suggests that the semantics of \iec\, is very simple when $A$ is a singleton set.
 Simplicity was our aim at the beginning.
 
-\section{Relationship with Intuitionistic Predicate Logic}
+\subsection{Relationship with Intuitionistic Predicate Logic}
 
 The translation of Suzuki~\cite{suzuki1990kripke} suggests
 \iec\,with
@@ -3904,7 +3912,6 @@ An $\mathsf R$-frame is a frame that
 satisfies all world restrictions in~$\mathsf R$.
 An $\mathsf R$-model is a model with an $\mathsf R$-frame.
 
-\newcommand{\modelsR}{\models_{\mathsf R}}
 
 \begin{definition}
  We define the \textit{validity relation} $M,w\models\varphi$ over a model
@@ -6443,6 +6450,1310 @@ the typed version of waitfree computation.
 Our result 
 hints broader correspondence between
 proof theory and distributed computation.
+
+\chapter{Finite Model Property for Some Intermediate Logics with Multiple Functional Modalities}
+
+ In a paper presented at LPAR-16, Hirai proposed an intermediate modal
+ logic for characterizing sequential consistency, one of the shared
+ memory consistencies.  He stated that the restriction on Kripke models
+ imposed by the logic corresponds to the restriction on program
+ executions on shared memory.  On the computing side, when a shared memory
+ consistency is broken, it is broken by a finite program execution.
+ Thus on the logic side, finite model property is desirable.
+ We generalize the problem and show finite
+ model property for a class of intermediate modal logics with possibly
+ multiple functional modalities.  The logics are parametrized with
+ a set of restrictions on the Kripke frames.  Each restrictions is
+ a disjunction of some inequalities containing free variables for
+ states in the frame.   We
+ develop a terminating analytic tableau for
+ each of the logics and establish finite model property.
+% intermediate modal logic, analytic tableau, finite model property
+
+\section{Introduction}
+
+We proved finite model property of a class of intermediate modal logics
+using analytic tableaux.
+The target logics have Kripke frames where modalities are interpreted as
+functions over the frame.  Moreover, each logic is parametrized by a
+set of restrictions.  Each restriction is a disjunction of some
+inequalities posing restrictions on the shape of the frame.
+
+The target class of intermediate modal logics is a generalization of
+intuitionistic epistemic logic proposed by Hirai~\cite{hirailpar}.
+He used intuitionistic epistemic logic in order to model shared memory
+consistencies, which are criteria that guarantees levels of
+synchronization among different processes.
+Both shared memory consistencies and some intermediate modal logics
+can be characterized as a restriction on
+partially-ordered structure:
+Kripke frames for intermediate modal logics
+and executions for shared memory
+consistencies~\cite{steinke2004unified}.
+He regarded Kripke frames as executions in order to translate
+an intermediate modal logic into a shared memory
+consistency.
+
+However, he did not show finite model property for those
+intermediate modal logics.  When software engineers talk about shared
+memory consistencies, they assume an execution is finite.
+When we think of Kripke models as executions, we are obliged to show
+that the model is finite.
+Especially when we want to construct a specific counterexample execution,
+we have to build a \textit{finite} Kripke model.
+
+For example,
+under \textit{sequential consistency logic}, which is intuitionistic epistemic
+logic along with the axioms of the form
+$(K_m\varphi\supset K_m\psi) \vee (K_m\psi\supset K_m\varphi)$,
+the formula $K_aK_mK_aI \supset K_bK_mK_bJ\supset K_bI$ is not a
+theorem.
+In terms of shared memory consistency, this means that even when a
+process~$a$ has put information~$I$ on the shared memory and got a
+successful acknowledgement from the shared memory and the other
+process~$b$ does the same with information~$J$, it is not always the
+case that process~$b$ has obtained information~$I$\kern -2pt.
+In other words, there are executions without this property.
+This can be confirmed via
+finite model property for sequential consistency logic.
+We show this property in a generalized form.
+
+\section{The Target Logics}
+ \label{logic}
+
+The class of logics that we consider is a generalization of
+intuitionistic propositional logic.
+The class of logics also contains G\"{o}del--Dummett logic~\cite{dummett59}
+and the intuitionistic epistemic logic proposed by 
+Hirai~\cite{hirailpar}.
+Let us assume that
+there are a countably infinite set~$\pvar$ of \textit{propositional variables} and a 
+finite set~$\agents$ of \textit{agents}. 
+
+\begin{definition}
+We define the set~$\fml$ of formulas by BNF:
+\[
+ \varphi,\psi ::= \bot\mid I\mid K_a\varphi\mid (\varphi\vee\psi)\mid
+ (\varphi\wedge\psi)\mid (\varphi\supset\psi)
+\]
+ where $a$ is an agent in $\agents$
+ and $I$ is a propositional variable in~$\pvar$.
+\end{definition}
+
+For a set of formulas $\Gamma$\!, notation $K_a\Gamma$ denotes the set
+$\{K_a\varphi\mid\varphi\in\Gamma\}$\enspace.
+
+\begin{definition}[Kripke frame]
+A \textit{frame} $\tuple{W,\preceq,(f_a)_{a\in \agents}}$ is a tuple where
+\begin{itemize}
+ \item $\tuple{W,\preceq}$ is a partially ordered set, and
+ \item each $f_a\colon W\rightarrow W$ is a monotonic function with
+       respect to~$\preceq$.
+\end{itemize} 
+\end{definition}
+
+\begin{definition}[Kripke model]
+A \textit{model} $\tuple{W,\preceq, (f_a)_{a\in \agents},\rho}$ is a tuple where
+\begin{itemize}
+ \item $\tuple{W,\preceq,(f_a)_{a\in \agents}}$ is a frame, and
+ \item $\rho\colon \pvar\rightarrow 2^W$ is a function that maps every
+       propositional variable to a upward-closed subset of $W$\!.
+\end{itemize} 
+\end{definition}
+
+We are going to prove finite model property for a class of
+intermediate modal logics.  The logics are parametrized with
+world restriction sets,  which we are going to define.
+We assume that there is a countably infinite set of \textit{world
+variables}~$\wvar$.
+We use $\mathsf v, \mathsf w,\ldots$ to denote world variables.
+We define \textit{world terms} using BNF:
+\[
+ \mathsf s::=\mathsf v\mid \mathsf s.a
+\]
+where $a$ is an agent.
+Every world term can be written as $\mathsf v.s$ where $s$ is a fintie sequence
+of agents (a postfix).
+A \textit{world inequality} is an inequation of the form $\mathsf s\le
+\mathsf t$ where $\mathsf s$ and $\mathsf t$ are world terms.
+\begin{definition}
+A world restriction is a sequence of world inequalities jointed
+ by~$\wor$ formed like
+ $\mathsf v_0.s_0\le\mathsf v_1.t_1\wor\cdots\wor
+ \mathsf v_{n-1}.s_{n-1}\le\mathsf v_n.t_n\wor \mathsf v_n.s_n\le\mathsf
+ v_0.t_0$ that satisfies either
+ \begin{itemize}
+  \item (single clause) $n=0$, or
+  \item (single postfix) $s_i = t_i = s_j = t_{j}$ for $0\le i,j\le n$.
+ \end{itemize}
+\end{definition}
+A \textit{world restriction set} is a finite set of world restrictions.
+
+A \textit{world valuation} maps a world variable into a world of a frame.
+We extend a world valuation on world variables
+$\delta\colon\mathcal V_W\rightarrow W$ to that on world terms
+inductively as $\delta(\mathsf s.a)=f_a(\delta(\mathsf s))$.
+A frame $\tuple{W,\preceq, 1,(f_a)_{a\in\agents}}$ satisfies a world inequality
+$\mathsf s\le\mathsf t$ iff $\delta(\mathsf s)\preceq \delta(\mathsf t)$
+for all $\delta\colon\mathcal V_W\rightarrow W$.
+A frame~$F$ satisfies a world restriction $\mathsf r$
+iff $M$ satisfies $\delta(\mathsf r)$ for any world valuation~$\delta$.
+For example, a frame satisfies $\mathsf v\le \mathsf w\wor\mathsf
+w\le\mathsf v$ iff the frame is totally ordered.
+An $\mathsf R$-frame is a frame that
+satisfies all world restrictions in~$\mathsf R$.
+An $\mathsf R$-model is a model with an $\mathsf R$-frame.
+
+\begin{definition}
+ We define the \textit{validity relation} $M,w\models\varphi$ over a model
+ $M = \tuple{W,\preceq,(f_a)_{a\in \agents},\rho}$, a state~$w\in W$ and a
+ formula~$\varphi$ inductively on $\varphi$.
+ In this definition, let
+ us abbreviate $M,w\models \varphi$ into $w\models \varphi$\enspace.
+\begin{itemize}
+\item $w\models \bot$ never holds.
+\item $w\models I$ iff
+$w \in
+ \rho(I)$.
+\item	    $w\models K_a \psi$ iff
+	    $f_a(w)\models \psi$.
+\item $w\models \psi_0\wedge\psi_1$ iff both
+ $w\models \psi_0$ and $w\models \psi_1$ hold.
+\item
+ $ w\models \psi_0\vee\psi_1$ iff either
+ $ w\models \psi_0$ or $w\models \psi_1$ holds.
+\item
+	   $w\models \psi_0\supset\psi_1$ iff 
+	   $w'\succeq w$ and $w'\models \psi_0$ imply
+	   $w'\models\psi_1$ for any $w'\in W$\enspace.
+\end{itemize}
+\end{definition}
+A model~$M$ \textit{satisfies} $\varphi$ iff $M,w\models\varphi$ holds for any
+state~$w$ of~$M$.
+A formula~$\varphi$ is \textit{valid under} $\mathsf R$ iff
+every $\mathsf R$-model~$M$ satisfies $M\models \varphi$.
+For this, we write $\modelsR \varphi$\enspace.
+
+\begin{lemma}[Kripke monotonicity]
+ \label{monot}
+ $M,w\models\varphi$ and $w\preceq v$ imply 
+$M,v\models\varphi$.
+\end{lemma}
+\begin{proof}
+ Induction on~$\varphi$.
+ We use monotonicity of $f_a$ here.
+\end{proof}
+
+\paragraph{The proof system.}
+Since both $\pvar$ and $\wvar$ are countably infinite,
+there is an injection that maps a world variable to a propositional
+variable.
+We fix one such injection
+$\mathsf w\mapsto I_{\mathsf w}$.
+Inductively on the construction of world terms,
+we assign a formula~$[\mathsf t]$ to every world term~$\mathsf t$:
+\begin{itemize}
+ \item for a world term $\mathsf w\in \wvar$, we define $[\mathsf w]$ to be
+       $I_{\mathsf w}$,
+ \item for a world term $\mathsf{s.a}$, we construct
+ a formula $[\mathsf{s.a}]$ by
+replacing every propositional variable~$P$ with $K_aP$ in $[\mathsf s]$.
+\end{itemize}
+Note that the sequence $\mathsf{.a.b.c}$ is translated into the same
+order $K_a K_b K_c$ although a postfix is translated into a prefix.
+We define $K_s\varphi$ as $[\mathsf w.s][\varphi/I_{\mathsf w}]$.
+Also, we define $f_b\circ f_a$ as $f_{ab}$.  This ensures $M, w\models
+K_s\varphi\Leftrightarrow M,f_s(w)\models\varphi$.
+
+This translation of world terms into formulas
+enables us to translate world inequalities and world restrictions
+into formulas:
+\begin{itemize}
+ \item $[\mathsf s\le \mathsf t] := [\mathsf s]\supset [\mathsf t]$, and
+ \item $[\mathsf{s_0}\le \mathsf{t_0}\wor \cdots\wor \mathsf{s_n}\le \mathsf{t_n}] := [\mathsf{s_0}\le \mathsf{t_0}]\vee
+       \cdots \vee [\mathsf{s_n}\le \mathsf{t_n}]$ \enspace.
+\end{itemize}
+
+We define $\mathbf{Ax}(\mathsf R)$ to be the substitution closure of
+$\{[\mathsf r]\mid \mathsf r\in \mathsf R\}$.
+The substitution closure of a set~$S$ of formulas is defined as
+$\{\varphi[\psi/P]\}$ where $\psi$ run freely on~$\fml$ and $P$ on~$\pvar$.
+
+\begin{figure}[t]
+\begin{center}
+ \def\fCenter{\vdashR}
+\AxiomC{}
+\LeftLabel{(axiom)}
+\UnaryInf$\varphi \fCenter \varphi$
+ \DisplayProof
+\hfill
+\Axiom$\Gamma\fCenter\varphi$
+\LeftLabel{(weakening)}
+ \UnaryInf$\psi,\,\Gamma\fCenter\varphi$
+\DisplayProof
+ \hfill
+\Axiom$ \varphi,\,\varphi,\,\Gamma\fCenter\psi$
+\LeftLabel{(contraction)}
+\UnaryInf$\varphi,\,\Gamma\fCenter\psi$
+\DisplayProof
+\ruleskip
+\Axiom$\Gamma, \varphi,\psi,\, \Gamma'\fCenter\theta$
+\LeftLabel{(exchange)}
+\UnaryInf$\Gamma,\,\psi,\varphi,\,\Gamma'\fCenter\theta$
+\DisplayProof
+\hfill
+\Axiom$\Gamma\fCenter\varphi$
+\Axiom$\Gamma'\fCenter\psi$
+\LeftLabel{($\wedge$-I)}
+\BinaryInf$\Gamma,\Gamma'\fCenter \varphi\wedge\psi$
+\DisplayProof
+\hfill
+\Axiom$\Gamma\fCenter \varphi$
+\LeftLabel{($\vee$-I$_0$)}
+\UnaryInf$\Gamma\fCenter \varphi\vee\psi$
+\DisplayProof
+\ruleskip
+\Axiom$\Gamma\fCenter \varphi$
+\LeftLabel{($\vee$-I$_1$)}
+\UnaryInf$\Gamma\fCenter \psi\vee\varphi$
+\DisplayProof
+\hfill
+\Axiom$\Gamma \fCenter\varphi\wedge\psi$
+\LeftLabel{($\wedge$-E$_0$)}
+\UnaryInf$\Gamma\fCenter \varphi$
+\DisplayProof
+\hfill
+\Axiom$\Gamma\fCenter \varphi\wedge\psi$
+\LeftLabel{($\wedge$-E$_1$)}
+\UnaryInf$\Gamma\fCenter \psi$
+\DisplayProof
+\ruleskip
+\Axiom$\Gamma\fCenter \psi_0\vee\psi_1$
+\Axiom$\Gamma,\,\psi_0\fCenter \varphi$
+\Axiom$\Gamma,\,\psi_1\fCenter \varphi$
+\LeftLabel{($\vee$-E)}
+\TrinaryInf$\Gamma\fCenter \varphi$
+\DisplayProof
+\vskip 5mm
+\Axiom$\varphi,\,\Gamma\fCenter\psi$
+\LeftLabel{($\supset$-I)}
+\UnaryInf$\Gamma\fCenter \varphi\supset\psi$
+\DisplayProof
+\hfill
+\Axiom$\Gamma\fCenter\psi_0\supset\psi_1$
+\Axiom$\Gamma\fCenter \psi_0$
+\LeftLabel{($\supset$-E)}
+\BinaryInf$\Gamma\fCenter \psi_1$
+\DisplayProof
+\hfill
+\Axiom$\Gamma\fCenter\bot$
+ \LeftLabel{($\bot$-E)}
+ \UnaryInf$\Gamma\fCenter\varphi$
+ \DisplayProof
+\ruleskip
+\AxiomC{}
+\LeftLabel{($\vee K$)}
+ \UnaryInf$K_a(\varphi\vee\psi)\fCenter (K_a \varphi)\vee K_a\psi$
+\DisplayProof
+ \hfill
+ \AxiomC{}
+ \LeftLabel{($\varphi\in \mathbf{Ax}(\mathsf R)$)}
+ \UnaryInf$\fCenter\varphi$
+ \DisplayProof
+ \ruleskip
+ \Axiom$\Gamma\fCenter\varphi$
+ \LeftLabel{(necessitation)}
+ \UnaryInf$K_a\Gamma\fCenter K_a\varphi$
+ \DisplayProof
+\end{center}
+\caption{Deduction rules of $\vdashR$.}
+\label{fig}
+\end{figure}
+
+\begin{definition}
+ We define the proof system $\vdashR$ by Fig.~\ref{fig}.
+\end{definition}
+
+\begin{theorem}
+ \label{sound-comp-nat-kripke}
+ $\Gamma\vdashR\varphi\Longleftrightarrow\Gamma\modelsR \varphi$\enspace.
+\end{theorem}
+We put the proof in Appendix~\ref{app} because the method is
+standard.
+
+\subsection{Examples}
+
+\paragraph{Classical logic.}
+When
+$\mathsf R = \{\mathsf v\le\mathsf w\wor\mathsf w\le\mathsf x\wor\mathsf x\le\mathsf
+v\}$,
+the corresponding axioms can be obtained as follows:
+\begin{align*}
+[ \mathsf v\le \mathsf w\wor \mathsf w\le\mathsf x\wor \mathsf x\le\mathsf v ] &=
+(I_{\mathsf v}\supset I_{\mathsf w})\vee (I_{\mathsf w}\supset
+I_{\mathsf x})\vee (I_{\mathsf x}\supset I_{\mathsf v})
+\\
+\mathbf{Ax}(\mathsf R) = \mathbf{Ax}(\{\mathsf v\le\mathsf w\wor \mathsf
+w\le \mathsf x \wor \mathsf x\le\mathsf v\}) &= \{(\varphi\supset\psi)\vee(\psi\supset\chi)\vee(\chi\supset\varphi)\}.
+\end{align*}
+$\mathbf{Ax}(\mathsf R)$ is equivalent to the excluded middle so $\mathsf R$ defines
+classical logic.
+
+\paragraph{G\"{o}del--Dummett logic.}
+When $\mathsf R=\{\mathsf v\le\mathsf w\wor\mathsf w\le\mathsf v\}$,
+the corresponding axioms can be obtained as follows:
+\begin{align*}
+[\mathsf v\le \mathsf w\wor \mathsf w\le\mathsf v] &=
+(I_{\mathsf v}\supset I_{\mathsf w})\vee (I_{\mathsf w}\supset
+I_{\mathsf v})\\
+\mathbf{Ax}(\mathsf R) = \mathbf{Ax}(\{\mathsf v\le\mathsf w\wor \mathsf
+w\le \mathsf v\}) &= \{(\varphi\supset\psi)\vee(\psi\supset\varphi)\mid
+\varphi,\psi\colon\mbox{formula}\}.
+\end{align*}
+$\mathbf{Ax}(\mathsf R)$ coincides with the axioms of
+G\"{o}del--Dummett logic~\cite{dummett59}.
+
+\paragraph{Sequential consistency logic.}
+When $\mathsf R=\{\mathsf v.\mathsf m\le\mathsf w.\mathsf m\wor \mathsf
+w.\mathsf m\le \mathsf v.\mathsf m\}$,
+the corresponding set of axioms
+$\mathbf{Ax}(\mathsf R) = \{(K_{\mathsf m}\varphi\supset K_{\mathsf
+m}\psi)\vee(K_{\mathsf m}\psi\supset K_{\mathsf m}\varphi)\mid \varphi,
+\psi\colon\mbox{formula}\}$
+ axiomatizes sequential consistency logic,
+which is proposed by Hirai~\cite{hirailpar} for modeling a shared memory consistency called sequential consistency.
+
+
+\section{Finite Model Property}
+\label{fmp-proof}
+
+This is our main result.
+\begin{theorem}
+ \label{fmp}
+ $\vdashR\varphi$ holds iff $M\models \varphi$ holds
+ for all finite {\sf R}-model $M$.
+\end{theorem}
+
+We use another deduction system\,\LB\,in order to obtain finite model
+property.
+The outline of the proof is these circular implications:
+\begin{align*}
+ \vdashRLB\varphi &\Longrightarrow \quad \models_{\mathsf R}\varphi\quad
+ &(\mbox{by Lemma~\ref{sound}})\\
+ &\Longrightarrow \quad \vdash_{\mathsf R}\varphi &(\mbox{by
+ Thm.~\ref{sound-comp-nat-kripke}}) \\
+ &\Longrightarrow\quad \modelsR\varphi &\mbox{(by Thm.~\ref{sound-comp-nat-kripke})}\\
+ &\Longrightarrow\quad M\models\varphi \mbox{ for any finite $\mathsf
+ R$-model }M\\
+ &\Longrightarrow\quad \vdashRLB\varphi & (\mbox{by
+ Lemma~\ref{R-fmp}})\enspace .
+\end{align*}
+This method extends Waaler
+and Wallen's method for intuitionistic logic~\cite{waaler1999tableaux}.
+
+\subsection{\LB}
+
+The deduction system\,\LB\,uses \textit{prefixed formulas}.  A
+prefixed formula is shaped like $\mathsf s::\varphi$ where $\mathsf s $
+is a world term and $\varphi$ is a formula.
+Informally, this prefixed formula means that the formula~$\varphi$ is
+satisfied in a state referenced by~$\mathsf s$.
+A \textit{sequent} is shaped like
+  $\Theta\parallel \Gamma\longrightarrow \Delta$ where
+$\Theta$ is a finite set of world inequalities and both
+$\Gamma$ and $\Delta$ are finite sets of prefixed formulas.
+In a sequent, world inequality
+$\mathsf s\le \mathsf s$ must be in $\Theta$
+ for any world term $\mathsf s$ occurring in $\Delta$ or $\Gamma$.
+
+A set~$\Theta$ of world inequalities
+\textit{conforms to} world restriction set~$\mathsf R$ when all of the
+following hold:
+\begin{itemize}
+ \item $\mathsf s\le \mathsf t, \mathsf t\le \mathsf u\in
+       \Theta\Longrightarrow
+       \mathsf s\le \mathsf u\in\Theta$,
+ \item If $\mathsf{s_0}\le \mathsf{t_0} \wor \mathsf{s_1}\le \mathsf
+       {t_1}\wor
+       \cdots\wor \mathsf{s_n}\le
+       \mathsf{t_n}\in \bar{\mathsf R}$ and all of
+       $\mathsf{s_0},\mathsf{s_1},\ldots,\mathsf{s_n},
+       \mathsf{t_0},\mathsf{t_1},\ldots, \mathsf{t_n}$ appear in~$\Theta$, then,
+       $\mathsf{s_i}\le \mathsf{t_i}\in\Theta$ for at least
+       one~$\mathsf{i}$, where $\bar {\mathsf R}$ is the substitution
+       closure of~$\mathsf R$,
+ \item If $\mathsf s\le\mathsf t\in\Theta$ and both $\mathsf s.a$ and
+       $\mathsf t.a$ appear in~$\Theta$, then $\mathsf s.a\le\mathsf
+       t.a\in \Theta$.
+\end{itemize}
+We define $\mathsf R(\Theta)$ to be the set of the minimal
+supersets of~$\Theta$ conforming to~$\mathsf R$.
+For example, when $\mathsf R=\{\mathsf w\le \mathsf v\wor\mathsf v\le \mathsf
+w\}$,
+$\mathsf R(\{\mathsf w\le \mathsf w, \mathsf v\le \mathsf v\}) =
+\{\{\mathsf w\le \mathsf v, \mathsf w\le \mathsf w, \mathsf v \le
+\mathsf v\}, \{\mathsf v \le
+\mathsf w, \mathsf w\le \mathsf w, \mathsf v\le \mathsf v\}\}$\enspace.
+ When $\Theta$ is finite, so is $\mathsf R(\Theta)$ because $\mathsf
+ R(\Theta)\subseteq \{\mathsf s\le\mathsf
+ t\mid\mathsf s,\mathsf t\mbox{ appears in }\Theta\}$.
+
+\begin{definition}
+ The calculus\,\LB\,for a world restriction set~$\mathsf R$ is defined in Fig.~\ref{LB}.
+ When $\mathsf w\le \mathsf w\parallel \rightarrow \mathsf
+ w::\varphi$ is provable in \LB\,for~$\mathsf R$,
+ we write $\vdashRLB\varphi$.
+\end{definition}
+
+\begin{figure}[t]
+  \def\fCenter{\longrightarrow}
+ \small
+ \begin{center}
+\ruleskip
+  \Axiom$\Theta\parallel \Gamma\fCenter \mathsf s::\varphi,\Delta$
+  \Axiom$\Theta\parallel \Gamma, \mathsf t::\psi \fCenter \Delta$
+  \RightLabel{L$\supset$}
+  \BinaryInf$\Theta, \mathsf s\le \mathsf t\parallel \Gamma, \mathsf t::\varphi\supset\psi
+  \fCenter \Delta$
+  \DisplayProof
+  \ruleskip
+  \Axiom$\Theta'\parallel \Gamma, \mathsf w::\varphi\fCenter
+  \mathsf w::\psi,\Delta\quad\mbox{ for every }\Theta'\in \mathsf
+  R(\Theta\cup\{\mathsf s\le \mathsf w\})$
+  \RightLabel{R$\supset$}
+  \UnaryInf$\Theta\parallel \Gamma \fCenter \mathsf s::\varphi\supset\psi, \Delta$
+  \DisplayProof\\ ($\mathsf w$ does not appear in the conclusion)
+  \ruleskip
+  \Axiom$\Theta'\parallel \Gamma, \mathsf s.a::\varphi\fCenter\Delta$
+  \RightLabel{L$a$}
+  \UnaryInf$\Theta\parallel \Gamma, \mathsf s::K_a\varphi\fCenter\Delta$
+  \DisplayProof
+\hfill
+  \Axiom$\Theta\parallel \Gamma\fCenter\Delta, \mathsf s.a::\varphi$
+  \RightLabel{R$a$}
+  \UnaryInf$\Theta\parallel\Gamma\fCenter\Delta, \mathsf s :: K_a\varphi$
+  \DisplayProof
+ \end{center}
+ \caption{The inference rules of \LB. Modification of Fig.~3 of
+ Waaler and Wallen~\cite{waaler1999tableaux}.
+ Since $\mathsf R(\Theta\cup\{\mathsf s\le\mathsf w\})$ is finite,
+ R$\supset$
+ is finitely branching.}
+\label{LB}
+\end{figure}
+
+\begin{figure}[ht]
+ \def\fCenter{\longrightarrow}
+ \Axiom$\Theta,\mathsf v\le\mathsf x\parallel\mathsf v::\varphi,\mathsf
+ x::\psi\fCenter\mathsf v::\psi,\mathsf x::\varphi$
+ \Axiom$\Theta,\mathsf x\le\mathsf v\parallel\mathsf v::\varphi,\mathsf
+ x::\psi\fCenter\mathsf v::\psi,\mathsf x::\varphi$
+ \RightLabel{R$\supset$}
+ \BinaryInf$\mathsf w\le\mathsf w,\mathsf w\le\mathsf v,\mathsf
+ v\le\mathsf v\parallel\mathsf v::\varphi\fCenter\mathsf v::\psi,\mathsf
+ w::\psi\supset\varphi$
+ \RightLabel{R$\supset$}
+ \UnaryInf$\mathsf w\le\mathsf w\parallel\fCenter\mathsf
+ w::\varphi\supset\psi,\mathsf w::\psi\supset\varphi$
+ \RightLabel{R$\vee$}
+ \UnaryInf$\mathsf w\le\mathsf w\parallel\fCenter\mathsf
+ w::(\varphi\supset\psi)\vee(\psi\supset\varphi)$
+ \DisplayProof
+ 
+ \caption{A derivation for
+ $\vdashRLB(\varphi\supset\psi)\vee(\psi\supset\varphi)$ where
+ $\mathsf R=\{\mathsf v\le\mathsf w,\mathsf w\le\mathsf v\}$.
+ In the figure, $\Theta$ stands for $\{\mathsf w\le\mathsf w,\mathsf
+ w\le \mathsf v, \mathsf v\le\mathsf v, \mathsf w\le \mathsf x, \mathsf
+ x \le \mathsf x\}$. }
+ \label{gdlb}
+\end{figure}
+
+\section{Soundness of LB}
+
+For a world valuation $\delta:\mathcal V_W\longrightarrow M$,
+we let $\delta(\Theta)$ denote a condition on
+model~$M$ stating $\delta(\mathsf s)\preceq \delta(\mathsf t)$ for any
+$\mathsf s\le \mathsf t\in\Theta$.
+Likewise, $\delta(\mathsf s::\varphi)$ is a condition stating
+$M,\delta(\mathsf s)\models\varphi$.  For a sequence~$\Gamma =
+(t_i::\varphi_i)_{i\in I}$ of
+prefixed formulas, $\delta(\Gamma)$ denotes the conjunction
+of $\delta(t_i::\varphi_i)$ taken over $i\in I$.
+   We say a pair
+$\tuple{M,\delta}$ \textit{satisfies}
+$\Theta\parallel\Gamma\longrightarrow\Delta$ when $\delta(\Theta)$ and
+$\delta(\Gamma)$ implies $\delta(\varphi)$ for some $\varphi$
+in~$\Delta$.
+
+\begin{proposition}
+ \label{exp-sound}
+ If an $\mathsf R$-model satisfies $\delta(\Theta)$,
+ the model satisfies $\delta(\Theta')$ for 
+ at least one element~$\Theta'$ of $\mathsf R(\Theta)$.
+\end{proposition}
+\begin{proof}
+ Let $\Theta_M$ be the set of world inequalities
+ $\{\mathsf s\le \mathsf t\mid M\mbox{
+ satisfies }\delta(\mathsf s\le \mathsf t)\}$.
+ The set $\Theta_M$ is clearly conforms to $\mathsf R$.
+ By definition of $\mathsf R(\Theta)$, there exists at least one $\Theta'\in
+ \mathsf R(\Theta)$ with $\Theta'\subseteq \Theta_M$.
+ Since $M$ satisfies $\delta(\Theta_M)$, it satisfies $\delta(\Theta')$.
+\end{proof}
+
+\begin{lemma}
+ \label{sound}
+If a sequent $\Theta\parallel \Gamma\longrightarrow \Delta$ is
+provable,
+then, for any $\mathsf R$-model $M$ and world valuation $\delta$,
+the pair~$\tuple{M,\delta}$ satisfies the sequent $\Theta\parallel
+ \Gamma\rightarrow\Delta$.
+\end{lemma}
+\begin{proof}
+Induction on derivation trees.
+ The case of R$\supset$ is tricky.
+ Assume an $\mathsf R$-model~$M$ satisfies all elements of
+ $\delta(\Theta)$ and $\delta(\Gamma)$ but no elements of $\delta(\Delta)$.
+ In order to prove $M,\delta(\mathsf s)\models\varphi\supset\psi$, we
+ arbitrarily take $w\in M$ with $ w\succeq \delta(\mathsf s)$ and assume $M,
+  w\models\varphi$.
+ Showing $M,w\models\psi$ is enough.
+ Let $\mathsf w$ be a world variable which does not occur in~$\Theta$.
+ We extend $\delta$ with $\mathsf{w}\mapsto w$ and call the extension~$\epsilon$.
+ Since $M$ is an~$\mathsf R$-model,
+ it satisfies $\delta(\Theta')$ for some $\Theta'\in \mathsf R(\Theta\cup
+ \{\mathsf s\le \mathsf w\})$ by Prop.~\ref{exp-sound}.
+ By induction hypothesis, $M$ satisfies some elements of $\epsilon(\Delta)$ or
+ $\epsilon(\mathsf w::\psi)$. Since $\Delta$ does not contain~$\mathsf w$,
+ $\epsilon(\Delta)$ is equivalent to $\delta(\Delta)$, of which no elements are
+ satisfied by~$M$.
+ Thus, $M$ satisfies $\epsilon(\mathsf w::\psi)$.
+ Since $\epsilon(\mathsf w) = w$, this means $M,  w\models\psi$.
+\end{proof}
+
+\section{Finite Model Property of LB}
+\label{fmplb}
+
+\begin{figure}[t]
+ \small
+\begin{center}
+ \def\fCenter{\longrightarrow}
+ \Axiom$\Theta\parallel\Gamma\fCenter\mathsf t::\varphi,\quad \Delta$
+ \RightLabel{R$\wedge_0$}
+ \UnaryInf$\Theta\parallel\Gamma\fCenter \mathsf
+ t::\varphi\wedge \psi,\quad \Delta$
+ \DisplayProof
+ \hfill
+ \Axiom$\Theta\parallel\Gamma\fCenter \mathsf t:: \psi,\quad \Delta$
+ \RightLabel{R$\wedge_1$}
+ \UnaryInf$\Theta\parallel\Gamma\fCenter \mathsf
+ t::\varphi\wedge\psi,\quad\Delta$
+ \DisplayProof
+ \ruleskip
+ \Axiom$\Theta\parallel\Gamma,\quad \mathsf t::\varphi\fCenter\Delta$
+ \RightLabel{L$\vee_0$}
+ \UnaryInf$\Theta\parallel\Gamma,\quad \mathsf
+ t::\varphi\vee\psi\fCenter \Delta$
+ \DisplayProof
+ \hfill
+ \Axiom$\Theta\parallel\Gamma,\quad \mathsf t::\psi\fCenter\Delta$
+ \RightLabel{L$\vee_1$}
+ \UnaryInf$\Theta\parallel\Gamma,\quad \mathsf
+ t::\varphi\vee\psi\fCenter\Delta$
+ \DisplayProof
+ \ruleskip
+ \Axiom$\Theta\parallel\Gamma\fCenter\mathsf
+ t::\varphi, \quad\mathsf t::\psi,\quad \Delta$
+ \RightLabel{R$\vee$}
+ \UnaryInf$\Theta\parallel\Gamma\fCenter\mathsf
+ t::\varphi\vee\psi,\quad \Delta$
+ \DisplayProof
+ \hfill
+ \Axiom$\mathsf s\ge \mathsf t,
+ \Theta \parallel \Gamma, \quad\mathsf t:: \varphi\supset\psi
+ \fCenter\mathsf s:: \varphi, \quad \Delta$
+ \RightLabel{LC$\supset_0$}
+ \UnaryInf$\mathsf s\ge \mathsf t,\Theta \parallel \Gamma, \quad
+ \mathsf t::\varphi\supset\psi\fCenter \Delta$
+ \DisplayProof
+ \ruleskip
+ \Axiom$\Theta\parallel\Gamma,\quad \mathsf
+ t::\varphi,\quad \mathsf t::\psi\fCenter\Delta$
+ \RightLabel{L$\wedge$}
+ \UnaryInf$\Theta\parallel\Gamma,\quad \mathsf t::
+ \varphi\wedge \psi\fCenter \Delta$
+ \DisplayProof
+ \hfill
+ \Axiom$\Theta\parallel\Gamma,\quad\mathsf t::\psi\fCenter \Delta$
+ \RightLabel{L$\supset_1$}
+ \UnaryInf$\Theta\parallel\Gamma,\quad\mathsf
+ t::\varphi\supset\psi\fCenter\Delta$
+ \DisplayProof
+ \ruleskip
+ \Axiom$\Theta'\parallel\Gamma,\quad \mathsf w::\varphi\fCenter
+ \mathsf w::\psi,\quad \Delta$
+ \RightLabel{R$\supset$}
+ \UnaryInf$\Theta\parallel\Gamma\fCenter \mathsf t::\varphi\supset\psi,\quad
+ \Delta$
+ \DisplayProof\\
+($\Theta'\in \mathsf R(\Theta\cup \{\mathsf t\le
+ \mathsf w\})$ and $\mathsf w$ does not appear in the conclusion)
+ \ruleskip
+ \Axiom$\Theta'\parallel \Gamma,\quad \mathsf s.a::\varphi\fCenter\Delta$
+ \RightLabel{L$a$}
+ \UnaryInf$\Theta\parallel \Gamma,\quad \mathsf s::K_a\varphi\fCenter
+ \Delta$
+ \DisplayProof
+ \hfill
+ \Axiom$\Theta'\parallel \Gamma\fCenter\Delta,\quad \mathsf s.a::\varphi$
+ \RightLabel{R$a$}
+ \UnaryInf$\Theta\parallel \Gamma\fCenter\Delta,\quad \mathsf s::K_a \varphi$
+ \DisplayProof
+\\
+(in L$a$ and R$a$, $\Theta'\in \mathsf R(\Theta\cup \{\mathsf s.a\le\mathsf s.a\})$)
+ \ruleskip
+ \Axiom$\Theta\parallel\Gamma
+ \fCenter \Delta$
+ \RightLabel{LT}
+ \UnaryInf$\Theta\parallel\Gamma,\quad
+ \mathsf t::\varphi
+\fCenter\Delta$
+ \DisplayProof
+ \caption{The rules for refutation ladders. A modified version of Fig.~6 of Waaler and
+ Wallen~\cite{waaler1999tableaux} with additional world inequality sidenotes and
+ prefixes.  The top of a refutation ladder can be any sequent.
+ No rule is branching.  Comma separated notation $\Gamma,\quad \mathsf
+ s::\varphi$ denotes the disjoint union $\Gamma\uplus \{\mathsf
+ s::\varphi\}$ in this figure.
+}
+ \label{refladder} 
+\end{center}
+\end{figure}
+
+We are going to use yet another derivation called the refutation
+ladder in order to construct a finite model from an unprovable sequent.
+Refutation ladders have rules in Fig.~\ref{refladder}.
+If the assumption of a rule is unprovable, so is the conclusion of the rule.
+A refutation ladder is not branching.
+
+ Not all ladders made of the rules in Fig.~\ref{refladder} are
+ refutation ladders.
+ There are some restrictions on the ladders.
+ In order to describe the restrictions,
+ we use a relation~$\prec$ between sequent occurrences in a ladder.
+Relation $T\prec S$ holds iff
+ $S$ is above $T$, and
+ at least one interleaving \textrm{R$\supset$} rule between $S$ and $T$
+ has its left formula not introduced by thinning~(LT).
+\begin{definition}
+ A \textit{refutation ladder} is a ladder made of the rules in
+ Fig.~\ref{refladder} that satisfies
+\begin{description}
+ \item[ (R1)] Thinning \textrm{(LT)} occurs only immediately above \textrm{R$\supset$} for the
+	    left side formula of the \textrm{R$\supset$} occurrence.
+ \item[ (R2)] 
+	    On the other hand, if an \textrm{R$\supset$} occurrence
+	    for a formula
+	    $\mathsf s::\varphi\supset\psi$ has $\mathsf t\le \mathsf s$
+	    in the sidenote of the assumption and
+	    $\mathsf t::\varphi$ in the left hand side of the assumption,
+	    then, 
+	    there is a thinning just above the R$\supset$ introducing
+	    $\mathsf w::\varphi$ where $\mathsf w$ is the world variable
+	    introduced by the \textrm{R$\supset$} occurrence.
+ \item[ (R3)]
+	    If there are two \textrm{LC$\supset_0$} occurrences one above the
+	    other.
+	    Let $S$ be former occurrence's conclusion and $T$ be latter occurrence's
+	    conclusion.
+	    Then, $T\prec S$ holds.
+ \item[ (R4)]
+	    The conclusion of \textrm{R$\supset$} must not be a
+	    possible conclusion of any other rule.
+	    In other words, when building up a refutation ladder from
+	    bottom to up, avoid using R$\supset$ whenever some other
+	    rules are applicable.
+ \item[ (R5)]
+	    For every sequent $\Theta\parallel \Gamma\rightarrow\Delta$
+	    in the ladder, $\Theta$ conforms to~$\mathsf R$.
+\end{description} 
+\end{definition}
+A \textit{refutation ladder of a sequent}~$S$ is a refutation ladder
+ with
+ $S$ at the bottom.
+The conditions \textbf{(R2)} and \textbf{(R3)} ensure that every
+ refutation ladder is finite~(Prop.~\ref{refladder-finite}).
+ Some other conditions \textbf{(R1)} and \textbf{(R4)} ensure
+ that thinning is not applied to non-atomic formulas.
+
+
+\begin{proposition}
+\label{refladder-finite}
+ Every refutation ladder is finite.
+\end{proposition}
+\begin{proof}
+ If a refutation ladder is infinite,
+ it must contain infinitely many $\supset$LC$_0$ occurrences.
+ By \textbf{(R3)}, there must also be infinitely many R$\supset$ rule
+ occurrences.
+ Moreover, by the definition of~$\prec$,
+ those occurrences have left-side formula not
+ introduced by thinning.
+ The number of such formulas is not more than the number of subformulas
+ in the endsequent because thinning occurs whenever it is possible as
+ \textbf{(R2)} states.
+\end{proof}
+
+\begin{definition}
+A \textit{complete refutation ladder} of~$S$ is a refutation ladder which is
+\begin{itemize}
+ \item maximal: not a proper sub-ladder of any
+       refutation ladder of~$S$
+ \item open:
+       for any sequent~$\Theta\parallel \Gamma\longrightarrow \Delta$,
+      the prefixed formula~$\mathsf t::\bot$ is not contained in~$\Gamma$.       
+       Either
+       $\mathsf t::\varphi\notin \Gamma$ or
+       $\mathsf s::\varphi\notin\Delta$ or $\mathsf t\le \mathsf s\notin
+       \Theta$.
+\end{itemize} 
+\end{definition}
+
+We are going to show that
+if a sequent $S$ is not provable in\,\LB, then there is a complete
+refutation ladder of $S$, and then there is a finite counter model.
+
+\subsection{Existence of a Complete Refutation Ladder}
+
+\begin{lemma}\label{chooser}
+ If a sequent~$S$ does not form a maximal refutation ladder by itself and
+ every applicable rule to $S$ yields a provable
+ sequent in \LB, then $S$ is provable in \LB.
+\end{lemma}
+\begin{proof}
+ At least one rule is applicable to $S$ because the sequent does
+ not form a maximal refutation ladder by itself. We split cases by the
+ applicable rule.
+ \begin{description}
+  \item[ (Case L$\wedge$ R$\vee$ L$a$ R$a$)]
+	    If the above is provable, then so is the below.
+  \item[ (Case R$\wedge_0$)]
+	     R$\wedge_1$ is also applicable.
+  \item[ (Case R$\wedge_1$)]
+	     In this case, we use the fact that R$\wedge_0$ is also
+	     applicable.
+	     Since $\Theta\parallel\Gamma\longrightarrow \mathsf t::\varphi, \Delta$ and
+	     $\Theta\parallel\Gamma\longrightarrow \mathsf t::\psi,
+	     \Delta$ are both provable in \LB,
+	     $\Theta\parallel\Gamma\longrightarrow \mathsf
+	     t::\varphi\wedge\psi$ is also provable in \LB.
+  \item[ (Case L$\vee_0$ L$\vee_1$)]
+	     Similar to the R$\wedge$ cases.
+  \item[ (Case L$\supset_1$ Split)] Immediate.
+  \item[ (Case LC$\supset_0$)]
+	     L$\supset_1$ is also applicable.
+  \item[ (Case R$\supset$)]
+	     The rule is also applicable with any $\Theta'\in
+	     \mathsf R(\Theta\cup\{\mathsf s\le \mathsf w\})$. Since every one of these is
+	     provable in \LB,
+	     the endsequent is also provable in \LB.
+ \end{description}
+\end{proof}
+
+For a refutation ladder~$L$, we define a sequent $\cup L$ as
+the sequent $\left(\bigcup_i \Theta_i\right)\parallel \left(\bigcup_i \Gamma_i\right)\longrightarrow
+\left(\bigcup_i\Delta_i\right)$ where $i$ runs over
+each sequent $\Theta_i\parallel \Gamma_i\longrightarrow\Delta_i$
+occurring in~$L$.
+We say $L$ is \textit{unprovable} when $\cup L$ is.
+
+\begin{lemma}
+ \label{comprefl}
+ An unprovable sequent has a complete refutation ladder.
+\end{lemma}
+\begin{proof}
+Assume the sequent
+$S = \Theta\parallel \Gamma\longrightarrow\Delta$
+is unprovable.
+Let $L$ be the set of refutation ladders of~$S$ and
+let $\bar L$ be the set of maximal such refutation ladders.
+We collect unprovable refutation ladders in~$L$ and call them~$L_u$.
+Again, $\bar L_u$ denotes the maximal elements of~$L_u$.
+The ladder consisting of only~$S$ is an element of~$L_u$
+so that $L_u$ is not empty.
+ Moreover, every refutation ladder in~$L_u$ is finite.
+These combined implies existence of maximal elements in $L_u$ so that $\bar L_u$ is not empty.
+By the contraposition of Lemma~\ref{chooser}, the set $\bar L_u$ is included in $\bar L$.
+Thus, there is an unprovable ladder~$l$ in~$\bar L$.
+Since $l$ is unprovable, $l$ is open.
+We can conclude that $l$ is a complete refutation ladder. 
+\end{proof}
+
+
+\subsection{Constructing a Model from a Complete Refutation Ladder}
+
+\begin{definition}[Hintikka Sequent]
+ A sequent $\Theta\parallel \Gamma\longrightarrow\Delta$ is $\mathsf R$-Hintikka
+ iff
+ \begin{enumerate}
+  \item $\Theta$ conforms to $\mathsf R$.
+  \item $\Gamma$ does not contain $\mathsf s::\bot$ for any world
+	term~$\mathsf s$.
+  \item If $\mathsf s::P\in \Gamma$ and $\mathsf t::P\in\Delta$ for
+	some~$P\in\pvar$\!, then
+	$\Theta$ does not contain~$\mathsf s\le \mathsf t$.
+  \item $\mathsf s::\varphi\wedge\psi\in\Gamma\Longrightarrow
+	\mathsf s::\varphi,\mathsf s::\psi\in\Gamma$
+  \item $\mathsf s::\varphi\vee\psi\in\Gamma
+	\Longrightarrow \mathsf s::\varphi\in\Gamma$ or
+	$\mathsf s::\psi\in\Gamma$.
+  \item If $\mathsf t::\varphi\supset\psi
+	\in\Gamma$ and $\mathsf s\ge t\in \Theta$,
+	then 
+	either
+	$\mathsf t::\varphi\in\Gamma$ or
+	$\mathsf s::\psi\in\Delta$ hold.
+  \item $\mathsf s::K_a\varphi\in\Gamma
+	\Longrightarrow \mathsf s.a::\varphi\in\Gamma$
+  \item $\mathsf s::\varphi\wedge\psi
+	\in\Delta\Longrightarrow \mathsf
+	s::\varphi\in\Delta$
+	or $\mathsf s::\psi\in\Delta$.
+  \item $\mathsf s::\varphi\vee\psi\in\Delta
+	\Longrightarrow \mathsf s::\varphi, \mathsf s::\psi\in
+	\Delta$.
+  \item If $\mathsf s::\varphi\supset\psi\in\Delta\Longrightarrow$, then
+	there exists a world term $\mathsf t$ with $\mathsf
+	s\le \mathsf t\in\Theta$ such that
+	$\mathsf t::\varphi\in\Gamma$, $\mathsf t::\psi\in\Delta$.
+  \item $\mathsf s:: K_a\varphi\in\Delta\Longrightarrow
+	\mathsf s.a::\varphi\in\Delta$.
+ \end{enumerate}
+\end{definition}
+
+\begin{proposition}
+ \label{Hsat}
+ A $\mathsf R$-Hintikka sequent is satisfiable in a finite $\mathsf R$-model.
+\end{proposition}
+\begin{proof}
+ \newcommand{\W}{WT(\Theta)}
+ Let $\Theta\parallel \Gamma\longrightarrow\Delta$ be a Hintikka sequent.
+ To construct a satisfying model, we use $\W$,
+ which is the set of world
+ terms occurring in~$\Theta$.
+ We define a frame $\tuple{\W, \preceq, (f_a)_{a\in\agents}}$ with
+ $\preceq$ being the relation $\{\tuple{\mathsf s,\mathsf t}\in
+ \W\times \W\mid
+ \mathsf s\le
+ \mathsf t\in\Theta\}$ and
+ $f_a(\mathsf s) = \mathsf s.a$ for $\mathsf s\in\W$\enspace.
+ Since $\Theta$ conforms to $\mathsf R$, 
+ the tuple is actually an $\mathsf R$-frame.
+ We define $\rho$ to be $\rho(P) = 
+ \{\mathsf s\in \W\mid
+ \mbox{there exists a world term } \mathsf t \in \W \mbox{ such that }
+ \mathsf t\le
+ \mathsf s \in \Theta\mbox{
+ and }\mathsf t::P\in \Gamma\}$.
+ The tuple $\tuple{\W,\preceq,(f_a)_{a\in \agents},\rho}$ forms
+ an $\mathsf R$-model because $\Theta$ conforms to $\mathsf R$.
+ Moreover, by induction on $\varphi$, we can show both 
+ $\mathsf s::\varphi\in\Gamma\Longrightarrow M,\mathsf s\models\varphi$
+ and 
+ $\mathsf s::\varphi\in\Delta\Longrightarrow M,\mathsf s\not\models\varphi$.
+ Thus, the sequent $\Theta\parallel \Gamma\longrightarrow\Delta$ is satisfiable.
+\end{proof}
+
+\begin{proposition}
+\label{completehintikka}
+ For a complete refutation ladder~$L$,
+$\cup L$ is a Hintikka sequent.
+\end{proposition}
+\begin{proof}
+ By openness, maximality and rules \textbf{(R3)}, \textbf{(R4)}.
+\end{proof}
+
+\begin{lemma}
+\label{R-fmp}
+ If $\vdashR\varphi$  does not hold, there exists a finite $\mathsf
+ R$-model~$M$ with $M\not\models\varphi$.
+\end{lemma}
+\begin{proof}
+ Assume $\not\vdashR\varphi$.
+ By soundness of \LB,
+ the sequent $\mathsf w\le\mathsf w\parallel \longrightarrow\varphi$ is not
+ provable in \LB.
+ By Lemma~\ref{comprefl},
+ there is a complete refutation ladder~$L$ for the sequent.
+ By Prop.~\ref{completehintikka},
+ $\cup L = L$  forms a Hintikka
+ sequent.
+ Moreover, 
+ the union $\bigcup_i\Theta_i$ conforms to~$\mathsf
+ R$.
+ Thus, when we construct a model from $\cup L$ with the method described in
+ the proof of Prop.~\ref{Hsat},
+ we obtain a finite $\mathsf R$-model.
+ Moreover, the state $\mathsf w$ of the model does not satisfy~$\varphi$.
+\end{proof}
+Now we can carry out the proof strategy for Thm.~\ref{fmp} described
+at the beginning of Sect.~\ref{fmp-proof}.
+
+\section{Application to Sequential Consistency Logic}
+
+Sequential consistency logic can be defined with the following world
+restrictions:
+\begin{itemize}
+ \item $\mathsf v.a\le\mathsf v.a.a$ for all $a\in\agents$,
+ \item $\mathsf v.a\le\mathsf v$ for all $a\in\agents$,
+ \item $\mathsf v.m\le\mathsf w.m$ where $m\in\agents$ is a special
+       agent called shared memory.
+\end{itemize}
+
+Let us consider a formula $K_a K_m K_a P\supset K_a K_m K_b Q\supset
+(K_a Q\wedge K_b P)$.
+Informally, this formula means that whenever processes $a$ and $b$ have
+made a round-trip communication with the shared memory, each process is
+guaranteed to have received the other process's initial knowledge (with
+an assumption a message carries all of sender's knowledge).
+We can build a countermodel for this formula by the method described in
+this paper, by building
+a complete refutation ladder for the formula~(Fig.~\ref{compex})
+\begin{figure}
+ \tiny
+ \def\fCenter{\longrightarrow}
+ \begin{center}
+  \Axiom$cl(\Theta_2, \mathsf x.b.m.b\le\mathsf x.b.m, \mathsf
+  x.a\le\mathsf x)\parallel\mathsf v.a.m.a::P, \mathsf
+  x.b.m.b::Q\fCenter \mathsf x.a::Q$
+  \RightLabel{R$a$}
+  \UnaryInf$cl(\Theta_2,\mathsf x.b.m.b\le\mathsf x.b.m)\parallel\mathsf
+  v.a.m.a::P, \mathsf x.b.m.b::Q\fCenter\mathsf x::K_a Q$
+  \RightLabel{R$\wedge_0$}
+  \UnaryInf$cl(\Theta_2, \mathsf x.b.m.b\le\mathsf
+  x.b.m)\parallel\mathsf v.a.m.a::P, \mathsf x.b.m.b::Q\fCenter\mathsf
+  x::K_a Q\wedge K_a P$
+  \RightLabel{L$b$}
+  \UnaryInf$\Theta_2=cl(\Theta_1,\mathsf x.b\le\mathsf x,\mathsf
+  x.b.m\le\mathsf x.b,\mathsf v.a.m\le\mathsf x.b.m)\parallel\mathsf
+  v.a.m.a::P, \mathsf x.b.m::K_b Q\fCenter \mathsf x::K_a Q\wedge K_b P$
+  \RightLabel{L$b$}
+  \UnaryInf$cl(\Theta_1, \mathsf x.b\le\mathsf x)\parallel
+  \mathsf v.a.m.a::P, \mathsf x.b::K_m K_b Q\fCenter x::K_a Q\wedge K_b
+  P$
+  \RightLabel{L$b$}
+  \UnaryInf$\Theta_1=cl(\Theta_0,\mathsf v\le\mathsf x, \mathsf
+  v.a.m.a\le \mathsf v.a.m)\parallel\mathsf v.a.m.a::P, \mathsf x::K_b
+  K_m K_b Q\fCenter x::K_a Q\wedge K_b P$
+  \RightLabel{R$\supset$}
+  \UnaryInf$cl(\Theta_0,\mathsf v.a.m.a\le\mathsf v.a.m)\parallel
+  \mathsf v.a.m.a::P\fCenter \mathsf v:: K_b K_m K_b Q\supset (K_a
+  Q\wedge K_b P)$
+  \RightLabel{L$a$}
+  \UnaryInf$\Theta_0=cl(\mathsf w\le\mathsf v, \mathsf v.a\le\mathsf v,
+  \mathsf v.a.m\le\mathsf v.a)\parallel\mathsf v.a.m::K_a P\fCenter
+  \mathsf v::K_b K_m K_b Q\supset (K_a Q\wedge K_b P)$
+  \RightLabel{L$a$}
+  \UnaryInf$cl(\mathsf w\le\mathsf v, \mathsf v.a\le\mathsf
+  v)\parallel\mathsf v.a::K_m K_a P\fCenter \mathsf v::K_b K_m K_b
+  Q\supset (K_a Q\wedge K_b P)$
+  \RightLabel{L$a$}
+  \UnaryInf$cl(\mathsf w\le\mathsf v)\parallel \mathsf v:: K_a K_m K_a P
+  \fCenter \mathsf v:: K_b K_m K_b Q\supset (K_a Q\wedge K_b P)$
+  \RightLabel{R$\supset$}
+  \UnaryInf$\mathsf w\le \mathsf w\parallel\fCenter \mathsf w:: K_a K_m K_a
+  P\supset K_b K_m K_b Q\supset (K_a Q\wedge K_b P)$
+  \DisplayProof
+ \end{center}
+ \caption{A complete refutation ladder for the considered formula.
+ $cl(\Theta)$ denotes the reflexive transitive closure of~$\Theta$.}
+ \label{compex}
+\end{figure}
+
+
+\section{Related Work}
+
+\paragraph{Work on intuitionistic modal logics.}
+
+Amati and Pirri~\cite{amati94} presented a uniform tableau method for a number of
+intuitionistic modal logics whose language contains two modalities
+$\square$ and $\lozenge$.
+However, they did not consider the functional modality where the two
+modalities coincide.  Nor did they consider the multimodal case.
+Their uniform tableau method uses boxes around some sequents of the
+tableaux.  This boxing method does not trivially encode our tableaux since our
+tableau method utilizes sequents whose different formulas are prefixed
+with different world terms.
+
+Baldoni, Giordano and Martelli~\cite{baldoni98} presented a tableau
+calculus for a class of multimodal logics called grammar logics.
+Their method is similar to our method in that worlds are denoted by
+variables and the relationship between the worlds are kept as a
+sidenote.
+However, their method does not parametrize logics with conditions involving
+disjunction while our method parametrizes logics with conditions
+involving $\wor$.
+
+\paragraph{Work on intermediate logics.}
+
+Sonobe~\cite{sonobe} gave a Gentzen-style formulation of some
+intermediate logics, the simplest of which is G\"{o}del--Dummett logic.
+He wrote his result ``was first obtained by way of tableau method.''
+Thus both Sonobe's and our method contain a tableau formalization for
+G\"{o}del--Dummett logic.  However, there are some differences even when
+we compare Sonobe's formalization of G\"odel--Dummett logic and our
+specialized method for G\"odel--Dummett logic.
+In our formalization\,\LB, branches are for different shapes of Kripke
+frames.  In Sonobe's formalization, branches are made for different
+states in a Kripke model.
+
+Avron~\cite{avron2000} presented a tableau system of G\"odel--Dummett logic
+based on a hypersequent calculus.
+As he points out, the system has an advantage of not using a rule with
+arbitrary number of
+premises.  Our tableau system does not have this advantage.
+Larchey-Wendling~\cite{countermodelsearch} proposes an efficient parallel
+countermodel searching method for G\"odel--Dummett logic.
+It would be interesting to try to extend their methods to the
+class of logics considered in this paper.
+
+\section{Conclusion}
+
+We have extended Waaler and Wallen's tableau method~\cite{waaler1999tableaux} for intuitionistic
+logic in two ways: adding functional modalities, and adding restrictions on the Kripke frames.
+This resulted in the finite model property of sequential consistency
+logic~\cite{hirailpar} and a class of intermediate logics with
+functional modalities.
+
+\appendix
+\section{Proof of Thm.~\ref{sound-comp-nat-kripke}}
+\label{app}
+\subsection{Soundness}
+
+\begin{lemma}[Soundness]
+ $\Gamma\modelsR\varphi\Longleftarrow\Gamma\vdashR\varphi$
+\end{lemma}
+\begin{proof}
+We show $\Gamma\modelsR\varphi$ inductively
+on the definition of $\Gamma\vdashR\varphi$.
+\begin{description}
+ \item[(Case {Ax})]
+	    Suppose $\varphi\in \mathsf{Ax}(R)$.
+	    For an $\mathsf{R}$-model~$M$ and a state~$w$ of~$M$,
+	    we are going to show $M,w\models\varphi$.
+	    Seeking contradiction,
+	    we assume $M,w\not\models\varphi$.
+	    Since $\varphi\in\mathsf{Ax}(R)$, there exists a world
+	    restriction $\mathsf r\in\mathsf R$ with
+	    $\varphi=[\mathsf r]\theta$,
+	    where $\theta$ is a substitution.
+	    Let $\mathsf r$ be
+	    $\mathsf v_0.s_0\le\mathsf v_1.t_1\wor\cdots\wor
+	    \mathsf v_{n-1}.s_{n-1}\le\mathsf v_n.t_n\wor\mathsf
+	    v_n.s_n\le\mathsf v_0.t_0$.
+	    Then,
+	    $\varphi = (K_{s_0}\varphi_0\supset
+	    K_{t_1}\varphi_1)\vee\cdots\vee
+	    (K_{s_{n-1}}\varphi_{n-1}\supset K_{t_n}\varphi_n)
+	    \vee (K_{s_n}\varphi_n\supset K_{t_0}\varphi_0)$
+	    for some $(\varphi_i)_{0\le i\le n}$.
+	    We define $\varphi_{n+1}$ to be $\varphi_0$ and
+	    $\varphi_{-1}$ to be $\varphi_n$.
+	    By assumption, $M,w\not\models K_{s_i}\varphi_i\supset
+	    K_{t_{i+1}}\varphi_{i+1}$ for any $0\le i\le n$.
+	    This implies existence of a sequence
+	    $(v_i)_{0\le i\le n}$ of states with $w\preceq v_i$ and
+	    $M,v_i\models K_{s_i}\varphi_i$ but $M,v_i\not\models
+	    K_{t_{i+1}}\varphi_{i+1}$.
+	    By the semantics of modalities, we have
+	    $M,f_{s_i}(v_i)\models \varphi_i$ but $M,
+	    f_{t_{i+1}}(v_i)\not\models\varphi_{i+1}$
+	    for any $0\le i\le n$.
+	    When $\mathsf r$ is single clause,
+	    $\mathsf r = \mathsf v.s\le\mathsf v.t$.
+	    Let $\delta(\mathsf v)$ be $v_0$.
+	    Since $M$ is an $\mathsf R$-model,
+	    $f_s(v_0)\preceq f_t(v_0)$ holds.
+	    Since $n=0$,
+	    we have $M,v_0\models K_s\varphi_0$ but $M,v_0\not\models
+	    K_t\varphi_0$.
+	    This contradicts Kripke monotonicity.
+	    Otherwise, when $\mathsf r$ is single postfix,
+	    $\mathsf r = \mathsf v_0.s\le\mathsf
+	    v_1.s\wor\cdots\wor\mathsf v_{n-1}.s\le\mathsf
+	    v_n.s\wor\mathsf v_n.s\le\mathsf v_0.s$.
+	    Let $\delta(\mathsf v_i)$ be $v_{n-i}$.
+	    Since $M$ is an $\mathsf R$-model,
+	    for some $0\le i\le n$,
+	    we have $\delta(\mathsf v_i.s)\preceq \delta(\mathsf
+	    v_{i+1}.s)$.
+	    This is equivalent to $f_s(v_{n-1})\preceq f_s(v_{n-i-1})$.
+	    The way we took $(v_i)_{0\le i\le n}$ ensures
+	    $M,v_{n-1}\models K_s\varphi_{n-i}$.
+	    In other words, $M,f_s(v_{n-1})\models \varphi_{n-i}$.
+	    By Kripke monotonicity, $M,f_s(v_{n-i-1})\models
+	    \varphi_{n-i}$.
+	    This contradicts $M,f_s(v_{n-i-1})\not\models\varphi_{n-1}$.
+ \item[(Other rules)]
+	    Straightforward.
+\end{description}
+\end{proof}
+
+\subsection{Completeness}
+We prove completeness via
+  adaptation of the standard saturated set construction (see Troelstra
+  and van Dalen~\cite[Ch.~2]{troelstra1988constructivism}).
+  Hirai~\cite{hirailpar} contains a similar proof for a special case of
+  sequential consistency logic.
+
+\begin{definition}
+ A set~$\Gamma$ of formulas is
+ $\mathsf R$-saturated iff all of these conditions hold:
+ \begin{enumerate}
+  \item $\Gamma$ does not contain $\bot$;
+  \item $\Gamma$ is closed under $\mathsf R$-deduction, i.e.,
+	$\Gamma\vdashR\varphi\Rightarrow\varphi\in\Gamma$;
+  \item $\varphi\vee\psi\in\Gamma\Rightarrow\varphi\in\Gamma$ or $\psi\in\Gamma$.
+ \end{enumerate}
+\end{definition}
+
+\begin{lemma}
+ \label{saturation}
+ For a set~$\Gamma$ of formulas with $\Gamma\not\vdashR\varphi$,
+ there exists a
+ saturated set $\Gamma^{\omega}$ of formulas with
+ $\Gamma^{\omega}\not\vdashR\varphi$ and
+ $\Gamma\subseteq \Gamma^{\omega}$.
+\end{lemma}
+\begin{proof}
+ Exactly the same as Lemma~2.10 in Hirai~\cite{hirailpar}.
+\end{proof}
+
+
+\begin{definition}[Canonical model candidate]
+ We define a tuple
+ $\R M = \tuple{\R W, \R\preceq, (\R{f_a})_{a\in \agents}, \R\rho}$
+ where
+ \begin{itemize}
+  \item $\R W$ is the set of $\mathsf R$-saturated sets of formulas;
+  \item $\Gamma\R\preceq \Delta$ iff $\Gamma\subseteq\Delta$;
+  \item $\R{f_a}(\Gamma) = \{\varphi\mid K_a\varphi\in\Gamma\}$;
+  \item $\R\rho(P)=\{\Gamma\mid P\in \Gamma\}$.
+ \end{itemize}
+\end{definition}
+
+\begin{lemma}
+ The tuple $\R M$ is a model.
+\end{lemma}
+\begin{proof}
+ Exactly the same as Lemma~2.11 in Hirai~\cite{hirailpar}.
+\end{proof}
+
+\begin{proposition}
+ \label{X}
+ For a saturated set~$\Gamma$ of formulas and the canonical model~$\R
+ M$,
+ $\varphi\in\Gamma\Leftrightarrow \R M,\Gamma\models\varphi$ holds.
+\end{proposition}
+\begin{proof}
+ Exactly the same as Lemma~2.13 in Hirai~\cite{hirailpar}.
+\end{proof}
+
+\begin{definition}
+ A frame~$F = \tuple{W,\preceq, (f_a)_{a\in\agents}}$
+ is a pseudo $\mathsf R$-frame iff $F$ satisfies
+ $\delta(\mathsf R)$ for all world valuation
+ $\delta$ and $w\in W$ s.t.
+ every world variable~$\mathsf v$ satisfies
+ $w\preceq \delta(\mathsf v)$.
+\end{definition}
+ A pseudo $\mathsf R$-model is a model with a pseudo $\mathsf R$-frame.
+
+\begin{lemma}
+ \label{pseudo-real}
+ For a pseudo $\mathsf R$-model~$M$ and a state $w$ of $M$ with
+ $M,w\models\varphi$,
+ there exists an $\mathsf R$-model $\bar M$ and a state $\bar w$
+ with $\bar M,\bar w\models\varphi$.
+\end{lemma}
+\begin{proof}
+ A deep postfix is a postfix~$s$ that contains any sequence of agents
+ encountered during parsing~$\varphi$ in the top-down direction.
+ Let $s$ be a deep postfix for~$\varphi$. Let $M$ be
+ $\tuple{W,\preceq,(f_a)_{a\in\agents},\rho}$.
+ We define $\bar M$ to be $\tuple{\bar W,\bar\preceq,
+ (\bar f_a)_{a\in\agents},\bar \rho}$ where
+ $\bar W=\{v\in W\mid v\succeq f_s(w)\}$,$\bar\preceq =
+ \preceq\cap (\bar W\times\bar W)$,
+ $\bar f_a(w)= \begin{cases}
+		    f_a(w)&(\mbox{if }f_a(w)\in\bar W)\\
+		    w&(\mbox{otherwise})\enspace,
+		   \end{cases}$
+ and $\bar \rho(P) =\rho(P)\cap\bar W$.
+ We define $\bar w$ to be $w$.
+ The new model~$\bar M$ simulates the original model~$M$ well enough
+ to make $\bar M,\bar w\models\varphi$ hold.
+ Since $\bar M$ is a restriction of $M$, $\bar M$ is a pseudo
+ $\mathsf R$-model.
+ Moreover, since $\bar M$ has the minimum state, $\bar M$ is an
+ $\mathsf R$-model.
+\end{proof}
+
+\begin{lemma}
+ $\R M$ is a pseudo $\mathsf R$-model.
+\end{lemma}
+\begin{proof}
+ Seeking contradiction,
+ assume the frame $\R F = \tuple{\R W, \R\preceq, (\R
+ {f_a})_{a\in\agents}}$
+ does not satisfy $\delta(\mathsf R)$ for
+ a world valuation~$\delta$ with
+ $\Delta\R\preceq\delta(\mathsf v)$ for all $\Delta\in\R W$.
+ There exists a world restriction
+ $\mathsf r\in\mathsf R$.
+ Let $\mathsf r$ be $\mathsf v_0.s\le\mathsf v_1.s\wor\cdots \wor\mathsf
+ v_{n-1}.s\le\mathsf v_n.s\wor\mathsf v_n.s\le\mathsf v_0.s$.
+ Since $\R F$ does not satisfy $\delta(\mathsf r)$,
+ $f_s(\delta(\mathsf v_i))\not{\R \preceq}f_s(\delta(\mathsf v_{i+1}))$
+ for
+ all $0\le i\le n$ (we define $\mathsf v_{n+1} = \mathsf v_0$).
+ Since $\R\preceq = \subseteq$, there exists
+ a formula $\psi_i\in f_s(\delta(\mathsf v_{i+1}))\setminus
+ f_s(\delta(\mathsf v_i))$ for every $0\le i\le n$.
+ In other words, $K_s\psi_i\in\delta(\mathsf v_{i+1})$
+ but $K_s\psi_i\notin\delta(\mathsf v_i)$.
+ By Prop.~\ref{X},
+ $\R M,\delta(\mathsf v_{i+1})\models K_s\psi_i$ but
+ $\R M,\delta(\mathsf v_{i})\not\models K_s\psi_i$.
+ On the other hand, $\mathbf{Ax}(\mathsf R)$ contains
+ $\bigvee_{0\le i\le n}\left(K_s\psi_i\supset K_s\psi_{i+1}\right)$.
+ So, for some $0\le i\le n$,
+ $K_s\psi_i\supset K_s\psi_{i+1}\in\Delta$.
+ This means, by Prop.~\ref{X},
+ $\R M,\Delta\models K_s\psi_i\supset K_s\psi_{i+1}$.
+ Since $\Delta\R\preceq\delta(\mathsf v_i)$,
+ by Kripke monotonicity (Lemma~\ref{monot}),
+ $\R M,\delta(\mathsf v_{i+1})\models K_s\psi_i\supset K_s\psi{i+1}$.
+ This contradicts $\R M,\delta(\mathsf v_{i+1})\models K_s\psi_i$ and
+ $\R M,\delta(\mathsf v_i)\not\models K_s\psi_i$.
+\end{proof}
+ 
+\begin{lemma}[Completeness]
+ $\modelsR\varphi\Longrightarrow\vdashR\varphi$
+\end{lemma}
+\begin{proof}
+ We show the contraposition.
+ Assume $\not\vdashR \varphi$. By
+ Lemma~\ref{saturation}, there exists
+ a saturated set~$\Gamma^\omega$ with $\Gamma^\omega\not\vdashR\varphi$.
+ By Lemma~\ref{X}, $\R M, \Gamma^\omega\not\models\varphi$.
+ By Lemma~\ref{pseudo-real}, there exists an
+ $\mathsf R$-model $\bar M$ and a state~$\bar w$ of $\bar M$
+ with $\bar M,\bar w\not\models \varphi$.
+ This witnesses $\not\modelsR\varphi$.
+\end{proof}
+\end{document}
 
 
 \paragraph{Acknowledgement.}
