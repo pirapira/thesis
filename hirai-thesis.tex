@@ -649,7 +649,7 @@ We give a deduction system and show
 soundness (Theorem~\ref{soundness}), disjunction property (Theorem~\ref{disjunction-property}),
 strong completeness
 (Theorem~\ref{strong-completeness}), finite model property
- (Theorem~\ref{fmp}) and decidability (Theorem~\ref{decidability}).
+ (Theorem~\ref{thm:fmp}) and decidability (Theorem~\ref{decidability}).
 
 \subsection{Application to Wait-free Communication}
 
@@ -1772,7 +1772,7 @@ $K_aK_a$ occurrences left.
 \newcommand{\natpls}{{\mathbb N}^{+}}
 
 \begin{lemma}[Saturation lemma]
-\label{saturation}
+\label{lemma:saturation}
  For sets of formulas $\Gamma$ and $\Omega$ with $\Gamma\not\vdash\varphi$, 
  $\Gamma\subseteq \Omega$ and $\varphi \in \Omega$,
 there exists an~$\Omega$-saturated
@@ -1942,7 +1942,7 @@ We check each condition in Definition~\ref{model} to
 	    ($\Rightarrow$) Assume $\modelion {(\Omega',\Gamma)} {\psi_0\supset\psi_1}$.
 	    Seeking contradiction, assume $\psi_0\supset\psi_1\notin \Gamma$.
 	    Since $\Gamma$ is deductively closed, $\Gamma\cup\{\psi_0\}\not\vdash\psi_1$.
-	    By Lemma~\ref{saturation}, there exists an~$\Omega'$-saturated
+	    By Lemma~\ref{lemma:saturation}, there exists an~$\Omega'$-saturated
 	    set $\Gamma'$ with
 	    $\Gamma'\supseteq \Gamma\cup \{\psi_0\}$ and $\Gamma'\not\vdash\psi_1$.
 	    By induction hypothesis, $\modelion {(\Omega',\Gamma')} {\psi_0}$ but not
@@ -1973,7 +1973,7 @@ We check each condition in Definition~\ref{model} to
 \begin{proof}
  We show the contraposition: assuming $\Gamma\not\vdash\varphi$, we show
  $\Gamma\not\models\varphi$.
- By Lemma~\ref{saturation},
+ By Lemma~\ref{lemma:saturation},
  there is a saturated set of formula $\Gamma'$ with $\Gamma'\not\vdash\varphi$
  and $\Gamma'\supseteq\Gamma$.
  By Lemma~\ref{exact},
@@ -2065,7 +2065,7 @@ We check each condition in Definition~\ref{model} to
  hereditary
  $f'$-subformula-closed
  by~Lemma~\ref{shorter}.
- By~Lemma~\ref{saturation},
+ By~Lemma~\ref{lemma:saturation},
  there exist an~$\Omega$-saturated set $\Gamma$ with $\varphi\notin\Gamma$.
  By~Lemma~\ref{exact},
  $\canon M(\Omega), (\Omega,\Gamma)\not\models\varphi$.
@@ -3545,7 +3545,7 @@ whether an output value is allowed or not depends on other processes'
 output values.  Waitfree task specifications cannot describe such tasks.
 
 \section{Related Work}
-\label{related}
+\label{first:related}
 
 Van Benthem~\cite{van2009information} investigates the connection between
 intuitionistic logic and information dynamics.  He speculates:
@@ -4146,7 +4146,7 @@ which is proposed by Hirai~\cite{hirailpar} for modeling a shared memory consist
 
 This is our main result.
 \begin{theorem}
- \label{fmp}
+ \label{thm:fmp}
  $\vdashR\varphi$ holds iff $M\models \varphi$ holds
  for all finite {\sf R}-model $M$.
 \end{theorem}
@@ -4714,7 +4714,7 @@ $\cup L$ is a Hintikka sequent.
  we obtain a finite $\mathsf R$-model.
  Moreover, the state $\mathsf w$ of the model does not satisfy~$\varphi$.
 \end{proof}
-Now we can carry out the proof strategy for Thm.~\ref{fmp} described
+Now we can carry out the proof strategy for Thm.~\ref{thm:fmp} described
 at the beginning of Sect.~\ref{fmp-proof}.
 
 \section{Application to Sequential Consistency Logic}
@@ -4935,7 +4935,7 @@ We prove completeness via
 \end{definition}
 
 \begin{lemma}
- \label{saturation}
+ \label{hoe:saturation}
  For a set~$\Gamma$ of formulas with $\Gamma\not\vdashR\varphi$,
  there exists a
  saturated set $\Gamma^{\omega}$ of formulas with
@@ -5061,7 +5061,7 @@ We prove completeness via
 \begin{proof}
  We show the contraposition.
  Assume $\not\vdashR \varphi$. By
- Lemma~\ref{saturation}, there exists
+ Lemma~\ref{hoe:saturation}, there exists
  a saturated set~$\Gamma^\omega$ with $\Gamma^\omega\not\vdashR\varphi$.
  By Lemma~\ref{X}, $\R M, \Gamma^\omega\not\models\varphi$.
  By Lemma~\ref{pseudo-real}, there exists an
@@ -6526,7 +6526,7 @@ Haskell%
 \footnote{\texttt{cabal install waitfree} will install this library.}.
 
 \subsection{Waitfreedom}
-\label{wf}
+\label{subsect:wf}
 
 Waitfreedom is a notion arisen in the theory of asynchronous
 communication. Since waitfreedom provides no synchronization, it has
@@ -6630,7 +6630,7 @@ of which at least one is guaranteed to be successful.  Such a set of
 computations can be represented as a hypersequent.
 @K s a@ as thread @s@'s computation yielding a value of type @a@ and
 @K t b@ as thread @t@'s computation yielding a value of type @b@,
-the waitfree protocol described at the end of Subsection~\ref{wf}
+the waitfree protocol described at the end of Subsection~\ref{subsect:wf}
 witnesses the following derivation because either @t@ obtains @b@ or @s@
 obtains @a@ after executing the protocol.
 \begin{center}
@@ -6691,7 +6691,7 @@ main = execute content
 
 We show an example program written with this library
 (Fig.~\ref{fig:example}).  This is a concrete realization of the
-simplest nontrivial waitfree computation described at the end of Subsection~\ref{wf}.
+simplest nontrivial waitfree computation described at the end of Subsection~\ref{subsect:wf}.
 
 \paragraph{The external behavior.}
   This program can be compiled and executed as:
