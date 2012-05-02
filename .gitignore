@@ -14,3 +14,16 @@
 /memo.txt~
 /hirai-thesis.lof
 /hirai-thesis.toc
+
+/.gitignore
+/wfpaper.aux
+/wfpaper.log
+/wfpaper.pdf
+/wfpaper.tex~
+/.omakedb
+/.omakedb.lock
+/OMakefile.omc
+/OMakefile~
+/OMakeroot.omc
+/sigplanconf-template.tex
+/wfpaper.fls
