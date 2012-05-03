@@ -890,7 +890,8 @@ $\{K_a\varphi\mid \varphi\in \Gamma\}$ respectively.
  \UnaryInfC{$\Gamma\vdash K_a \varphi\vee K_a\psi$}
 \DisplayProof
 \end{center}
-\caption{Deduction rules of \iec.  (ax) stands for axiom, (w) for weakening, (c) for
+\caption[Deduction rules of \iec.]
+{Deduction rules of \iec.  (ax) stands for axiom, (w) for weakening, (c) for
  contraction, (e) for exchange, (ispec) for introspection and (nec) for necessitation.
  ($\diamondsuit$-I) denotes the introduction rule for connective~$\diamondsuit$.
  ($\diamondsuit$-E) denotes the elimination rule for connective~$\diamondsuit$.}
@@ -2133,7 +2134,9 @@ the meaning of the modality $K_a$.
  \supseti{\vdash \varphi\supset K_a\varphi}
  \DisplayProof
 }
- \caption{Adding a classical principle called
+ \caption[Double negation elimination destroys the meaning of
+ \fix{which} modalities]
+{Adding a classical principle called
  double negation elimination destroys the meaning of modalities. Note that weakening is
  used in the proof.}
  \label{triv}
@@ -2558,7 +2561,8 @@ We use G\"{o}del translation to translate classical epistemic formula into $\iec
  \go{\psi_0}\supset\go{\psi_1}}
  \DisplayProof
 }
- \caption{Parts of Proofs for Lemma~\ref{naka}. I.H. stands for induction hypothesis.}
+ \caption[Parts of Proofs for Lemma~\ref{naka}.]
+ {Parts of Proofs for Lemma~\ref{naka}. I.H. stands for induction hypothesis.}
  \label{wedge}
 \end{sidewaysfigure}
 
@@ -2977,7 +2981,7 @@ Other cases are the same as Lemma~\ref{soundness}.
  and $\Gamma\subset \Gamma^\omega$.
 \end{lemma}
 \noindent 
-This lemma can be proved in the same way as Lemma~\ref{saturation} where each $\vdash$ is replaced by $\vdashsc$.
+This lemma can be proved in the same way as Lemma~\ref{lemma:saturation} where each $\vdash$ is replaced by $\vdashsc$.
 
 \renewcommand{\canon}[1]{#1^{\mbox{sc}}}
 \begin{definition}[Canonical model candidate for sequential consistency]
@@ -3358,7 +3362,7 @@ Figure~\ref{schedulemodel}.
 \begin{center}
  \includegraphics[scale=0.3]{schedulemodel.eps} 
 \end{center}
-\caption{A model $R(\cdot, \sigma)$
+\caption[A model $R(\cdot, \sigma)$.]{A model $R(\cdot, \sigma)$
  induced by the partial schedule $\sigma = \left(\{a,b\}, \{a\}, \{b\}\right)$.
  A solid arrow pointing to $(x,n)$ shows an $f_x$ mapping.  Dotted arrows show $\preceq$ relations.
  We omit implied arrows and the valuation.}
@@ -3367,7 +3371,7 @@ Figure~\ref{schedulemodel}.
 
 We can state the logical characterisation of waitfree communication.
 \begin{theorem}[Completeness for waitfree communication]
-\label{sc-comp}
+\label{wf:sc-comp}
  Assume $\varphi\supset \psi$ is a waitfree assertion.
  The relation $\vdash_{SC} \varphi\supset\psi$ holds if the relation $R(\varphi, \sigma),
  (o,n) \models \psi$ holds for any compatible partial schedule $\sigma$ where the state~$(o,n)$
@@ -3495,9 +3499,9 @@ If $\pi_k\neq x$, $f_{\pi_k}((o,k))\models K_x\psi'$ implies $(o,k')\models K_x\
 \end{description}
 \end{description}
 \end{proof}
-After showing this generalised lemma, proving Theorem~\ref{sc-comp} is
+After showing this generalised lemma, proving Theorem~\ref{wf:sc-comp} is
 easy.
-\begin{proof}[Proof of Theorem~\ref{sc-comp}]
+\begin{proof}[Proof of Theorem~\ref{wf:sc-comp}]
  Since $R(\varphi, p), w_{|P|}\models \psi$, $SC(p,|P|)\vdash \varphi\supset
  \psi$.
 By Lemma~\ref{perm}, $\vdashsc
@@ -3668,7 +3672,9 @@ a~simplicial complex as a~model of \iec\, as in an example (Figure~\ref{subdivis
  \begin{center}
   \includegraphics[scale=0.3]{subdivision_original.eps}
  \end{center}
- \caption{How subdivision of simplicial complexes is transformed into \iec\, model.
+ \caption[How subdivision of simplicial complexes is transformed into
+ \iec\, model.]
+{How subdivision of simplicial complexes is transformed into \iec\, model.
 Left: A simplex $s_0 = \{v_a, v_b\}$ is subdivided into $s_1 = \{v_a, w_b\}, s_2
  = \{w_a, w_b\}$ and $s_3 = \{w_a, v_b\}$. Right: \iec\, frame obtained from the left
  subdivision.}
@@ -4084,11 +4090,11 @@ $\{\varphi[\psi/P]\}$ where $\psi$ run freely on~$\fml$ and $P$ on~$\pvar$.
  \DisplayProof
 \end{center}
 \caption{Deduction rules of $\vdashR$.}
-\label{fig}
+\label{figR}
 \end{figure}
 
 \begin{definition}
- We define the proof system $\vdashR$ by Fig.~\ref{fig}.
+ We define the proof system $\vdashR$ by Fig.~\ref{figR}.
 \end{definition}
 
 \begin{theorem}
@@ -4251,7 +4257,8 @@ $\mathsf R(\{\mathsf w\le \mathsf w, \mathsf v\le \mathsf v\}) =
   \UnaryInf$\Theta\parallel\Gamma\fCenter\Delta, \mathsf s :: K_a\varphi$
   \DisplayProof
  \end{center}
- \caption{The inference rules of \LB. Modification of Fig.~3 of
+ \caption[The inference rules of \LB.]
+{The inference rules of \LB. Modification of Fig.~3 of
  Waaler and Wallen~\cite{waaler1999tableaux}.
  Since $\mathsf R(\Theta\cup\{\mathsf s\le\mathsf w\})$ is finite,
  R$\supset$
@@ -4277,7 +4284,9 @@ $\mathsf R(\{\mathsf w\le \mathsf w, \mathsf v\le \mathsf v\}) =
  w::(\varphi\supset\psi)\vee(\psi\supset\varphi)$
  \DisplayProof
  
- \caption{A derivation for
+ \caption[A derivation for
+ $\vdashRLB(\varphi\supset\psi)\vee(\psi\supset\varphi)$.]
+{A derivation for
  $\vdashRLB(\varphi\supset\psi)\vee(\psi\supset\varphi)$ where
  $\mathsf R=\{\mathsf v\le\mathsf w,\mathsf w\le\mathsf v\}$.
  In the figure, $\Theta$ stands for $\{\mathsf w\le\mathsf w,\mathsf
@@ -4437,7 +4446,8 @@ Induction on derivation trees.
  \mathsf t::\varphi
 \fCenter\Delta$
  \DisplayProof
- \caption{The rules for refutation ladders. A modified version of Fig.~6 of Waaler and
+ \caption[The rules for refutation ladders.]
+{The rules for refutation ladders. A modified version of Fig.~6 of Waaler and
  Wallen~\cite{waaler1999tableaux} with additional world inequality sidenotes and
  prefixes.  The top of a refutation ladder can be any sequent.
  No rule is branching.  Comma separated notation $\Gamma,\quad \mathsf
@@ -4783,7 +4793,8 @@ a complete refutation ladder for the formula~(Fig.~\ref{compex})
   P\supset K_b K_m K_b Q\supset (K_a Q\wedge K_b P)$
   \DisplayProof
  \end{center}
- \caption{A complete refutation ladder for the considered formula.
+ \caption[A complete refutation ladder for the \fix{which} considered formula.]
+{A complete refutation ladder for the considered formula.
  $cl(\Theta)$ denotes the reflexive transitive closure of~$\Theta$.}
  \label{compex}
 \end{figure}
@@ -5316,7 +5327,8 @@ A semantics will be given in Sect.~\ref{comparison}.
    {$\hyper\hmid         \Gamma\vdash[i]\theta$}
 \vskip 2mm
 \end{center}
-\caption{The underlying logic.
+\caption[The underlying logic \fix{of what}.]
+ {The underlying logic.
  Metavariables~$i$ and $j$ stand for a process.
  $\hyper$ stands for a
  hypersequent.
@@ -5525,7 +5537,8 @@ The typing rules for the terms are given in Fig.~\ref{termassign}.
    {$\cotuple{\cotuple{\hypert_0,\hypert_1},\hypert_2}\hmid\Gamma \tr \tj{\lmat M x {N_0} y {N_1}}{[i]\theta}$}
 \vskip 2mm
 \end{center}
- \caption{Term assignment.
+ \caption[Term assignment.\fix{of what}]
+ {Term assignment.
  $\hypert$ stands for
  a possibly empty hypersequent (with possible subscripts).
  $\hypert^+$ stands for a non-empty hypersequent.
@@ -6683,7 +6696,8 @@ content = comm (readH $ PortNumber 6000) rerror (readH $ PortNumber 6001) rerror
 main :: IO ()
 main = execute content
 \end{spec}
- \caption{An example program.  This spawns two threads each waiting for
+ \caption[An example program.\fix{for what}]
+ {An example program.  This spawns two threads each waiting for
  a TCP connection.  The two threads do waitfree communication, so the
  slowest thread obtains the inputs for all threads. }
  \label{fig:example}
