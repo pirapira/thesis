@@ -244,6 +244,11 @@ Many of the contents also appear in the author's Master's Thesis \fix{cite}.
 
 \chapter{Introduction}
 
+There have been several attempts.
+The best thing we can hope is that the computational
+interpretation coincides with something we know already.
+That is the case indeed.
+
 We extended the Curry--Howard correspondence to G\"odel--Dummett logic.
 The Curry--Howard correspondence is \fix{add}
 
@@ -6237,14 +6242,22 @@ The definition is inductive over the type derivation.
  \semi{\cotuple{\hypert_0,\hypert_1}\hmid MN} =& (\semi{\hat \hypert_0 \hmid M}\cup
  \semi{\hat\hypert_1\hmid N})\hmid \{\tuple{i,\p z}\}\enspace, \\
  \sem{\hypert\hmid \lpil M} =& \sem{\hypert\hmid M}; \p z \leftarrow
- \semi{\hypert\hmid\hat M}'\enspace, \\
+ \lpil {\semi{\hypert\hmid\hat M}'}\enspace, \\
  \semi{\hypert\hmid \lpil M}=& \semi{\hat \hypert\hmid M}\hmid
+ \{\tuple{i, \p z}\}\enspace, \\
+ \sem{\hypert\hmid \lpir M} =& \sem{\hypert\hmid M}; \p z \leftarrow
+ \lpir{ \semi{\hypert\hmid\hat M}' }\enspace, \\
+ \semi{\hypert\hmid \lpir M}=& \semi{\hat \hypert\hmid M}\hmid
+ \{\tuple{i, \p z}\}\enspace, \\
+ \sem{\hypert\hmid \linl{M}} =& \sem{\hypert\hmid M}; \p z \leftarrow
+ \linl{ \semi{\hypert\hmid\hat M}'}\enspace, \\
+ \semi{\hypert\hmid \linl M}=& \semi{\hat \hypert\hmid M}\hmid
+ \{\tuple{i, \p z}\}\enspace, \\
+ \sem{\hypert\hmid \linr M} =& \sem{\hypert\hmid M}; \p z \leftarrow
+ \linr{\semi{\hypert\hmid\hat M}'}\enspace, \\
+ \semi{\hypert\hmid \linr{M}}=& \semi{\hat \hypert\hmid M}\hmid
  \{\tuple{i, \p z}\}\enspace.
 \end{align*} }
-We omitted translations of some constructs $\pi_{\mathrm r}$, $\mathsf{inl}$,
-$\mathsf{inr}$, but they are defined in the same way
-as $\pi_{\mathrm
-l}$ case.
 When $(\tj{x_i}{[i]\iota_i})_{i\in\processes}
 \tr\tj{M}(\wwedge_{i\in \processes}[i]o_i)$ is
 derivable,
