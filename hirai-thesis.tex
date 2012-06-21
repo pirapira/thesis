@@ -1,4 +1,4 @@
-\documentclass[doctor]{iscs-thesis}
+\documentclass[doctor,interim]{iscs-thesis}
 
 \usepackage{amsmath, stmaryrd, rotating, amssymb,
 setspace, float, amsthm}
@@ -225,9 +225,39 @@ setspace, float, amsthm}
 \newcommand{\wwedge}{\operatorname*{\bigwedge\kern -8pt \bigwedge}}
 
 \etitle{A Computational Interpretation of G\"odel--Dummett Logic}
-
+\jtitle{ゲーデル・ダメット論理の計算的解釈}
+\eauthor{Yoichi Hirai}
+\jauthor{平井洋一}
+\esupervisor{Masami Hagiya}
+\jsupervisor{萩谷昌己}
+\supervisortitle{Professor} % Professor, etc.
+\date{July 4, 2012}
 
 \begin{document}
+
+\begin{eabstract}
+ We give a computational interpretation of G\"odel--Dummett logic, based
+ on the Curry--Howard isomorphism.  This leads to characterization
+ of waitfreedom, which is a class of problems in distributed
+ computation.  Although both G\"odel--Dummett logic and waitfreedom are 
+ important players in their respective areas, their connection has not
+ been known.  G\"odel--Dummett logic is a typical intermediate logic---a
+ logic between classical and intuitionistic logics.
+ Waitfreedom is a class of distributed computation where no process can
+ wait for another.  Both concepts has attracted attention since 1990's.
+\end{eabstract}
+
+\begin{jabstract}
+ カリー・ハワード対応に基づき、ゲーデル・ダメット論理の計算的解釈を与え
+ る。すると、分散計算の問題クラスであるwaitfree計算を特徴づけられる。
+ ゲーデル・ダメット論理もwaitfree計算も、それぞれの分野で重要であるのに、
+ これらの関連は、これまで知られていなかった。
+\end{jabstract}
+
+今後はnpurlっぽい抽出を考えるべきではなかろうか。
+それか、topologicalなんちゃらを頑張るべきか。
+
+\maketitle
 
 \paragraph{Acknowledgement.}
 The work about Hyper $\lambda$ calculus is encouraged by feedbacks from
@@ -304,14 +334,6 @@ apply hypersequents to solve distributed computational difficulties.
 
 \chapter{Inuitionistic Epistemic Logic}
 
-\etitle{An Intuitionistic Epistemic Logic for Asynchronous Communication}
-\jtitle{非同期通信のための直観主義知識論理}
-\eauthor{Yoichi Hirai}
-\jauthor{平井洋一}
-\esupervisor{Masami Hagiya}
-\jsupervisor{萩谷昌己}
-\supervisortitle{Professor} % Professor, etc.
-\date{February 10, 2010}
 
 We apply formal constructive reasoning to
  asyncyhronous communication.
@@ -408,24 +430,6 @@ waitfree主張と呼ばれる論理式たちと，
 タスクが要求する知識伝達だけに注目すると，知識伝達がwaitfreeに実現できるか否かは決定可能で
  あることを示した．
 
-\begin{acknowledge}
- The author thanks
- Masami Hagiya and
- Yoshihiko Kakutani for their advices over both meta-level and technical matters
- and a great deal of encouragement.
- The author thanks Daisuke Kimura, Kazuyuki Asada and Tatsuya Abe for
- discussion about different proof strategies for conservertivity.
- The author is thankful to the anonymous refrees
- of the conference PPL2010 for their comments that considerably improved
- the presentation of Chapter~\ref{wf}.
-\end{acknowledge}
-\frontmatter
-\tableofcontents
-\listoffigures
-
-\mainmatter
-
-\section{Introduction}
 
 In this thesis, we show that
 formal constructive reasoning is
