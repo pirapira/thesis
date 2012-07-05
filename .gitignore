@@ -27,3 +27,12 @@
 /OMakeroot.omc
 /sigplanconf-template.tex
 /wfpaper.fls
+/interim/.omakedb
+/interim/.omakedb.lock
+/interim/OMakefile.omc
+/interim/OMakeroot.omc
+/interim/hirai-thesis.aux
+/interim/hirai-thesis.dvi
+/interim/hirai-thesis.fls
+/interim/hirai-thesis.log
+/interim/hirai-thesis.pdf
