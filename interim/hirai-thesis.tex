@@ -1,0 +1,314 @@
+\documentclass[doctor,interim]{iscs-thesis}
+
+\usepackage{amsmath, stmaryrd, rotating, amssymb,
+setspace, float, amsthm}
+\usepackage{bussproofs}
+
+%% from http://yav.purely-functional.net/haskell_latex.html
+\usepackage{fancyvrb}
+\DefineVerbatimEnvironment{code}{Verbatim}{fontsize=\small}
+\DefineVerbatimEnvironment{spec}{Verbatim}{fontsize=\small}
+\newcommand{\ignore}[1]{}
+
+
+%%% from master thesis
+
+\usepackage{rotating}
+
+\usepackage{bussproofs,stmaryrd, amssymb, amsmath, amsthm, showlabels}
+\newcommand{\ruleT}[1]{\LeftLabel{(T)}\UnaryInfC{${#1}$}}
+\newcommand{\powerset}[1]{{\mathcal P({#1})}}
+\newcommand{\proj}[0]{\operatorname{proj}}
+\newcommand{\len}[0]{\operatorname{len}}
+\newcommand{\cl}[0]{\operatorname{cl}}
+\newcommand{\carrier}[0]{\operatorname{carrier}}
+\newcommand{\subfml}{\operatorname{subfml}}
+\newcommand{\seq}{\operatorname{Seq}}
+\newcommand{\type}{\operatorname{Type}}
+\newcommand{\vdashsc}{\vdash_{\mbox{\rm sc}}}
+\newcommand{\iec}{{\rm {\textbf{IEC}}}}
+\newcommand{\ckv}{{\rm {\textbf{S4}\ast\cdots\ast\textbf{S4}}}}
+\newcommand{\vdashsf}{\vdash_{\ckv}}
+\newcommand{\initial}[1]{${#1}\vdashn{#1}$}
+\newcommand{\supsete}[1]{\LeftLabel{($\supset$-E)}\BinaryInfC{${#1}$}}
+\newcommand{\supseti}[1]{\LeftLabel{($\supset$-I)}\UnaryInfC{${#1}$}}
+\newcommand{\nec}[1]{\LeftLabel{(nec)}\UnaryInfC{${#1}$}}
+\newcommand{\wedgeel}[1]{\LeftLabel{($\wedge$-E$_0$)}\UnaryInfC{${#1}$}}
+\newcommand{\wedgei}[1]{\LeftLabel{($\wedge$-I)}\BinaryInfC{${#1}$}}
+\newcommand{\veeil}[1]{\LeftLabel{($\vee$-I$_0$)}\UnaryInfC{${#1}$}}
+\newcommand{\veeir}[1]{\LeftLabel{($\vee$-I$_1$)}\UnaryInfC{${#1}$}}
+\newcommand{\veee}[1]{\LeftLabel{($\vee$-E)}\TrinaryInfC{${#1}$}}
+\newcommand{\weaken}[1]{\LeftLabel{(w)}\UnaryInfC{${#1}$}}
+\newcommand{\be}[1]{\LeftLabel{($\bot$-E)}\UnaryInfC{${#1}$}}
+\newcommand{\ax}[1]{	     \AxiomC{}
+	     \LeftLabel{(ax)}
+\UnaryInfC{\initial{#1}}}
+\newcommand{\dn}[1]{\LeftLabel{(DN)}\UnaryInfC{${#1}$}}
+
+\newenvironment{example}[1][Example]{\begin{trivlist}
+    \item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+\newenvironment{remark}[1][Remark]{\begin{trivlist}
+    \item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+
+\usepackage{graphicx}	% required for `\includegraphics' (yatex added)
+\usepackage[numbers,sort&compress]{natbib}
+
+%%% end from master thesis
+
+%%% from haskell symposium submitted paper
+\usepackage{graphicx}
+\usepackage{bussproofs}
+\usepackage{amsmath,amssymb}
+%\usepackage{showlabels}
+
+\usepackage{setspace}
+
+%\doublespacing
+
+\newcommand{\Nat}{{\mathbb N}}
+\newcommand{\Real}{{\mathbb R}}
+\newcommand{\pvar}{\mathcal V_P}
+\newcommand{\agents}{\mathcal A}
+\newcommand{\wvar}{\mathcal V_W}
+
+\newcommand{\tuple}[1]{\langle{#1}\rangle}
+\newcommand{\fix}[1]{[FIX \fbox{#1}]}
+\newcommand{\fml}{\operatorname{Fml}}
+\newcommand{\id}{\operatorname{id}}
+\newcommand{\kv}{$\mathbf K \vee$}
+\newcommand{\vdashR}{\vdash_{\mathsf R}}
+
+\newcommand{\vdashRLB}{\vdashR^{\mbox{\tiny \LB}}}
+
+\newcommand{\T}{\mathbf T}
+\newcommand{\memory}{{\sf m}}
+\newcommand{\ruleskip}{\vskip 5mm}
+
+%%% 
+
+\newcommand{\R}[1]{{#1}^{\mathsf R}}
+\newcommand{\modelsR}{\models_{\mathsf R}}
+
+
+\newtheorem{notation}{Notation}
+\newtheorem{proposition}{Proposition}
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\newtheorem{theorem}{Theorem}
+
+
+
+\newcommand{\nat}{\mathbb{N}}
+\newcommand{\steps}[2]{Steps_{#1}\left({#2}\right)}
+
+\newcommand{\hypc}[2]{{\mathcal{C}#1}\left[{#2}\right]}
+\newcommand{\hyper}{\mathcal{H}}
+\newcommand{\hypert}{\mathcal{O}}
+\newcommand{\hmid}{\mid\mid\mid}
+
+\newcommand{\tr}{\vartriangleright}
+\newcommand{\update}{\vartriangleleft}
+
+\newcommand{\elim}{\mathcal E}
+\newcommand{\intro}{\mathcal I}
+
+\newcommand{\coml}{\leftarrow_{\mathrm g}}
+\newcommand{\comr}{\leftarrow_{\mathrm d}}
+
+\newcommand{\reduce}{\rightsquigarrow}
+\newcommand{\reduction}{\reduce^\ast}
+\newcommand{\processes}{\mathbb{P}}
+\newcommand{\ProV}{\mathbf{ProV}}
+\newcommand{\LB}{\textbf{LB}}
+\newcommand{\p}[1]{\texttt{#1}}
+
+%% terms
+\newcommand{\g} [0]{\mathsf{g}}
+\newcommand{\spair} [1]{\langle{#1}\rangle^{\square}}
+\newcommand{\lpair} [1]{\langle{#1}\rangle}
+\newcommand{\gpair} [1]{\langle{#1}\rangle^{\g}}
+\newcommand{\cotuple}[1]{[{#1}]}
+\newcommand{\ev}[1]{\mathsf{ev}\left({#1}\right)}
+
+\newcommand{\ginl}[1]{\mathsf{inl}^{\g}\left({#1}\right)}
+\newcommand{\linl}[1]{\mathsf{inl}\left({#1}\right)}
+\newcommand{\sinl}[1]{\mathsf{inl}^{\square}\left({#1}\right)}
+\newcommand{\bsinl}[1]{\mathsf{inl}^{\blacksquare}\left({#1}\right)}
+
+\newcommand{\ginr}[1]{\mathsf{inr}^{\g}\left({#1}\right)}
+\newcommand{\linr}[1]{\mathsf{inr}\left({#1}\right)}
+\newcommand{\sinr}[1]{\mathsf{inr}^{\square}\left({#1}\right)}
+\newcommand{\bsinr}[1]{\mathsf{inr}^{\blacksquare}\left({#1}\right)}
+
+\newcommand{\gpil}[1]{\pi^{\g}_{\mathrm l}\left({#1}\right)}
+\newcommand{\lpil}[1]{\pi_{\mathrm l}\left({#1}\right)}
+\newcommand{\spil}[1]{\pi^{\square}_{\mathrm l}\left({#1}\right)}
+
+\newcommand{\gpir}[1]{\pi^{\g}_{\mathrm r}\left({#1}\right)}
+\newcommand{\lpir}[1]{\pi_{\mathrm r}\left({#1}\right)}
+\newcommand{\spir}[1]{\pi^{\square}_{\mathrm r}\left({#1}\right)}
+
+\newcommand{\vg}[2]{{#1}_{#2, \mathrm g}}
+\newcommand{\vd}[2]{{#1}_{#2, \mathrm d}}
+
+
+\newcommand{\gmat}[5]{\mathsf{match}^{\g}\,{#1}\,\mathsf{of}\, \ginl{#2}. {#3}/
+\ginr{#4}. {#5}}
+\newcommand{\lmat}[5]{\mathsf{match}\,{#1}\,\mathsf{of}\, \linl{#2}. {#3}/
+\linr{#4}. {#5}}
+\newcommand{\smat}[5]{\mathsf{match}^{\square}\,{#1}\,\mathsf{of}\, \sinl{#2}. {#3}/
+\sinr{#4}. {#5}}
+\newcommand{\bsmat}[5]{\mathsf{match}^{\blacksquare}\,{#1}\,\mathsf{of}\, \bsinl{#2}. {#3}/
+\bsinr{#4}. {#5}}
+
+\newcommand{\ifte}[3]{\mathsf{If}\, {#1}\, \mathsf{then}\, {#2}\, \mathsf{else}\, {#3}}
+
+\newcommand{\ltor}[4]{\overrightarrow{{#2}^{#1}_{#3}} \left({#4}\right)}
+\newcommand{\rtol}[4]{\overleftarrow{{#2}^{#1}_{#3}} \left({#4}\right)}
+\newcommand{\abort}{\mathsf{abort\,}}
+
+\newcommand{\compare}[2]{{#1} == {#2}}
+
+\newcommand{\term} [0]{\mathcal{T}}
+\newcommand{\lterm}[0]{\mathcal{T}^-}
+\newcommand{\val}  [0]{\mathcal{V}}
+\newcommand{\lval} [0]{\mathcal{V}^-}
+\newcommand{\tj}   [2]{ {#1} \colon{#2} }
+
+\newcommand{\wor}{\mathsf{{or}}}
+
+\newcommand{\Id}{\mathsf{Id}}
+\newcommand{\lgd}{$\lambda$-GD}
+
+%% configuration
+\newcommand{\lstore}{{\sigma}}
+\newcommand{\rstore}{{\tau}}
+\newcommand{\conf}[3]{(\lstore{#1},\rstore{#2},{#3})}
+\newcommand{\confwithcontext}[3]{\conf{#1}{#2}{\hypert\hmid C[{{#3}}]\hmid\hypert'}}
+\newcommand{\concreteconf}[3]{({#1},{#2},{#3})}
+
+%% reductions and the like
+\newcommand{\breduce}{\reduce_{\mathrm B}}
+\newcommand{\areduce}{\reduce_{\mathrm A}}
+\newcommand{\wreduce}{\reduce_{\mathrm W}}
+\newcommand{\rreduce}{\reduce_{\mathrm R}}
+\newcommand{\preduce}{\reduce_{\mathrm P}}
+\newcommand{\bpreduce}{\reduce_{\mathrm{B/P}}}
+
+%% logical rules
+\newcommand{\UnaryRule}[3]{ \AxiomC{#1}
+\LeftLabel{#2}
+\UnaryInfC{#3} \DisplayProof} 
+\newcommand{\BinaryRule}[4]{ \AxiomC{#1} \AxiomC{#2}
+\LeftLabel{#3}
+\BinaryInfC{#4}\DisplayProof}
+\newcommand{\TrinaryRule}[5]{ \AxiomC{#1} \AxiomC{#2}
+\AxiomC{#3} \LeftLabel{#4}
+\TrinaryInfC{#5} \DisplayProof}
+
+%% investi
+\newcommand{\inv}[1]{{#1}^{\mathsf i}}
+
+\newcommand{\rightlocal}{\rightsquigarrow_{\beta{\mathrm l}}}
+\newcommand{\rightcomm}{\rightsquigarrow_{\beta{\mathrm c}}}
+\newcommand{\rightdist}{\rightsquigarrow_{\beta{\mathrm d}}}
+\newcommand{\dist}[2]{[{#1}; {#2}]}
+
+\newcommand{\interpret}[1]{\llbracket {#1} \rrbracket}
+
+\newcommand{\process}{p}
+\newcommand{\contex}[1]{\mathcal C[{#1}]}
+\newcommand{\sem}[1]{\llbracket{#1}\rrbracket}
+\newcommand{\semi}[1]{\llparenthesis{#1}\rrparenthesis}
+
+\newcommand{\wwedge}{\operatorname*{\bigwedge\kern -8pt \bigwedge}}
+
+% A Computational Interpretation of Gödel--Dummett Logic
+\etitle{A Computational Interpretation of G\"odel--Dummett Logic}
+\jtitle{ゲーデル・ダメット論理の計算的解釈}
+\eauthor{Yoichi Hirai}
+\jauthor{平井洋一}
+\esupervisor{Masami Hagiya}
+\jsupervisor{萩谷昌己}
+\supervisortitle{Professor} % Professor, etc.
+\date{July 4, 2012}
+
+\begin{document}
+
+\begin{eabstract}
+ We give a computational interpretation of G\"odel--Dummett logic, based
+ on the Curry--Howard isomorphism.  This leads to characterization
+ of waitfree computation, which is a class of distributed
+ computation.  Although both G\"odel--Dummett logic and waitfree computation are 
+ important players in their respective areas, their connection has not
+ been known.  G\"odel--Dummett logic is an intermediate logic---a
+ logic between classical and intuitionistic logics.
+ Waitfree computation is a class of distributed computation where no process can
+ wait for another.  Our contribution is defining a typed lambda calculus
+ for G\"odel--Dummett logic, which can solve
+ exactly the same problems solvable by waitfree computation.
+ This is the first result characterizing shared memory consistency using
+ a type system, marking an important step in 
+ an emerging area of research to be called ``implicit shared
+ memory consistency.''
+
+ In his Master's Thesis, the author sensed some semantic connection
+ between G\"odel--Dummett logic and a degree of shared memory consistency
+ called sequential consistency.
+ However, we are heavily indebted to Arnon
+ Avron's paper in 1991.  Our typed lambda calculus is based on Avron's
+ hypersequents.
+ Our problem comes from Avron's question 
+ ``it seems to us extremely important to determine the exact
+ computational content of them [the logics with cut-elimination
+ using hypersequents] and to develop corresponding $\lambda$-calculi.''
+ To this twenty-year-old question, we give an answer for a typical
+ example of G\"odel--Dummett logic.
+ We show that the computational content of G\"odel--Dummett logic is
+ waitfree computation.
+
+ Technically, this research studies a typed lambda calculus.
+ We show three theorems:
+ no typed term can reduce infinitely often;
+ no typed term can reduce to a term representing failure;
+ and a typed term can solve a problem if and only if a waitfree protocol
+ can solve the problem.
+\end{eabstract}
+
+\begin{jabstract}
+ カリー・ハワード対応に基づいた，ゲーデル・ダメット論理の計算的解釈を与え
+ る．すると，分散計算の問題クラスであるwaitfree計算を特徴づけられる．
+ ゲーデル・ダメット論理もwaitfree計算も，それぞれの分野で重要であるのに，
+ これらの関連は，これまで知られていなかった．ゲーデル・ダメット論理は中
+ 間論理(直観主義論理と古典論理の間の論理)の一つである．Waitfree計算は，プロセスが他の
+ プロセスを待てないという制限で決まる，分散計算のクラスである．
+ 本研究の貢献は，ゲーデル・ダメット論理の型付きラムダ計算を定義して，
+ ちょうどwaitfree計算で解ける問題だけを解けると示したことである．
+ 本研究は，
+ 共有メモリの一貫性を，型システムで特徴づけた初めての研究であって，
+ 興りつつある「非明示メモリ一貫性」と呼ぶべき研究分野の重要な一歩である．
+
+ 著者は修士論文で，ゲーデル・ダメット論理と共有メモリ一貫性の一種である
+ 逐次一貫性との意味論的な関連に気づいていた．
+ しかし，本研究の手法も問題も
+ Arnon Avronの1991年の論文によるところが大きい．
+ まず，その論文でAvronが提案したハイパーシーケントが，
+ 本研究の型付きラムダ計算の基礎である．
+ さらに，その論文でAvronが提起した問題
+ 「ハイパーシーケントでカット除去できる論理の計算的意味はなにか」
+ が，本研究で探求する問題である．
+ この二十年来の問題の典型例であるゲーデル・ダメット論理の場合に，解答を
+ 与える．ゲーデル・ダメット論理の計算的意味は，waitfree計算であると示す．
+
+ 技術的に，本研究は型付きラムダ計算の研究である．
+ 示した定理は，
+ 型が付いた項の簡約が無限に続かないことと，
+ 型が付いた項の簡約が失敗を表す項で終わらないことと，
+ 型が付いた項で解ける問題がwaitfreeに解ける問題と
+ 一致することの三つである．
+\end{jabstract}
+
+\maketitle
+
+\end{document}
