@@ -1,5 +1,6 @@
-
 \chapter{A Hyper $\lambda$-Calculus for G\"odel--Dummett Logic}
+
+\subsection{Summary}
 
 We propose a typed lambda calculus based on Avron's hypersequent
 calculus for G\"odel--Dummett logic.  This calculus turns out to model
@@ -9,8 +10,6 @@ we give soundness and completeness of
 the calculus against the typed version of waitfree protocols.
 The calculus is not only proof theoretically interesting,
 but also valuable as a basis for distributed programming languages.
-
-\section{Introduction}
 
 The Curry--Howard isomorphism~\cite{curryhoward} is surprising because the same
 method works for two different purposes: a logical purpose of
@@ -484,12 +483,12 @@ A \textit{configuration} is a triple $\conf{}{}\hypert$ of two
 stores $\lstore, \rstore$ and a hyperterm~$\hypert$.
 
 To complete the definition of \lgd,
- we define the \textit{reductions} $\reduce_\clubsuit$ of
- configurations for $\clubsuit\in\{\mathrm B, \mathrm W, \mathrm R, \mathrm A,
+ we define the \textit{reductions} $\reduce_\spadesuit$ of
+ configurations for $\spadesuit\in\{\mathrm B, \mathrm W, \mathrm R, \mathrm A,
  \mathrm P\}$.
  We consider terms up to $\alpha$-equivalence and implicitly
  require all instances
- of $\rightsquigarrow_\clubsuit$ to avoid free variable captures.
+ of $\rightsquigarrow_\spadesuit$ to avoid free variable captures.
  Below, $\square$ and $\blacksquare$ match $\g$ or nothing.
 
 \begin{definition}[Basic Reduction]
@@ -1294,12 +1293,12 @@ One possible reduction sequence is as follows:
  \concreteconf{[l\mapsto {c_0}]}{[l\mapsto {c_1}]}{\gpair{\{{c_0}\}, \{c_0, c_1\}}}\enspace.
 \end{align*}
 Moreover, the same initial configuration can reduce to
-\begin{equation*}
+\begin{Equation*}
  \concreteconf{[l\mapsto c_0]}{[l\mapsto c_1]}{\gpair{\{c_1,c_0\},
  \{c_1\}}}\text{ or }
  \concreteconf{[l\mapsto c_0]}{[l\mapsto c_1]}{\gpair{\{c_1,c_0\},
  \{c_0, c_1\}}}\enspace. 
-\end{equation*}
+\end{Equation*}
 There are no other normal forms.
 These three normal forms correspond to the three answers for the
 two-party participating set problem.
@@ -1402,4 +1401,3 @@ proof theory and distributed computation.
 consider the Kripke model.
 
 translation back and forth.
-

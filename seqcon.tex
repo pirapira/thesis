@@ -1,6 +1,8 @@
 \chapter{Inuitionistic Epistemic Logic}
 
 
+\subsection{Summary}
+
 We apply formal constructive reasoning to
  asyncyhronous communication.
 After defining a general-purpose logic called
@@ -1562,7 +1564,7 @@ A straightforward way to model sequential consistency might be
 choosing the set of memory states in the model
 and then asserting the memory states are lined up in a total order.
 Actually, we can identify a memory state as a state~$w$ with
-$f_\memory(w) = w$ because this equation asserts that
+$f_\memory(w) = w$ because this Equation asserts that
 the memory's state seen from the state~$w$ is the state~$w$ itself.
 This straightforward modelling of sequential consistency turns out to be
 in appropriate logically because there is no formula which holds exactly
@@ -1870,7 +1872,7 @@ This form of definition is similar to that of validity of logical a formula:
 a valid logical formula is a formula which is satisfied by any model.
 We consider the schedule v.s. distributed program relation is similar to
 the formula v.s. model relation.
-In Section~\ref{sc},
+In section~\ref{sc},
 in this section, we express wait-freedom as a class of formulas.
 
 A distributed program specifies
@@ -2282,12 +2284,8 @@ waitfree task specification,
 an assertion that a waitfree protocol meets a specification.
 
 
+\section{Finite Model Property for Sequential Consistency Logic}
 
-
-\chapter{Finite Model Property for Sequential Consistency Logic}
-
-
-\section{Introduction}
 
 We proved finite model property for sequential consistency logic
 using analytic tableaux.
@@ -2391,7 +2389,7 @@ We define \textit{world terms} using BNF:
 where $a$ is an agent.
 Every world term can be written as $\mathsf v.s$ where $s$ is a fintie sequence
 of agents (a postfix).
-A \textit{world inequality} is an inequation of the form $\mathsf s\le
+A \textit{world inequality} is an inEquation of the form $\mathsf s\le
 \mathsf t$ where $\mathsf s$ and $\mathsf t$ are world terms.
 \begin{definition}
 A world restriction is a sequence of world inequalities jointed

@@ -65,165 +65,7 @@ setspace, float, amsthm}
 
 %\doublespacing
 
-\newcommand{\Nat}{{\mathbb N}}
-\newcommand{\Real}{{\mathbb R}}
-\newcommand{\pvar}{\mathcal V_P}
-\newcommand{\agents}{\mathcal A}
-\newcommand{\wvar}{\mathcal V_W}
-
-\newcommand{\tuple}[1]{\langle{#1}\rangle}
-\newcommand{\fix}[1]{[FIX \fbox{#1}]}
-\newcommand{\fml}{\operatorname{Fml}}
-\newcommand{\id}{\operatorname{id}}
-\newcommand{\kv}{$\mathbf K \vee$}
-\newcommand{\vdashR}{\vdash_{\mathsf R}}
-
-\newcommand{\vdashRLB}{\vdashR^{\mbox{\tiny \LB}}}
-
-\newcommand{\T}{\mathbf T}
-\newcommand{\memory}{{\sf m}}
-\newcommand{\ruleskip}{\vskip 5mm}
-
-%%%
-
-\newcommand{\R}[1]{{#1}^{\mathsf R}}
-\newcommand{\modelsR}{\models_{\mathsf R}}
-
-
-\newtheorem{notation}{Notation}
-\newtheorem{proposition}{Proposition}
-\newtheorem{definition}{Definition}
-\newtheorem{lemma}{Lemma}
-\newtheorem{corollary}{Corollary}
-\newtheorem{theorem}{Theorem}
-
-
-
-\newcommand{\nat}{\mathbb{N}}
-\newcommand{\steps}[2]{Steps_{#1}\left({#2}\right)}
-
-\newcommand{\hypc}[2]{{\mathcal{C}#1}\left[{#2}\right]}
-\newcommand{\hyper}{\mathcal{H}}
-\newcommand{\hypert}{\mathcal{O}}
-\newcommand{\hmid}{\mid\mid\mid}
-
-\newcommand{\tr}{\vartriangleright}
-\newcommand{\update}{\vartriangleleft}
-
-\newcommand{\elim}{\mathcal E}
-\newcommand{\intro}{\mathcal I}
-
-\newcommand{\coml}{\leftarrow_{\mathrm g}}
-\newcommand{\comr}{\leftarrow_{\mathrm d}}
-
-\newcommand{\reduce}{\rightsquigarrow}
-\newcommand{\reduction}{\reduce^\ast}
-\newcommand{\processes}{\mathbb{P}}
-\newcommand{\ProV}{\mathbf{ProV}}
-\newcommand{\LB}{\textbf{LB}}
-\newcommand{\p}[1]{\texttt{#1}}
-
-%% terms
-\newcommand{\g} [0]{\mathsf{g}}
-\newcommand{\spair} [1]{\langle{#1}\rangle^{\square}}
-\newcommand{\lpair} [1]{\langle{#1}\rangle}
-\newcommand{\gpair} [1]{\langle{#1}\rangle^{\g}}
-\newcommand{\cotuple}[1]{[{#1}]}
-\newcommand{\ev}[1]{\mathsf{ev}\left({#1}\right)}
-
-\newcommand{\ginl}[1]{\mathsf{inl}^{\g}\left({#1}\right)}
-\newcommand{\linl}[1]{\mathsf{inl}\left({#1}\right)}
-\newcommand{\sinl}[1]{\mathsf{inl}^{\square}\left({#1}\right)}
-\newcommand{\bsinl}[1]{\mathsf{inl}^{\blacksquare}\left({#1}\right)}
-
-\newcommand{\ginr}[1]{\mathsf{inr}^{\g}\left({#1}\right)}
-\newcommand{\linr}[1]{\mathsf{inr}\left({#1}\right)}
-\newcommand{\sinr}[1]{\mathsf{inr}^{\square}\left({#1}\right)}
-\newcommand{\bsinr}[1]{\mathsf{inr}^{\blacksquare}\left({#1}\right)}
-
-\newcommand{\gpil}[1]{\pi^{\g}_{\mathrm l}\left({#1}\right)}
-\newcommand{\lpil}[1]{\pi_{\mathrm l}\left({#1}\right)}
-\newcommand{\spil}[1]{\pi^{\square}_{\mathrm l}\left({#1}\right)}
-
-\newcommand{\gpir}[1]{\pi^{\g}_{\mathrm r}\left({#1}\right)}
-\newcommand{\lpir}[1]{\pi_{\mathrm r}\left({#1}\right)}
-\newcommand{\spir}[1]{\pi^{\square}_{\mathrm r}\left({#1}\right)}
-
-\newcommand{\vg}[2]{{#1}_{#2, \mathrm g}}
-\newcommand{\vd}[2]{{#1}_{#2, \mathrm d}}
-
-
-\newcommand{\gmat}[5]{\mathsf{match}^{\g}\,{#1}\,\mathsf{of}\, \ginl{#2}. {#3}/
-\ginr{#4}. {#5}}
-\newcommand{\lmat}[5]{\mathsf{match}\,{#1}\,\mathsf{of}\, \linl{#2}. {#3}/
-\linr{#4}. {#5}}
-\newcommand{\smat}[5]{\mathsf{match}^{\square}\,{#1}\,\mathsf{of}\, \sinl{#2}. {#3}/
-\sinr{#4}. {#5}}
-\newcommand{\bsmat}[5]{\mathsf{match}^{\blacksquare}\,{#1}\,\mathsf{of}\, \bsinl{#2}. {#3}/
-\bsinr{#4}. {#5}}
-
-\newcommand{\ifte}[3]{\mathsf{If}\, {#1}\, \mathsf{then}\, {#2}\, \mathsf{else}\, {#3}}
-
-\newcommand{\ltor}[4]{\overrightarrow{{#2}^{#1}_{#3}} \left({#4}\right)}
-\newcommand{\rtol}[4]{\overleftarrow{{#2}^{#1}_{#3}} \left({#4}\right)}
-\newcommand{\abort}{\mathsf{abort\,}}
-
-\newcommand{\compare}[2]{{#1} == {#2}}
-
-\newcommand{\term} [0]{\mathcal{T}}
-\newcommand{\lterm}[0]{\mathcal{T}^-}
-\newcommand{\val}  [0]{\mathcal{V}}
-\newcommand{\lval} [0]{\mathcal{V}^-}
-\newcommand{\tj}   [2]{ {#1} \colon{#2} }
-
-\newcommand{\wor}{\mathbin{\mathsf{or}}}
-
-\newcommand{\Id}{\mathsf{Id}}
-\newcommand{\lgd}{$\lambda$-GD}
-
-%% configuration
-\newcommand{\lstore}{{\sigma}}
-\newcommand{\rstore}{{\tau}}
-\newcommand{\conf}[3]{(\lstore{#1},\rstore{#2},{#3})}
-\newcommand{\confwithcontext}[3]{\conf{#1}{#2}{\hypert\hmid C[{{#3}}]\hmid\hypert'}}
-\newcommand{\concreteconf}[3]{({#1},{#2},{#3})}
-
-%% reductions and the like
-\newcommand{\breduce}{\reduce_{\mathrm B}}
-\newcommand{\areduce}{\reduce_{\mathrm A}}
-\newcommand{\wreduce}{\reduce_{\mathrm W}}
-\newcommand{\rreduce}{\reduce_{\mathrm R}}
-\newcommand{\preduce}{\reduce_{\mathrm P}}
-\newcommand{\bpreduce}{\reduce_{\mathrm{B/P}}}
-
-%% logical rules
-\newcommand{\UnaryRule}[3]{ \AxiomC{#1}
-\LeftLabel{#2}
-\UnaryInfC{#3} \DisplayProof} 
-\newcommand{\BinaryRule}[4]{ \AxiomC{#1} \AxiomC{#2}
-\LeftLabel{#3}
-\BinaryInfC{#4}\DisplayProof}
-\newcommand{\TrinaryRule}[5]{ \AxiomC{#1} \AxiomC{#2}
-\AxiomC{#3} \LeftLabel{#4}
-\TrinaryInfC{#5} \DisplayProof}
-
-%% investi
-\newcommand{\inv}[1]{{#1}^{\mathsf i}}
-
-\newcommand{\rightlocal}{\rightsquigarrow_{\beta{\mathrm l}}}
-\newcommand{\rightcomm}{\rightsquigarrow_{\beta{\mathrm c}}}
-\newcommand{\rightdist}{\rightsquigarrow_{\beta{\mathrm d}}}
-\newcommand{\dist}[2]{[{#1}; {#2}]}
-
-\newcommand{\interpret}[1]{\llbracket {#1} \rrbracket}
-
-\newcommand{\process}{p}
-\newcommand{\contex}[1]{\mathcal C[{#1}]}
-\newcommand{\sem}[1]{\llbracket{#1}\rrbracket}
-\newcommand{\semi}[1]{\llparenthesis{#1}\rrparenthesis}
-
-\newcommand{\wwedge}{\operatorname*{\bigwedge\kern -8pt \bigwedge}}
-
+\input{macros.tex}
 \etitle{A Computational Interpretation of G\"odel--Dummett Logic}
 \jtitle{ゲーデル・ダメット論理の計算的解釈}
 \eauthor{Yoichi Hirai}
@@ -278,10 +120,12 @@ Many of the contents also appear in the author's Master's Thesis \fix{cite}.
 
 \mainmatter
 
-%\input{introduction.tex}
+\input{introduction.tex}
 \input{seqcon.tex}
-%\input{lambda.tex}
-%\input{haskell.tex}
+\input{lambda.tex}
+\input{pole.tex}
+\input{haskell.tex}
+
 
 This research was partially supported by the Ministry of Education,
 Science, Sports and Culture, Grant-in-Aid for JSPS Fellows, 23-6978, 2011.
