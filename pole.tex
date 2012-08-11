@@ -54,9 +54,8 @@ difference is to be discussed in Sect. \fix{?}.
 % 2a terms -- unchanged -- remove pi or anything
 
 \newcommand{\conc}{\parallel}
-\newcommand{\comod}[4]{\ast^{\rightarrow {#3 \colon
-{#4}}}_{\leftarrow{#1\colon {#2}}}}
-\newcommand{\reader}[2]{\ast_{\leftarrow{#1\colon {#2}}}}
+\newcommand{\comod}[2]{\ast^{\rightarrow {#2}}_{\leftarrow{#1}}}
+\newcommand{\reader}[1]{\ast_{\leftarrow{#1}}}
 
 We consider a programming language, which is a modification of
 Danos and Krivine's.
@@ -72,10 +71,6 @@ A type is an element of $\form(\emptyset)$.
 Channels have involution $c\mapsto\co c$ with
 $c\neq \co c$ and
 $\co{\co c} = c$.
-Moreover, each channel $c$ is associated with a type~$\phi$,
-written as $c\colon\phi$.
-For any types $\phi$ and $\psi$, there are infinitely many
-channels $c\colon\phi$ with $\co c\colon\psi$.
 A \textit{term}~$t$ is defined by BNF:
 \[
  t::= x
@@ -83,8 +78,8 @@ A \textit{term}~$t$ is defined by BNF:
  \mid t\conc t
  \mid \lambda x.t
  \mid \ast_t
- \mid \comod c\phi c\phi
- \mid \reader  c\phi
+ \mid \comod c c
+ \mid \reader  c
 \]
 where $x$ is a variable and $c\colon\phi$ is a channel.
 A \textit{stack}~$\pi$ is defined by BNF:
@@ -126,22 +121,22 @@ that satisfies:
 	    $[\ast_u,\pi],S\red[u,\pi],S$\enspace;
  \item[(write)]
 	    $
-	    [\comod c\phi{\co c}\psi, t\cdot\pi], S[\co
+	    [\comod c{\co c}, t\cdot\pi], S[\co
 	    c\colon\psi\mapsto\bot]
 	    \red
-	    [\reader c\phi, \pi],
+	    [\reader c, \pi],
 	    S[\co c\colon\psi\mapsto t]
 	    $\enspace;
  \item[(write')]
 	    $
-	    [\comod c\phi{\co c}\psi, t\cdot\pi], S[\co
+	    [\comod c{\co c}, t\cdot\pi], S[\co
 	    c\colon\psi\mapsto u]
 	    \red
-	    [\reader c\phi, \pi],
+	    [\reader c, \pi],
 	    S[\co c\colon\psi\mapsto u]
 	    $\enspace;
  \item[(read)]$
-	    [\reader c \phi,\pi],
+	    [\reader c ,\pi],
 	    S[c\colon\phi\mapsto u]
 	    \red
 	    [u,\pi],
@@ -149,7 +144,7 @@ that satisfies:
 	    $\enspace; and
  \item[(fail)]
 	    $
-	    [\reader c\phi,\pi],
+	    [\reader c,\pi],
 	    S[c\colon\phi\mapsto \bot]
 	    \red
 	    \emptyset,S[c\colon\phi\mapsto \bot]
@@ -210,9 +205,9 @@ We type terms as follows.\\ \noindent
 \LeftLabel {Communication}
 \BinaryInfC{$
 \G\tr\tj{
-t[\comod c\psi {\co c}\phi/x]
+t[\comod c {\co c}/x]
    \conc
-u[\comod{\co c}\phi c\psi/y]
+u[\comod{\co c} c/y]
   }{\theta}$}
 \DisplayProof
 
@@ -224,9 +219,8 @@ both $\G,\tj x{\phi\imp\phi}\tr\tj{(x)t}\phi$
 and $\G,\tj y{\phi\imp\phi}\tr\tj{(y)u}\phi$ are derivable
 for $x$ and $y$ not appearing in $\G$, $u$, or $t$.
 By the communication rule,
-$\G\tr\tj{(\comod c\phi{\co c}\phi)t\conc(\comod {\co c}\phi c
-\phi)u}\phi$ is derivable.
-But $[(\comod c\phi{\co c}\phi)t\conc (\comod{\co c}\phi c\phi)u,
+$\G\tr\tj{(\comod c{\co c})t\conc(\comod {\co c} c)u}\phi$ is derivable.
+But $[(\comod c{\co c})t\conc (\comod{\co c} c)u,
 \pi],S_\epsilon$
 can reduce both to $[t,\pi], S_\epsilon[c\mapsto u, \co c\mapsto t]$
 and to $[u,\pi], S_\epsilon[c\mapsto u,\co c\mapsto t]$.
@@ -331,9 +325,9 @@ t\in\sem\phi\text{ and }\pi\in\nsem\psi\}$.
  \AxiomC{$\G,\tj x{\phi\imp\psi}\tr\tj t \theta$}
  \AxiomC{$\G,\tj y{\psi\imp\phi}\tr\tj u \theta$}
  \BinaryInfC{$\G\tr\tj{
-t[\comod c\psi {\co c}\phi/x]
+t[\comod c {\co c}/x]
    \conc
-u[\comod{\co c}\phi c\psi/y]
+u[\comod{\co c} c/y]
 }{\theta}$}
  \DisplayProof
  )
@@ -373,7 +367,7 @@ One might want to show this property.
  $E = \{([a,\pi_A],S),([b,\pi_B],S)\mid S \text{ is a store}\}$.
 \end{example}
 However, the executables which reduce to a multiset on~$E$ does not form
-a pole.  Since $\comod c\phi{\co c}\psi$ and $\comod {\co c}\psi c\phi$
+a pole.  Since $\comod c{\co c}$ and $\comod {\co c} c$
 are separate, they just turn into $\emptyset$, however, when they are
 connected by $\conc$, they do not turn into $\emptyset$.
 
