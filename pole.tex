@@ -286,20 +286,6 @@ we define $\nsem{\phi}_\Sigma\colon \form(2^\Pi)\rightarrow
 \end{align*}
 Using this, we define $\sem \phi_\Sigma=\nsem{\phi}_\Sigma\rightarrow\bbot$.
 
-For $\Sigma\subset \Sigma'$, we have
-$\nsem{\phi}_\Sigma\supset\nsem{\phi}_\Sigma$
-and $\sem{\phi}_\Sigma\subset\sem{\phi}_\Sigma$
-for all $\phi$.
-When we define $F(\Sigma)$ as the set of stores $S$
-such that $S(c\colon\phi) \in \sem{\phi}_\Sigma\cup\{\bot\}$.
-Then, $F$ is an order-preserving function.
-So, by Knaster--Tarski theorem,
-there is the greatest $\hat\Sigma$ such that $F(\hat\Sigma) =
-\hat\Sigma$.
-An element of $\hat\Sigma$ is called a \textit{proper store}.
-Note that the empty store is proper by definition of~$F$.
-We define $\nsem{\phi} = \nsem{\phi}_{\hat\Sigma}$
-and $\sem{\phi} = \sem{\phi}_{\hat\Sigma}$.
 When we abuse $\sem{\phi}$ as a set of terms,
 $\sem{\phi}$ is the largest set~$\mathcal T$
 with $\mathcal T\times\hat\Sigma\subset\sem{\phi}$.
@@ -340,20 +326,6 @@ t\in\sem\phi\text{ and }\pi\in\nsem\psi\}$.
  \AxiomC    {$\G\tr\tj u \phi$}
  \BinaryInfC{$\G\tr\tj{(t)u}{\psi}$}
  \DisplayProof )
- Take $v_i\in\sem{\phi_i}$.
- By induction hypothesis, $t[v_i/x_i]$ is in $\sem{\phi\imp\psi}$
- and $u[v_i/x_i]$ is in $\sem{\phi}$.
- For any proper store~$S$ and $\pi\in\nsem\psi$,
- we claim that $e = [(t)u[v_i/x_i],\pi],S$ is in $\bbot$.
- One reduction from $e$ is
- $e\red[t[v_i/x_i],u[v_i/x_i]\cdot\pi],S$.
- Since $u[v_i/x_i]\in\sem\phi$ and $\pi\in\nsem\psi$,
- $u[v_i/x_i]\cdot\pi$ is in $\nsem{\phi\imp\psi}$.
- Moreover, since $S$ is proper,
- $(t[v_i/x_i], S)$ is in $\sem{\phi\imp\psi}$.
- By definition of $\sem{\cdot}$,
- $[t[v_i/x_i],u[v_i/x_i]\cdot\pi],S$ is in $\bbot$.
- By definition of a pole, $e$ is also in $\bbot$.
 
  (Communication
  \AxiomC{$\G,\tj x{\phi\imp\psi}\tr\tj t \theta$}
@@ -365,71 +337,11 @@ u[\comod{\co c}\phi c\psi/y]
 }{\theta}$}
  \DisplayProof
  )
- First we claim that $\reader c\psi$ is in $\sem\psi$.
- For that, for any proper store~$S$ and a stack $\pi_\psi\in\nsem\psi$,
- we show that $e=[\reader c\psi,\pi_\psi],S$ is in $\bbot$.
- The reductions from $e$ are
- $e\red[S(\tj c\psi),\pi_\psi],S$ and
- $e\red\emptyset,S$ depending on whether $S(\tj c\psi)$ is a term in
- $\sem\psi$ or $\bot$.
- In the former case, since $S(\tj c\psi)$ is in $\sem\psi$ and $S$ is
- proper, $(S(\tj c\psi),S)$ is in $\sem\psi$, making
- the reduct $[S(\tj c\psi),\pi_\psi],S$ an element of $\bbot$.
- Otherwise, the reduct $\emptyset,S$ is in $\bbot$ by definition of a
- pole.
- Since at least one reduction from $e$
- leads to an element of $\bbot$,
- $e$ itself is an element of $\bbot$.
- We have shown the first claim that $\reader c\psi$ is in $\sem\psi$.
- We also claim that $\comod c\psi{\co c}\phi$ is in
- $\sem{\phi\imp\psi}$.
- For that, for any proper store~$S$,
- $v\in\sem\phi$ and $\pi\in\nsem\psi$, we show
- $e'=[\comod c\psi{\co c}\psi,v\cdot\pi],S$ is in $\bbot$.
- The only reduction from $e'$ is to $e'\red[\reader c\psi,\pi], S''$
- where $S''$ might be $S[\co c\colon\phi\mapsto v]$ or
- unchanged $S$ depending on $S(\co c\colon\phi)$.
- Anyway, since $v$ is in $\sem\phi_{\hat\Sigma}$,
- $S''$ is proper i.e. in $F(\hat\Sigma) = \hat\Sigma$.
- Since $S''$ is proper and $\pi$ is in $\nsem\psi$,
- we have $[\reader c\psi,\pi],S''\in\bbot$ because $\reader c\psi$ is in
- $\sem\psi$.
- Now take any $v_i\in\sem{\phi_i}$ and $\pi'\in\nsem \theta$.
- Since $\comod c\psi{\co c}\phi$ is in $\sem{\phi\imp\psi}$,
- by induction hypothesis,
- $t[\comod c\psi{\co c}\phi/x][v_i/x_i]$ is in $\sem \theta$.
- By a symmetric argument,
- $u[\comod {\co c}\phi c \psi/y][v_i/x_i]$ is also in $\sem \theta$.
- By Prop.~\ref{type-conc},
- $(t[\comod c\psi{\co c}\phi/x]\conc u[\comod {\co c}\phi c
- \psi/y])[v_i/x_i]$ is also in $\sem \theta$.
 
  (Abstraction
  \AxiomC{$\G,\tj x\phi\tr\tj t\psi$}
  \UnaryInfC{$\G\tr\tj{\lambda x.t}{\phi\imp\psi}$}
  \DisplayProof)
- With arbitrary $v_i\in\sem{\phi_i}$,
- $u\cdot\pi\in\nsem{\phi\imp\psi}$
- and a proper store~$S$,
- it is enough to show that
- $e = [\lambda x.t[v_i/x_i],u\cdot\pi],S$ is in $\bbot$.
- One reduction from $e$ is to
- $[t[v_i/x_i][\ast_u/x],\pi],S$.
- We claim that $\ast_u$ is in $\phi$.
- For that, taking any $\pi_\phi\in\nsem\phi$ and
- proper store~$S'$, showing
- $[\ast_u,\pi_\phi],S'\in\bbot$ is enough.
- Since a reduction from this executable is to
- $[u,\pi_\phi],S'$, which is in $\bbot$,
- $[\ast_u,\pi_\phi],S'$ is in $\bbot$,
- making $\ast_u$ an element of $\sem\phi$.
- Back to $t[v_i/x_i][\ast_u/x]$,
- by induction hypothesis,
- this term is in $\sem\psi$.
- This shows that the reduct of $e$,
- which is
- $[t[v_i/x_i][\ast_u/x],\pi],S$, is in $\bbot$.
- Consequently, $e$ is also in $\bbot$.
 
  (Mix)
 
@@ -465,36 +377,6 @@ a pole.  Since $\comod c\phi{\co c}\psi$ and $\comod {\co c}\psi c\phi$
 are separate, they just turn into $\emptyset$, however, when they are
 connected by $\conc$, they do not turn into $\emptyset$.
 
-\section{Specification Using Existential Poles}
-
-We seek to have a weaker condition on poles, and arrive at a
-existential poles.
-
-What we can readily show is the following.
-\fix{define witness}
-\begin{proposition}
- Let
- $\tr\tj c
- {\forall X\forall A\forall B
- [((A\imp B)\imp X)
-  \imp((B\imp A)\imp X)
-  \imp X]}$
- be
- derivable.
- For all terms $\rho,\sigma, r$ and for all stacks $\pi, \pi_A$ and
- $\pi_B$,
- if $[(\rho)d  ,\pi], S'\reduce [d,a\cdot \pi_B], S''$ and
-    $[(\sigma)f,\pi], S'\reduce [f,b\cdot \pi_A], S'''$ hold for all $d$,
- $f$ and $S$,
- then
- $[(c)(\rho)\sigma,\pi],S_\epsilon$ reduces to a witness on
- $E = \{([a,\pi_A],S),([b,\pi_B],S)\mid S \text{ is a store}\}$.
-\end{proposition}
-\begin{proof}
- \fix{fill}
-\end{proof}
-We obtain non-abortfullness as a corollary of this proposition.
-
 Another important property of an executable is
 non-abortfullness
 which states that the executable has no reduction sequence leading to
@@ -515,115 +397,11 @@ In order to prove non-abortfullness as a logical property,
 we define another variant of poles called scheduled poles.
 
 
-\section{Specification Using Scheduled Poles}
-
-Since our calculus is non-deterministic,
-some interesting properties have to mention
-all possibilities.
-For that, we use the concept of schedules?
-
 \fix{find a property that can only be verified using scheduled poles}.
 \fix{maybe exact specification}
 
 
 \newcommand{\sche}{\sqsubseteq}
-A \textit{schedule}~$\sche$ is a total order on channels.
-If a channel~$c$ satisfies $\co c\sche c$, then it is called
-an $\textit{active}$ channel on $\sche$.
-The reduction relation on a schedule~$\sche$, which is written
-$\red^\sche$ is defined in the same way as $\red$ but without the
-(fail) condition for $\reader c\phi$ for any channel~$c$ with $\co c
-\sche c$.
-
-A \textit{run} is a nonempty finite sequence
-$(e_i)_{i\in\{0,\ldots,n\}}$ of executables where
-$e_i\red e_{i+1}$ holds for any $i\in\{0,\ldots,n\}$.
-The run is \textit{compatible} to a schedule~$\sche$ iff
-$e_i\red^\sche e_{i+1}$ for any $i\in\{0,\ldots,n-1\}$.
-
-\begin{proposition}
- To any initialized run, there exists a compatible schedule.
-\end{proposition}
-\begin{proof}
- Seeking contradiction, assume a fail reduction occurs for both $\reader
- c\phi$ and $\reader{\co c}\psi$ in a run.
- Without loss of generality, we can assume that the fail reduction for
- $\reader c\phi$ occurs before that for $\reader{\co c}\psi$.
- Since the run is initialized\fix{define},
- before the fail reduction for $\reader c \phi$,
- there is a (write) reduction
- or (write') reduction for $\comod c\phi{\co c}\psi$.
- After that, the store maps $\co c\psi$ to a term.
- That contradicts our assumption that the fail reduction for $\co c\psi$
- occurs after that for $c\phi$.
-\end{proof}
-
-A \textit{scheduled pole}~$\bbot_\sche$ is a set of executables
-which satisfies
-\begin{enumerate}
- \item $e$ is in $\bbot$ if $e'\in\bbot_\sche$ for all
-       $e'$ with $e\red^\sche e'$;
- \item if $(m,S)\in\bbot$ or $(m',S)\in\bbot_\sche$
-       then $(m\conc m',S)\in\bbot_\sche$.
-\end{enumerate}
-
-\begin{proposition}
- If $t$ is in the set of terms $\sem{\phi}^\sche$, then
- $t\conc u$ and $u\conc t$ are in $\sem{\phi}^\sche$.
-\end{proposition}
-\fix{prove}
-
-\fix{define quibbly: closed for taking prefix of stacks, has (x,epsilon)
-as element}
-
-\begin{proposition}[Scheduled Adequacy]
- Let $\tj{x_1}{\phi_1},\ldots,\tj{x_n}{\phi_n}\tr\tj t\psi$ be
- derivable,
- $\bbot_\sche$ be any scheduled pole,
- and $|\cdot|_0^-$ be any map from propositional variables to $2^\Pi$,
- then,
- for all $v_1\in\sem{\phi_1}_\sche,\ldots,v_n\in\sem{\phi_n}_\sche$, the
- term $t[v_1/x_1,\ldots,v_n/x_n]$ is in $\sem{\psi}_\sche$.
-\end{proposition}
-\begin{proof}
- By induction on derivation of $t$.
-
- (Communication
- \AxiomC{$\G,\tj x{\phi\imp\psi}\tr\tj t \theta$}
- \AxiomC{$\G,\tj y{\psi\imp\phi}\tr\tj u \theta$}
- \BinaryInfC{$\G\tr\tj{
-t[\comod c\psi {\co c}\phi/x]
-   \conc
-u[\comod{\co c}\phi c\psi/y]
-}{\theta}$}
- \DisplayProof
- )
- Since the schedule~$\sche$ is a total order on channels, without loss
- of generality, we can assume $\co c\subseteq c$.  Now we claim that
- $\reader c\psi$ is in $\sem{\psi}_\sche$.
- For that, for any proper store~$S$ and a stack
- $\pi_\psi\in\nsem\psi_\sche$,
- we show that $e=[\reader c\psi,\pi_\psi], S$ is in $\bbot_\sche$.
- \fix{now, a problem arises.  if S(c colon psi) is empty, what to do?
- it has no reduction to anything...  so, we have to think about it.
- maybe, one way is allowing this.  so we have to change the definition
- of scheduled pole}
- If $S(c\colon\psi) = \bot$, the definition of scheduled poles
- immidiately makes $e$ a member of $\bbot_\sche$.
- Otherwise, since $S$ is proper, $[S(c\colon\psi),\pi_\psi], S$ is in
- $\bbot$, making $e$ an element of $\bbot_\sche$.
- Using this, we can also show that $\comod c\psi{\co c}\phi$ is in $\sem
-{\phi\imp\psi}_\sche$, in exactly the same manner as Prop.~\fix{fill}.
- By induction hypothesis,
- $t[\comod c\psi{\co c}\phi/x][v_i/x_i]$ is in $\sem{\theta}_\sche$.
- By defintion of scheduled poles,
- $t[\comod c\psi {\co c}\phi/x]
-   \conc
-  u[\comod{\co c}\phi c\psi/y]$ is in $\sem\theta_\sche$.
-\end{proof}
-\begin{remark}
- The mix rule can be made stronger.  \fix{fill}
-\end{remark}
 
 \begin{proposition}[Non-abortfullness]
 Let $\tr\tj t\psi$ be derivable, then,
@@ -631,16 +409,6 @@ Let $\tr\tj t\psi$ be derivable, then,
  any store $S'$.
 \end{proposition}
 \begin{proof}
- For any run $(e_i)$, take a compatible schedule~$\sche$.
- For this $\sche$, we define $\bbot_\sche$ to be the set of executables
- which has no run compatible to $\sche$ leading to $\emptyset, S$ for
- any store~$S$.
- Then $\bbot_\sche$ is a scheduled pole.
- For any propositional variable~$A$, we define $\nsem{A}_0 =
- \{\epsilon\}$.
- Since $\bbot_\sche$ is quibbly, every type~$\phi$ has
- $\epsilon\in\nsem{\phi}_\sche$.
- By scheduled adequacy, $t$ is in $\sem \psi _\sche$.
 \end{proof}
 
 

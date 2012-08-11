@@ -1,4 +1,4 @@
-\documentclass[doctor,interim]{iscs-thesis}
+\documentclass[doctor]{iscs-thesis}
 
 \usepackage{amsmath, stmaryrd, rotating, amssymb,
 setspace, float, amsthm}
@@ -16,40 +16,6 @@ setspace, float, amsthm}
 \usepackage{rotating}
 
 \usepackage{bussproofs,stmaryrd, amssymb, amsmath, amsthm, showlabels}
-\newcommand{\ruleT}[1]{\LeftLabel{(T)}\UnaryInfC{${#1}$}}
-\newcommand{\powerset}[1]{{\mathcal P({#1})}}
-\newcommand{\proj}[0]{\operatorname{proj}}
-\newcommand{\len}[0]{\operatorname{len}}
-\newcommand{\cl}[0]{\operatorname{cl}}
-\newcommand{\carrier}[0]{\operatorname{carrier}}
-\newcommand{\subfml}{\operatorname{subfml}}
-\newcommand{\seq}{\operatorname{Seq}}
-\newcommand{\type}{\operatorname{Type}}
-\newcommand{\vdashsc}{\vdash_{\mbox{\rm sc}}}
-\newcommand{\iec}{{\rm {\textbf{IEC}}}}
-\newcommand{\ckv}{{\rm {\textbf{S4}\ast\cdots\ast\textbf{S4}}}}
-\newcommand{\vdashsf}{\vdash_{\ckv}}
-\newcommand{\initial}[1]{${#1}\vdashn{#1}$}
-\newcommand{\supsete}[1]{\LeftLabel{($\supset$-E)}\BinaryInfC{${#1}$}}
-\newcommand{\supseti}[1]{\LeftLabel{($\supset$-I)}\UnaryInfC{${#1}$}}
-\newcommand{\nec}[1]{\LeftLabel{(nec)}\UnaryInfC{${#1}$}}
-\newcommand{\wedgeel}[1]{\LeftLabel{($\wedge$-E$_0$)}\UnaryInfC{${#1}$}}
-\newcommand{\wedgei}[1]{\LeftLabel{($\wedge$-I)}\BinaryInfC{${#1}$}}
-\newcommand{\veeil}[1]{\LeftLabel{($\vee$-I$_0$)}\UnaryInfC{${#1}$}}
-\newcommand{\veeir}[1]{\LeftLabel{($\vee$-I$_1$)}\UnaryInfC{${#1}$}}
-\newcommand{\veee}[1]{\LeftLabel{($\vee$-E)}\TrinaryInfC{${#1}$}}
-\newcommand{\weaken}[1]{\LeftLabel{(w)}\UnaryInfC{${#1}$}}
-\newcommand{\be}[1]{\LeftLabel{($\bot$-E)}\UnaryInfC{${#1}$}}
-\newcommand{\ax}[1]{	     \AxiomC{}
-	     \LeftLabel{(ax)}
-\UnaryInfC{\initial{#1}}}
-\newcommand{\dn}[1]{\LeftLabel{(DN)}\UnaryInfC{${#1}$}}
-
-\newenvironment{example}[1][Example]{\begin{trivlist}
-    \item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
-\newenvironment{remark}[1][Remark]{\begin{trivlist}
-    \item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
-
 \usepackage{graphicx}	% required for `\includegraphics' (yatex added)
 \usepackage[numbers,sort&compress]{natbib}
 
@@ -61,9 +27,7 @@ setspace, float, amsthm}
 \usepackage{amsmath,amssymb}
 %\usepackage{showlabels}
 
-\usepackage{setspace}
-
-%\doublespacing
+\doublespacing
 
 \input{macros.tex}
 \etitle{A Computational Interpretation of G\"odel--Dummett Logic}
@@ -73,7 +37,7 @@ setspace, float, amsthm}
 \esupervisor{Masami Hagiya}
 \jsupervisor{萩谷昌己}
 \supervisortitle{Professor} % Professor, etc.
-\date{July 4, 2012}
+\date{\fix{XXX}}
 
 \begin{document}
 
@@ -122,7 +86,7 @@ Many of the contents also appear in the author's Master's Thesis \fix{cite}.
 
 %\input{introduction.tex}
 %\input{seqcon.tex}
-%\input{lambda.tex}
+\input{lambda.tex}
 \input{pole.tex}
 %\input{haskell.tex}
 
