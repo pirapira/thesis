@@ -49,7 +49,7 @@ difference is to be discussed in Sect. \fix{?}.
 % 1b difference from Danos--Krivine
 
 %%% 2. terms types and _models_?
-\section{Types and Terms}
+\section{Synchronous Semantics}
 
 % 2a terms -- unchanged -- remove pi or anything
 
@@ -79,6 +79,537 @@ A \textit{term}~$t$ is defined by BNF:
  \mid \lambda x.t
  \mid \ast_t
  \mid \comod c c
+\]
+where $x$ is a variable and $c\colon\phi$ is a channel.
+A \textit{stack}~$\pi$ is defined by BNF:
+\[
+ \pi ::= \epsilon
+ \mid t\cdot \pi
+ \enspace.
+\]
+We write the set of terms as $\Lambda$ and stacks~$\Pi$.
+An \textit{executable} is a finite multiset on $\Lambda \times \Pi$.
+
+% 2a' reduction
+\newcommand{\red}{\succ_1}
+\renewcommand{\reduce}{\succ}
+We have reduction relation~$\red$ on executables,
+which is defined to be the smallest binary relation
+that satisfies:
+\begin{description}
+ \item[(cong)] if
+	    $[t,\pi]         \red [ t',\pi']$
+	    then
+	    $[t,\pi \conc e] \red [ t',\pi'\conc e]$  \enspace;
+ \item[(push)]
+	    $[(t)u,\pi]      \red [t,u\cdot\pi]$      \enspace;
+ \item[(dist)]
+	    $[t\conc u,\pi]  \red [t,\pi\conc u,\pi]$ \enspace;
+ \item[(store)]
+	    $[\lambda x.t,u\cdot\pi]
+	     \red
+	     [t[\ast_u/x],      \pi]$\enspace;
+ \item[(load)]
+	    $[\ast_u,\pi],S\red[u,\pi]$\enspace;
+ \item[(com)]
+	    $[\comod c{\co c}, t\cdot\pi\conc \comod{\co c}c,
+	    u\cdot\sigma] \red
+	    [u,\pi\conc t,\sigma]$\enspace.
+ % this kind of failures lead to something strange
+ % it gets affine
+ % \item[(com0)]
+ % 	    $[\comod c{\co c}, t\cdot\pi\conc \comod{\co c}c,
+ % 	    u\cdot\sigma] \red
+ % 	    [u,\pi]$\enspace.
+ % \item[(com1)]
+ % 	    $[\comod c{\co c}, t\cdot\pi\conc \comod{\co c}c,
+ % 	    u\cdot\sigma] \red
+ % 	    [t,\sigma]$\enspace.
+\end{description}
+We denote the reflexive transitive closure of $\red$ as $\reduce$.
+
+% I want to write these rules are non-blocking here.
+% but, actually, Danos and Krivines rules are also non-blocking.
+% they just busy-wait.
+% In order to remove busy-waiting, we need types.
+
+% 2b type system -- remove pierce -- add com'
+
+\newcommand{\sequent}[3]{{#1}\mid\,{#2}\tr{#3}}
+\newcommand{\aseq}[3]{\AxiomC{$\sequent{#1}{#2}{#3}$}}
+\newcommand{\useq}[3]{\UnaryInfC{$\sequent{#1}{#2}{#3}$}}
+\newcommand{\bseq}[3]{\BinaryInfC{$\sequent{#1}{#2}{#3}$}}
+
+\fix{describe a sequent; we do not allow multiple occurrences of the
+same variable}
+The derivation rules follow.\\ \noindent
+
+%
+\AxiomC    {}
+\LeftLabel{Ax}
+\useq  {\tj x\phi}{}{\tj x\phi}
+\DisplayProof
+\ruleskip
+%
+\aseq{\D,\tj x\phi}\G{\tj t\psi}
+\LeftLabel{D}
+\useq\D{\tj x\phi,\G}{\tj t\psi}
+\DisplayProof
+\ruleskip
+%
+\aseq{\D}{\tj x\phi,\G}{\tj t\psi}
+\LeftLabel{$\imp$I}
+\useq{\D}{\G}{\tj{\lambda x.t}{\phi\imp\psi}}
+\DisplayProof
+\ruleskip
+%
+\aseq\D\G{\tj t{\phi\imp\psi}}
+\aseq{\D'}\G{\tj u\phi}
+\LeftLabel{$\imp$E}
+\bseq{\D,\D'}{\G}{\tj{(t)u}\psi}
+\DisplayProof
+\ruleskip
+%
+\aseq\D\G{\tj t\phi}
+\LeftLabel{Gen}
+\useq\D\G{\tj t{\forall X\phi}}
+\DisplayProof ($\D$ and $\G$ does not contain $X$ freely)
+\ruleskip
+%
+\aseq\D\G{\tj t{\forall X\phi}}
+\LeftLabel{Ins}
+\useq\D\G{\tj t{\phi[\psi/X]}}
+\DisplayProof
+\ruleskip
+%
+\aseq{\tj x{\phi\imp\psi},\D} \G{\tj t\theta}
+\aseq{\tj y{\psi\imp\phi},\D'}\G{\tj u\theta}
+\LeftLabel{Com}
+\bseq{\D,\D'}\G{\tj
+  {t[\comod c{\co c}/x]\conc u[\comod{\co c}c/y]}
+  \theta}
+\DisplayProof
+\ruleskip
+add structural rules.
+
+\section{Specification Using Poles}
+
+% 2C truth values and models. make them disjunctive!
+%    so that the empty set does not count as successful.
+%    Also, make it closed for ``for all''
+A \textit{pole}~$\bbot$ is a set of executables
+which satisfies
+\begin{enumerate}
+ \item $e$ is in $\bbot$ if $e'\in\bbot$ and
+       $e\red e'$; and
+ \item if $(m,S)\in\bbot$ and $(m',S)\in\bbot$
+       then $(m\conc m',S)\in\bbot$.
+\end{enumerate}
+
+For a set~$\mathcal Z$ of stacks, $\mathcal Z\imp\bbot$ denotes
+the largest set~$\mathcal X$ of term-store pairs such that
+$\mathcal X\times\mathcal Z\subset \bbot.$
+A set $\mathcal X$ of terms is called a truth value
+iff there exists
+such $\mathcal Z$ that $\mathcal X = \mathcal Z\imp \bbot$.
+
+\renewcommand{\sem}[1]{|{#1}|}
+\newcommand{\nsem}[1]{\sem{#1}^-}
+For $F\in\form(2^\Pi)$ and $|\cdot|^-_0\colon\pvar\rightarrow 2^\Pi$,
+we define $\nsem{\phi}\colon \form(2^\Pi)\rightarrow
+2^\Pi$ inductively as
+\begin{align*}
+ \nsem{\mathcal Z} &= \mathcal Z \\
+ \nsem{X}&= |X|_0^- \\
+ \nsem{\phi\imp\psi}&=
+ \{t\cdot\pi\mid t\in\nsem\phi\rightarrow\bbot \text{ and }\pi\in\nsem\psi\}
+ \\
+ \nsem{\forall X\phi}&=
+ \bigcup_{\mathcal Z\in 2^\Pi} \nsem{\phi[\mathcal Z/X]}
+\end{align*}
+Using this, we define $\sem \phi=\nsem{\phi}\rightarrow\bbot$.
+We have an equality
+$\nsem{\phi\imp\psi} = \{t\cdot\pi\mid
+t\in\sem\phi\text{ and }\pi\in\nsem\psi\}$, which we denote
+$\sem{\phi}\cdot\nsem{\psi}$.
+Moreover, for types~$\phi$ and $\psi$, we define $\sem{\phi,\psi}$
+as the set of pairs $(t,u)$ of terms such that
+$t,\pi_\phi\conc u,\pi_\psi\in\bbot$ for any $\pi_\phi\in\nsem\phi$
+and $\pi_\psi\in\nsem\psi$.
+
+\begin{proposition}
+ \label{squash}
+ When $(t,u)\in\sem{\phi,\psi}$ then $t\conc u\in\sem\phi$.
+\end{proposition}
+\begin{proof}
+ For any $\pi_\phi\in\nsem\phi$,
+ $t\conc u,\pi_\phi\red t,\pi_\phi\conc u,\phi_\phi$ holds.
+ The reduct is in $\bbot$ by assumption.
+ So, the original executable is also in $\bbot$.
+\end{proof}
+
+\newcommand{\comodL}{\comod c{\co c}}
+\newcommand{\comodR}{\comod{\co c}c}
+\begin{proposition}
+ \label{comod-type}
+ $(\comodL, \comodR)\in\sem{\phi\imp\psi,\psi\imp\phi}$
+ for any types~$\phi$ and $\psi$.
+\end{proposition}
+\begin{proof}
+ Take any $t\cdot\pi_\psi\in\nsem{\phi\imp\psi} =
+ \sem\phi\cdot\nsem\psi$
+ and $u\cdot\pi_\phi\in\nsem{\psi\imp\phi}$.
+ We claim $e=\comodL,t\cdot\pi_\psi\conc\comodR,u\cdot\pi_\phi$ is in
+ $\bbot$.
+ By (com), $e\red t,\pi_\phi\conc u,\pi_\psi$.
+ We have $t,\pi_\phi\in\bbot$ and $u,\pi_\psi\in\bbot$.
+ Since $\bbot$ is closed for $\conc$,
+ we have $t,\pi_\phi\conc u,\pi_\psi\in\bbot$.
+ And since $\bbot$ is closed for $\red^{-1}$,
+ we have $e\in\bbot$.
+\end{proof}
+
+\begin{proposition}
+ \label{type-conc}
+ The set $\sem\phi$ of terms is closed for $\conc$.
+\end{proposition}
+\begin{proof}
+ Assuming $t$ and $u$ are in $\sem\phi$, we show $t\conc u$ is also in
+ $\sem\phi$.
+ By definition of $\sem\phi$, both $(t,S)$ and $(u,S)$ are in $\sem\phi$
+ for any proper store~$S$.
+ In other words, for any $\pi\in\nsem\phi$,
+ both $[t,\pi],S$ and $[u,\pi],S$ are in $\bbot$.
+ By definition of a pole,
+ $[t\conc u,\pi],S$ is also in $\bbot$,
+ making $(t\conc u, S)$ an element of $\sem\phi$, further ensuring
+ membership of $t\conc u$ with regard to $\sem\phi$.
+\end{proof}
+% 2d the adequacy lemma
+\fix{describe the notation $[\vec d/\G]$ and $\sem{\G}$}
+\begin{proposition}[Adequacy]
+ Let $\sequent{\hat\D }{\G }{\tj{t}{\phi'}}$ and
+     $\sequent{\tj y\psi,\D'}{\G'}{\tj{u}{\psi'}}$ be
+ derivable.  Under that condition, we claim that
+ \begin{enumerate}[label=(\arabic{*}), ref=\textit{(\arabic{*})}]
+  \item \label{c:first}
+	$t[\vec d/\hat\D][\vec g/\G]$ is in $\sem{\phi'}$ for any
+	$v\in\sem\phi$, $\vec g\in\sem\G$ and $\vec d\in\sem{\hat\D}$; and that
+  \item \label{c:second} when $\hat \D$ is equal to  $\tj x\phi, \D$ up
+	to exchange,
+	$(t[v/x][\vec d/\D][\vec g/\G],
+	u[w/y][\vec{d'}/\D'][\vec{g'}/G'])$ is in $\sem{\phi',\psi'}$
+	for any $(v,w)    \in \sem{\phi,\psi}$,
+	        $\vec d   \in \sem\D$,
+	        $\vec{d'} \in \sem{\D'}$,
+	        $\vec{g}  \in \sem{\G}$ and
+	        $\vec{g'} \in \sem{\G'}$.
+ \end{enumerate}
+\end{proposition}
+\begin{proof}
+ We prove both statements at the same time by induction on the sum of
+ the heights of the derivations.
+ \begin{description}
+  \item[(Ax, Ax)] When both derivations consist of only axiom rules,
+       the statements are tautologies.
+  \item[(D, \textminus)] Both statements follow immediately from the
+       induction hypothesis.
+  \item[($\imp$I, \textminus)]
+       In this case, the derivation for~$t$ ends as
+       \aseq{\hat\D}{\tj {z}{\phi_0},\G}{\tj t{\phi_1}}
+       \useq{\hat\D}{\G}{\tj{\lambda {z}.t}{\phi_0\imp{\phi_1}}}
+       \DisplayProof.
+       \begin{enumerate}[label=\textit{(\arabic{*})}]
+	\item
+	     Take any $\vec d\in\sem{\hat\D}$, $\vec
+	     g\in\sem\G$ and
+	     $u\cdot\pi\in\nsem{\phi_0\imp\phi_1}=\sem{\phi_0}\cdot\nsem{\phi_1}$.
+	     First we show $\ast_u\in\sem{\phi_0}$.
+	     For that, take any $\pi_0\in\nsem{\phi_0}$.  Then, by
+	     (load), $\ast_u,\pi_0\red u,\pi_0$, which is in $\bbot$.
+	     So, since $\bbot$ is closed for $\red^{-1}$,
+	     $\ast_u$ is in $\sem{\phi_0}$.
+	     By induction hypothesis~\ref{c:first},
+	     $e' = t[\ast_u/z][\vec d/\hat\D][\vec g/\G],\pi$ is in
+	     $\bbot$ because the term is in $\sem{\phi_1}$ and the
+	     stack is in $\nsem{\phi_1}$.
+	     The executable $e = (\lambda z.t)[\vec d/\hat\D][\vec
+	     g/\G], u\cdot \pi$ reduces to
+	     $e'$, which is shown to be in $\bbot$.
+	     Since $\bbot$ is closed for $\red^{-1}$,
+	     $e$ is also in $\bbot$.
+	     This ensures $(\lambda z.t)[\vec d/\hat\D][\vec
+	     g/\G]\in\bbot$.
+	\item Here we have $\hat\D = \tj x\phi, \D$ up to
+	      exchange.  The variable $x$ is different from any
+	      variable in
+	      $\D,\G$ and also different from $z$.
+	      Take any $(v,w)\in\sem{\phi,\psi}$,
+	      $\vec g\in\sem{\G}$, $\vec{g'}\in\sem{\G'}$, $\vec
+	      d\in\sem\D$,
+	      $\vec{d'\in\D'}$, $\pi_\psi\in\nsem{\psi}$ and
+	      $u\cdot\pi\in\nsem{\phi_0\imp\phi_1} =
+	      \sem{\phi_0}\cdot \nsem{\phi_1}$.
+	      We have $\ast_u\in\sem{\phi_0}$ as in~\ref{c:first}.
+	      By induction hypothesis,
+	      $(t[\ast_u/z][\vec d/\D][\vec g/\G],
+	      u[w/y][d'/\D'][\vec{g'}/\G'])$ is in
+	      $\sem{\phi_1,\psi}$.
+	      So, $e'=t[\ast_u/z][v/x][\vec d/\D][\vec g/\G],
+		    \pi\conc
+		            u[w/y][\vec{d'}/\D'][\vec{g'}/\G'],\pi_\psi$ is
+		    in $\bbot$.
+	      Since $e = (\lambda z.t)[v/x][\vec d/\D][\vec g/\G],
+	      u\cdot \pi\conc
+	      u[w/y][\vec{d'}/\D'][\vec{g'}/\G'],\pi_\psi$ reduces
+	      to
+	      $e'$ by (store) and (cong),
+	      $e$ is also in $\bbot$.
+	      This verifies the statement.
+       \end{enumerate}
+  \item[($\imp$E, \textminus)]
+	 The derivation for $t$ ends as
+	     \aseq{\D_0}{\G}{\tj{t_0}{\phi_1\imp\phi'}}
+	     \aseq{\D_1}{\G}{\tj{t_1}{\phi_1}}
+	     \bseq{\D_0,\D_1}{\G}{\tj{t_0(t_1)}{\phi'}}
+	     \DisplayProof
+	     and the derivation for $u$ ends at sequent
+	     $\sequent{\tj{y}{\psi},\D'}{\G'}{\tj{u}{\psi'}}$.
+	     We have $\D_0,\D_1 = \tj{x}{\phi},\D$ up to exchange.
+	 Also, $t=(t_0)t_1$.
+       \begin{enumerate}[label=\textit{(\arabic{*})}]
+	\item Take any $\vec{d_0}\in\sem{\D_0}$,
+	      $\vec{d_1}\in\sem{\D_1}$,
+	      $\vec g\in\sem\G$ and $\pi\in\nsem{\phi'}$.
+	      By induction hypothesis~\ref{c:first}, we have
+	      $t_0'=t_0[\vec{d_0}/\D_0][\vec
+	      g/\G]\in\sem{\phi_1\imp\phi'}$
+	      and
+	      $t_1'=t_1[\vec{d_1}/\D_1][\vec
+	      g/\G]\in{\sem{\phi_1}}$.
+	      Since variables in $\D_0$ and $\D_1$ are
+	      disjoint, we have
+	      $t'=((t_0)t_1)[\vec{d_0}/\D_0][\vec{d_1}/\D_1][\vec
+	      g/\G] = (t_0')t_1'$.
+		    By (push), $(t_0')t_1',\pi\red t_0',t_1'\cdot\pi$,
+		    which is in $\bbot$ because
+		    $t_0'\in\sem{\phi_1\imp\phi'}$ and
+		    $t_1'\cdot\pi\in\nsem{\phi_1\imp\phi'} =
+		    \sem{\phi_1}\cdot\nsem{\phi'}$.
+		    Since $\bbot$ is closed for $\red^{-1}$,
+		    $(t_0')t_1',\pi$ is in $\bbot$.
+		    Since $\pi$ was taken arbitrarily,
+		    we have $(t_0')t_1'\in\sem{\phi'}$.
+	\item $\tj x\phi$ might be in $\D_0$ or in $\D_1$.
+	      \begin{description}
+	       \item[(Case $\tj{x}{\phi}\in\D_0$)]
+		    Let $\D_0$ be equal to $\tj{x}{\phi},\overline{\D_0}$ up
+		    to exchange.
+		    The derivation for $t$ ends in\[
+		    \aseq{\tj{x}{\phi},\overline{\D_0}}\G{\tj{t_0}{\phi_1\imp\phi'}}
+		    \aseq{\D_1}\G{\tj{t_1}{\phi_1}}
+		    \bseq{\tj{x}{\phi},\overline{\D_0},\D_1}{\G}{\tj{(t_0)t_1}{\phi'}}
+		    \DisplayProof\enspace.
+						  \]
+		    Take any $(v,w)\in\sem{\phi,\psi}$,
+		             $\vec{d_0}\in\sem{\overline{\D_0}}$,
+		             $\vec{d_1}\in\sem{\D_1}$,
+		             $\vec{d'}\in\sem{\D'_1}$,
+		             $\vec g\in\sem{\G}$,
+		             $\pi\in\nsem{\phi'}$ and
+		             $\sigma\in\nsem{\psi'}$.
+		    By induction hypothesis~\ref{c:second},
+		    $t_0'=t_0[v/x][\vec{d_0}/\overline{\D_0}][\vec
+		    g/\G]$ and
+		    $u' = u[w/y][\vec{d'}/\D'][\vec g/\G]$ satisfy
+		    $(t_0',u')\in\sem{\phi_1\imp\phi',\psi'}$.
+		    By induction hypothesis~\ref{c:first},
+		    $t_1'=t_1[\vec{d_1}/\D_1][\vec g/\G]$ is in
+		    $\sem{\phi_1}$.
+		    We have $t' =
+		    ((t_0)t_1)[v/x][\vec{d_0}/\overline{\D_0}][\vec{d_1}/\D_1][\vec
+		    g/\G] = (t_0')t_1'$.
+		    By (push) and (cong), $(t_0')t_1',\pi\conc
+		    u',\sigma\red t_0',t_1'\cdot\pi\conc u',\sigma$,
+		    which is in $\bbot$ because
+		    $(t_0',u')\in\sem{\phi_1\imp\phi',\psi'}$ and
+		    $t_1'\cdot\pi\in \sem{\phi_1}\cdot\nsem{\phi'} =
+		    \nsem{\phi_1\imp\phi'}$, $u'\in\sem{\psi'}$
+		    and $\sigma\in\nsem{\psi'}$.
+		    Since $\bbot$ is closed for $\red^{-1}$,
+		    $(t_0')t_1',\pi\conc u',\sigma$ is in $\bbot$.
+	       \item[(Case $\tj{x}{\phi}\in\D_1$)]
+		    \fix{skipped}
+	      \end{description}
+       \end{enumerate}
+  \item[(Com, \textminus)]
+       The derivation for $t$ ends in
+       \[
+       \aseq{\tj{\hat x}{\theta\imp\tau},\D_0}{\G}{\tj{t_0}{\phi'}}
+       \aseq{\tj{\hat y}{\tau\imp\theta},\D_1}{\G}{\tj{t_1}{\phi'}}
+       \bseq{\D_0,\D_1}\G{\tj{(t_0[\comodL/\hat x]\conc t_1[\comodR/\hat
+       y])}{\phi'}}
+       \DisplayProof\enspace.
+       \]
+       \begin{enumerate}[label=\textit{(\arabic{*})}]
+	\item Take any
+	      $\vec{d_0}\in\sem{\D_0}$,
+	      $\vec{d_1}\in\sem{\D_1}$,
+	      $\vec{g}  \in\sem{\G}$.
+	      By Prop.~\ref{comod-type}, we have
+	      $(\comodL,\comodR)\in\sem{\theta\imp\tau,\tau\imp\theta}$.
+	      By induction hypothesis~\ref{c:second}, the terms
+	      $t_0'=t_0[\comodL/\hat x][\vec{d_0}/\D_0][\vec g/\G]$
+	      and
+	      $t_1'=t_1[\comodR/\hat y][\vec{d_1}/\D_1][\vec g/\G]$
+	      satisfy
+	      $(t_0',t_1')\in\sem{\phi',\phi'}$.
+	      By Prop.~\ref{squash}, we have $t_0'\conc
+	      t_1'\in\sem{\phi'}$.
+	      This term $t_0'\conc t_1'$ is equal to
+	      $(t_0[\comodL/\hat x]\conc t_1[\comodR/\hat
+	      y])[\vec{d_0}/\D_0][\vec{d_1}/\D_1][\vec g/\G]$.
+	\item Without loss of generality,
+	      we can assume $(\tj x\phi)\in\D_0$ so
+	      $\D_0 =\tj x\phi, \overline{\D_0}$ up to exchange.
+	      Take any
+	      $(v,w)\in\sem{\phi,\psi}$,
+	      $\vec{d_0}\in\sem{\overline{\D_0}}$,
+	      $\vec{d_1}\in\sem{\overline{\D_1}}$,
+	      $\vec{d'}\in\sem{\D'}$,
+	      $\vec g\in \sem\G$,
+	      $\pi\in\nsem{\phi'}$ and
+	      $\sigma\in\nsem{\psi'}$.
+	      By induction hypothesis~\ref{c:second},
+	      the terms $t_0'=t_0[v/x][\vec{d_0}/\overline{\D_0}][\vec
+	      g/\G]$
+	      and
+	      $u'=u[w/y][\vec{d_1}/\D_1][\vec g/\G]$
+	      satisfy
+	      $(t_0',u')\in\sem{\phi',\psi'}$.
+	      By induction hypothesis~\ref{c:first},
+	      $t_1'=t_1[\vec{d_1}/\D_1][\vec g/\G]$ is in $\sem{\phi'}$.
+	      From these, respectively, we obtain
+	      $t_0',\pi\conc u',\sigma\in\bbot$
+	      and
+	      $t_1',\pi\in\bbot$.
+	      Since $\bbot$ is closed for $\conc$,
+	      we have $t_0',\pi\conc t_1',\pi\conc u',\sigma\in\bbot$.
+	      By (dist) and (cong),
+	      $(t_0'\conc t_1'),\pi\conc u',\sigma$ reduces
+	      to this executable.
+	      So $(t_0'\conc t_1',u')\in\sem{\phi',\psi'}$
+	      where $t_0'\conc t_1' = (t_0[\comodL/\hat x]\conc
+	      t_1[\comodR/\hat y])[\vec{d_0}/\D_0][\vec{d_1}/\D_1][\vec g/\G]$.
+       \end{enumerate}
+  \item[(Gen, \textminus)]
+       The derivation for $t$ ends in
+       \aseq{\hat\D}{\G}{\tj t\phi}
+       \useq{\hat\D}{\G}{\tj t{\forall X\phi}}
+       \DisplayProof.
+       \begin{enumerate}[label=\textit{(\arabic{*})}]
+	\item Take any $\vec d\in\sem{\hat\D}$ and $\vec g\in\sem{\G}$.
+	      Since neither $\hat\D$ nor $\G$ contains $X$ freely,
+	      the sets $\sem{\hat\D}$ and $\G$ do not change whatever
+	      $\nsem{X}_0$ is.
+	      On the other hand, since the indcution
+	      hypothesis~\ref{c:first}
+	      holds for arbitrary $\nsem{X}_0$,
+	      the term $t[\vec d/\hat\D][\vec g/\G]$ is in
+	      $\bigcap_{\mathcal Z\in 2^\Pi}\sem{\phi'[\mathcal Z/X]}$.
+	      Since $(\bigcap_{\mathcal Z\in 2^\Pi}\sem{\phi'[\mathcal
+	      Z/X]})\cdot (\bigcup_{\mathcal Z\in
+	      2^\Pi}\nsem{\phi'[\mathcal Z/X]})$ is a subset of $\bbot$,
+	      the term is in $\sem{\forall X\phi'} = \left(\bigcup_{\mathcal
+	      Z\in 2^\Pi}\nsem{\phi'[\mathcal Z/X]}\right) \rightarrow
+	      \bbot$.
+	\item Take any
+	      $(v,w)\in\sem{\phi,\psi}$,
+	      $\vec{d_0}\in\sem{\D_0}$,
+	      $\vec{d_1}\in\sem{\D_1}$,
+	      $\vec g   \in\sem{\G}$,
+	      $\pi_{\phi'}\in\nsem{\forall X\phi'}$ and
+	      $\pi_{\psi'}\in\nsem{\psi'}$.
+	      We can replace $X$ in the derivation of $t$ with
+	      another propositional variable~$X'$ that does not
+	      occur in the derivation of $u$.
+	      We are going to use the induction hypothesis on the
+	      renamed derivation with the terms and stacks taken above.
+	      Since $\phi,\D_0$ and $\G$ do not contain
+	      $X$ freely, we have
+	      $(v,w)\in\sem{\phi[X'/X],\psi}$,
+	      $\vec{d_0}\in\sem{\D_0[X'/X]}$,
+	      $\vec{g}\in\sem{\G[X'/X]} = \G$ and $\pi_{\phi'}\in
+	      \nsem{\forall X'\phi'[X'/X]}$.
+	      By induction hypothesis on the renamed derivation,
+	      the terms
+	      $t' = t[v/x][\vec{d_0}/\D_0][\vec g/\G]$ and
+	      $u' = u[w/y][\vec{d_1}/\D_1][\vec g/\G]$ satisfy
+	      $(t',u')\in\sem{\phi'[X'/X],\psi'}$ for any $\nsem{X'}_0$.
+	      That is, for any $\mathcal Z\in 2^\Pi$,
+	      $\pi\in\nsem{\phi'[X'/X][\mathcal Z/X']}$ and
+	      $\sigma\in\nsem{\psi'[\mathcal Z/X']}$,
+	      $t'\pi\conc u',\sigma$ is in $\bbot$,
+	      making $t',\pi_{\phi'}\conc u',\pi_{\sigma'}$ an elment of
+	      $\bbot$ because
+	      $\pi_{\psi'}\in\nsem{\psi'}=\nsem{\psi'[\mathcal Z/X']}$,
+	      where the last equality holds because of the way we chose
+	      the variable~$X'$.
+       \end{enumerate}
+  \item[(Ins, \textminus)]
+       The derivation for $t$ ends in
+       \aseq{\tj x\phi,\D}\G{\tj t{\forall X\phi}}
+       \useq{\tj x\phi,\D}\G{\tj t{\phi[\psi/X]}}
+       \DisplayProof.
+       Both statements follow immediately from the induction hypotheses
+       because $\nsem{\phi[\psi/X]}$ is a subset of $\nsem{\forall X\phi}$.
+  \item[(Other cases)] In the other cases,
+       where induction proceeds over the derivation for $u$,
+       \ref{c:first} is trivially proved using the induction
+       hypothesis and \ref{c:second} is proved
+       symmetrically as another case above.
+ \end{description}
+\end{proof}
+Note that (1) uses (2) and vice versa.
+
+\begin{proposition}
+ Let $E$ be a set of executables.
+ Then the following set is a pole: the set of executables that reduces to
+ a multiset on $E$.
+\end{proposition}
+\begin{proof}
+ \fix{fill}
+\end{proof}
+
+\begin{proposition}
+ Let
+ $\sequent{}{}{\tj c
+ {\forall X\forall A\forall B
+ [((A\imp B)\imp X)
+  \imp((B\imp A)\imp X)
+  \imp X]}}$
+ be
+ derivable.
+ For all terms $\rho,\sigma, r$ and for all stacks $\pi, \pi_A$ and
+ $\pi_B$,
+ if $[(\rho)d  ,\pi]\reduce [d,a\cdot \pi_B]$ and
+    $[(\sigma)f,\pi]\reduce [f,b\cdot \pi_A]$ hold for all $d$ and $f$,
+ then
+ $[(c)(\rho)\sigma,\pi],S_\epsilon$ reduces to a multiset on
+ $E = \{(a,\pi_A),(b,\pi_B)\}$.
+\end{proposition}
+\begin{proof}
+\end{proof}
+\section{Asynchronous Semantics}
+
+A \textit{term}~$t$ is defined by BNF:
+\[
+ t::= x
+ \mid (t)t
+ \mid t\conc t
+ \mid \lambda x.t
+ \mid \ast_t
+ \mid \comod c c
  \mid \reader  c
 \]
 where $x$ is a variable and $c\colon\phi$ is a channel.
@@ -95,12 +626,16 @@ The \textit{empty store}~$S_\epsilon$ maps any channel to $\bot$.
 For a store $S$, we define a store $S[c\colon\phi\mapsto x]$ to be
 the same as $S$ except that $S[c\colon\phi\mapsto x](c\colon\phi\mapsto
 x)$ is $x$.
+A \textit{store} is a partial mapping from locations to
+terms, equivalently, a mapping from locations to terms and $\bot$'s.
+The \textit{empty store}~$S_\epsilon$ maps any channel to $\bot$.
+For a store $S$, we define a store $S[c\colon\phi\mapsto x]$ to be
+the same as $S$ except that $S[c\colon\phi\mapsto x](c\colon\phi\mapsto
+x)$ is $x$.
 An \textit{executable} is a finite multiset on $\Lambda \times \Pi$,
 paired with a store.
 
 % 2a' reduction
-\newcommand{\red}{\succ_1}
-\renewcommand{\reduce}{\succ}
 We have reduction relation~$\red$ on executables,
 which is defined to be the smallest binary relation
 that satisfies:
@@ -153,63 +688,6 @@ that satisfies:
 \end{description}
 We denote the reflexive transitive closure of $\red$ as $\reduce$.
 
-% I want to write these rules are non-blocking here.
-% but, actually, Danos and Krivines rules are also non-blocking.
-% they just busy-wait.
-% In order to remove busy-waiting, we need types.
-
-% 2b type system -- remove pierce -- add com'
-
-We type terms as follows.\\ \noindent
-\AxiomC    {}
-\LeftLabel {Axiom}
-\UnaryInfC {$\G,\tj x \phi\tr \tj x \phi$}
-\DisplayProof
-    \ruleskip\noindent
-%%
-\AxiomC    {$\G,\tj x \phi\tr \tj t \psi$}
-\LeftLabel {Abstraction}
-\UnaryInfC {$\G\tr\tj{\lambda x.t}{\phi\imp\psi}$}
-\DisplayProof
-    \ruleskip\noindent
-%%
-\AxiomC    {$\G\tr\tj{t}{\phi\imp\psi}$}
-\AxiomC    {$\G\tr\tj u \phi$}
-\LeftLabel {Application}
-\BinaryInfC{$\G\tr\tj{(t)u}{\psi}$}
-\DisplayProof
-    \ruleskip\noindent
-%%
-\AxiomC    {$\G\tr\tj t \phi$}
-\LeftLabel {Generalization}
-\UnaryInfC {$\G\tr\tj{t}{\forall X\phi}$}
-\DisplayProof
-($X$ not free in $\G$)
-    \ruleskip\noindent
-%%
-\AxiomC    {$\G\tr\tj t{\forall X\phi}$}
-\LeftLabel {Instantiation}
-\UnaryInfC {$\G\tr\tj t{\phi[\psi/X]}$}
-\DisplayProof
-    \ruleskip\noindent
-%%
-\AxiomC    {$\G\tr\tj t \phi$}
-\AxiomC    {$\G\tr\tj u \phi$}
-\LeftLabel {Mix}
-\BinaryInfC{$\G\tr\tj {t\conc u}{\phi}$}
-\DisplayProof
-    \ruleskip\noindent
-%%
-\AxiomC    {$\G,\tj x{\phi\imp \psi}\tr\tj t \theta$}
-\AxiomC    {$\G,\tj y{\psi\imp \phi}\tr\tj u \theta$}
-\LeftLabel {Communication}
-\BinaryInfC{$
-\G\tr\tj{
-t[\comod c {\co c}/x]
-   \conc
-u[\comod{\co c} c/y]
-  }{\theta}$}
-\DisplayProof
 
 We can implement something similar to Lafont's example,
 showing that confluence does not hold.
@@ -227,149 +705,6 @@ and to $[u,\pi], S_\epsilon[c\mapsto u,\co c\mapsto t]$.
 Since $t$ and $u$ were taken arbitrarily, we cannot distinguish terms
 of the same type if we equate a term with what it reduces to.
 
-\section{Specification Using Poles}
-
-% 2C truth values and models. make them disjunctive!
-%    so that the empty set does not count as successful.
-%    Also, make it closed for ``for all''
-A \textit{pole}~$\bbot$ is a set of executables
-which satisfies
-\begin{enumerate}
- \item $e$ is in $\bbot$ if $e'\in\bbot$ and
-       $e\red e'$;
- \item $\emptyset, S$ is in $\bbot$ for any store~$S$; and
- \item if $(m,S)\in\bbot$ and $(m',S)\in\bbot$
-       then $(m\conc m',S)\in\bbot$.
-\end{enumerate}
-For a set of executable~$E$, the pole generated by~$E$ is the smallest
-pole containing~$E$.
-This is well-defined because the condition for a pole is monotonic.
-\begin{proposition}
- Let $e$ be a nonempty executable in the pole generated by $E$.
- Then $e$ reduces to a multiset on~$E$.
-\end{proposition}
-\begin{proof}
- \fix{prove}
-\end{proof}
-
-A term-store pair is a pair of a term and a store.
-For a term~$t$, stack~$\pi$ and store~$S$, we identify $([t,\pi], S)$
-as $((t,S), \pi)$
-For a set~$\mathcal Z$ of stacks, $\mathcal Z\imp\bbot$ denotes
-the largest set~$\mathcal X$ of term-store pairs such that
-$\mathcal X\times\mathcal Z\subset \bbot.$
-A set $\mathcal X$ of terms is called a truth value
-iff there exists
-such $\mathcal Z$ that $\mathcal X = \mathcal Z\imp \bbot$.
-
-\renewcommand{\sem}[1]{|{#1}|}
-\newcommand{\nsem}[1]{\sem{#1}^-}
-For $F\in\form(2^\Pi)$ and $|\cdot|^-_0\colon\pvar\rightarrow 2^\Pi$,
-and a set~$\Sigma$ of stores,
-we define $\nsem{\phi}_\Sigma\colon \form(2^\Pi)\rightarrow
-2^\Pi$ inductively as
-\begin{align*}
- \nsem{\mathcal Z}_\Sigma &= \mathcal Z \\
- \nsem{X}_\Sigma&= |X|_0^- \\
- \nsem{\phi\imp\psi}_\Sigma&=
- \{t\cdot\pi\mid(t,S)\in\nsem\phi_\Sigma\rightarrow\bbot\text{ for all store
- }S\in \Sigma\text{ and }\pi\in\nsem\psi_\Sigma\}
- \\
- \nsem{\forall X\phi}_\Sigma&=
- \bigcup_{\mathcal Z\in 2^\Pi} \nsem{\phi[\mathcal Z/X]}_\Sigma
-\end{align*}
-Using this, we define $\sem \phi_\Sigma=\nsem{\phi}_\Sigma\rightarrow\bbot$.
-
-When we abuse $\sem{\phi}$ as a set of terms,
-$\sem{\phi}$ is the largest set~$\mathcal T$
-with $\mathcal T\times\hat\Sigma\subset\sem{\phi}$.
-With these notations, we have an equality
-$\nsem{\phi\imp\psi} = \{t\cdot\pi\mid
-t\in\sem\phi\text{ and }\pi\in\nsem\psi\}$.
-
-\begin{proposition}
- \label{type-conc}
- The set $\sem\phi$ of terms is closed for $\conc$.
-\end{proposition}
-\begin{proof}
- Assuming $t$ and $u$ are in $\sem\phi$, we show $t\conc u$ is also in
- $\sem\phi$.
- By definition of $\sem\phi$, both $(t,S)$ and $(u,S)$ are in $\sem\phi$
- for any proper store~$S$.
- In other words, for any $\pi\in\nsem\phi$,
- both $[t,\pi],S$ and $[u,\pi],S$ are in $\bbot$.
- By definition of a pole,
- $[t\conc u,\pi],S$ is also in $\bbot$,
- making $(t\conc u, S)$ an element of $\sem\phi$, further ensuring
- membership of $t\conc u$ with regard to $\sem\phi$.\qed
-\end{proof}
-% 2d the adequacy lemma
-\begin{proposition}[Adequacy]
- Let $\tj{x_1}{\phi_1},\ldots,\tj{x_n}{\phi_n}\tr\tj t \psi$ be derivable,
- $\bbot$ be any pole,
- and $|\cdot|_0^-$ be any map from propositional variables to
- $2^\Pi$, then, for all
- $v_1\in\sem{\phi_1},\ldots,v_n\in\sem{\phi_n}$,
- the term $t[v_1/x_1,\ldots,v_n/x_n]$ is in $\sem\psi$.
-\end{proposition}
-\begin{proof}
- By induction on the derivation of~$t$.
-
- (Application
- \AxiomC    {$\G\tr\tj{t}{\phi\imp\psi}$}
- \AxiomC    {$\G\tr\tj u \phi$}
- \BinaryInfC{$\G\tr\tj{(t)u}{\psi}$}
- \DisplayProof )
-
- (Communication
- \AxiomC{$\G,\tj x{\phi\imp\psi}\tr\tj t \theta$}
- \AxiomC{$\G,\tj y{\psi\imp\phi}\tr\tj u \theta$}
- \BinaryInfC{$\G\tr\tj{
-t[\comod c {\co c}/x]
-   \conc
-u[\comod{\co c} c/y]
-}{\theta}$}
- \DisplayProof
- )
-
- (Abstraction
- \AxiomC{$\G,\tj x\phi\tr\tj t\psi$}
- \UnaryInfC{$\G\tr\tj{\lambda x.t}{\phi\imp\psi}$}
- \DisplayProof)
-
- (Mix)
-
- (Generalization)
-
- (Instantiation)
-
- (Axiom)
- \qed
-\end{proof}
-
-One might want to show this property.
-\begin{example}
- Let
- $\tr\tj c
- {\forall X\forall A\forall B
- [((A\imp B)\imp X)
-  \imp((B\imp A)\imp X)
-  \imp X]}$
- be
- derivable.
- For all terms $\rho,\sigma, r$ and for all stacks $\pi, \pi_A$ and
- $\pi_B$,
- if $[(\rho)d  ,\pi], S'\reduce [d,a\cdot \pi_B], S''$ and
-    $[(\sigma)f,\pi], S'\reduce [f,b\cdot \pi_A], S'''$ hold for all $d$,
- $f$ and $S$,
- then
- $[(c)(\rho)\sigma,\pi],S_\epsilon$ reduces to a multiset on
- $E = \{([a,\pi_A],S),([b,\pi_B],S)\mid S \text{ is a store}\}$.
-\end{example}
-However, the executables which reduce to a multiset on~$E$ does not form
-a pole.  Since $\comod c{\co c}$ and $\comod {\co c} c$
-are separate, they just turn into $\emptyset$, however, when they are
-connected by $\conc$, they do not turn into $\emptyset$.
 
 Another important property of an executable is
 non-abortfullness
