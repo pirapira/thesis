@@ -34,7 +34,7 @@ In contrast to Danos and Krivine's \fix{cite} formulation,
 where computation can wait for another,
 our calculus is weaker and resides in a particular class of
 distributed computation called waitfreedom.
-This work is a reformulation of Hirai~\fix{cite} in the
+This work is a reformulation of Hirai~\fix{cite} in the setting of
 second-order logic.
 This allowed parametricity argument.
 Also, differently from Hirai's \fix{cite} hypersequent formulation,
@@ -91,10 +91,9 @@ We write the set of terms as $\Lambda$ and stacks~$\Pi$.
 An \textit{executable} is a finite multiset on $\Lambda \times \Pi$.
 
 % 2a' reduction
-\newcommand{\red}{\succ_1}
-\renewcommand{\reduce}{\succ}
-We have reduction relation~$\red$ on executables,
-which is defined to be the smallest binary relation
+\newcommand{\red}{\succ}
+The reduction relation~$\red$ on executables
+is defined to be the smallest preorder
 that satisfies:
 \begin{description}
  \item[(cong)] if
@@ -126,7 +125,6 @@ that satisfies:
  % 	    u\cdot\sigma] \red
  % 	    [t,\sigma]$\enspace.
 \end{description}
-We denote the reflexive transitive closure of $\red$ as $\reduce$.
 
 % I want to write these rules are non-blocking here.
 % but, actually, Danos and Krivines rules are also non-blocking.
@@ -164,9 +162,9 @@ The derivation rules follow.\\ \noindent
 \ruleskip
 %
 \aseq\D\G{\tj t{\phi\imp\psi}}
-\aseq{\D'}\G{\tj u\phi}
+\aseq{}\G{\tj u\phi}
 \LeftLabel{$\imp$E}
-\bseq{\D,\D'}{\G}{\tj{(t)u}\psi}
+\bseq{\D}{\G}{\tj{(t)u}\psi}
 \DisplayProof
 \ruleskip
 %
@@ -370,13 +368,12 @@ and $\pi_\psi\in\nsem\psi$.
   \item[($\imp$E, \textminus)]
 	 The derivation for $t$ ends as
 	     \aseq{\D_0}{\G}{\tj{t_0}{\phi_1\imp\phi'}}
-	     \aseq{\D_1}{\G}{\tj{t_1}{\phi_1}}
-	     \bseq{\D_0,\D_1}{\G}{\tj{t_0(t_1)}{\phi'}}
+	     \aseq{}{\G}{\tj{t_1}{\phi_1}}
+	     \bseq{\D_0}{\G}{\tj{t_0(t_1)}{\phi'}}
 	     \DisplayProof
 	     and the derivation for $u$ ends at sequent
 	     $\sequent{\tj{y}{\psi},\D'}{\G'}{\tj{u}{\psi'}}$.
-	     We have $\D_0,\D_1 = \tj{x}{\phi},\D$ up to exchange.
-	 Also, $t=(t_0)t_1$.
+	 We have $t=(t_0)t_1$.
        \begin{enumerate}[label=\textit{(\arabic{*})}]
 	\item Take any $\vec{d_0}\in\sem{\D_0}$,
 	      $\vec{d_1}\in\sem{\D_1}$,
@@ -400,9 +397,8 @@ and $\pi_\psi\in\nsem\psi$.
 		    $(t_0')t_1',\pi$ is in $\bbot$.
 		    Since $\pi$ was taken arbitrarily,
 		    we have $(t_0')t_1'\in\sem{\phi'}$.
-	\item $\tj x\phi$ might be in $\D_0$ or in $\D_1$.
-	      \begin{description}
-	       \item[(Case $\tj{x}{\phi}\in\D_0$)]
+	\item
+	       $\tj{x}{\phi}\in\D_0$)
 		    Let $\D_0$ be equal to $\tj{x}{\phi},\overline{\D_0}$ up
 		    to exchange.
 		    The derivation for $t$ ends in\[
@@ -414,7 +410,7 @@ and $\pi_\psi\in\nsem\psi$.
 		    Take any $(v,w)\in\sem{\phi,\psi}$,
 		             $\vec{d_0}\in\sem{\overline{\D_0}}$,
 		             $\vec{d_1}\in\sem{\D_1}$,
-		             $\vec{d'}\in\sem{\D'_1}$,
+		             $\vec{d'}\in\sem{\D'c}$,
 		             $\vec g\in\sem{\G}$,
 		             $\pi\in\nsem{\phi'}$ and
 		             $\sigma\in\nsem{\psi'}$.
@@ -438,9 +434,6 @@ and $\pi_\psi\in\nsem\psi$.
 		    and $\sigma\in\nsem{\psi'}$.
 		    Since $\bbot$ is closed for $\red^{-1}$,
 		    $(t_0')t_1',\pi\conc u',\sigma$ is in $\bbot$.
-	       \item[(Case $\tj{x}{\phi}\in\D_1$)]
-		    \fix{skipped}
-	      \end{description}
        \end{enumerate}
   \item[(Com, \textminus)]
        The derivation for $t$ ends in
