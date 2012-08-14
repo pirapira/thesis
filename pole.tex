@@ -19,6 +19,11 @@
 
 % \maketitle
 
+\newcommand{\ltypes}[1]{\mathsf{Ltypes}({#1})}
+\newcommand{\lvars}[1]{\mathsf{Lvars}({#1})}
+\newcommand{\rtypes}[1]{\mathsf{Rtypes}({#1})}
+\newcommand{\rterms}[1]{\mathsf{Rterms}({#1})}
+
 \subsection{Summary}
 %%% abstract
 This work is a refinement of
@@ -133,62 +138,71 @@ that satisfies:
 
 % 2b type system -- remove pierce -- add com'
 
-\newcommand{\sequent}[3]{{#1}\mid\,{#2}\tr{#3}}
-\newcommand{\aseq}[3]{\AxiomC{$\sequent{#1}{#2}{#3}$}}
-\newcommand{\useq}[3]{\UnaryInfC{$\sequent{#1}{#2}{#3}$}}
-\newcommand{\bseq}[3]{\BinaryInfC{$\sequent{#1}{#2}{#3}$}}
+\newcommand{\sequent}[2]{{#1}\tr{#2}}
+\newcommand{\aseq}[2]{\AxiomC{$\sequent{#1}{#2}$}}
+\newcommand{\useq}[2]{\UnaryInfC{$\sequent{#1}{#2}$}}
+\newcommand{\bseq}[2]{\BinaryInfC{$\sequent{#1}{#2}$}}
+
+\newcommand{\Haseq}[3]{\AxiomC{${#1}\hmid\sequent{#2}{#3}$}}
+\newcommand{\Huseq}[3]{\UnaryInfC{${#1}\hmid\sequent{#2}{#3}$}}
+\newcommand{\Hbseq}[3]{\BinaryInfC{${#1}\hmid\sequent{#2}{#3}$}}
+
+\newcommand{\Hy}{\mathcal{H}}
+\newcommand{\Ky}{\mathcal{K}}
+\newcommand{\limp}{\multimap}
 
 \fix{describe a sequent; we do not allow multiple occurrences of the
 same variable}
 The derivation rules follow.\\ \noindent
 
-%
-\AxiomC    {}
-\LeftLabel{Ax}
-\useq  {\tj x\phi}{}{\tj x\phi}
+\newcommand{\xphi}{\tj{x}{\phi}}
+
+\AxiomC{}
+\LL  {Ax}
+\useq{\xphi}{\xphi}
 \DisplayProof
 \ruleskip
 %
-\aseq{\D,\tj x\phi}\G{\tj t\psi}
-\LeftLabel{D}
-\useq\D{\tj x\phi,\G}{\tj t\psi}
+\Haseq\Hy{\xphi,\G}{\tj t\psi}
+\LL{$\limp$I}
+\Huseq\Hy{\G}{\tj{\lambda x.t}{\phi\limp\psi}}
 \DisplayProof
 \ruleskip
 %
-\aseq{\D}{\tj x\phi,\G}{\tj t\psi}
-\LeftLabel{$\imp$I}
-\useq{\D}{\G}{\tj{\lambda x.t}{\phi\imp\psi}}
+\Haseq{\Hy_0}{\G}{\tj t{\phi\limp\psi}}
+\Haseq{\Hy_1}{\D}{\tj u\phi}
+\LL   {$\limp$E}
+\Hbseq{\Hy_0\hmid\Hy_1}{\G,\D}{\tj{(t)u}\psi}
 \DisplayProof
 \ruleskip
 %
-\aseq\D\G{\tj t{\phi\imp\psi}}
-\aseq{}\G{\tj u\phi}
-\LeftLabel{$\imp$E}
-\bseq{\D}{\G}{\tj{(t)u}\psi}
+\Haseq{\Hy}\G{\tj t\phi}
+\LL   {$\forall$I}
+\Huseq{\Hy}\G{\tj t{\forall X\phi}}
 \DisplayProof
 \ruleskip
 %
-\aseq\D\G{\tj t\phi}
-\LeftLabel{Gen}
-\useq\D\G{\tj t{\forall X\phi}}
-\DisplayProof ($\D$ and $\G$ does not contain $X$ freely)
-\ruleskip
-%
-\aseq\D\G{\tj t{\forall X\phi}}
-\LeftLabel{Ins}
-\useq\D\G{\tj t{\phi[\psi/X]}}
+\Haseq{\Hy}{\G}{\tj{t}{\forall X\phi}}
+\LL   {$\forall$E}
+\Huseq{\Hy}{\G}{\tj{t}{\phi[\psi/X]}}
 \DisplayProof
 \ruleskip
 %
-\aseq{\tj x{\phi\imp\psi},\D} \G{\tj t\theta}
-\aseq{\tj y{\psi\imp\phi},\D'}\G{\tj u\theta}
-\LeftLabel{Com}
-\bseq{\D,\D'}\G{\tj
-  {t[\comod c{\co c}/x]\conc u[\comod{\co c}c/y]}
-  \theta}
+\newcommand{\comodL}{\comod c{\co c}}
+\newcommand{\comodR}{\comod{\co c}c}
+\Haseq{\Hy_0}{\tj{x}{\phi\limp\psi},\G}{\tj t\theta}
+\Haseq{\Hy_1}{\tj{y}{\psi\limp\phi},\G}{\tj u\tau}
+\LL{Com}
+\BinaryInfC{$
+\Hy_0\hmid\Hy_1\hmid
+\sequent\G{t[\comodL/x]}
+\hmid
+\sequent{\D}{u[\comodR/y]}
+$}
 \DisplayProof
-\ruleskip
-add structural rules.
+
+\fix{and exchange rules}
+
 
 \section{Specification Using Poles}
 
@@ -267,295 +281,103 @@ and $\pi_\psi\in\nsem\psi$.
  we have $e\in\bbot$.
 \end{proof}
 
-\begin{proposition}
- \label{type-conc}
- The set $\sem\phi$ of terms is closed for $\conc$.
-\end{proposition}
-\begin{proof}
- Assuming $t$ and $u$ are in $\sem\phi$, we show $t\conc u$ is also in
- $\sem\phi$.
- By definition of $\sem\phi$, both $(t,S)$ and $(u,S)$ are in $\sem\phi$
- for any proper store~$S$.
- In other words, for any $\pi\in\nsem\phi$,
- both $[t,\pi],S$ and $[u,\pi],S$ are in $\bbot$.
- By definition of a pole,
- $[t\conc u,\pi],S$ is also in $\bbot$,
- making $(t\conc u, S)$ an element of $\sem\phi$, further ensuring
- membership of $t\conc u$ with regard to $\sem\phi$.
-\end{proof}
 % 2d the adequacy lemma
 \fix{describe the notation $[\vec d/\G]$ and $\sem{\G}$}
+
+\fix{add what we really want to show is this short proposition: ...
+}
+We deal with two derivations because otherwise the proof for the
+Com rule fails.
+We include $t_{ij}$ terms in the statements because otherwise
+the proof for $\limp$E rule fails.
+
 \begin{proposition}[Adequacy]
- Let $\sequent{\hat\D }{\G }{\tj{t}{\phi'}}$ and
-     $\sequent{\tj y\psi,\D'}{\G'}{\tj{u}{\psi'}}$ be
- derivable.  Under that condition, we claim that
+ Let these hypersequents be derivable:
+ \begin{align*}
+  \Hy = &\sequent{\G_0}{\tj{t_0}{\phi_0}} \hmid
+  \sequent{\G_1}{\tj{t_1}{\phi_1}} \hmid \cdots \hmid
+  \sequent{\G_{m'}}{\tj{t_{m'}}{\phi_{m'}}}
+  &\text{ and}\\
+  \Ky = &\sequent{\D_0}{\tj{u_0}{\psi_0}} \hmid
+  \sequent{\D_1}{\tj{u_1}{\psi_1}} \hmid \cdots \hmid
+  \sequent{\D_{n'}}{\tj{u_{n'}}{\psi_{n'}}}
+ \end{align*}
+where $\phi_i = {\phi_{i1}\limp\phi_{i2}\limp\cdots\limp\phi_{im(i)}}$
+and   $\psi_i = {\psi_{i1}\limp\psi_{i2}\limp\cdots\limp\psi_{im(i)}}$.
+ Also assume these are derivable:
+ \begin{align*}
+  & \Hy_{ij} \hmid \sequent{\G_{ij}}{\tj{t_{ij}}{\phi_{ij}}} &\text{ for
+  } 0\le i\le m'\text{ and }1\le j\le m(i) &\text{ and }\\
+  & \Ky_{ij} \hmid \sequent{\D_{ij}}{\tj{u_{ij}}{\psi_{ij}}} &\text{ for
+  } 0\le i\le n'\text{ and }1\le j\le n(i)&\enspace .
+ \end{align*}
+ Under these conditions, we make two statements.
  \begin{enumerate}[label=(\arabic{*}), ref=\textit{(\arabic{*})}]
   \item \label{c:first}
-	$t[\vec d/\hat\D][\vec g/\G]$ is in $\sem{\phi'}$ for any
-	$v\in\sem\phi$, $\vec g\in\sem\G$ and $\vec d\in\sem{\hat\D}$; and that
-  \item \label{c:second} when $\hat \D$ is equal to  $\tj x\phi, \D$ up
-	to exchange,
-	$(t[v/x][\vec d/\D][\vec g/\G],
-	u[w/y][\vec{d'}/\D'][\vec{g'}/G'])$ is in $\sem{\phi',\psi'}$
-	for any $(v,w)    \in \sem{\phi,\psi}$,
-	        $\vec d   \in \sem\D$,
-	        $\vec{d'} \in \sem{\D'}$,
-	        $\vec{g}  \in \sem{\G}$ and
-	        $\vec{g'} \in \sem{\G'}$.
+	For any
+	$\vec{g_i}         \in\sem{\G_i}$,
+	$\vec{h_{ij}}      \in\sem{\ltypes{\Hy_{ij}}}$,
+	$\vec{g_{ij}}      \in\sem{\G_{ij}}$,
+	$\pi_i             \in\nsem{\phi_{i0}}$ and
+	$\vec{\pi_{ij}}    \in\nsem{\rtypes{\Hy_{ij}}}$,
+	the following executable is in $\bbot$:
+	\[
+	 \bigparallel_{i,j}\left(\vec{H_{ij}},\,
+	\vec{\pi_{ij}}\right)\quad \conc\quad
+	\bigparallel_i\left(t_i',\,\,\,t'_{i1}\cdot t'_{i2}\cdots
+	t'_{im(i)}\cdot \pi_i\right)
+	\]
+	where $
+	 \vec{H_{ij}}=(\rterms{\Hy_{ij}})[\vec{h_{ij}}/\lvars{\Hy_{ij}}]$,\quad
+	$t'_i = t_i[\vec{g_i}/\G_i]$ and\quad
+	$t'_{ij} = t_{ij}[\vec{g_{ij}}/\G_{ij}]$\enspace.
+  \item \label{c:second}
+	If $\tj{x}{\phi}\in\G_{\hat\imath}$ and
+	$\tj{y}{\psi}\in\D_{\hat\jmath}$,
+	when we define $\hat{\G_i} = \G_i -\{\xphi\}$ and
+	$\hat{\D_i} = \D_i -\{\tj{y}\psi\}$,
+	for any $(v,w)\in\sempair{\phi,\psi}$,
+	$\vec{h_{ij}}\in\sem{\ltypes{\Hy_{ij}}}$,
+	$\vec{k_{ij}}\in\sem{\ltypes{\Ky_{ij}}}$,
+	$\vec{g_i}\in\sem{\hat{\G_i}}$,
+	$\vec{d_i}\in\sem{\hat{\D_i}}$,
+	$\pi_i\in\nsem{\phi_{i0}}$,
+	$\sigma_i\in\nsem{\psi_{i0}}$,
+	$\vec{\pi_{ij}}\in\nsem{\rtypes{\Hy_{ij}}}$ and
+	$\vec{\sigma_{ij}}\in\nsem{\rtypes{\Ky_{ij}}}$,
+	the following executable is in $\bbot$:
+	\begin{align*}
+	       & 	 \bigparallel_{i,j}\left(\vec{H_{ij}},\,
+	\vec{\pi_{ij}}\right)\quad \conc\quad
+	\bigparallel_i\left(t_i',\,\,\,t'_{i1}\cdot t'_{i2}\cdots
+	t'_{im(i)}\cdot \pi_i\right)
+\\
+	 \conc\quad  &
+	 \bigparallel_{i,j}\left(\vec{K_{ij}},\,
+	\vec{\sigma_{ij}}\right)\quad \conc\quad
+	\bigparallel_i\left(u_i',\,\,\,u'_{i1}\cdot u'_{i2}\cdots
+	u'_{in(i)}\cdot \sigma_i\right)
+	\end{align*}
+	where
+	$\vec{H_{ij}}=(\rterms{\Hy_{ij}})[\vec{h_{ij}}/\lvars{\Hy_{ij}}]$,\quad
+	$\vec{K_{ij}}=(\rterms{\Ky_{ij}})[\vec{k_{ij}}/\lvars{\Ky_{ij}}]$,\quad
+	$t'_i=t_i[\vec{g_i}/\hat{\G_i}][v/x]$,\quad
+	$u'_i=u_i[\vec{d_i}/\hat{\D_i}][w/y]$,\quad
+	$t'_{ij}=t_{ij}[\vec{g_{ij}}/\G_{ij}]$\quad and
+	$u'_{ij}=u_{ij}[\vec{d_{ij}}/\D_{ij}]$\enspace.
  \end{enumerate}
 \end{proposition}
 \begin{proof}
- We prove both statements at the same time by induction on the sum of
- the heights of the derivations.
+ By induction on the sum of number of derivational steps.
+ We split cases according to the last rules applied for the
+ derivation for $\Hy$ and the derivation for $\Ky$.
  \begin{description}
-  \item[(Ax, Ax)] When both derivations consist of only axiom rules,
-       the statements are tautologies.
-  \item[(D, \textminus)] Both statements follow immediately from the
-       induction hypothesis.
+  \item[(Ax, Ax)]
   \item[($\imp$I, \textminus)]
-       In this case, the derivation for~$t$ ends as
-       \aseq{\hat\D}{\tj {z}{\phi_0},\G}{\tj t{\phi_1}}
-       \useq{\hat\D}{\G}{\tj{\lambda {z}.t}{\phi_0\imp{\phi_1}}}
-       \DisplayProof.
-       \begin{enumerate}[label=\textit{(\arabic{*})}]
-	\item
-	     Take any $\vec d\in\sem{\hat\D}$, $\vec
-	     g\in\sem\G$ and
-	     $u\cdot\pi\in\nsem{\phi_0\imp\phi_1}=\sem{\phi_0}\cdot\nsem{\phi_1}$.
-	     First we show $\ast_u\in\sem{\phi_0}$.
-	     For that, take any $\pi_0\in\nsem{\phi_0}$.  Then, by
-	     (load), $\ast_u,\pi_0\red u,\pi_0$, which is in $\bbot$.
-	     So, since $\bbot$ is closed for $\red^{-1}$,
-	     $\ast_u$ is in $\sem{\phi_0}$.
-	     By induction hypothesis~\ref{c:first},
-	     $e' = t[\ast_u/z][\vec d/\hat\D][\vec g/\G],\pi$ is in
-	     $\bbot$ because the term is in $\sem{\phi_1}$ and the
-	     stack is in $\nsem{\phi_1}$.
-	     The executable $e = (\lambda z.t)[\vec d/\hat\D][\vec
-	     g/\G], u\cdot \pi$ reduces to
-	     $e'$, which is shown to be in $\bbot$.
-	     Since $\bbot$ is closed for $\red^{-1}$,
-	     $e$ is also in $\bbot$.
-	     This ensures $(\lambda z.t)[\vec d/\hat\D][\vec
-	     g/\G]\in\bbot$.
-	\item Here we have $\hat\D = \tj x\phi, \D$ up to
-	      exchange.  The variable $x$ is different from any
-	      variable in
-	      $\D,\G$ and also different from $z$.
-	      Take any $(v,w)\in\sem{\phi,\psi}$,
-	      $\vec g\in\sem{\G}$, $\vec{g'}\in\sem{\G'}$, $\vec
-	      d\in\sem\D$,
-	      $\vec{d'\in\D'}$, $\pi_\psi\in\nsem{\psi}$ and
-	      $u\cdot\pi\in\nsem{\phi_0\imp\phi_1} =
-	      \sem{\phi_0}\cdot \nsem{\phi_1}$.
-	      We have $\ast_u\in\sem{\phi_0}$ as in~\ref{c:first}.
-	      By induction hypothesis,
-	      $(t[\ast_u/z][\vec d/\D][\vec g/\G],
-	      u[w/y][d'/\D'][\vec{g'}/\G'])$ is in
-	      $\sem{\phi_1,\psi}$.
-	      So, $e'=t[\ast_u/z][v/x][\vec d/\D][\vec g/\G],
-		    \pi\conc
-		            u[w/y][\vec{d'}/\D'][\vec{g'}/\G'],\pi_\psi$ is
-		    in $\bbot$.
-	      Since $e = (\lambda z.t)[v/x][\vec d/\D][\vec g/\G],
-	      u\cdot \pi\conc
-	      u[w/y][\vec{d'}/\D'][\vec{g'}/\G'],\pi_\psi$ reduces
-	      to
-	      $e'$ by (store) and (cong),
-	      $e$ is also in $\bbot$.
-	      This verifies the statement.
-       \end{enumerate}
   \item[($\imp$E, \textminus)]
-	 The derivation for $t$ ends as
-	     \aseq{\D_0}{\G}{\tj{t_0}{\phi_1\imp\phi'}}
-	     \aseq{}{\G}{\tj{t_1}{\phi_1}}
-	     \bseq{\D_0}{\G}{\tj{t_0(t_1)}{\phi'}}
-	     \DisplayProof
-	     and the derivation for $u$ ends at sequent
-	     $\sequent{\tj{y}{\psi},\D'}{\G'}{\tj{u}{\psi'}}$.
-	 We have $t=(t_0)t_1$.
-       \begin{enumerate}[label=\textit{(\arabic{*})}]
-	\item Take any $\vec{d_0}\in\sem{\D_0}$,
-	      $\vec{d_1}\in\sem{\D_1}$,
-	      $\vec g\in\sem\G$ and $\pi\in\nsem{\phi'}$.
-	      By induction hypothesis~\ref{c:first}, we have
-	      $t_0'=t_0[\vec{d_0}/\D_0][\vec
-	      g/\G]\in\sem{\phi_1\imp\phi'}$
-	      and
-	      $t_1'=t_1[\vec{d_1}/\D_1][\vec
-	      g/\G]\in{\sem{\phi_1}}$.
-	      Since variables in $\D_0$ and $\D_1$ are
-	      disjoint, we have
-	      $t'=((t_0)t_1)[\vec{d_0}/\D_0][\vec{d_1}/\D_1][\vec
-	      g/\G] = (t_0')t_1'$.
-		    By (push), $(t_0')t_1',\pi\red t_0',t_1'\cdot\pi$,
-		    which is in $\bbot$ because
-		    $t_0'\in\sem{\phi_1\imp\phi'}$ and
-		    $t_1'\cdot\pi\in\nsem{\phi_1\imp\phi'} =
-		    \sem{\phi_1}\cdot\nsem{\phi'}$.
-		    Since $\bbot$ is closed for $\red^{-1}$,
-		    $(t_0')t_1',\pi$ is in $\bbot$.
-		    Since $\pi$ was taken arbitrarily,
-		    we have $(t_0')t_1'\in\sem{\phi'}$.
-	\item
-	       $\tj{x}{\phi}\in\D_0$)
-		    Let $\D_0$ be equal to $\tj{x}{\phi},\overline{\D_0}$ up
-		    to exchange.
-		    The derivation for $t$ ends in\[
-		    \aseq{\tj{x}{\phi},\overline{\D_0}}\G{\tj{t_0}{\phi_1\imp\phi'}}
-		    \aseq{\D_1}\G{\tj{t_1}{\phi_1}}
-		    \bseq{\tj{x}{\phi},\overline{\D_0},\D_1}{\G}{\tj{(t_0)t_1}{\phi'}}
-		    \DisplayProof\enspace.
-						  \]
-		    Take any $(v,w)\in\sem{\phi,\psi}$,
-		             $\vec{d_0}\in\sem{\overline{\D_0}}$,
-		             $\vec{d_1}\in\sem{\D_1}$,
-		             $\vec{d'}\in\sem{\D'c}$,
-		             $\vec g\in\sem{\G}$,
-		             $\pi\in\nsem{\phi'}$ and
-		             $\sigma\in\nsem{\psi'}$.
-		    By induction hypothesis~\ref{c:second},
-		    $t_0'=t_0[v/x][\vec{d_0}/\overline{\D_0}][\vec
-		    g/\G]$ and
-		    $u' = u[w/y][\vec{d'}/\D'][\vec g/\G]$ satisfy
-		    $(t_0',u')\in\sem{\phi_1\imp\phi',\psi'}$.
-		    By induction hypothesis~\ref{c:first},
-		    $t_1'=t_1[\vec{d_1}/\D_1][\vec g/\G]$ is in
-		    $\sem{\phi_1}$.
-		    We have $t' =
-		    ((t_0)t_1)[v/x][\vec{d_0}/\overline{\D_0}][\vec{d_1}/\D_1][\vec
-		    g/\G] = (t_0')t_1'$.
-		    By (push) and (cong), $(t_0')t_1',\pi\conc
-		    u',\sigma\red t_0',t_1'\cdot\pi\conc u',\sigma$,
-		    which is in $\bbot$ because
-		    $(t_0',u')\in\sem{\phi_1\imp\phi',\psi'}$ and
-		    $t_1'\cdot\pi\in \sem{\phi_1}\cdot\nsem{\phi'} =
-		    \nsem{\phi_1\imp\phi'}$, $u'\in\sem{\psi'}$
-		    and $\sigma\in\nsem{\psi'}$.
-		    Since $\bbot$ is closed for $\red^{-1}$,
-		    $(t_0')t_1',\pi\conc u',\sigma$ is in $\bbot$.
-       \end{enumerate}
+  \item[($\forall$I, \textminus)]
+  \item[($\forall$E, \textminus)]
   \item[(Com, \textminus)]
-       The derivation for $t$ ends in
-       \[
-       \aseq{\tj{\hat x}{\theta\imp\tau},\D_0}{\G}{\tj{t_0}{\phi'}}
-       \aseq{\tj{\hat y}{\tau\imp\theta},\D_1}{\G}{\tj{t_1}{\phi'}}
-       \bseq{\D_0,\D_1}\G{\tj{(t_0[\comodL/\hat x]\conc t_1[\comodR/\hat
-       y])}{\phi'}}
-       \DisplayProof\enspace.
-       \]
-       \begin{enumerate}[label=\textit{(\arabic{*})}]
-	\item Take any
-	      $\vec{d_0}\in\sem{\D_0}$,
-	      $\vec{d_1}\in\sem{\D_1}$,
-	      $\vec{g}  \in\sem{\G}$.
-	      By Prop.~\ref{comod-type}, we have
-	      $(\comodL,\comodR)\in\sem{\theta\imp\tau,\tau\imp\theta}$.
-	      By induction hypothesis~\ref{c:second}, the terms
-	      $t_0'=t_0[\comodL/\hat x][\vec{d_0}/\D_0][\vec g/\G]$
-	      and
-	      $t_1'=t_1[\comodR/\hat y][\vec{d_1}/\D_1][\vec g/\G]$
-	      satisfy
-	      $(t_0',t_1')\in\sem{\phi',\phi'}$.
-	      By Prop.~\ref{squash}, we have $t_0'\conc
-	      t_1'\in\sem{\phi'}$.
-	      This term $t_0'\conc t_1'$ is equal to
-	      $(t_0[\comodL/\hat x]\conc t_1[\comodR/\hat
-	      y])[\vec{d_0}/\D_0][\vec{d_1}/\D_1][\vec g/\G]$.
-	\item Without loss of generality,
-	      we can assume $(\tj x\phi)\in\D_0$ so
-	      $\D_0 =\tj x\phi, \overline{\D_0}$ up to exchange.
-	      Take any
-	      $(v,w)\in\sem{\phi,\psi}$,
-	      $\vec{d_0}\in\sem{\overline{\D_0}}$,
-	      $\vec{d_1}\in\sem{\overline{\D_1}}$,
-	      $\vec{d'}\in\sem{\D'}$,
-	      $\vec g\in \sem\G$,
-	      $\pi\in\nsem{\phi'}$ and
-	      $\sigma\in\nsem{\psi'}$.
-	      By induction hypothesis~\ref{c:second},
-	      the terms $t_0'=t_0[v/x][\vec{d_0}/\overline{\D_0}][\vec
-	      g/\G]$
-	      and
-	      $u'=u[w/y][\vec{d_1}/\D_1][\vec g/\G]$
-	      satisfy
-	      $(t_0',u')\in\sem{\phi',\psi'}$.
-	      By induction hypothesis~\ref{c:first},
-	      $t_1'=t_1[\vec{d_1}/\D_1][\vec g/\G]$ is in $\sem{\phi'}$.
-	      From these, respectively, we obtain
-	      $t_0',\pi\conc u',\sigma\in\bbot$
-	      and
-	      $t_1',\pi\in\bbot$.
-	      Since $\bbot$ is closed for $\conc$,
-	      we have $t_0',\pi\conc t_1',\pi\conc u',\sigma\in\bbot$.
-	      By (dist) and (cong),
-	      $(t_0'\conc t_1'),\pi\conc u',\sigma$ reduces
-	      to this executable.
-	      So $(t_0'\conc t_1',u')\in\sem{\phi',\psi'}$
-	      where $t_0'\conc t_1' = (t_0[\comodL/\hat x]\conc
-	      t_1[\comodR/\hat y])[\vec{d_0}/\D_0][\vec{d_1}/\D_1][\vec g/\G]$.
-       \end{enumerate}
-  \item[(Gen, \textminus)]
-       The derivation for $t$ ends in
-       \aseq{\hat\D}{\G}{\tj t\phi}
-       \useq{\hat\D}{\G}{\tj t{\forall X\phi}}
-       \DisplayProof.
-       \begin{enumerate}[label=\textit{(\arabic{*})}]
-	\item Take any $\vec d\in\sem{\hat\D}$ and $\vec g\in\sem{\G}$.
-	      Since neither $\hat\D$ nor $\G$ contains $X$ freely,
-	      the sets $\sem{\hat\D}$ and $\G$ do not change whatever
-	      $\nsem{X}_0$ is.
-	      On the other hand, since the indcution
-	      hypothesis~\ref{c:first}
-	      holds for arbitrary $\nsem{X}_0$,
-	      the term $t[\vec d/\hat\D][\vec g/\G]$ is in
-	      $\bigcap_{\mathcal Z\in 2^\Pi}\sem{\phi'[\mathcal Z/X]}$.
-	      Since $(\bigcap_{\mathcal Z\in 2^\Pi}\sem{\phi'[\mathcal
-	      Z/X]})\cdot (\bigcup_{\mathcal Z\in
-	      2^\Pi}\nsem{\phi'[\mathcal Z/X]})$ is a subset of $\bbot$,
-	      the term is in $\sem{\forall X\phi'} = \left(\bigcup_{\mathcal
-	      Z\in 2^\Pi}\nsem{\phi'[\mathcal Z/X]}\right) \rightarrow
-	      \bbot$.
-	\item Take any
-	      $(v,w)\in\sem{\phi,\psi}$,
-	      $\vec{d_0}\in\sem{\D_0}$,
-	      $\vec{d_1}\in\sem{\D_1}$,
-	      $\vec g   \in\sem{\G}$,
-	      $\pi_{\phi'}\in\nsem{\forall X\phi'}$ and
-	      $\pi_{\psi'}\in\nsem{\psi'}$.
-	      We can replace $X$ in the derivation of $t$ with
-	      another propositional variable~$X'$ that does not
-	      occur in the derivation of $u$.
-	      We are going to use the induction hypothesis on the
-	      renamed derivation with the terms and stacks taken above.
-	      Since $\phi,\D_0$ and $\G$ do not contain
-	      $X$ freely, we have
-	      $(v,w)\in\sem{\phi[X'/X],\psi}$,
-	      $\vec{d_0}\in\sem{\D_0[X'/X]}$,
-	      $\vec{g}\in\sem{\G[X'/X]} = \G$ and $\pi_{\phi'}\in
-	      \nsem{\forall X'\phi'[X'/X]}$.
-	      By induction hypothesis on the renamed derivation,
-	      the terms
-	      $t' = t[v/x][\vec{d_0}/\D_0][\vec g/\G]$ and
-	      $u' = u[w/y][\vec{d_1}/\D_1][\vec g/\G]$ satisfy
-	      $(t',u')\in\sem{\phi'[X'/X],\psi'}$ for any $\nsem{X'}_0$.
-	      That is, for any $\mathcal Z\in 2^\Pi$,
-	      $\pi\in\nsem{\phi'[X'/X][\mathcal Z/X']}$ and
-	      $\sigma\in\nsem{\psi'[\mathcal Z/X']}$,
-	      $t'\pi\conc u',\sigma$ is in $\bbot$,
-	      making $t',\pi_{\phi'}\conc u',\pi_{\sigma'}$ an elment of
-	      $\bbot$ because
-	      $\pi_{\psi'}\in\nsem{\psi'}=\nsem{\psi'[\mathcal Z/X']}$,
-	      where the last equality holds because of the way we chose
-	      the variable~$X'$.
-       \end{enumerate}
-  \item[(Ins, \textminus)]
-       The derivation for $t$ ends in
-       \aseq{\tj x\phi,\D}\G{\tj t{\forall X\phi}}
-       \useq{\tj x\phi,\D}\G{\tj t{\phi[\psi/X]}}
-       \DisplayProof.
-       Both statements follow immediately from the induction hypotheses
-       because $\nsem{\phi[\psi/X]}$ is a subset of $\nsem{\forall X\phi}$.
   \item[(Other cases)] In the other cases,
        where induction proceeds over the derivation for $u$,
        \ref{c:first} is trivially proved using the induction
