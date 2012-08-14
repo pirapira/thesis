@@ -19,6 +19,7 @@
 # You will usually need to modify this file for your project.
 .PHONY: all install clean
 LATEX = platex
+LATEXFLAGS = -halt-on-error
 DVIPDFM = dvipdfm
 DVIPDFMFLAGS = -p a4
 
