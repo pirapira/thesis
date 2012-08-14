@@ -1,5 +1,5 @@
-\chapter{Some Disjunctive Tautologies as
-  Asynchronous Communication Schemes}
+\chapter{Prelinearity Axiom as an
+  Asynchronous Communication Scheme}
 
 	% packages
 % \usepackage{setspace}
@@ -24,6 +24,7 @@
 \newcommand{\rtypes}[1]{\mathsf{Rtypes}({#1})}
 \newcommand{\rterms}[1]{\mathsf{Rterms}({#1})}
 
+\renewcommand{\vec}{\overrightarrow}
 \subsection{Summary}
 %%% abstract
 This work is a refinement of
@@ -80,12 +81,11 @@ A \textit{term}~$t$ is defined by BNF:
 \[
  t::= x
  \mid (t)t
- \mid t\conc t
  \mid \lambda x.t
  \mid \ast_t
  \mid \comod c c
 \]
-where $x$ is a variable and $c\colon\phi$ is a channel.
+where $x$ is a variable and $c$ is a channel.
 A \textit{stack}~$\pi$ is defined by BNF:
 \[
  \pi ::= \epsilon
@@ -102,13 +102,11 @@ is defined to be the smallest preorder
 that satisfies:
 \begin{description}
  \item[(cong)] if
-	    $[t,\pi]         \red [ t',\pi']$
+	    $e_0         \red e_1$
 	    then
-	    $[t,\pi \conc e] \red [ t',\pi'\conc e]$  \enspace;
+	    $[e_0 \conc e] \red [ e_1\conc e]$  \enspace;
  \item[(push)]
 	    $[(t)u,\pi]      \red [t,u\cdot\pi]$      \enspace;
- \item[(dist)]
-	    $[t\conc u,\pi]  \red [t,\pi\conc u,\pi]$ \enspace;
  \item[(store)]
 	    $[\lambda x.t,u\cdot\pi]
 	     \red
@@ -130,6 +128,11 @@ that satisfies:
  % 	    u\cdot\sigma] \red
  % 	    [t,\sigma]$\enspace.
 \end{description}
+From Danos and Krivine's formalization~\fix{cite},
+we removed terms of the form $ t\conc t $ and
+reductions
+	    $[t\conc u,\pi]  \red [t,\pi\conc u,\pi]$
+because they duplicate terms in $\pi$ and hence destroy the linearity.
 
 % I want to write these rules are non-blocking here.
 % but, actually, Danos and Krivines rules are also non-blocking.
@@ -227,6 +230,7 @@ such $\mathcal Z$ that $\mathcal X = \mathcal Z\imp \bbot$.
 
 \renewcommand{\sem}[1]{|{#1}|}
 \newcommand{\nsem}[1]{\sem{#1}^-}
+\newcommand{\sempair}[1]{\sem{(#1)}}
 For $F\in\form(2^\Pi)$ and $|\cdot|^-_0\colon\pvar\rightarrow 2^\Pi$,
 we define $\nsem{\phi}\colon \form(2^\Pi)\rightarrow
 2^\Pi$ inductively as
@@ -244,27 +248,14 @@ We have an equality
 $\nsem{\phi\imp\psi} = \{t\cdot\pi\mid
 t\in\sem\phi\text{ and }\pi\in\nsem\psi\}$, which we denote
 $\sem{\phi}\cdot\nsem{\psi}$.
-Moreover, for types~$\phi$ and $\psi$, we define $\sem{\phi,\psi}$
+Moreover, for types~$\phi$ and $\psi$, we define $\sempair{\phi,\psi}$
 as the set of pairs $(t,u)$ of terms such that
 $t,\pi_\phi\conc u,\pi_\psi\in\bbot$ for any $\pi_\phi\in\nsem\phi$
 and $\pi_\psi\in\nsem\psi$.
 
 \begin{proposition}
- \label{squash}
- When $(t,u)\in\sem{\phi,\psi}$ then $t\conc u\in\sem\phi$.
-\end{proposition}
-\begin{proof}
- For any $\pi_\phi\in\nsem\phi$,
- $t\conc u,\pi_\phi\red t,\pi_\phi\conc u,\phi_\phi$ holds.
- The reduct is in $\bbot$ by assumption.
- So, the original executable is also in $\bbot$.
-\end{proof}
-
-\newcommand{\comodL}{\comod c{\co c}}
-\newcommand{\comodR}{\comod{\co c}c}
-\begin{proposition}
  \label{comod-type}
- $(\comodL, \comodR)\in\sem{\phi\imp\psi,\psi\imp\phi}$
+ $(\comodL, \comodR)\in\sempair{\phi\imp\psi,\psi\imp\phi}$
  for any types~$\phi$ and $\psi$.
 \end{proposition}
 \begin{proof}
@@ -385,7 +376,7 @@ and   $\psi_i = {\psi_{i1}\limp\psi_{i2}\limp\cdots\limp\psi_{im(i)}}$.
        symmetrically as another case above.
  \end{description}
 \end{proof}
-Note that (1) uses (2) and vice versa.
+Note that \ref{c:first} uses \ref{c:second} and vice versa.
 
 \begin{proposition}
  Let $E$ be a set of executables.
