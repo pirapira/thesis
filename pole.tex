@@ -221,54 +221,63 @@ which satisfies
        then $(m\conc m',S)\in\bbot$.
 \end{enumerate}
 
-For a set~$\mathcal Z$ of stacks, $\mathcal Z\imp\bbot$ denotes
-the largest set~$\mathcal X$ of term-store pairs such that
-$\mathcal X\times\mathcal Z\subset \bbot.$
-A set $\mathcal X$ of terms is called a truth value
+An \textit{environment} is a pair of a stack and an executable.
+The set of environments is written as~$E$.
+A \textit{program} is a pair of a term an executable.
+For a set~$\mathcal Z$ of environments, $\mathcal Z\imp\bbot$ denotes
+the set of programs $(t,e)$ such that
+for any environment $(\pi,e')\in \mathcal Z$,
+the executable $t,\pi\conc e \conc e'$ is in $\bbot$.
+A set $\mathcal X$ of programss is called a truth value
 iff there exists
 such $\mathcal Z$ that $\mathcal X = \mathcal Z\imp \bbot$.
 
 \renewcommand{\sem}[1]{|{#1}|}
 \newcommand{\nsem}[1]{\sem{#1}^-}
 \newcommand{\sempair}[1]{\sem{(#1)}}
-For $F\in\form(2^\Pi)$ and $|\cdot|^-_0\colon\pvar\rightarrow 2^\Pi$,
-we define $\nsem{\phi}\colon \form(2^\Pi)\rightarrow
-2^\Pi$ inductively as
+For $F\in\form(2^E)$ and $|\cdot|^-_0\colon\pvar\rightarrow 2^E$,
+we define $\nsem{\phi}\colon \form(2^E)\rightarrow
+2^E$ inductively as
 \begin{align*}
  \nsem{\mathcal Z} &= \mathcal Z \\
  \nsem{X}&= |X|_0^- \\
  \nsem{\phi\imp\psi}&=
- \{t\cdot\pi\mid t\in\nsem\phi\rightarrow\bbot \text{ and }\pi\in\nsem\psi\}
+ \{(t\cdot\pi, e_0\conc e_1)\mid
+ (t,e_0)\in\nsem\phi\rightarrow\bbot \text{ and }(\pi,e_1)\in\nsem\psi\}
  \\
  \nsem{\forall X\phi}&=
  \bigcup_{\mathcal Z\in 2^\Pi} \nsem{\phi[\mathcal Z/X]}
 \end{align*}
 Using this, we define $\sem \phi=\nsem{\phi}\rightarrow\bbot$.
 We have an equality
-$\nsem{\phi\imp\psi} = \{t\cdot\pi\mid
-t\in\sem\phi\text{ and }\pi\in\nsem\psi\}$, which we denote
+$\nsem{\phi\imp\psi} = \{(t\cdot\pi, e_0\conc e_1)\mid
+(t,e_0)\in\sem\phi\text{ and }(\pi,e_1)\in\nsem\psi\}$, which we denote
 $\sem{\phi}\cdot\nsem{\psi}$.
 Moreover, for types~$\phi$ and $\psi$, we define $\sempair{\phi,\psi}$
-as the set of pairs $(t,u)$ of terms such that
-$t,\pi_\phi\conc u,\pi_\psi\in\bbot$ for any $\pi_\phi\in\nsem\phi$
-and $\pi_\psi\in\nsem\psi$.
+as the set of pairs $((t,e_0),(u,e_1))$ of programs such
+that
+$t,\pi_\phi\conc u,\pi_\psi\conc e_0\conc e_1\conc e_2\conc e_3
+\in\bbot$ for any $(\pi_\phi,e_2)\in\nsem\phi$
+and $(\pi_\psi,e_3)\in\nsem\psi$.
 
 \begin{proposition}
  \label{comod-type}
- $(\comodL, \comodR)\in\sempair{\phi\imp\psi,\psi\imp\phi}$
+ $((\comodL,\emptyset), (\comodR,\emptyset))\in\sempair{\phi\imp\psi,\psi\imp\phi}$
  for any types~$\phi$ and $\psi$.
 \end{proposition}
 \begin{proof}
- Take any $t\cdot\pi_\psi\in\nsem{\phi\imp\psi} =
- \sem\phi\cdot\nsem\psi$
- and $u\cdot\pi_\phi\in\nsem{\psi\imp\phi}$.
- We claim $e=\comodL,t\cdot\pi_\psi\conc\comodR,u\cdot\pi_\phi$ is in
+ Take any $(t\cdot\pi_\psi,e_{00}\conc e_{01})\in\nsem{\phi\imp\psi}$
+ and $(u\cdot\pi_\phi,e_{10}\conc e_{11})\in\nsem{\psi\imp\phi}$ so that
+ $(t, e_{00})\in\sem{\phi}$, $(\pi_\psi,e_{01})\in\nsem{\psi}$,
+ $(u, e_{10})\in\sem{\psi}$, $(\pi_\phi,e_{11})\in\nsem{\phi}$.
+ We claim $e=\comodL,t\cdot\pi_\psi\conc\comodR,u\cdot\pi_\phi\conc
+ e_{00}\conc e_{01}\conc e_{10}\conc e_{11}$ is in
  $\bbot$.
- By (com), $e\red t,\pi_\phi\conc u,\pi_\psi$.
- We have $t,\pi_\phi\in\bbot$ and $u,\pi_\psi\in\bbot$.
- Since $\bbot$ is closed for $\conc$,
- we have $t,\pi_\phi\conc u,\pi_\psi\in\bbot$.
- And since $\bbot$ is closed for $\red^{-1}$,
+ By (com), $e\red t,\pi_\phi\conc u,\pi_\psi\conc e_{00}\conc
+ e_{01}\conc e_{10}\conc e_{11}$, which is in $\bbot$ because
+ we have $t,\pi_\phi\conc e_{00}\conc e_{11}\in\bbot$ and
+ $u,\pi_\psi\conc e_{01}\conc e_{10}\in\bbot$.
+ Since $\bbot$ is closed for $\red^{-1}$,
  we have $e\in\bbot$.
 \end{proof}
 
