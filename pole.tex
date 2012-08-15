@@ -18,11 +18,6 @@
 
 % \maketitle
 
-\newcommand{\ltypes}[1]{\mathsf{Ltypes}({#1})}
-\newcommand{\lvars}[1]{\mathsf{Lvars}({#1})}
-\newcommand{\rtypes}[1]{\mathsf{Rtypes}({#1})}
-\newcommand{\rterms}[1]{\mathsf{Rterms}({#1})}
-
 \renewcommand{\vec}{\overrightarrow}
 
 \newcommand{\sequent}[2]{{#1}\tr{#2}}
@@ -30,12 +25,6 @@
 \newcommand{\useq}[2]{\UnaryInfC{$\sequent{#1}{#2}$}}
 \newcommand{\bseq}[2]{\BinaryInfC{$\sequent{#1}{#2}$}}
 
-\newcommand{\Haseq}[3]{\AxiomC{$\sequent{#2}{#3}\hmid{#1}$}}
-\newcommand{\Huseq}[3]{\UnaryInfC{$\sequent{#2}{#3}\hmid{#1}$}}
-\newcommand{\Hbseq}[3]{\BinaryInfC{$\sequent{#2}{#3}\hmid{#1}$}}
-
-\newcommand{\Hy}{\mathcal{H}}
-\newcommand{\Ky}{\mathcal{K}}
 \newcommand{\limp}{\multimap}
 
 
@@ -169,38 +158,37 @@ The derivation rules follow.\\ \noindent
 \DisplayProof
 \ruleskip
 %
-\Haseq\Hy{\xphi,\G}{\tj t\psi}
+\aseq{\xphi,\G}{\tj t\psi}
 \LL{$\limp$I}
-\Huseq\Hy{\G}{\tj{\lambda x.t}{\phi\limp\psi}}
+\useq{\G}{\tj{\lambda x.t}{\phi\limp\psi}}
 \DisplayProof
 \ruleskip
 %
-\Haseq{\Hy_0}{\G}{\tj t{\phi\limp\psi}}
-\Haseq{\Hy_1}{\D}{\tj u\phi}
+\aseq{\G}{\tj t{\phi\limp\psi}}
+\aseq{\D}{\tj u\phi}
 \LL   {$\limp$E}
-\Hbseq{\Hy_0\hmid\Hy_1}{\G,\D}{\tj{(t)u}\psi}
+\bseq{\G,\D}{\tj{(t)u}\psi}
 \DisplayProof
 \ruleskip
 %
-\Haseq{\Hy}\G{\tj t\phi}
+\aseq\G{\tj t\phi}
 \LL   {$\forall$I}
-\Huseq{\Hy}\G{\tj t{\forall X\phi}}
+\useq\G{\tj t{\forall X\phi}}
 \DisplayProof
 \ruleskip
 %
-\Haseq{\Hy}{\G}{\tj{t}{\forall X\phi}}
+\aseq{\G}{\tj{t}{\forall X\phi}}
 \LL   {$\forall$E}
-\Huseq{\Hy}{\G}{\tj{t}{\phi[\psi/X]}}
+\useq{\G}{\tj{t}{\phi[\psi/X]}}
 \DisplayProof
 \ruleskip
 %
 \newcommand{\comodL}{\comod c{\co c}}
 \newcommand{\comodR}{\comod{\co c}c}
-\Haseq{\Hy_0}{\tj{x}{\phi\limp\psi},\G}{\tj t\theta}
-\Haseq{\Hy_1}{\tj{y}{\psi\limp\phi},\G}{\tj u\tau}
+\aseq{\tj{x}{\phi\limp\psi},\G}{\tj t\theta}
+\aseq{\tj{y}{\psi\limp\phi},\G}{\tj u\tau}
 \LL{Com}
 \BinaryInfC{$
-\Hy_0\hmid\Hy_1\hmid
 \sequent\G{t[\comodL/x]}
 \hmid
 \sequent{\D}{u[\comodR/y]}
@@ -297,13 +285,9 @@ the proof for $\limp$E rule fails.
 \begin{proposition}[Adequacy]
  Let these hypersequents be derivable:
  \begin{align*}
-  \Hy = &\sequent{\G_0}{\tj{t_0}{\phi_0}} \hmid
-  \sequent{\G_1}{\tj{t_1}{\phi_1}} \hmid \cdots \hmid
-  \sequent{\G_{m}}{\tj{t_{m}}{\phi_{m}}}
-  &\text{ and}\\
-  \Ky = &\sequent{\D_0}{\tj{u_0}{\psi_0}} \hmid
-  \sequent{\D_1}{\tj{u_1}{\psi_1}} \hmid \cdots \hmid
-  \sequent{\D_{n}}{\tj{u_{n}}{\psi_{n}}}\enspace.
+  \sequent{\G_0}{\tj{t_0}{\phi_0}}
+  \text{ and}\\
+  \sequent{\D_0}{\tj{u_0}{\psi_0}}\enspace.
  \end{align*}
  Under these conditions, we make two statements.
  \begin{enumerate}[label=(\arabic{*}), ref=\textit{(\arabic{*})}]
@@ -348,180 +332,7 @@ the proof for $\limp$E rule fails.
   \item[(Ax, Ax)] When both derivations consist of only axiom rules,
        the statements are tautologies.
    \item[($\limp$I, \textminus)]
-       In this case, the derivation for~$t$ ends as
-       \Haseq{\Hy'}{\tj {z}{\hat\phi},\G_0}{\tj {t'}{\hat\psi}}
-       \Huseq{\Hy'}{\G_0}{\tj{\lambda {z}.t'}{\hat\phi\limp{\hat\psi}}}
-       \DisplayProof.
-       \begin{enumerate}[label=\textit{(\arabic{*})}]
-	\item Take any
-	      $(\vec{g_i},\vec{f_i})\in\sem{\G_i}$,
-	      $(v\cdot\pi,e_0\conc e_1)\in\nsem{\hat\phi\limp\hat\psi}$
-	      and
-	      $(\pi_i,e_i)\in\sem{\phi_i}$ for $1\le i\le m$ so that
-	      $(v,e_0)\in\sem{\hat\phi}$ and
-	      $(\pi,e_1)\in\nsem{\hat\psi}$.
-	      Then, by (load),
-	      we have $(\ast_v,e_0)\in\sem{\hat\phi}$.
-	      We need to show
-	      \[
-	       (\lambda z.t')[\vec{g_0}/\G_0], v\cdot \pi\conc
-	      e_0\conc e_1\conc f\in\bbot
-	      \]
-	      where $f=\bigparallel_{1\le i\le
-	      m}\left(t_i[\vec{g_i}/\G_i],\pi_i\conc e_i\right)$.
-	      By (store), the executable reduces to
-	      $t'[\vec{g_0}/\G_0][\ast_v/z],\pi\conc e_0\conc e_1\conc
-	      f$,
-	      which is in $\bbot$ by induction hypothesis~\ref{c:first}.
-	      Since $\bbot$ is closed for $\red^{-1}$, the executable in
-	      question is in $\bbot$.
-	\item
-	     Either $\G_0$ or other $\G_i$ contains $\xphi$.
-	     \begin{description}
-	      \item[($\hat\imath = 0$)] In this case, we have $\G_0 = \xphi, \G$.
-	      \item[($\hat\imath > 0$)] 
-	     \end{description}
-	     \fix{fill}
-       \end{enumerate}
   \item[($\limp$E, \textminus)]
-	 The derivation for $t$ ends as
-       \[
-	     \Haseq{\Hy_0}{\G_{00}}{\tj{t_{00}}{\hat\phi\limp\phi_0}}
-	     \Haseq{\Hy_1}{\G_{01}}{\tj{t_{01}}{\hat\phi}}
-	     \Hbseq{\Hy_0\hmid \Hy_1}{\G_{00},\G_{01}}{\tj{(t_{00})t_{01}}{\phi_0}}
-	     \DisplayProof
-       \]
-	     and the derivation for $u$ ends at sequent
-	     $\sequent{\tj{y}{\psi},\D}{\tj{u_0}{\psi_0}}\hmid \Ky$.
-	 We have $t_0=(t_{00})t_{01}$.
-       \begin{enumerate}[label=\textit{(\arabic{*})}]
-	\item \fix{after (2)}
-	      Take any $\vec{d_0}\in\sem{\D_0}$,
-	      $\vec{d_1}\in\sem{\D_1}$,
-	      $\vec g\in\sem\G$ and $\pi\in\nsem{\phi'}$.
-	      By induction hypothesis~\ref{c:first}, we have
-	      $t_0'=t_0[\vec{d_0}/\D_0][\vec
-	      g/\G]\in\sem{\phi_1\limp\phi'}$
-	      and
-	      $t_1'=t_1[\vec{d_1}/\D_1][\vec
-	      g/\G]\in{\sem{\phi_1}}$.
-	      Since variables in $\D_0$ and $\D_1$ are
-	      disjoint, we have
-	      $t'=((t_0)t_1)[\vec{d_0}/\D_0][\vec{d_1}/\D_1][\vec
-	      g/\G] = (t_0')t_1'$.
-		    By (push), $(t_0')t_1',\pi\red t_0',t_1'\cdot\pi$,
-		    which is in $\bbot$ because
-		    $t_0'\in\sem{\phi_1\limp\phi'}$ and
-		    $t_1'\cdot\pi\in\nsem{\phi_1\limp\phi'} =
-		    \sem{\phi_1}\cdot\nsem{\phi'}$.
-		    Since $\bbot$ is closed for $\red^{-1}$,
-		    $(t_0')t_1',\pi$ is in $\bbot$.
-		    Since $\pi$ was taken arbitrarily,
-		    we have $(t_0')t_1'\in\sem{\phi'}$.
-	\item $\xphi$ might be in $\G_{00}$ or $\G_{01}$ or another
-	      $\G_{\hat\imath}$ ($\hat\imath >0$).
-	     \begin{description}
-	      \item[($\tj{x}{\phi}\in\G_{00}$)]
-		   \fix{use the new}
-		    Let $\D_0$ be equal to $\tj{x}{\phi},\overline{\D_0}$ up
-		    to exchange.
-		    The derivation for $t$ ends in\[
-		    \aseq{\tj{x}{\phi},\overline{\D_0}}{\tj{t_0}{\phi_1\limp\phi'}}
-		    \aseq{\D_1}{\tj{t_1}{\phi_1}}
-		    \bseq{\tj{x}{\phi},\overline{\D_0},\D_1}{\tj{(t_0)t_1}{\phi'}}
-		    \DisplayProof\enspace.
-						  \]
-		    Take any $(v,w)\in\sem{\phi,\psi}$,
-		             $\vec{d_0}\in\sem{\overline{\D_0}}$,
-		             $\vec{d_1}\in\sem{\D_1}$,
-		             $\vec{d'}\in\sem{\D'c}$,
-		             $\vec g\in\sem{\G}$,
-		             $\pi\in\nsem{\phi'}$ and
-		             $\sigma\in\nsem{\psi'}$.
-		    By induction hypothesis~\ref{c:second},
-		    $t_0'=t_0[v/x][\vec{d_0}/\overline{\D_0}][\vec
-		    g/\G]$ and
-		    $u' = u[w/y][\vec{d'}/\D'][\vec g/\G]$ satisfy
-		    $(t_0',u')\in\sem{\phi_1\limp\phi',\psi'}$.
-		    By induction hypothesis~\ref{c:first},
-		    $t_1'=t_1[\vec{d_1}/\D_1][\vec g/\G]$ is in
-		    $\sem{\phi_1}$.
-		    We have $t' =
-		    ((t_0)t_1)[v/x][\vec{d_0}/\overline{\D_0}][\vec{d_1}/\D_1][\vec
-		    g/\G] = (t_0')t_1'$.
-		    By (push) and (cong), $(t_0')t_1',\pi\conc
-		    u',\sigma\red t_0',t_1'\cdot\pi\conc u',\sigma$,
-		    which is in $\bbot$ because
-		    $(t_0',u')\in\sem{\phi_1\limp\phi',\psi'}$ and
-		    $t_1'\cdot\pi\in \sem{\phi_1}\cdot\nsem{\phi'} =
-		    \nsem{\phi_1\limp\phi'}$, $u'\in\sem{\psi'}$
-		    and $\sigma\in\nsem{\psi'}$.
-		    Since $\bbot$ is closed for $\red^{-1}$,
-		    $(t_0')t_1',\pi\conc u',\sigma$ is in $\bbot$.
-	      \item[($\xphi\in\G_{01}$)]
-		   Let $\G_{01}$ be equal to $\xphi,\G'_{01}$.
-		   Then the derivation ends in
-		   \[
-		   \Haseq{\Hy_0}{\G_{00}}{\tj{t_{00}}{\hat\phi\limp\phi_0}}
-		   \Haseq{\Hy_1}{\xphi,\G'_{01}}{\tj{t_{01}}{\hat\phi}}
-		   \Hbseq{\Hy_{0}\hmid
-		   \Hy_{1}}{\G_{00},\xphi,\G'_{01}}{\tj{(t_{00})t_{01}}{\phi_0}}
-		   \DisplayProof\enspace.
-		   \]
-		   Take any
-		   $((v,e'),(w,f'))               \in\sempair{\phi,\psi}$,
-		   $(\vec{g_{00}},\vec{e_{00}})   \in\sem{\G_{00}}$,
-		   $(\vec{g_{01}},\vec{e_{01}})   \in\sem{\G_{01}}$,
-		   $(\vec d,      \vec{f})        \in\sem{\D}$,
-		   $(\vec{g_i},   \vec{e_i})      \in\sem{\G_{i}}$ for
-		   $i>0$,
-		   $(\vec{d_j},\vec{f_j})         \in\sem{\D_j}$ for
-		   $i>0$,
-		   $(\pi_i,e'_i)                  \in\nsem{\phi_i}$
-		   for $0\le i\le m$ and
-		   $(\sigma_j,f'_j)               \in\nsem{\psi_i}$ for
-		   $0\le j\le n$.
-		   Then, we have to show
-		   that the following executable is in $\bbot$:
-		   \[
-		    ((t_{00})t_{01})[v/x][\vec{g_{00}}/\G_{00}][\vec{g_{01}}/\G_{01}],\pi_0\conc
-		   e'_0\conc e_0\conc e_1\in\bbot
-		   \]
-		   where
-		   \begin{align*}
-		    e_0 =&
-		    \vec{e_{00}}\conc
-		    \bigparallel_{i\in\Hy_0}(t_i[\vec{g_i}/\G_i],\pi_i\conc
-		    e'_i \conc \vec{e_i})\text{ and}\\
-		    e_1 =&
-		    e'\conc \vec{e_{01}}\conc
-		    \bigparallel_{i\in\Hy_1}(t_i[\vec{g_i}/\G_i],\pi_i
-		    \conc e'_i\conc \vec{e_i}) \conc \\ &
-		    u_0[w/y][\vec d/\D],\sigma_0\conc f'_0\conc
-		    \vec{f}\conc
-		    \bigparallel_{1\le j\le n} \kern -8pt \left(u_j[\vec{d_j}/\D_j],
-		    \sigma_j\conc f'_j\conc {\vec{f_j}}\right).
-		   \end{align*}
-		   The executable in question reduces to
-		   \[
-		    t_{00}[\vec{g_{00}}/\G_{00}],t_{01}[v/x][\vec{g_{01}}/\G_{01}]\cdot\pi_0\conc
-		   e'_0\conc e_0\conc e_1\in\bbot\enspace.
-		   \]
-		   By induction hypothesis~\ref{c:second},
-		   $(t_{01}[v/x][\vec{g_{01}}/\G_{01}],e_1)$ is in
-		   $\sem{\hat\phi}$.
-		   Since $(\pi_0,e'_0)$ is in $\nsem{\phi_0}$,
-		   the environment
-		   $(t_{01}[v/x][\vec{g_{01}}/\G_{01}]\cdot\pi_0,
-		   e_1\conc e'_0)$ is in $\nsem{\hat\phi\limp\phi_0}$.
-		   By induction hypothesis~\ref{c:first},
-		   the program
-		   $ t_{00}[\vec{g_{00}}/\G_{00}], e_0 $ is in
-		   $\sem{\hat\phi\limp\phi_0}$.
-		   As a result, we have shown the statement.
-	      \item[($\xphi\in\G_i$ where $i>0$)]
-	     \end{description}
-       \end{enumerate}
    \item[(Com, \textminus)]
        The derivation for $t$ ends in
        \[
