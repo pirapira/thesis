@@ -1,5 +1,4 @@
-\chapter{Prelinearity Axiom as an
-  Asynchronous Communication Scheme}
+\chapter{Parametricity for Prelinearity}
 
 	% packages
 % \usepackage{setspace}
@@ -25,6 +24,21 @@
 \newcommand{\rterms}[1]{\mathsf{Rterms}({#1})}
 
 \renewcommand{\vec}{\overrightarrow}
+
+\newcommand{\sequent}[2]{{#1}\tr{#2}}
+\newcommand{\aseq}[2]{\AxiomC{$\sequent{#1}{#2}$}}
+\newcommand{\useq}[2]{\UnaryInfC{$\sequent{#1}{#2}$}}
+\newcommand{\bseq}[2]{\BinaryInfC{$\sequent{#1}{#2}$}}
+
+\newcommand{\Haseq}[3]{\AxiomC{$\sequent{#2}{#3}\hmid{#1}$}}
+\newcommand{\Huseq}[3]{\UnaryInfC{$\sequent{#2}{#3}\hmid{#1}$}}
+\newcommand{\Hbseq}[3]{\BinaryInfC{$\sequent{#2}{#3}\hmid{#1}$}}
+
+\newcommand{\Hy}{\mathcal{H}}
+\newcommand{\Ky}{\mathcal{K}}
+\newcommand{\limp}{\multimap}
+
+
 \subsection{Summary}
 %%% abstract
 This work is a refinement of
@@ -70,7 +84,7 @@ countably infinite.
 For a set~$S$,
 the set $\form(S)$ denotes the set of formulas:
 \[
-\phi::= s \mid X \mid \phi\imp\phi\mid \forall X \phi
+\phi::= s \mid X \mid \phi\limp\phi\mid \forall X \phi
 \]
 where $s\in S$ and $X\in \pvar$.
 A type is an element of $\form(\emptyset)$.
@@ -141,21 +155,10 @@ because they duplicate terms in $\pi$ and hence destroy the linearity.
 
 % 2b type system -- remove pierce -- add com'
 
-\newcommand{\sequent}[2]{{#1}\tr{#2}}
-\newcommand{\aseq}[2]{\AxiomC{$\sequent{#1}{#2}$}}
-\newcommand{\useq}[2]{\UnaryInfC{$\sequent{#1}{#2}$}}
-\newcommand{\bseq}[2]{\BinaryInfC{$\sequent{#1}{#2}$}}
-
-\newcommand{\Haseq}[3]{\AxiomC{${#1}\hmid\sequent{#2}{#3}$}}
-\newcommand{\Huseq}[3]{\UnaryInfC{${#1}\hmid\sequent{#2}{#3}$}}
-\newcommand{\Hbseq}[3]{\BinaryInfC{${#1}\hmid\sequent{#2}{#3}$}}
-
-\newcommand{\Hy}{\mathcal{H}}
-\newcommand{\Ky}{\mathcal{K}}
-\newcommand{\limp}{\multimap}
-
 \fix{describe a sequent; we do not allow multiple occurrences of the
 same variable}
+\fix{say, up to external exchange, we identify}
+
 The derivation rules follow.\\ \noindent
 
 \newcommand{\xphi}{\tj{x}{\phi}}
@@ -224,13 +227,13 @@ which satisfies
 An \textit{environment} is a pair of a stack and an executable.
 The set of environments is written as~$E$.
 A \textit{program} is a pair of a term an executable.
-For a set~$\mathcal Z$ of environments, $\mathcal Z\imp\bbot$ denotes
+For a set~$\mathcal Z$ of environments, $\mathcal Z\limp\bbot$ denotes
 the set of programs $(t,e)$ such that
 for any environment $(\pi,e')\in \mathcal Z$,
 the executable $t,\pi\conc e \conc e'$ is in $\bbot$.
 A set $\mathcal X$ of programss is called a truth value
 iff there exists
-such $\mathcal Z$ that $\mathcal X = \mathcal Z\imp \bbot$.
+such $\mathcal Z$ that $\mathcal X = \mathcal Z\limp \bbot$.
 
 \renewcommand{\sem}[1]{|{#1}|}
 \newcommand{\nsem}[1]{\sem{#1}^-}
@@ -241,7 +244,7 @@ we define $\nsem{\phi}\colon \form(2^E)\rightarrow
 \begin{align*}
  \nsem{\mathcal Z} &= \mathcal Z \\
  \nsem{X}&= |X|_0^- \\
- \nsem{\phi\imp\psi}&=
+ \nsem{\phi\limp\psi}&=
  \{(t\cdot\pi, e_0\conc e_1)\mid
  (t,e_0)\in\nsem\phi\rightarrow\bbot \text{ and }(\pi,e_1)\in\nsem\psi\}
  \\
@@ -250,7 +253,7 @@ we define $\nsem{\phi}\colon \form(2^E)\rightarrow
 \end{align*}
 Using this, we define $\sem \phi=\nsem{\phi}\rightarrow\bbot$.
 We have an equality
-$\nsem{\phi\imp\psi} = \{(t\cdot\pi, e_0\conc e_1)\mid
+$\nsem{\phi\limp\psi} = \{(t\cdot\pi, e_0\conc e_1)\mid
 (t,e_0)\in\sem\phi\text{ and }(\pi,e_1)\in\nsem\psi\}$, which we denote
 $\sem{\phi}\cdot\nsem{\psi}$.
 Moreover, for types~$\phi$ and $\psi$, we define $\sempair{\phi,\psi}$
@@ -262,12 +265,12 @@ and $(\pi_\psi,e_3)\in\nsem\psi$.
 
 \begin{proposition}
  \label{comod-type}
- $((\comodL,\emptyset), (\comodR,\emptyset))\in\sempair{\phi\imp\psi,\psi\imp\phi}$
+ $((\comodL,\emptyset), (\comodR,\emptyset))\in\sempair{\phi\limp\psi,\psi\limp\phi}$
  for any types~$\phi$ and $\psi$.
 \end{proposition}
 \begin{proof}
- Take any $(t\cdot\pi_\psi,e_{00}\conc e_{01})\in\nsem{\phi\imp\psi}$
- and $(u\cdot\pi_\phi,e_{10}\conc e_{11})\in\nsem{\psi\imp\phi}$ so that
+ Take any $(t\cdot\pi_\psi,e_{00}\conc e_{01})\in\nsem{\phi\limp\psi}$
+ and $(u\cdot\pi_\phi,e_{10}\conc e_{11})\in\nsem{\psi\limp\phi}$ so that
  $(t, e_{00})\in\sem{\phi}$, $(\pi_\psi,e_{01})\in\nsem{\psi}$,
  $(u, e_{10})\in\sem{\psi}$, $(\pi_\phi,e_{11})\in\nsem{\phi}$.
  We claim $e=\comodL,t\cdot\pi_\psi\conc\comodR,u\cdot\pi_\phi\conc
@@ -296,35 +299,46 @@ the proof for $\limp$E rule fails.
  \begin{align*}
   \Hy = &\sequent{\G_0}{\tj{t_0}{\phi_0}} \hmid
   \sequent{\G_1}{\tj{t_1}{\phi_1}} \hmid \cdots \hmid
-  \sequent{\G_{m'}}{\tj{t_{m'}}{\phi_{m'}}}
+  \sequent{\G_{m}}{\tj{t_{m}}{\phi_{m}}}
   &\text{ and}\\
   \Ky = &\sequent{\D_0}{\tj{u_0}{\psi_0}} \hmid
   \sequent{\D_1}{\tj{u_1}{\psi_1}} \hmid \cdots \hmid
-  \sequent{\D_{n'}}{\tj{u_{n'}}{\psi_{n'}}}
- \end{align*}
- where $\phi_i = {\phi_{i1}\limp\phi_{i2}\limp\cdots\limp\phi_{im(i)}}$
- and   $\psi_i = {\psi_{i1}\limp\psi_{i2}\limp\cdots\limp\psi_{im(i)}}$.
- Also assume these are derivable:
- \begin{align*}
-  & \Hy_{ij} \hmid \sequent{\G_{ij}}{\tj{t_{ij}}{\phi_{ij}}} &\text{ for
-  } 0\le i\le m'\text{ and }1\le j\le m(i) &\text{ and }\\
-  & \Ky_{ij} \hmid \sequent{\D_{ij}}{\tj{u_{ij}}{\psi_{ij}}} &\text{ for
-  } 0\le i\le n'\text{ and }1\le j\le n(i)&\enspace .
+  \sequent{\D_{n}}{\tj{u_{n}}{\psi_{n}}}\enspace.
  \end{align*}
  Under these conditions, we make two statements.
  \begin{enumerate}[label=(\arabic{*}), ref=\textit{(\arabic{*})}]
-  \item \label{c:first}
-	$t[\vec d/\hat\D][\vec g/\G]$ is in $\sem{\phi'}$ for any
-	$v\in\sem\phi$, $\vec g\in\sem\G$ and $\vec d\in\sem{\hat\D}$; and that
-  \item \label{c:second} when $\hat \D$ is equal to  $\tj x\phi, \D$ up
-	to exchange,
-	$(t[v/x][\vec d/\D][\vec g/\G],
-	u[w/y][\vec{d'}/\D'][\vec{g'}/G'])$ is in $\sem{\phi',\psi'}$
-	for any $(v,w)    \in \sem{\phi,\psi}$,
-	        $\vec d   \in \sem\D$,
-	        $\vec{d'} \in \sem{\D'}$,
-	        $\vec{g}  \in \sem{\G}$ and
-	        $\vec{g'} \in \sem{\G'}$.
+  \item \label{c:first} the executable
+	\[
+	\bigparallel_{0\le i\le m}
+	\left(t_i[\vec{g_i}/\G_i], \pi_i\conc e_i\conc \vec{f_i}\right)
+	\]
+	is in $\bbot$
+	 for any
+	$(\vec{g_i},\vec{f_i})\in\sem{\G_i}$ and $(\pi_i, e_i)\in\nsem{\phi_i}$; and that
+  \item \label{c:second}
+	when $\G_{\hat\imath}$ and $\D_{\hat\jmath}$ are respectively
+	equal to $\tj x\phi, \G$ and $\tj y\psi, \D$ up to exchange,
+	the following executable is in $\bbot$:
+	\begin{align*}
+	 &
+	 t_{\hat\imath}[v/x][\vec{g}/\G],\pi_{\hat\imath}
+	 \conc e'\conc e'_{\hat\imath} \conc \vec e\conc
+	 u_{\hat\jmath}[w/y][\vec d /\D],
+	 \sigma_{\hat\jmath}\conc f'\conc f'_{\hat\jmath}\conc \vec f \\ \conc
+	&\bigparallel_{i\neq\hat\imath} \left(t_i[\vec{g_i}/\G_i],
+	\pi_i\conc e'_i\conc \vec{e_i}\right)
+	 \quad \conc
+	\bigparallel_{j\neq\hat\jmath} \left(u_j[\vec{d_j}/\D_j],
+	\sigma_j\conc f'_j\conc {\vec{f_j}}\right)
+	\end{align*}
+	for any
+	$((v,e'),(w,f'))    \in \sempair{\phi,\psi}$,
+	$(\vec{g},\vec{e})  \in \sem{\G}$,
+	$(\vec d,\vec{f})   \in \sem\D$,
+	$(\vec{g_i},\vec{e_i})\in \sem{\G_i}$ for $i\neq\hat\imath$,
+	$(\vec{d_j},\vec{f_j})\in \sem{\D_j}$ for $j\neq\hat\jmath$,
+	$(\pi_i,e'_i)    \in \nsem{\phi_i}$   for $0\le i\le m$ and
+	$(\sigma_j,f'_j) \in \nsem{\psi_j}$   for $0\le j\le n$.
   \end{enumerate}
  \end{proposition}
  \begin{proof}
@@ -333,77 +347,61 @@ the proof for $\limp$E rule fails.
   \begin{description}
   \item[(Ax, Ax)] When both derivations consist of only axiom rules,
        the statements are tautologies.
-  \item[(D, \textminus)] Both statements follow immediately from the
-       induction hypothesis.
-   \item[($\imp$I, \textminus)]
+   \item[($\limp$I, \textminus)]
        In this case, the derivation for~$t$ ends as
-       \aseq{\tj {z}{\phi_0},\G}{\tj t{\phi_1}}
-       \useq{\G}{\tj{\lambda {z}.t}{\phi_0\imp{\phi_1}}}
+       \Haseq{\Hy'}{\tj {z}{\hat\phi},\G_0}{\tj {t'}{\hat\psi}}
+       \Huseq{\Hy'}{\G_0}{\tj{\lambda {z}.t'}{\hat\phi\limp{\hat\psi}}}
        \DisplayProof.
        \begin{enumerate}[label=\textit{(\arabic{*})}]
+	\item Take any
+	      $(\vec{g_i},\vec{f_i})\in\sem{\G_i}$,
+	      $(v\cdot\pi,e_0\conc e_1)\in\nsem{\hat\phi\limp\hat\psi}$
+	      and
+	      $(\pi_i,e_i)\in\sem{\phi_i}$ for $1\le i\le m$ so that
+	      $(v,e_0)\in\sem{\hat\phi}$ and
+	      $(\pi,e_1)\in\nsem{\hat\psi}$.
+	      Then, by (load),
+	      we have $(\ast_v,e_0)\in\sem{\hat\phi}$.
+	      We need to show
+	      \[
+	       (\lambda z.t')[\vec{g_0}/\G_0], v\cdot \pi\conc
+	      e_0\conc e_1\conc f\in\bbot
+	      \]
+	      where $f=\bigparallel_{1\le i\le
+	      m}\left(t_i[\vec{g_i}/\G_i],\pi_i\conc e_i\right)$.
+	      By (store), the executable reduces to
+	      $t'[\vec{g_0}/\G_0][\ast_v/z],\pi\conc e_0\conc e_1\conc
+	      f$,
+	      which is in $\bbot$ by induction hypothesis~\ref{c:first}.
+	      Since $\bbot$ is closed for $\red^{-1}$, the executable in
+	      question is in $\bbot$.
 	\item
-	     Take any $\vec d\in\sem{\hat\D}$, $\vec
-	     g\in\sem\G$ and
-	     $u\cdot\pi\in\nsem{\phi_0\imp\phi_1}=\sem{\phi_0}\cdot\nsem{\phi_1}$.
-	     First we show $\ast_u\in\sem{\phi_0}$.
-	     For that, take any $\pi_0\in\nsem{\phi_0}$.  Then, by
-	     (load), $\ast_u,\pi_0\red u,\pi_0$, which is in $\bbot$.
-	     So, since $\bbot$ is closed for $\red^{-1}$,
-	     $\ast_u$ is in $\sem{\phi_0}$.
-	     By induction hypothesis~\ref{c:first},
-	     $e' = t[\ast_u/z][\vec d/\hat\D][\vec g/\G],\pi$ is in
-	     $\bbot$ because the term is in $\sem{\phi_1}$ and the
-	     stack is in $\nsem{\phi_1}$.
-	     The executable $e = (\lambda z.t)[\vec d/\hat\D][\vec
-	     g/\G], u\cdot \pi$ reduces to
-	     $e'$, which is shown to be in $\bbot$.
-	     Since $\bbot$ is closed for $\red^{-1}$,
-	     $e$ is also in $\bbot$.
-	     This ensures $(\lambda z.t)[\vec d/\hat\D][\vec
-	     g/\G]\in\bbot$.
-	\item Here we have $\hat\D = \tj x\phi, \D$ up to
-	      exchange.  The variable $x$ is different from any
-	      variable in
-	      $\D,\G$ and also different from $z$.
-	      Take any $(v,w)\in\sem{\phi,\psi}$,
-	      $\vec g\in\sem{\G}$, $\vec{g'}\in\sem{\G'}$, $\vec
-	      d\in\sem\D$,
-	      $\vec{d'\in\D'}$, $\pi_\psi\in\nsem{\psi}$ and
-	      $u\cdot\pi\in\nsem{\phi_0\imp\phi_1} =
-	      \sem{\phi_0}\cdot \nsem{\phi_1}$.
-	      We have $\ast_u\in\sem{\phi_0}$ as in~\ref{c:first}.
-	      By induction hypothesis,
-	      $(t[\ast_u/z][\vec d/\D][\vec g/\G],
-	      u[w/y][d'/\D'][\vec{g'}/\G'])$ is in
-	      $\sem{\phi_1,\psi}$.
-	      So, $e'=t[\ast_u/z][v/x][\vec d/\D][\vec g/\G],
-		    \pi\conc
-		            u[w/y][\vec{d'}/\D'][\vec{g'}/\G'],\pi_\psi$ is
-		    in $\bbot$.
-	      Since $e = (\lambda z.t)[v/x][\vec d/\D][\vec g/\G],
-	      u\cdot \pi\conc
-	      u[w/y][\vec{d'}/\D'][\vec{g'}/\G'],\pi_\psi$ reduces
-	      to
-	      $e'$ by (store) and (cong),
-	      $e$ is also in $\bbot$.
-	      This verifies the statement.
+	     Either $\G_0$ or other $\G_i$ contains $\xphi$.
+	     \begin{description}
+	      \item[($\hat\imath = 0$)] In this case, we have $\G_0 = \xphi, \G$.
+	      \item[($\hat\imath > 0$)] 
+	     \end{description}
+	     \fix{fill}
        \end{enumerate}
-  \item[($\imp$E, \textminus)]
+  \item[($\limp$E, \textminus)]
 	 The derivation for $t$ ends as
-	     \aseq{\G}{\tj{t_0}{\phi_1\imp\phi'}}
-	     \aseq{\G}{\tj{t_1}{\phi_1}}
-	     \bseq{\G}{\tj{t_0(t_1)}{\phi'}}
+       \[
+	     \Haseq{\Hy_0}{\G_{00}}{\tj{t_{00}}{\hat\phi\limp\phi_0}}
+	     \Haseq{\Hy_1}{\G_{01}}{\tj{t_{01}}{\hat\phi}}
+	     \Hbseq{\Hy_0\hmid \Hy_1}{\G_{00},\G_{01}}{\tj{(t_{00})t_{01}}{\phi_0}}
 	     \DisplayProof
+       \]
 	     and the derivation for $u$ ends at sequent
-	     $\sequent{\tj{y}{\psi},\D'}{\G'}{\tj{u}{\psi'}}$.
-	 We have $t=(t_0)t_1$.
+	     $\sequent{\tj{y}{\psi},\D}{\tj{u_0}{\psi_0}}\hmid \Ky$.
+	 We have $t_0=(t_{00})t_{01}$.
        \begin{enumerate}[label=\textit{(\arabic{*})}]
-	\item Take any $\vec{d_0}\in\sem{\D_0}$,
+	\item \fix{after (2)}
+	      Take any $\vec{d_0}\in\sem{\D_0}$,
 	      $\vec{d_1}\in\sem{\D_1}$,
 	      $\vec g\in\sem\G$ and $\pi\in\nsem{\phi'}$.
 	      By induction hypothesis~\ref{c:first}, we have
 	      $t_0'=t_0[\vec{d_0}/\D_0][\vec
-	      g/\G]\in\sem{\phi_1\imp\phi'}$
+	      g/\G]\in\sem{\phi_1\limp\phi'}$
 	      and
 	      $t_1'=t_1[\vec{d_1}/\D_1][\vec
 	      g/\G]\in{\sem{\phi_1}}$.
@@ -413,19 +411,22 @@ the proof for $\limp$E rule fails.
 	      g/\G] = (t_0')t_1'$.
 		    By (push), $(t_0')t_1',\pi\red t_0',t_1'\cdot\pi$,
 		    which is in $\bbot$ because
-		    $t_0'\in\sem{\phi_1\imp\phi'}$ and
-		    $t_1'\cdot\pi\in\nsem{\phi_1\imp\phi'} =
+		    $t_0'\in\sem{\phi_1\limp\phi'}$ and
+		    $t_1'\cdot\pi\in\nsem{\phi_1\limp\phi'} =
 		    \sem{\phi_1}\cdot\nsem{\phi'}$.
 		    Since $\bbot$ is closed for $\red^{-1}$,
 		    $(t_0')t_1',\pi$ is in $\bbot$.
 		    Since $\pi$ was taken arbitrarily,
 		    we have $(t_0')t_1'\in\sem{\phi'}$.
-	\item
-	       $\tj{x}{\phi}\in\D_0$)
+	\item $\xphi$ might be in $\G_{00}$ or $\G_{01}$ or another
+	      $\G_{\hat\imath}$ ($\hat\imath >0$).
+	     \begin{description}
+	      \item[($\tj{x}{\phi}\in\G_{00}$)]
+		   \fix{use the new}
 		    Let $\D_0$ be equal to $\tj{x}{\phi},\overline{\D_0}$ up
 		    to exchange.
 		    The derivation for $t$ ends in\[
-		    \aseq{\tj{x}{\phi},\overline{\D_0}}{\tj{t_0}{\phi_1\imp\phi'}}
+		    \aseq{\tj{x}{\phi},\overline{\D_0}}{\tj{t_0}{\phi_1\limp\phi'}}
 		    \aseq{\D_1}{\tj{t_1}{\phi_1}}
 		    \bseq{\tj{x}{\phi},\overline{\D_0},\D_1}{\tj{(t_0)t_1}{\phi'}}
 		    \DisplayProof\enspace.
@@ -441,7 +442,7 @@ the proof for $\limp$E rule fails.
 		    $t_0'=t_0[v/x][\vec{d_0}/\overline{\D_0}][\vec
 		    g/\G]$ and
 		    $u' = u[w/y][\vec{d'}/\D'][\vec g/\G]$ satisfy
-		    $(t_0',u')\in\sem{\phi_1\imp\phi',\psi'}$.
+		    $(t_0',u')\in\sem{\phi_1\limp\phi',\psi'}$.
 		    By induction hypothesis~\ref{c:first},
 		    $t_1'=t_1[\vec{d_1}/\D_1][\vec g/\G]$ is in
 		    $\sem{\phi_1}$.
@@ -451,20 +452,81 @@ the proof for $\limp$E rule fails.
 		    By (push) and (cong), $(t_0')t_1',\pi\conc
 		    u',\sigma\red t_0',t_1'\cdot\pi\conc u',\sigma$,
 		    which is in $\bbot$ because
-		    $(t_0',u')\in\sem{\phi_1\imp\phi',\psi'}$ and
+		    $(t_0',u')\in\sem{\phi_1\limp\phi',\psi'}$ and
 		    $t_1'\cdot\pi\in \sem{\phi_1}\cdot\nsem{\phi'} =
-		    \nsem{\phi_1\imp\phi'}$, $u'\in\sem{\psi'}$
+		    \nsem{\phi_1\limp\phi'}$, $u'\in\sem{\psi'}$
 		    and $\sigma\in\nsem{\psi'}$.
 		    Since $\bbot$ is closed for $\red^{-1}$,
 		    $(t_0')t_1',\pi\conc u',\sigma$ is in $\bbot$.
+	      \item[($\xphi\in\G_{01}$)]
+		   Let $\G_{01}$ be equal to $\xphi,\G'_{01}$.
+		   Then the derivation ends in
+		   \[
+		   \Haseq{\Hy_0}{\G_{00}}{\tj{t_{00}}{\hat\phi\limp\phi_0}}
+		   \Haseq{\Hy_1}{\xphi,\G'_{01}}{\tj{t_{01}}{\hat\phi}}
+		   \Hbseq{\Hy_{0}\hmid
+		   \Hy_{1}}{\G_{00},\xphi,\G'_{01}}{\tj{(t_{00})t_{01}}{\phi_0}}
+		   \DisplayProof\enspace.
+		   \]
+		   Take any
+		   $((v,e'),(w,f'))               \in\sempair{\phi,\psi}$,
+		   $(\vec{g_{00}},\vec{e_{00}})   \in\sem{\G_{00}}$,
+		   $(\vec{g_{01}},\vec{e_{01}})   \in\sem{\G_{01}}$,
+		   $(\vec d,      \vec{f})        \in\sem{\D}$,
+		   $(\vec{g_i},   \vec{e_i})      \in\sem{\G_{i}}$ for
+		   $i>0$,
+		   $(\vec{d_j},\vec{f_j})         \in\sem{\D_j}$ for
+		   $i>0$,
+		   $(\pi_i,e'_i)                  \in\nsem{\phi_i}$
+		   for $0\le i\le m$ and
+		   $(\sigma_j,f'_j)               \in\nsem{\psi_i}$ for
+		   $0\le j\le n$.
+		   Then, we have to show
+		   that the following executable is in $\bbot$:
+		   \[
+		    ((t_{00})t_{01})[v/x][\vec{g_{00}}/\G_{00}][\vec{g_{01}}/\G_{01}],\pi_0\conc
+		   e'_0\conc e_0\conc e_1\in\bbot
+		   \]
+		   where
+		   \begin{align*}
+		    e_0 =&
+		    \vec{e_{00}}\conc
+		    \bigparallel_{i\in\Hy_0}(t_i[\vec{g_i}/\G_i],\pi_i\conc
+		    e'_i \conc \vec{e_i})\text{ and}\\
+		    e_1 =&
+		    e'\conc \vec{e_{01}}\conc
+		    \bigparallel_{i\in\Hy_1}(t_i[\vec{g_i}/\G_i],\pi_i
+		    \conc e'_i\conc \vec{e_i}) \conc \\ &
+		    u_0[w/y][\vec d/\D],\sigma_0\conc f'_0\conc
+		    \vec{f}\conc
+		    \bigparallel_{1\le j\le n} \kern -8pt \left(u_j[\vec{d_j}/\D_j],
+		    \sigma_j\conc f'_j\conc {\vec{f_j}}\right).
+		   \end{align*}
+		   The executable in question reduces to
+		   \[
+		    t_{00}[\vec{g_{00}}/\G_{00}],t_{01}[v/x][\vec{g_{01}}/\G_{01}]\cdot\pi_0\conc
+		   e'_0\conc e_0\conc e_1\in\bbot\enspace.
+		   \]
+		   By induction hypothesis~\ref{c:second},
+		   $(t_{01}[v/x][\vec{g_{01}}/\G_{01}],e_1)$ is in
+		   $\sem{\hat\phi}$.
+		   Since $(\pi_0,e'_0)$ is in $\nsem{\phi_0}$,
+		   the environment
+		   $(t_{01}[v/x][\vec{g_{01}}/\G_{01}]\cdot\pi_0,
+		   e_1\conc e'_0)$ is in $\nsem{\hat\phi\limp\phi_0}$.
+		   By induction hypothesis~\ref{c:first},
+		   the program
+		   $ t_{00}[\vec{g_{00}}/\G_{00}], e_0 $ is in
+		   $\sem{\hat\phi\limp\phi_0}$.
+		   As a result, we have shown the statement.
+	      \item[($\xphi\in\G_i$ where $i>0$)]
+	     \end{description}
        \end{enumerate}
-  \item[($\forall$I, \textminus)]
-  \item[($\forall$E, \textminus)]
    \item[(Com, \textminus)]
        The derivation for $t$ ends in
        \[
-       \aseq{\tj{\hat x}{\theta\imp\tau},\D_0}{\tj{t_0}{\phi'}}
-       \aseq{\tj{\hat y}{\tau\imp\theta},\D_1}{\tj{t_1}{\phi'}}
+       \aseq{\tj{\hat x}{\theta\limp\tau},\D_0}{\tj{t_0}{\phi'}}
+       \aseq{\tj{\hat y}{\tau\limp\theta},\D_1}{\tj{t_1}{\phi'}}
        \bseq{\D_0,\D_1}{\tj{(t_0[\comodL/\hat x]\conc t_1[\comodR/\hat
        y])}{\phi'}}
        \DisplayProof\enspace.
@@ -475,7 +537,7 @@ the proof for $\limp$E rule fails.
 	      $\vec{d_1}\in\sem{\D_1}$,
 	      $\vec{g}  \in\sem{\G}$.
 	      By Prop.~\ref{comod-type}, we have
-	      $(\comodL,\comodR)\in\sem{\theta\imp\tau,\tau\imp\theta}$.
+	      $(\comodL,\comodR)\in\sem{\theta\limp\tau,\tau\limp\theta}$.
 	      By induction hypothesis~\ref{c:second}, the terms
 	      $t_0'=t_0[\comodL/\hat x][\vec{d_0}/\D_0][\vec g/\G]$
 	      and
@@ -520,7 +582,8 @@ the proof for $\limp$E rule fails.
 	      where $t_0'\conc t_1' = (t_0[\comodL/\hat x]\conc
 	      t_1[\comodR/\hat y])[\vec{d_0}/\D_0][\vec{d_1}/\D_1][\vec g/\G]$.
        \end{enumerate}
-  \item[(Gen, \textminus)]
+  \item[($\forall$I, \textminus)]
+       \fix{renew}
        The derivation for $t$ ends in
        \aseq{\hat\D}{\tj t\phi}
        \useq{\hat\D}{\tj t{\forall X\phi}}
@@ -574,7 +637,8 @@ the proof for $\limp$E rule fails.
 	      where the last equality holds because of the way we chose
 	      the variable~$X'$.
        \end{enumerate}
-  \item[(Ins, \textminus)]
+  \item[($\forall$E, \textminus)]
+       \fix{renew}
        The derivation for $t$ ends in
        \aseq{\tj x\phi,\D}{\tj t{\forall X\phi}}
        \useq{\tj x\phi,\D}{\tj t{\phi[\psi/X]}}
@@ -598,9 +662,9 @@ Note that \ref{c:first} uses \ref{c:second} and vice versa.
  Let
  $\sequent{}{}{\tj c
  {\forall X\forall A\forall B
- [((A\imp B)\imp X)
-  \imp((B\imp A)\imp X)
-  \imp X]}}$
+ [((A\limp B)\limp X)
+  \limp((B\limp A)\limp X)
+  \limp X]}}$
  be
  derivable.
  For all terms $\rho,\sigma, r$ and for all stacks $\pi, \pi_A$ and
@@ -613,6 +677,10 @@ Note that \ref{c:first} uses \ref{c:second} and vice versa.
 \end{proposition}
 \begin{proof}
 \end{proof}
+
+\section{Adding Exponentials}
+
+
 \section{Asynchronous Semantics}
 
 A \textit{term}~$t$ is defined by BNF:
@@ -706,8 +774,8 @@ We can implement something similar to Lafont's example,
 showing that confluence does not hold.
 Suppose $\G\tr\tj t\phi$ and $\G\tr\tj u\phi$ are both derivable.
 Then, by induction on the derivation,
-both $\G,\tj x{\phi\imp\phi}\tr\tj{(x)t}\phi$
-and $\G,\tj y{\phi\imp\phi}\tr\tj{(y)u}\phi$ are derivable
+both $\G,\tj x{\phi\limp\phi}\tr\tj{(x)t}\phi$
+and $\G,\tj y{\phi\limp\phi}\tr\tj{(y)u}\phi$ are derivable
 for $x$ and $y$ not appearing in $\G$, $u$, or $t$.
 By the communication rule,
 $\G\tr\tj{(\comod c{\co c})t\conc(\comod {\co c} c)u}\phi$ is derivable.
@@ -761,8 +829,15 @@ Let $\tr\tj t\psi$ be derivable, then,
 
 \section*{where to put them}
 
+``Undecidability of second order linear logic'' has
+\begin{align*}
+ \phi\otimes \psi&\equiv \forall X((\phi\limp\psi\limp X)\limp X) \\
+ {1}      &\equiv \forall X(X\limp X)\\
+ \exists X\phi   &\equiv \forall Y((\forall X(\phi\limp Y))\limp Y)
+\end{align*}
+
 Not all disjunctive tautologies are valid in G\"odel--Dummett logic:
-$(P\imp Q)\lor(Q\imp R)$.
+$(P\limp Q)\lor(Q\limp R)$.
 
 Non-abortfullness is not a pole.
 In order to change this, we have to do something more subtle.
