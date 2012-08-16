@@ -64,6 +64,9 @@
 \newcommand{\cotuple}[1]{[{#1}]}
 \newcommand{\ev}[1]{\mathsf{ev}\left({#1}\right)}
 
+\newcommand{\inl}[1]{\mathsf{inl}({#1})}
+\newcommand{\inr}[1]{\mathsf{inr}({#1})}
+
 \newcommand{\ginl}[1]{\mathsf{inl}^{\g}\left({#1}\right)}
 \newcommand{\linl}[1]{\mathsf{inl}\left({#1}\right)}
 \newcommand{\sinl}[1]{\mathsf{inl}^{\square}\left({#1}\right)}
@@ -85,7 +88,10 @@
 \newcommand{\vg}[2]{{#1}_{#2, \mathrm g}}
 \newcommand{\vd}[2]{{#1}_{#2, \mathrm d}}
 
+\newcommand{\mats}[4]{\langle \inl{#1}. {#2}/ \inr{#3}. {#4}\rangle}
 
+\newcommand{\mat}[5]{\mathsf{match}\,{#1}\,\mathsf{of}\, \inl{#2}. {#3}/
+\inr{#4}. {#5}}
 \newcommand{\gmat}[5]{\mathsf{match}^{\g}\,{#1}\,\mathsf{of}\, \ginl{#2}. {#3}/
 \ginr{#4}. {#5}}
 \newcommand{\lmat}[5]{\mathsf{match}\,{#1}\,\mathsf{of}\, \linl{#2}. {#3}/
@@ -203,3 +209,7 @@
     \item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
 \newenvironment{remark}[1][Remark]{\begin{trivlist}
     \item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+
+\newcommand{\xphi}{\tj{x}{\phi}}
+\newcommand{\ypsi}{\tj{y}{\psi}}
+

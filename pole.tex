@@ -19,11 +19,14 @@
 % \maketitle
 
 \renewcommand{\vec}{\overrightarrow}
+\newcommand{\sche}{\sqsubseteq}
+
 
 \newcommand{\sequent}[2]{{#1}\tr{#2}}
 \newcommand{\aseq}[2]{\AxiomC{$\sequent{#1}{#2}$}}
 \newcommand{\useq}[2]{\UnaryInfC{$\sequent{#1}{#2}$}}
 \newcommand{\bseq}[2]{\BinaryInfC{$\sequent{#1}{#2}$}}
+\newcommand{\tseq}[2]{\TrinaryInfC{$\sequent{#1}{#2}$}}
 
 \newcommand{\limp}{\multimap}
 
@@ -73,9 +76,16 @@ countably infinite.
 For a set~$S$,
 the set $\form(S)$ denotes the set of formulas:
 \[
-\phi::= s \mid X \mid \phi\limp\phi\mid \forall X \phi
+\phi::= s \mid X \mid \phi\limp\phi\mid \phi\oplus\phi\mid
+\forall X \phi
 \]
 where $s\in S$ and $X\in \pvar$.
+The connective $\forall$ connects stronger than $\oplus$, which is
+stronger than $\limp$.
+Recurring $\limp$,
+$\phi_0\limp\phi_1\limp\cdots\limp\phi_n$ is defined inductively on~$n$
+as
+$\phi_0\limp(\phi_1\limp\cdots\limp\phi_n)$.
 A type is an element of $\form(\emptyset)$.
 Channels have involution $c\mapsto\co c$ with
 $c\neq \co c$ and
@@ -87,27 +97,33 @@ A \textit{term}~$t$ is defined by BNF:
  \mid \lambda x.t
  \mid \ast_t
  \mid \comod c c
+ \mid t\conc t
 \]
 where $x$ is a variable and $c$ is a channel.
 A \textit{stack}~$\pi$ is defined by BNF:
 \[
  \pi ::= \epsilon
  \mid t\cdot \pi
+ \mid \mats x e x e
  \enspace.
 \]
 We write the set of terms as $\Lambda$ and stacks~$\Pi$.
-An \textit{executable} is a finite multiset on $\Lambda \times \Pi$.
+An \textit{executable}~$e$ is defined as
+\[
+ e::= t,\pi\mid e\conc e
+\]
 
 % 2a' reduction
 \newcommand{\red}{\succ}
+A schedule~$\sche$ is a total order on channels.
 The reduction relation~$\red$ on executables
 is defined to be the smallest preorder
 that satisfies:
 \begin{description}
  \item[(cong)] if
-	    $e_0         \red e_1$
-	    then
-	    $[e_0 \conc e] \red [ e_1\conc e]$  \enspace;
+      $e_0         \red e_1$
+      then
+      $(e_0 \conc e) \red (e_1\conc e)$\enspace;
  \item[(push)]
 	    $[(t)u,\pi]      \red [t,u\cdot\pi]$      \enspace;
  \item[(store)]
@@ -115,27 +131,22 @@ that satisfies:
 	     \red
 	     [t[\ast_u/x],      \pi]$\enspace;
  \item[(load)]
-	    $[\ast_u,\pi],S\red[u,\pi]$\enspace;
- \item[(com)]
+	    $[\ast_u,\pi]\red [u,\pi]$\enspace;
+ \item[(dist)]
+           $[t\conc u,\pi]  \red [t,\pi\conc u,\pi]$ \enspace;
+ \item[(mat0)]
+           $[\inl{t}, \mats xeyf] \red e[v/x] $ \enspace;
+ \item[(mat1)]
+           $[\inr{t}, \mats xeyf] \red f[t/y] $ \enspace;
+ \item[(com0)]
 	    $[\comod c{\co c}, t\cdot\pi\conc \comod{\co c}c,
 	    u\cdot\sigma] \red
-	    [u,\pi\conc t,\sigma]$\enspace.
- % this kind of failures lead to something strange
- % it gets affine
- % \item[(com0)]
- % 	    $[\comod c{\co c}, t\cdot\pi\conc \comod{\co c}c,
- % 	    u\cdot\sigma] \red
- % 	    [u,\pi]$\enspace.
- % \item[(com1)]
- % 	    $[\comod c{\co c}, t\cdot\pi\conc \comod{\co c}c,
- % 	    u\cdot\sigma] \red
- % 	    [t,\sigma]$\enspace.
+	    [u,\pi]$\enspace(if $\co c\sche c$); and
+ \item[(com1)]
+	    $[\comod c{\co c}, t\cdot\pi\conc \comod{\co c}c,
+	    u\cdot\sigma] \red
+	    [t,\sigma]$\enspace(if $c\sche \co c$).
 \end{description}
-From Danos and Krivine's formalization~\fix{cite},
-we removed terms of the form $ t\conc t $ and
-reductions
-	    $[t\conc u,\pi]  \red [t,\pi\conc u,\pi]$
-because they duplicate terms in $\pi$ and hence destroy the linearity.
 
 % I want to write these rules are non-blocking here.
 % but, actually, Danos and Krivines rules are also non-blocking.
@@ -149,8 +160,6 @@ same variable}
 \fix{say, up to external exchange, we identify}
 
 The derivation rules follow.\\ \noindent
-
-\newcommand{\xphi}{\tj{x}{\phi}}
 
 \AxiomC{}
 \LL  {Ax}
@@ -171,10 +180,30 @@ The derivation rules follow.\\ \noindent
 \DisplayProof
 \ruleskip
 %
+\aseq{\G}{\tj{t}{\phi}}
+\LL  {$\oplus$I}
+\useq{\G}{\tj{\inl{t}}{\phi\oplus\psi}}
+\DisplayProof
+\ruleskip
+%
+\aseq{\G}{\tj{t}{\psi}}
+\LL  {$\oplus$I}
+\useq{\G}{\tj{\inr{t}}{\phi\oplus\psi}}
+\DisplayProof
+\ruleskip
+%
+\aseq{\G}{\tj{t}{\phi\oplus\psi}}
+\aseq{\D,\xphi}{\tj{u_0}{\theta}}
+\aseq{\D,\ypsi}{\tj{u_1}{\theta}}
+\LL  {$\oplus$E}
+\tseq{\G,\D}{\tj{\mat{t}{x}{u_0}{y}{u_1}}{\theta}}
+\DisplayProof
+\ruleskip
+%
 \aseq\G{\tj t\phi}
 \LL   {$\forall$I}
 \useq\G{\tj t{\forall X\phi}}
-\DisplayProof
+\DisplayProof ($\G$ does not contain $X$ freely)
 \ruleskip
 %
 \aseq{\G}{\tj{t}{\forall X\phi}}
@@ -186,13 +215,9 @@ The derivation rules follow.\\ \noindent
 \newcommand{\comodL}{\comod c{\co c}}
 \newcommand{\comodR}{\comod{\co c}c}
 \aseq{\tj{x}{\phi\limp\psi},\G}{\tj t\theta}
-\aseq{\tj{y}{\psi\limp\phi},\G}{\tj u\tau}
+\aseq{\tj{y}{\psi\limp\phi},\G}{\tj u\theta}
 \LL{Com}
-\BinaryInfC{$
-\sequent\G{t[\comodL/x]}
-\hmid
-\sequent{\D}{u[\comodR/y]}
-$}
+\bseq{\G}{\tj{t[\comodL/x]\conc u[\comodR/y]}{\theta}}
 \DisplayProof
 
 \fix{and exchange rules}
@@ -206,10 +231,12 @@ $}
 A \textit{pole}~$\bbot$ is a set of executables
 which satisfies
 \begin{enumerate}
- \item $e$ is in $\bbot$ if $e'\in\bbot$ and
-       $e\red e'$; and
- \item if $(m,S)\in\bbot$ and $(m',S)\in\bbot$
-       then $(m\conc m',S)\in\bbot$.
+ \item $e$ is in $\bbot$ if $e\red e'$ and
+       $e'\in\bbot$;
+ \item if either $e\in\bbot$ or $f\in\bbot$
+       then $e\conc f\in\bbot$. %; and
+% \item if both $e\in\bbot$ and $f\in\bbot$
+%       then $e\hmid f\in\bbot$.
 \end{enumerate}
 
 An \textit{environment} is a pair of a stack and an executable.
@@ -234,10 +261,14 @@ we define $\nsem{\phi}\colon \form(2^E)\rightarrow
  \nsem{X}&= |X|_0^- \\
  \nsem{\phi\limp\psi}&=
  \{(t\cdot\pi, e_0\conc e_1)\mid
- (t,e_0)\in\nsem\phi\rightarrow\bbot \text{ and }(\pi,e_1)\in\nsem\psi\}
+ (t,e_0)\in\nsem\phi\rightarrow\bbot \text{ and }(\pi,e_1)\in\nsem\psi\}\\
+ \nsem{\phi\oplus\psi}=& \{(\mats xey{e'}, f)\mid\\ &
+ e[v/x]\conc f\conc f'\in\bbot \text{ for all } (v,f')\in\nsem{\phi}\rightarrow\bbot\text{
+ and }\\ &
+ e'[w/y]\conc f\conc f'\in\bbot \text{ for all } (w,f')\in\nsem{\psi}\rightarrow\bbot\}
  \\
- \nsem{\forall X\phi}&=
- \bigcup_{\mathcal Z\in 2^\Pi} \nsem{\phi[\mathcal Z/X]}
+ \nsem{\forall X\phi}=&
+ \bigcup_{\mathcal Z\in 2^\Pi} \nsem{\phi[\mathcal Z/X]}\enspace.
 \end{align*}
 Using this, we define $\sem \phi=\nsem{\phi}\rightarrow\bbot$.
 We have an equality
@@ -257,17 +288,19 @@ and $(\pi_\psi,e_3)\in\nsem\psi$.
  for any types~$\phi$ and $\psi$.
 \end{proposition}
 \begin{proof}
- Take any $(t\cdot\pi_\psi,e_{00}\conc e_{01})\in\nsem{\phi\limp\psi}$
- and $(u\cdot\pi_\phi,e_{10}\conc e_{11})\in\nsem{\psi\limp\phi}$ so that
- $(t, e_{00})\in\sem{\phi}$, $(\pi_\psi,e_{01})\in\nsem{\psi}$,
- $(u, e_{10})\in\sem{\psi}$, $(\pi_\phi,e_{11})\in\nsem{\phi}$.
- We claim $e=\comodL,t\cdot\pi_\psi\conc\comodR,u\cdot\pi_\phi\conc
+ Take any $(t\cdot\sigma,e_{00}\conc e_{01})\in\nsem{\phi\limp\psi}$
+ and $(u\cdot\pi,e_{10}\conc e_{11})\in\nsem{\psi\limp\phi}$ so that
+ $(t, e_{00})\in\sem{\phi}$, $(\sigma,e_{01})\in\nsem{\psi}$,
+ $(u, e_{10})\in\sem{\psi}$, $(\pi,e_{11})\in\nsem{\phi}$.
+ We claim $e=\comodL,t\cdot\sigma\conc\comodR,u\cdot\pi\conc
  e_{00}\conc e_{01}\conc e_{10}\conc e_{11}$ is in
  $\bbot$.
- By (com), $e\red t,\pi_\phi\conc u,\pi_\psi\conc e_{00}\conc
- e_{01}\conc e_{10}\conc e_{11}$, which is in $\bbot$ because
- we have $t,\pi_\phi\conc e_{00}\conc e_{11}\in\bbot$ and
- $u,\pi_\psi\conc e_{01}\conc e_{10}\in\bbot$.
+ Depending on the schedule,
+ $e\red t,\pi\conc e_{00}\conc e_{01}\conc e_{10}\conc e_{11}$ or
+ $e\red u,\sigma\conc e_{00}\conc e_{01}\conc e_{10}\conc e_{11}$,
+ both of which are in $\bbot$ because
+ $t,\pi\conc e_{00}\conc e_{11}$ and
+ $u,\sigma\conc e_{01}\conc e_{10}$ are in $\bbot$.
  Since $\bbot$ is closed for $\red^{-1}$,
  we have $e\in\bbot$.
 \end{proof}
@@ -283,46 +316,34 @@ We include $t_{ij}$ terms in the statements because otherwise
 the proof for $\limp$E rule fails.
 
 \begin{proposition}[Adequacy]
- Let these hypersequents be derivable:
- \begin{align*}
-  \sequent{\G_0}{\tj{t_0}{\phi_0}}
-  \text{ and}\\
-  \sequent{\D_0}{\tj{u_0}{\psi_0}}\enspace.
- \end{align*}
- Under these conditions, we make two statements.
+ Let these sequents be derivable:
+$  \sequent{\G}{\tj{t}{\phi}} $
+   and
+$  \sequent{\D}{\tj{u}{\psi}}$\enspace.
+ Under these conditions, we state that:
  \begin{enumerate}[label=(\arabic{*}), ref=\textit{(\arabic{*})}]
   \item \label{c:first} the executable
-	\[
-	\bigparallel_{0\le i\le m}
-	\left(t_i[\vec{g_i}/\G_i], \pi_i\conc e_i\conc \vec{f_i}\right)
-	\]
+	$
+	t[\vec{g}/\G], \pi\conc \vec{e}\conc e'
+	$
 	is in $\bbot$
 	 for any
-	$(\vec{g_i},\vec{f_i})\in\sem{\G_i}$ and $(\pi_i, e_i)\in\nsem{\phi_i}$; and that
+	$(\vec{g},\vec{e})\in\sem{\G}$ and $(\pi, e')\in\nsem{\phi}$; and that
   \item \label{c:second}
-	when $\G_{\hat\imath}$ and $\D_{\hat\jmath}$ are respectively
-	equal to $\tj x\phi, \G$ and $\tj y\psi, \D$ up to exchange,
+	when $\G$ and $\D$ are respectively
+	equal to $\tj x\sigma, \hat\G$ and $\tj y\tau, \hat\D$ up to exchange,
 	the following executable is in $\bbot$:
-	\begin{align*}
-	 &
-	 t_{\hat\imath}[v/x][\vec{g}/\G],\pi_{\hat\imath}
-	 \conc e'\conc e'_{\hat\imath} \conc \vec e\conc
-	 u_{\hat\jmath}[w/y][\vec d /\D],
-	 \sigma_{\hat\jmath}\conc f'\conc f'_{\hat\jmath}\conc \vec f \\ \conc
-	&\bigparallel_{i\neq\hat\imath} \left(t_i[\vec{g_i}/\G_i],
-	\pi_i\conc e'_i\conc \vec{e_i}\right)
-	 \quad \conc
-	\bigparallel_{j\neq\hat\jmath} \left(u_j[\vec{d_j}/\D_j],
-	\sigma_j\conc f'_j\conc {\vec{f_j}}\right)
-	\end{align*}
+	\[
+	t[v/x][\vec g/\hat \G],\pi    \conc
+	u[w/y][\vec d/\hat \D],\sigma \conc
+	\vec e \conc e' \conc e'' \conc \vec f\conc f'\conc f''
+	\]
 	for any
-	$((v,e'),(w,f'))    \in \sempair{\phi,\psi}$,
-	$(\vec{g},\vec{e})  \in \sem{\G}$,
-	$(\vec d,\vec{f})   \in \sem\D$,
-	$(\vec{g_i},\vec{e_i})\in \sem{\G_i}$ for $i\neq\hat\imath$,
-	$(\vec{d_j},\vec{f_j})\in \sem{\D_j}$ for $j\neq\hat\jmath$,
-	$(\pi_i,e'_i)    \in \nsem{\phi_i}$   for $0\le i\le m$ and
-	$(\sigma_j,f'_j) \in \nsem{\psi_j}$   for $0\le j\le n$.
+	$((v,e'),(w,f'))\in\sempair{\sigma,\tau}$,
+	$(\vec g,\vec e)\in\sem{\hat\G}$,
+	$(\vec d,\vec f)\in\sem{\hat\D}$,
+	$(\pi,e'')      \in\nsem{\phi}$ and
+	$(\sigma,f'')   \in\nsem{\psi}$.
   \end{enumerate}
  \end{proposition}
  \begin{proof}
@@ -332,8 +353,59 @@ the proof for $\limp$E rule fails.
   \item[(Ax, Ax)] When both derivations consist of only axiom rules,
        the statements are tautologies.
    \item[($\limp$I, \textminus)]
-  \item[($\limp$E, \textminus)]
+   \item[($\limp$E, \textminus)]
+	The derivation for $t$ ends as
+	\[
+	\aseq{\G_0}{\tj{t_0}{\phi'\limp\phi}}
+	\aseq{\G_1}{\tj{t_1}{\phi'}}
+	\bseq{\G_0,\G_1}{\tj{(t_0)t_1}{\phi}}
+	\DisplayProof\enspace.
+	\]
+	Variable~$x$ might be contained in $\G_0$ or $\G_1$.
+	\begin{description}
+	 \item[(case $\G_0 = \tj{x}{\sigma},\hat\G_0$)] \fix{fill}
+	 \item[(case $\G_1 = \tj{x}{\sigma},\hat\G_1$)]
+	      Take any
+	      $((v,e'),(w,f'))\in\sempair{\sigma,\tau}$,
+	      $(\vec{g_0},\vec{e_0})\in\sem{\G_0}$,
+	      $(\vec{g_1},\vec{e_1})\in\sem{\hat\G_1}$,
+	      $(\vec{d},\vec{f})\in\sem{\hat\D}$,
+	      $(\pi,e'')\in\nsem{\phi}$ and
+	      $(\sigma,f'')\in\nsem{\psi}$.
+	      We have to show that the following executable is in $\bbot$:
+	      \[
+	       ((t_0)t_1)[v/x][\vec{g_0}/\G_0][\vec{g_1}/\hat\G_1],\pi\conc
+	      \vec{e_0}
+	      \conc\hat{f}\conc
+	      e''
+	      \]
+	      where
+	      $\hat f = u[w/y][\vec{d}/\hat\D],\sigma\conc f'\conc
+	      \vec{f}\conc f''\conc \vec{e_1}$.  This executable reduces
+	      to
+	      \[
+	       t_0[\vec{g_0}/\G_0],t_1[v/x][\vec{g_1}/\hat\G_1]\cdot \pi\conc
+	      \vec{e_0}
+	      \conc\hat{f}\conc
+	      e''\enspace.
+	      \]
+	      By induction hypothesis~\ref{c:second},
+	      $(t_1[v/x][\vec{g_1}/\hat\G_1],\hat f)$ is in
+	      $\sem{\phi'}$.
+	      Moreover we had $(\pi,e'')\in\nsem{\phi}$.
+	      Combined,
+	      $(t_1[v/x][\vec{g_1}/\hat\G_1]\cdot\pi,\hat f\conc e'')$
+	      is in $\nsem{\phi'\limp\phi}$\kern -1pt.
+	      By induction hypothesis~\ref{c:first},
+	      $(t_0[\vec{g_0}/\G_0],\hat e)$ is in
+	      $\sem{\phi'\limp\phi}$.
+	      So, the reduct is in $\bbot$, making the original
+	      executable a member of~$\bbot$.
+	\end{description}
+   \item[($\oplus$I, \textminus)]
+   \item[($\oplus$E, \textminus)]
    \item[(Com, \textminus)]
+	\fix{read}
        The derivation for $t$ ends in
        \[
        \aseq{\tj{\hat x}{\theta\limp\tau},\D_0}{\tj{t_0}{\phi'}}
@@ -463,7 +535,7 @@ Note that \ref{c:first} uses \ref{c:second} and vice versa.
 \begin{proposition}
  Let $E$ be a set of executables.
  Then the following set is a pole: the set of executables that reduces to
- a multiset on $E$.
+ an executable containing an element of $E$.
 \end{proposition}
 \begin{proof}
  \fix{fill}
@@ -621,8 +693,6 @@ we define another variant of poles called scheduled poles.
 \fix{find a property that can only be verified using scheduled poles}.
 \fix{maybe exact specification}
 
-
-\newcommand{\sche}{\sqsubseteq}
 
 \begin{proposition}[Non-abortfullness]
 Let $\tr\tj t\psi$ be derivable, then,
