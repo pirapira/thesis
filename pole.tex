@@ -98,13 +98,14 @@ A \textit{term}~$t$ is defined by BNF:
  \mid \ast_t
  \mid \comod c c
  \mid t\conc t
+ \mid \mat t x t x t
 \]
 where $x$ is a variable and $c$ is a channel.
 A \textit{stack}~$\pi$ is defined by BNF:
 \[
  \pi ::= \epsilon
  \mid t\cdot \pi
- \mid \mats x e x e
+ \mid \mats x t \pi x t \pi
  \enspace.
 \]
 We write the set of terms as $\Lambda$ and stacks~$\Pi$.
@@ -135,9 +136,9 @@ that satisfies:
  \item[(dist)]
            $[t\conc u,\pi]  \red [t,\pi\conc u,\pi]$ \enspace;
  \item[(mat0)]
-           $[\inl{t}, \mats xeyf] \red e[v/x] $ \enspace;
+           $[\inl{v}, \mats xt\pi yu\sigma] \red [t[v/x],\pi] $ \enspace;
  \item[(mat1)]
-           $[\inr{t}, \mats xeyf] \red f[t/y] $ \enspace;
+           $[\inr{w}, \mats xt\pi yu\sigma] \red [u[w/y],\sigma] $ \enspace;
  \item[(com0)]
 	    $[\comod c{\co c}, t\cdot\pi\conc \comod{\co c}c,
 	    u\cdot\sigma] \red
@@ -262,10 +263,10 @@ we define $\nsem{\phi}\colon \form(2^E)\rightarrow
  \nsem{\phi\limp\psi}&=
  \{(t\cdot\pi, e_0\conc e_1)\mid
  (t,e_0)\in\nsem\phi\rightarrow\bbot \text{ and }(\pi,e_1)\in\nsem\psi\}\\
- \nsem{\phi\oplus\psi}=& \{(\mats xey{e'}, f)\mid\\ &
- e[v/x]\conc f\conc f'\in\bbot \text{ for all } (v,f')\in\nsem{\phi}\rightarrow\bbot\text{
+ \nsem{\phi\oplus\psi}=& \{(\mats x{t}{\pi}y{u}{\sigma}, f)\mid\\ &
+ t[v/x],\pi\conc f\conc f'\in\bbot \text{ for all } (v,f')\in\nsem{\phi}\rightarrow\bbot\text{
  and }\\ &
- e'[w/y]\conc f\conc f'\in\bbot \text{ for all } (w,f')\in\nsem{\psi}\rightarrow\bbot\}
+ u[w/y],\sigma\conc f\conc f'\in\bbot \text{ for all } (w,f')\in\nsem{\psi}\rightarrow\bbot\}
  \\
  \nsem{\forall X\phi}=&
  \bigcup_{\mathcal Z\in 2^\Pi} \nsem{\phi[\mathcal Z/X]}\enspace.
