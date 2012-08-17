@@ -1,4 +1,4 @@
-\chapter{Prelinear Realizability}
+\chapter{Prelinear Parametricity}
 
 	% packages
 % \usepackage{setspace}
@@ -46,10 +46,10 @@ In contrast to Danos and Krivine's formulation~\cite{danos-krivine},
 where computation can wait for another,
 our calculus is weaker and resides in a particular class of
 distributed computation called waitfreedom.
-This work is a reformulation of Hirai~\cite{hiraiflops2012} in the setting of
+This work is a reformulation of \citet{hiraiflops2012} in the setting of
 second-order logic.
 This allowed parametricity argument.
-Also, differently from Hirai's \fix{cite} hypersequent formulation,
+Also, differently from Hirai's hypersequent formulation~\citep{hiraiflops2012},
 we succceed in describing the computational behaviour of the Dummett
 (a.k.a symmetric excluded middle) in the implicational form: this
 difference is to be discussed in Sect. \fix{?}.
@@ -147,8 +147,9 @@ that satisfies:
 	    u\cdot\sigma] \red
 	    [t,\sigma]$\enspace(if $c\sche \co c$).
 \end{description}
-The operational semantics for the additive constructs comes from Curien \fix{cite}.
-Below, we omit the outermost parentheses (e.g. [ and ]) for multisets.
+Rules (cong), (push), (store), (load) and (dist) come from \citet{danos-krivine}.
+The operational semantics for the additive constructs comes from \citet{curien-mac}.
+Below, we sometimes omit the outermost parentheses (e.g. [ and ]) for multisets.
 
 % I want to write these rules are non-blocking here.
 % but, actually, Danos and Krivines rules are also non-blocking.
@@ -385,13 +386,47 @@ the case for Com rule fails.  Thus we deal with two derivations.
 	 \item Take any
 	       $(\vec g,\vec e)\in\sem{\G}$
 	       and
-	       $(\pi,e'')\in\nsem{\phi_0\limp\phi_1}$.
-	       \fix{fill}
+	       $(t_0\cdot\pi,e_0\conc e_1)\in\nsem{\phi_0\limp\phi_1}$
+	       so that $(t_0,e_0)\in\sem{\phi_0}$ and
+	       $(\pi,e_1)\in\nsem{\phi_1}$ hold.
+	       We have to show that the following executable is in
+	       $\bbot$:
+	       \[
+	       (\lambda\hat x.t_1)[\vec g/\G],
+	       t_0\cdot\pi\conc\vec{e}\conc e_0\conc e_1\enspace.
+	       \]
+	       The executable reduces to
+	       \[
+		t_1[\ast_{t_0}][\vec{g}/\G],\pi\conc\vec{e}\conc e_0\conc{e_1}\enspace.
+	       \]
+	       We have $(\ast_{t_0}, e_0)\in\sem{\phi_0}$ so, by
+	       induction hypothesis~\ref{c:first},
+	       the reduct is in $\bbot$.
+	       Since $\bbot$ is closed for $\rev\red$, the original
+	       executable is in $\bbot$, too.
 	 \item Take any $(v,w,e')\in\sempair{\theta,\tau}$,
 	       $(\vec g,\vec e)\in\sem{\hat\G}$,
 	       $(\vec d,\vec f)\in\sem{\hat\D}$,
-	       $(\pi,e'')\in\nsem{\phi_0\limp\phi_1}$ and
-	       $(\sigma,f'')\in\nsem\psi$. \fix{fill}
+	       $(t_0\cdot\pi,e_0'\conc e_1')\in\nsem{\phi_0\limp\phi_1}$ and
+	       $(\sigma,f'')\in\nsem\psi$ so that
+	       $(t_0,e_0')\in\sem{\phi_0}$ and
+	       $(\pi,e_1')\in\nsem{\phi_1}$.
+	       We have to show that this executable is in $\bbot$:
+	       \[
+	       (\lambda \hat x. t_1)[v/x][\vec{g}/\G],t_0\pi\conc
+	       u[w/y][\vec{d}/\D],\sigma\conc
+	       e'\conc \vec{e}\conc \vec{f} \conc{e_0'}\conc{e_1'}\enspace.
+	       \]
+	       By (store) and (cong), the executable reduces to
+	       \[
+		t_1[v/x][\vec{g}/\G][\ast_{t_0}/\hat x],\pi\conc
+	       u[w/y][\vec{d}/\D],\sigma\conc
+	       e'\conc \vec{e}\conc \vec{f} \conc{e_0'}\conc{e_1'}\enspace.
+	       \]
+	       Since $(\ast_{t_0},e_0')$ is in $\sem{\phi_0}$,
+	       by induction hypothesis~\ref{c:second}, the reduct is in
+	       $\bbot$.  Since $\bbot$ is closed for $\rev\red$,
+	       the original executable is also in $\bbot$.
 	\end{enumerate}
    \item[($\limp$E, \textminus)]
 	The derivation for $t$ ends as
@@ -430,17 +465,34 @@ the case for Com rule fails.  Thus we deal with two derivations.
 	       Since $\bbot$ is closed for $\red^{-1}$, the original
 	       executable is also in $\bbot$.
 	 \item Variable~$x$ might be contained in $\G_0$ or $\G_1$.
-	       \begin{description}
-		\item[(case $\G_0 = \tj{x}{\sigma},\hat\G_0$)]
-		     Take
-		     $(v,w,e')\in\sempair{\sigma,\tau}$,
-		     $(\vec{g_0},\vec{e_0})\in\sem{\hat\G_0}$,
-		     $(\vec{g_1},\vec{e_1})\in\sem{\G_1}$,
-		     $(\vec{d},\vec{f})\in\sem{\hat\D}$,
-		     $(\pi,e'')\in\nsem{\phi}$ and
-		     $(\sigma,f'')\in\nsem{\psi}$.
-		     We have to show that the following executable is in $\bbot$:
-		     \fix{fill}
+	 \begin{description}
+	  \item[(case $\G_0 = \tj{x}{\sigma},\hat\G_0$)]
+	       Take
+	       $(v,w,e')\in\sempair{\sigma,\tau}$,
+	       $(\vec{g_0},\vec{e_0})\in\sem{\hat\G_0}$,
+	       $(\vec{g_1},\vec{e_1})\in\sem{\G_1}$,
+	       $(\vec{d},\vec{f})\in\sem{\hat\D}$,
+	       $(\pi,e'')\in\nsem{\phi}$ and
+	       $(\sigma,f'')\in\nsem{\psi}$.
+	       We have to show that the following executable is in
+	       $\bbot$:
+	       \[
+	       ((t_0)t_1)[v/x][\vec{g_0}/\hat\G_0][\vec{g_1}/\G_1],\pi\conc
+	       u' ,\sigma\conc \hat e\conc {\vec{e_1}}\conc
+	       {e''}\conc{f''}\enspace.
+	       \]
+	       where
+	       $u' = u[w/y][\vec{d}/\D]$ and
+	       $\hat e= e'\conc \vec{e_0}\conc \vec{f}$.
+	       By (push), this executable reduces to
+	       \[
+		t_0[v/x][\vec{g_0}/\hat\G_0],
+	       t_1[\vec{g_1}/\G_1]\cdot\pi
+	       \conc
+	       u' ,\sigma\conc \hat e\conc {\vec{e_1}}\conc
+	       {e''}\conc{f''}\enspace.
+	       \]
+		     \fix{C}
 		\item[(case $\G_1 = \tj{x}{\sigma},\hat\G_1$)]
 	      Take any
 	      $(v,w,e')\in\sempair{\sigma,\tau}$,
@@ -482,7 +534,7 @@ the case for Com rule fails.  Thus we deal with two derivations.
 	      $\sem{\phi'\limp\phi}$.
 	      So, the reduct is in $\bbot$, making the original
 	      executable a member of~$\bbot$.
-	       \end{description}
+	 \end{description}
 	\end{enumerate}
    \item[($\oplus$I, \textminus)]
 	Without loss of generality, we can assume that the
