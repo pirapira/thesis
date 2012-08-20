@@ -1,4 +1,4 @@
-\chapter{Prelinear Parametricity}
+\chapter{Prelinearity as an Asynchronous Communication Scheme}
 
 	% packages
 % \usepackage{setspace}
@@ -31,28 +31,43 @@
 \newcommand{\limp}{\multimap}
 
 
-\subsection{Summary}
+\section{Summary}
 %%% abstract
-This work is a refinement of
-Danos and Krivine's ``Disjunctive Tautologies as
-Synchronisation Schemes''~\cite{danos-krivine}.
-We show that some autologies,
-namely the therems of G\"odel--Dummett logic,
-can be viewed as asynchronous communication schemes.
-We call these asynchronous because the operational semantics
-of the communicating terms does not allow a term to wait for another
-term.
-In contrast to Danos and Krivine's formulation~\cite{danos-krivine},
-where computation can wait for another,
-our calculus is weaker and resides in a particular class of
-distributed computation called waitfreedom.
-This work is a reformulation of \citet{hiraiflops2012} in the setting of
-second-order logic.
-This allowed parametricity argument.
-Also, differently from Hirai's hypersequent formulation~\citep{hiraiflops2012},
-we succceed in describing the computational behaviour of the Dummett
-(a.k.a symmetric excluded middle) in the implicational form: this
-difference is to be discussed in Sect. \fix{?}.
+\citet{danos-krivine} investigate
+the computational semantics of disjunctive tautologies
+such as the excluded middle and the symmetric excluded middle.
+They state that those tautologies are synchronizasion schemes.
+Indeed in their formalism, reduction of one term can wait
+for another, making synchronisation.
+However,
+one can find no communication among different
+concurrent elements in an executable.
+In the current paper, we show that logical axioms can specify how
+concurrent threads exchange information.
+
+We observe the computational behaviour of prelinearity axiom
+$(\phi\limp\psi)\oplus(\psi\limp\phi)$
+on top of IMALL2, which is the fragment of second order
+intuitionistic linear logic with connectives $\{\forall, \limp,
+\oplus\}$.
+We interpret the disjunction~$\oplus$ in the axiom
+nondeterministically: whether
+one theread can give information to the other or
+vice versa.
+In Sect.~\ref{sec:sync}, where threads wait for others,
+we externally specify such nondeterministic choice.
+In Sect.~\ref{sec:async}, where threads do not wait for others,
+the nondeterminism appears automatically as a slower thread cannot pass
+information to a faster one.
+We adapt \citet{danos-krivine}'s realizability argument to our
+synchronous case and give simulation from the
+asynchronous case to the synchronous case.
+
+Our computational semantics here is closely related to
+\citet{hiraiflops2012}'s for G\"odel--Dummett logic,
+which is axiomatized by Dummet axiom $(\phi\imp\psi)\lor(\psi\imp\phi)$
+on top of intuitionistic logic.
+
 
 %%% 1. introduction
 
@@ -62,6 +77,7 @@ difference is to be discussed in Sect. \fix{?}.
 
 %%% 2. terms types and _models_?
 \section{Synchronous Semantics}
+\label{sec:sync}
 
 % 2a terms -- unchanged -- remove pi or anything
 
@@ -73,20 +89,6 @@ We consider a programming language, which is a modification of
 Danos and Krivine's.
 We assume a set~$\pvar$ of propositional variables whose cardinality is
 countably infinite.
-For a set~$S$,
-the set $\form(S)$ denotes the set of formulas:
-\[
-\phi::= s \mid X \mid \phi\limp\phi\mid \phi\oplus\phi\mid
-\forall X \phi
-\]
-where $s\in S$ and $X\in \pvar$.
-The connective $\forall$ connects stronger than $\oplus$, which is
-stronger than $\limp$.
-Recurring $\limp$,
-$\phi_0\limp\phi_1\limp\cdots\limp\phi_n$ is defined inductively on~$n$
-as
-$\phi_0\limp(\phi_1\limp\cdots\limp\phi_n)$.
-A type is an element of $\form(\emptyset)$.
 Channels have involution $c\mapsto\co c$ with
 $c\neq \co c$ and
 $\co{\co c} = c$.
@@ -113,8 +115,8 @@ An \textit{executable}~$e$ is a multiset on $\Lambda\times\Pi$.
 
 % 2a' reduction
 \newcommand{\red}{\succ}
-A schedule~$\sche$ is a total order on channels.
-The reduction relation~$\red$ on executables
+A \textit{schedule}~$\sche$ is a total order on channels.
+The \textit{reduction} relation~$\red$ on executables
 is defined to be the smallest preorder
 that satisfies:
 \begin{description}
@@ -141,15 +143,20 @@ that satisfies:
  \item[(com0)]
 	    $[\comod c{\co c}, t\cdot\pi\conc \comod{\co c}c,
 	    u\cdot\sigma] \red
-	    [u,\pi]$\enspace(if $\co c\sche c$); and
+	    [u,\pi]$\enspace(if $\co c\sche c$ but $c\not\sche \co c$)\enspace;
  \item[(com1)]
 	    $[\comod c{\co c}, t\cdot\pi\conc \comod{\co c}c,
 	    u\cdot\sigma] \red
-	    [t,\sigma]$\enspace(if $c\sche \co c$).
+	    [t,\sigma]$\enspace(if $c\sche \co c$ but $\co c\not\sche c$)\enspace; and
+ \item[(com2)]
+	    $[\comod c{\co c}, t\cdot\pi\conc \comod{\co c}c,
+	    u\cdot\sigma] \red
+	    [u,\pi\conc t,\sigma]$\enspace(if $c\sche \co c$ and $\co c\sche
+       c$)\enspace.
 \end{description}
 Rules (cong), (push), (store), (load) and (dist) come from \citet{danos-krivine}.
 The operational semantics for the additive constructs comes from \citet{curien-mac}.
-Below, we sometimes omit the outermost parentheses (e.g. [ and ]) for multisets.
+Below, we sometimes omit the outermost parentheses (i.e. [ and ]) for multisets.
 
 % I want to write these rules are non-blocking here.
 % but, actually, Danos and Krivines rules are also non-blocking.
@@ -162,6 +169,20 @@ Below, we sometimes omit the outermost parentheses (e.g. [ and ]) for multisets.
 same variable}
 \fix{say, up to external exchange, we identify}
 
+For a set~$S$,
+$\form(S)$ is the set of formulas~$\phi$:
+\[
+\phi::= s \mid X \mid \phi\limp\phi\mid \phi\oplus\phi\mid
+\forall X \phi
+\]
+where $s\in S$ and $X\in \pvar$.
+The connective $\forall$ connects stronger than $\oplus$, which is
+stronger than $\limp$.
+Recurring $\limp$,
+$\phi_0\limp\phi_1\limp\cdots\limp\phi_n$ is defined inductively on~$n$
+as
+$\phi_0\limp(\phi_1\limp\cdots\limp\phi_n)$.
+A type is an element of $\form(\emptyset)$.
 The derivation rules follow.\\ \noindent
 
 \AxiomC{}
@@ -222,11 +243,15 @@ The derivation rules follow.\\ \noindent
 \LL{Com}
 \bseq{\G}{\tj{(t[\comodL/x]\conc u[\comodR/y])}{\theta}}
 \DisplayProof
+\ruleskip
+%
+\aseq{\G,\tj{x}{\phi},\tj{y}{\psi},\D}{\tj{t}{\theta}}
+\LL{Ex}
+\useq{\G,\tj{y}{\psi},\tj{x}{\phi},\D}{\tj{t}{\theta}}
+\DisplayProof
 
-\fix{and exchange rules}
 
-
-\section{Specification Using Poles}
+\subsection{Specification Using Poles}
 
 % 2C truth values and models. make them disjunctive!
 %    so that the empty set does not count as successful.
@@ -237,27 +262,27 @@ which satisfies
  \item \label{red-closed} $e$ is in $\bbot$ if $e\red e'$ and
        $e'\in\bbot$; and
  \item \label{conc-closed} if $e$ or $f$ is in $\bbot$
-       then $e\conc f\in\bbot$. %; and
-% \item if both $e\in\bbot$ and $f\in\bbot$
-%       then $e\hmid f\in\bbot$.
+       then $e\conc f\in\bbot$.
 \end{enumerate}
-Condition~\ref{conc-closed}. is different from Danos and
-Krivine~\fix{cite}'s definition of poles.
+Condition~\ref{conc-closed}. is different from \citet{danos-krivine}'s
+definition of poles.
 There, the condition said if $e$ \textit{and} $f$ \textit{are} in
 $\bbot$, then $e\conc f$ is in $\bbot$.  Our choice here is influenced
-by hypersequents and hyper-lambda calculi \fix{cite}, where
+by hypersequents~\citep{avron91} and hyper-lambda
+calculi~\citep{hiraiflops2012},
+where
 components are interpreted disjunctively.
 
 An \textit{environment} is a pair of a stack and an executable.
 The set of environments is written as~$E$.
 A \textit{program} is a pair of a term an executable.
-For a set~$\mathcal Z$ of environments, $\mathcal Z\limp\bbot$ denotes
+For a set~$\mathcal Z$ of environments, $\mathcal Z\rightarrow\bbot$ denotes
 the set of programs $(t,e)$ such that
 for any environment $(\pi,e')\in \mathcal Z$,
 the executable $t,\pi\conc e \conc e'$ is in $\bbot$.
 A set $\mathcal X$ of programs is called a truth value
 iff there exists
-such $\mathcal Z$ that $\mathcal X = \mathcal Z\limp \bbot$.
+such $\mathcal Z$ that $\mathcal X = \mathcal Z\rightarrow \bbot$.
 We define programs and environments because if we continue using
 terms and stacks, the proof of adequacy (Prop.~\ref{c:adequacy}) does
 not go through the case for
@@ -297,14 +322,15 @@ and $(\sigma,e_1)\in\nsem\psi$.
 
 \begin{proposition}
  \label{squash}
- If $(t,u,e)$ is in $\sem{\phi,\phi}$ then $(t\conc u, e)$ is in
+ If $(t,u,e)$ is in $\sem{\phi,\phi}$ then $((t\conc u), e)$ is in
  $\sem\phi$.
 \end{proposition}
 \begin{proof}
  For any $\pi\in\nsem\phi$,
- $(t\conc u),\pi\conc e \red t,\pi\conc u,\pi\conc e$ holds.
+ the executable $[(t\conc u),\pi\conc e]$ reduces to $[t,\pi\conc
+ u,\pi\conc e]$ by (dist).
  The reduct is in $\bbot$ by assumption.
- So, the original executable is also in $\bbot$.
+ So, the original executable is also in~$\bbot$.
 \end{proof}
 
 \begin{proposition}
@@ -316,14 +342,15 @@ and $(\sigma,e_1)\in\nsem\psi$.
  Take any $(t\cdot\sigma,e_{0}\conc e_{1})\in\nsem{\phi\limp\psi}$
  and $(u\cdot\pi,f_{0}\conc f_{1})\in\nsem{\psi\limp\phi}$ so that
  $(t, e_{0})\in\sem{\phi}$, $(\sigma,e_{1})\in\nsem{\psi}$,
- $(u, f_{0})\in\sem{\psi}$, $(\pi,f_{1})\in\nsem{\phi}$.
- We claim $e=\comodL,t\cdot\sigma\conc\comodR,u\cdot\pi\conc
+ $(u, f_{0})\in\sem{\psi}$ and $(\pi,f_{1})\in\nsem{\phi}$ hold.
+ We claim that $e=\comodL,t\cdot\sigma\conc\comodR,u\cdot\pi\conc
  e_{0}\conc e_{1}\conc f_{0}\conc f_{1}$ is in
  $\bbot$.
  Depending on the schedule, $e$ might reduce to
  $ t,\pi\conc e_{0}\conc e_{1}\conc f_{0}\conc f_{1}$ and otherwise to
- $ u,\sigma\conc e_{0}\conc e_{1}\conc f_{0}\conc f_{1}$,
- both of which are in $\bbot$ because
+ $ u,\sigma\conc e_{0}\conc e_{1}\conc f_{0}\conc f_{1}$ or
+ $ t,\pi\conc u,\sigma\conc e_{0}\conc e_{1}\conc f_{0}\conc f_{1}$,
+ all of which are in $\bbot$ because
  $t,\pi\conc e_{0}\conc f_{1}$ and
  $u,\sigma\conc e_{1}\conc f_{0}$ are in $\bbot$.
  Since $\bbot$ is closed for $\red^{-1}$,
@@ -331,11 +358,17 @@ and $(\sigma,e_1)\in\nsem\psi$.
 \end{proof}
 
 % 2d the adequacy lemma
-\fix{describe the notation $[\vec d/\G]$ and $\sem{\G}$}
+For $\G = \tj{x_1}{\phi_1},\ldots,\tj{x_n}{\phi_n}$,
+we denote by $\sem{\G}$ the set of pairs $(\vec t,e)$ where
+$\vec{t} = (t_1,\dots,t_n)$, $e = \bigparallel_{1\le i\le n} e_i$
+ and each pair~$(t_i, e_i)$ is in $\sem{\phi_i}$.
+For such tuple, $[\vec{t}/\G]$ denotes the simultaneous substitution
+$[t_i/x_i]_{i}$.
 
 Here we state adequacy.  What we want is statement~\ref{c:first}.
 However, when we try to prove \ref{c:first} by induction on derivations,
-the case for Com rule fails.  Thus we deal with two derivations.
+the case for Com rule fails.  Thus we deal with two derivations at the
+same time.
 
 \begin{proposition}[Adequacy]
  \label{c:adequacy}
@@ -347,11 +380,11 @@ the case for Com rule fails.  Thus we deal with two derivations.
  \begin{enumerate}[label=(\arabic{*}), ref=\textit{(\arabic{*})}]
   \item \label{c:first} the program
 	$
-	(t[\vec{g}/\G], \vec{e})
+	(t[\vec{g}/\G], e)
 	$
 	is in $\sem\phi$
 	 for any
-	$(\vec{g},\vec{e})\in\sem{\G}$; and that
+	$(\vec{g},e)\in\sem{\G}$; and that
   \item \label{c:second}
 	when $\G$ and $\D$ are respectively
 	equal to $\tj x\theta, \hat\G$ and $\tj y\tau, \hat\D$ up to exchange,
@@ -359,18 +392,18 @@ the case for Com rule fails.  Thus we deal with two derivations.
 	\[\left(
 	t[v/x][\vec g/\hat \G],\quad
 	u[w/y][\vec d/\hat \D],\quad
-	\vec e \conc \vec f \conc e'
+	 e \conc  f \conc e'
 	\right)
 	\]
 	for any
 	$(v,w,e')\in\sempair{\theta,\tau}$,
-	$(\vec g,\vec e)\in\sem{\hat\G}$ and
-	$(\vec d,\vec f)\in\sem{\hat\D}$.
+	$(\vec g, e)\in\sem{\hat\G}$ and
+	$(\vec d, f)\in\sem{\hat\D}$.
   \end{enumerate}
 \end{proposition}
 \begin{proof}
  We prove both statements at the same time by induction on the sum of
- the heights of the derivations.
+ the heights of the derivations.  Here we identify sequents up to exchange.
   \begin{description}
   \item[(Ax, Ax)] When both derivations consist of only axiom rules,
        the statements follow from the definitions of $\sem{\phi}$ and
@@ -384,7 +417,7 @@ the case for Com rule fails.  Thus we deal with two derivations.
 	\]
 	\begin{enumerate}[label=\textit{(\arabic{*})}]
 	 \item Take any
-	       $(\vec g,\vec e)\in\sem{\G}$
+	       $(\vec g, e)\in\sem{\G}$
 	       and
 	       $(t_0\cdot\pi,e_0\conc e_1)\in\nsem{\phi_0\limp\phi_1}$
 	       so that $(t_0,e_0)\in\sem{\phi_0}$ and
@@ -393,11 +426,11 @@ the case for Com rule fails.  Thus we deal with two derivations.
 	       $\bbot$:
 	       \[
 	       (\lambda\hat x.t_1)[\vec g/\G],
-	       t_0\cdot\pi\conc\vec{e}\conc e_0\conc e_1\enspace.
+	       t_0\cdot\pi\conc e\conc e_0\conc e_1\enspace.
 	       \]
 	       The executable reduces to
 	       \[
-		t_1[\ast_{t_0}][\vec{g}/\G],\pi\conc\vec{e}\conc e_0\conc{e_1}\enspace.
+		t_1[\ast_{t_0}/\hat x][\vec{g}/\G],\pi\conc{e}\conc e_0\conc{e_1}\enspace.
 	       \]
 	       We have $(\ast_{t_0}, e_0)\in\sem{\phi_0}$ so, by
 	       induction hypothesis~\ref{c:first},
@@ -405,8 +438,8 @@ the case for Com rule fails.  Thus we deal with two derivations.
 	       Since $\bbot$ is closed for $\rev\red$, the original
 	       executable is in $\bbot$, too.
 	 \item Take any $(v,w,e')\in\sempair{\theta,\tau}$,
-	       $(\vec g,\vec e)\in\sem{\hat\G}$,
-	       $(\vec d,\vec f)\in\sem{\hat\D}$,
+	       $(\vec g, e)\in\sem{\hat\G}$,
+	       $(\vec d, f)\in\sem{\hat\D}$,
 	       $(t_0\cdot\pi,e_0'\conc e_1')\in\nsem{\phi_0\limp\phi_1}$ and
 	       $(\sigma,f'')\in\nsem\psi$ so that
 	       $(t_0,e_0')\in\sem{\phi_0}$ and
@@ -415,13 +448,13 @@ the case for Com rule fails.  Thus we deal with two derivations.
 	       \[
 	       (\lambda \hat x. t_1)[v/x][\vec{g}/\G],t_0\pi\conc
 	       u[w/y][\vec{d}/\D],\sigma\conc
-	       e'\conc \vec{e}\conc \vec{f} \conc{e_0'}\conc{e_1'}\enspace.
+	       e'\conc {e}\conc {f} \conc{e_0'}\conc{e_1'}\enspace.
 	       \]
 	       By (store) and (cong), the executable reduces to
 	       \[
 		t_1[v/x][\vec{g}/\G][\ast_{t_0}/\hat x],\pi\conc
 	       u[w/y][\vec{d}/\D],\sigma\conc
-	       e'\conc \vec{e}\conc \vec{f} \conc{e_0'}\conc{e_1'}\enspace.
+	       e'\conc {e}\conc {f} \conc{e_0'}\conc{e_1'}\enspace.
 	       \]
 	       Since $(\ast_{t_0},e_0')$ is in $\sem{\phi_0}$,
 	       by induction hypothesis~\ref{c:second}, the reduct is in
@@ -438,155 +471,310 @@ the case for Com rule fails.  Thus we deal with two derivations.
 	\]
 	\begin{enumerate}[label=\textit{(\arabic{*})}]
 	 \item Take any
-	       $(\vec{g_0},\vec{e_0})\in\sem{\G_0}$,
-	       $(\vec{g_1},\vec{e_1})\in\sem{\G_1}$ and
+	       $(\vec{g_0},{e_0})\in\sem{\G_0}$,
+	       $(\vec{g_1},{e_1})\in\sem{\G_1}$ and
 	       $(\pi,e'')\in\nsem{\phi}$.
 	       We have to show that this executable is in $\bbot$:
 	       \[
 		((t_0)t_1)[\vec{g_0}/\G_0][\vec{g_1}/\G_1],\pi\conc
-	       \vec{e_0}\conc \vec{e_1}\conc e''.
+	       {e_0}\conc {e_1}\conc e''.
 	       \]
 	       By (push), this executable reduces to
 	       \[
 		t_0[\vec{g_0}/\G_0], t_1[\vec{g_1}/\G_1]\cdot \pi
-	       \conc \vec{e_0}\conc \vec{e_1}\conc e''.
+	       \conc {e_0}\conc {e_1}\conc e''.
 	       \]
 	       By induction hypothesis~\ref{c:first} on both branches,
 	       we have $(t_0[\vec{g_0/\G_0}],
-	       \vec{e_0})\in\sem{\phi'\limp\phi}$
+	       {e_0})\in\sem{\phi'\limp\phi}$
 	       and
-	       $(t_1[\vec{g_1}/\G_1],\vec{e_1})\in\sem{\phi'}$.
+	       $(t_1[\vec{g_1}/\G_1],{e_1})\in\sem{\phi'}$.
 	       By the lattar, we have $(t_1[\vec{g_1}/\G_1]\cdot\pi,
-	       \vec{e_1}\conc e'')\in\nsem{\phi'\limp\phi}$.
-	       By definition of $\phi'\limp\phi$, we have shown that the
+	       {e_1}\conc e'')\in\nsem{\phi'\limp\phi}$.
+	       By definition of $\sem{\phi'\limp\phi}$, we have shown that the
 	       reduct is in $\bbot$.
 	       Since $\bbot$ is closed for $\red^{-1}$,
 	       the original executable is also in $\bbot$.
-	       Since $\bbot$ is closed for $\red^{-1}$, the original
-	       executable is also in $\bbot$.
 	 \item Variable~$x$ might be contained in $\G_0$ or $\G_1$.
-	 \begin{description}
-	  \item[(case $\G_0 = \tj{x}{\sigma},\hat\G_0$)]
-	       Take
-	       $(v,w,e')\in\sempair{\sigma,\tau}$,
-	       $(\vec{g_0},\vec{e_0})\in\sem{\hat\G_0}$,
-	       $(\vec{g_1},\vec{e_1})\in\sem{\G_1}$,
-	       $(\vec{d},\vec{f})\in\sem{\hat\D}$,
-	       $(\pi,e'')\in\nsem{\phi}$ and
-	       $(\sigma,f'')\in\nsem{\psi}$.
-	       We have to show that the following executable is in
-	       $\bbot$:
-	       \[
-	       ((t_0)t_1)[v/x][\vec{g_0}/\hat\G_0][\vec{g_1}/\G_1],\pi\conc
-	       u' ,\sigma\conc \hat e\conc {\vec{e_1}}\conc
-	       {e''}\conc{f''}\enspace.
-	       \]
-	       where
-	       $u' = u[w/y][\vec{d}/\D]$ and
-	       $\hat e= e'\conc \vec{e_0}\conc \vec{f}$.
-	       By (push), this executable reduces to
-	       \[
-		t_0[v/x][\vec{g_0}/\hat\G_0],
-	       t_1[\vec{g_1}/\G_1]\cdot\pi
-	       \conc
-	       u' ,\sigma\conc \hat e\conc {\vec{e_1}}\conc
-	       {e''}\conc{f''}\enspace.
-	       \]
-		     \fix{C}
+	       \begin{description}
+		\item[(case $\G_0 = \tj{x}{\sigma},\hat\G_0$)]
+		     Take
+		     $(v,w,e')\in\sempair{\sigma,\tau}$,
+		     $(\vec{g_0},{e_0})\in\sem{\hat\G_0}$,
+		     $(\vec{g_1},{e_1})\in\sem{\G_1}$,
+		     $(\vec{d},{f})\in\sem{\hat\D}$,
+		     $(\pi,e'')\in\nsem{\phi}$ and
+		     $(\sigma,f'')\in\nsem{\psi}$.
+		     We have to show that the following executable is in
+		     $\bbot$:
+		     \[
+		     ((t_0)t_1)[v/x][\vec{g_0}/\hat\G_0][\vec{g_1}/\G_1],\pi\conc
+		     u' ,\sigma\conc \hat e\conc {{e_1}}\conc
+		     {e''}\conc{f''}\enspace.
+		     \]
+		     where
+		     $u' = u[w/y][\vec{d}/\hat\D]$ and
+		     $\hat e= e'\conc {e_0}\conc {f}$.
+		     By (push) and (cong), this executable reduces to
+		     \[
+		     t_0[v/x][\vec{g_0}/\hat\G_0],
+		     t_1[\vec{g_1}/\G_1]\cdot\pi
+		     \conc
+		     u' ,\sigma\conc \hat e\conc {{e_1}}\conc
+		     {e''}\conc{f''}\enspace.
+		     \]
+		     By induction hypothesis~\ref{c:first},
+		     $(t_1[\vec{g_1}/\G_1],{e_1})$ is in $\sem{\phi'}$.
+		     In addition to this, $(\pi,e'')$ is in $\nsem{\phi}$,
+		     making $(t_1[\vec{g_1}/\G_1], {e_1}\conc e'')$ in
+		     $\sem{\phi'\limp\phi}$.
+		     By induction hypothesis~\ref{c:second},
+		     $(t_0[v/x][\vec{g_0}/\hat\G_0], u', \hat e)$ is in
+		     $\sempair{\phi'\limp\phi,\psi}$.
+		     These make the reduct a member of $\bbot$.
+		     Since $\bbot$ is closed for $\rev\red$, the original
+		     executable is also in $\bbot$.
 		\item[(case $\G_1 = \tj{x}{\sigma},\hat\G_1$)]
-	      Take any
-	      $(v,w,e')\in\sempair{\sigma,\tau}$,
-	      $(\vec{g_0},\vec{e_0})\in\sem{\G_0}$,
-	      $(\vec{g_1},\vec{e_1})\in\sem{\hat\G_1}$,
-	      $(\vec{d},\vec{f})\in\sem{\hat\D}$,
-	      $(\pi,e'')\in\nsem{\phi}$ and
-	      $(\sigma,f'')\in\nsem{\psi}$.
-	      We have to show that the following executable is in $\bbot$:
-	      \[
-	       ((t_0)t_1)[v/x][\vec{g_0}/\G_0][\vec{g_1}/\hat\G_1],\pi\conc
-	      \vec{e_0}
-	      \conc\hat{f}\conc
-	      e''
-	      \]
-	      where
-	      $\hat f = u[w/y][\vec{d}/\hat\D],\sigma\conc
-	      \vec{f}\conc f''\conc \vec{e_1}\conc e'$.  This executable reduces
-	      to
-	      \[
-	       t_0[\vec{g_0}/\G_0],t_1[v/x][\vec{g_1}/\hat\G_1]\cdot \pi\conc
-	      \vec{e_0}
-	      \conc\hat{f}\conc
-	      e''\enspace.
-	      \]
-	      By induction hypothesis~\ref{c:second},
+		     Take any
+		     $(v,w,e')\in\sempair{\sigma,\tau}$,
+		     $(\vec{g_0},{e_0})\in\sem{\G_0}$,
+		     $(\vec{g_1},{e_1})\in\sem{\hat\G_1}$,
+		     $(\vec{d},{f})\in\sem{\hat\D}$,
+		     $(\pi,e'')\in\nsem{\phi}$ and
+		     $(\sigma,f'')\in\nsem{\psi}$.
+		     We have to show that the following executable is in $\bbot$:
+		     \[
+		     ((t_0)t_1)[v/x][\vec{g_0}/\G_0][\vec{g_1}/\hat\G_1],\pi\conc
+		     {e_0}
+		     \conc\hat{f}\conc
+		     e''
+		     \]
+		     where
+		     $\hat f = u[w/y][\vec{d}/\hat\D],\sigma\conc
+		     {f}\conc f''\conc {e_1}\conc e'$.
+		     By (push) and (cong), this executable reduces
+		     to
+		     \[
+		     t_0[\vec{g_0}/\G_0],t_1[v/x][\vec{g_1}/\hat\G_1]\cdot \pi\conc
+		     {e_0}
+		     \conc\hat{f}\conc
+		     e''\enspace.
+		     \]
+		     By induction hypothesis~\ref{c:second},
 		     $(t_1[v/x][\vec{g_1}/\hat\G_1],
-		     u[w/y][\vec{d}/\hat\D], \vec{e_1}\conc \vec{f}\conc
+		     u[w/y][\vec{d}/\hat\D], {e_1}\conc {f}\conc
 		     e')$ is in $\sempair{\phi',\psi}$.
 		     So, since $(\sigma,f'')$ is in $\nsem{\psi}$,
-	      $(t_1[v/x][\vec{g_1}/\hat\G_1],\hat f)$ is in
-	      $\sem{\phi'}$.
-	      Moreover we had $(\pi,e'')\in\nsem{\phi}$.
-	      Combined,
-	      $(t_1[v/x][\vec{g_1}/\hat\G_1]\cdot\pi,\hat f\conc e'')$
-	      is in $\nsem{\phi'\limp\phi}$\kern -1pt.
-	      By induction hypothesis~\ref{c:first},
-	      $(t_0[\vec{g_0}/\G_0],\hat e)$ is in
-	      $\sem{\phi'\limp\phi}$.
-	      So, the reduct is in $\bbot$, making the original
-	      executable a member of~$\bbot$.
-	 \end{description}
+		     $(t_1[v/x][\vec{g_1}/\hat\G_1],\hat f)$ is in
+		     $\sem{\phi'}$.
+		     Moreover we had $(\pi,e'')\in\nsem{\phi}$.
+		     Combined,
+		     $(t_1[v/x][\vec{g_1}/\hat\G_1]\cdot\pi,\hat f\conc e'')$
+		     is in $\nsem{\phi'\limp\phi}$\kern -1pt.
+		     By induction hypothesis~\ref{c:first},
+		     $(t_0[\vec{g_0}/\G_0],\hat e)$ is in
+		     $\sem{\phi'\limp\phi}$.
+		     So, the reduct is in $\bbot$, making the original
+		     executable a member of~$\bbot$.
+	       \end{description}
 	\end{enumerate}
    \item[($\oplus$I, \textminus)]
 	Without loss of generality, we can assume that the
 	derivation for $t$ ends as
 	\[
-	\aseq{\G}{\tj{t}{\phi}}
-	\useq{\G}{\tj{\inl{t}}{\phi\oplus\psi}}
+	\aseq{\G}{\tj{t'}{\phi_0}}
+	\useq{\G}{\tj{\inl{t'}}{\phi_0\oplus\phi_1}}
 	\DisplayProof\enspace.
 	\]
 	\begin{enumerate}[label=\textit{(\arabic{*})}]
-	 \item \fix{fill}
-	 \item \fix{fill}
+	 \item Take any $(\vec g, e)\in\sem{\G}$ and
+	       $(\mats {\hat x}v{\pi_0}{\hat y}w{\pi_1}, e'')$
+	       in $\nsem{\phi_0\oplus\phi_1}$.
+	       By induction hypothesis~\ref{c:first},
+	       $(t'[\vec g/\G], e)$ is in $\sem{\phi_0}$.
+	       By definition of $\nsem{\phi_0\oplus\phi_1}$,
+	       the executable
+	       $v[t'[\vec g/\G]/\hat x],\pi_0\conc{e}\conc e''$
+	       is in
+	       $\bbot$.
+	       Since $\bbot$ is closed for $\rev\red$,
+	       the executable
+	       $\inl{t'}[\vec g/\G], \mats {\hat x}v{\pi_0}{\hat
+	       y}w{\pi_1}
+	       \conc{e}\conc e''$
+	       is also in $\bbot$.
+	       This shows the statement because we chose an arbitrary
+	       element of $\nsem{\phi_0\oplus\phi_1}$.
+	 \item Take any $(v,w,e')\in\sempair{\theta,\tau}$,
+	       $(\vec g, e)\in\sem{\hat\G}$,
+	       $(\vec d, f)\in\sem{\hat\D}$,
+	       $(\mats{\hat x}{\hat v}{\pi_0}{\hat y}w{\pi_1}, e'')\in
+	       \nsem{\phi_0\oplus\phi_1}$ and
+	       $(\sigma,f'')\in\nsem{\psi}$.
+	       We have to show that the following executable is in
+	       $\bbot$:
+	       \[
+		(\inl t)[v/x][\vec g/\hat\G], \mats{\hat x}{\hat v}{\pi_0}{\hat
+	       y}w{\pi_1}\conc
+	       u',\sigma\conc
+	       \hat e\conc e''\conc f''
+	       \]
+	       where
+	       $u' = u[w/y][\vec d/\hat\D]$ and $\hat e=e'\conc  e\conc
+	       f$.
+	       By (ansL), the executable reduces to
+	       $\hat v[t'[v/x][\vec g/\hat\G]/\hat x],\pi_0 \conc
+	       u',\sigma\conc
+	       \hat e\conc e''\conc f''
+	       $.
+	       By induction hypothesis~\ref{c:second},
+	       $(t'[v/x][\vec g/\hat \G], u', \hat e)$ is in
+	       $\sempair{\phi_0,\psi}$.
+	       So, $(t'[v/x][\vec g/\hat\G], [u',\sigma\conc \hat e\conc
+	       f''])$ is in $\sem{\phi_0}$.
+	       By definition of $\nsem{\phi_0\oplus\phi_1}$,
+	       the reduct is in $\bbot$.
+	       Since $\bbot$ is closed for $\rev\red$,
+	       the original executable is also in $\bbot$.
 	\end{enumerate}
    \item[($\oplus$E, \textminus)]
 	The derivation for $t$ ends in
 	\[
 	\aseq{\G_0}{\tj{t}{\phi_0\oplus\phi_1}}
-	\aseq{\G_1,\tj{\hat{x}}{\phi_0}}{\tj{u_0}{\phi}}
-	\aseq{\G_1,\tj{\hat{y}}{\phi_1}}{\tj{u_1}{\phi}}
-	\tseq{\G_0,\G_1}{\tj{\mat{t}{\hat x}{u_0}{\hat y}{u_1}}{\phi}}
+	\aseq{\G_1,\tj{\hat{x}}{\phi_0}}{\tj{t_0}{\phi}}
+	\aseq{\G_1,\tj{\hat{y}}{\phi_1}}{\tj{t_1}{\phi}}
+	\tseq{\G_0,\G_1}{\tj{\mat{t}{\hat x}{t_0}{\hat y}{t_1}}{\phi}}
 	\DisplayProof\enspace.
 	\]
 	\begin{enumerate}[label=\textit{(\arabic{*})}]
-	 \item Take any $(\vec{g_0},\vec{e_0})\in\sem{\G_0}$,\quad
-	       $(\pi,e')\in\nsem{\phi}$ and
-	       $(\vec{g_1},\vec{e_1})\in\sem{\G_1}$.
+	 \item Take any $(\vec{g_0},{e_0})\in\sem{\G_0}$,\quad
+	       $(\vec{g_1},{e_1})\in\sem{\G_1}$
+	       and
+	       $(\pi,e')\in\nsem{\phi}$.
 	       We have to show that the executable
 	       \[
-	       (\mat t{\hat{x}}{u_0}{\hat{y}}{u_1})[\vec{ g_0}/\G_0][\vec{g_1}/\G_1],
-	       \pi\conc \vec{e_0}\conc e'\conc \vec{e_1}
+	       (\mat t{\hat{x}}{t_0}{\hat{y}}{t_1})[\vec{ g_0}/\G_0][\vec{g_1}/\G_1],
+	       \pi\conc {e_0}\conc e'\conc {e_1}
 	       \]
 	       is in $\bbot$.
-	       The executable reduces to
+	       By (ask), the executable reduces to
 	       \[
-		t,\mats{\hat{x}}{u_0}{\pi}{\hat{y}}{u_1}{\pi}\conc\vec{e_0}\conc
-	       e'\conc \vec{e_1}\enspace.
+		t[\vec{g_0}/\G_0],
+	       \mats{\hat{x}}{t_0[\vec{g_1}/\G_1]}{\pi}
+	       {\hat{y}}{t_1[\vec{g_1}/\G_1]}{\pi}\conc{e_0}\conc
+	       {e_1}\enspace.
 	       \]
 	       We claim that
-	       $(\mats{\hat{x}}{u_0}{\pi}{\hat{y}}{u_1}{\pi},\vec{e_1}\conc
+	       $(\mats{\hat{x}}{t_0[\vec{g_0/\G_0}]}{\pi}{\hat{y}}{t_1}{\pi},{e_1}\conc
 	       e')$ is in $\nsem{\phi\oplus\psi}$ and that
-	       $(t,\vec{e_0})$ is in $\sem{\phi\oplus\psi}$.  The first
+	       $(t[\vec{g_0}/\G_0],{e_0})$ is in $\sem{\phi\oplus\psi}$.  The first
 	       claim is shown by induction hypothesis~\ref{c:first}
-	       stating that $(u_0[v/\hat{x}][\vec{e_1}/\G_1], \vec{e_1}\conc
+	       stating that $(t_0[v/\hat{x}][\vec{g_1}/\G_1], {e_1}\conc
 	       e'')$ is in $\sem{\phi}$ for any $(v,e'')\in\sem{\phi_0}$
-	       and similarly to~$u_1$.
+	       and similarly to~$t_1$.
 	       The second claim follows from induction
 	       hypothesis~\ref{c:first} on $t$.
 	       By the two claims and by the definition of
 	       $\sem{\phi\oplus\psi}$,
 	       we have shown that the reduct is in $\bbot$ and
 	       thence that the original executable is in $\bbot$.
-	 \item \fix{fill}
+	 \item Variable $x$ might be in $\G_0$ or $\G_1$.
+	       \begin{description}
+		\item[(case $\G_0 = \tj x\theta,\hat\G_0$)]
+		     Take any
+		     $(v,w,e')\in\sempair{\theta,\tau}$,
+		     $(\vec{g_0},{e_0})\in\sem{\hat\G_0}$,
+		     $(\vec{g_1},{e_1})\in\sem{\G_1}$,
+		     $(\vec d, f)\in\sem{\hat\D}$,
+		     $(\pi,e')\in\nsem{\phi}$ and
+		     $(\sigma,f')\in\nsem\psi$.
+		     We have to show tht the following executable is in
+		     $\bbot$:
+		     \begin{eqnarray*}
+		     (\mat{t'}{\hat x}{t_0}{\hat
+		     y}{t_1})[v/x][\vec{g_0}/\hat\G_0][\vec{g_1}/\G_1],\pi\conc\\
+		     u[w/y][\vec d/\hat\D],\sigma\conc e'\conc
+		     {e_0}\conc {e_1}\conc  f\conc e'\conc
+		     f'.
+		     \end{eqnarray*}
+		     By (ask) and (cong), this executable reduces to
+		     \begin{eqnarray*}
+		     (t'[v/x][\vec{g_0}/\hat\G_0],
+		      \mats{\hat x}{t_0[\vec{g_1}/\G_1]}{\pi}{\hat y}{t_1[\vec{g_1}/\G_1]}{\pi}
+		      \conc\\
+		     u[w/y][\vec d/\hat\D],\sigma\conc e'\conc
+		     {e_0}\conc {e_1}\conc  f\conc e'\conc
+		     f'\enspace.
+		     \end{eqnarray*}
+		     By induction hypothesis~\ref{c:second},
+		     we have
+		     \[
+		     (t'[v/x][\vec{g_0}/\hat\G_0], u[w/y][\vec d/\hat\D],
+		     e'\conc {e_0}\conc f) \in\sempair{\phi_0\oplus\phi_1,\psi}\enspace.
+		     \]
+		     Also, we defined $(\sigma,f')$ to be an element of
+		     $\nsem\psi$.
+		     By definition of $\sempair{\phi_0\oplus\phi_1,\psi}$,
+		     the reduct is in $\bbot$.  Since $\bbot$ is closed for
+		     $\rev\red$,
+		     the original executable is also in $\bbot$.
+		\item[(case $\G_1=\tj{x}{\theta},\hat\G_1$)]
+		     Take any
+		     $(v,w,e')\in\sempair{\theta,\tau}$,
+		     $(\vec{g_0},{e_0})\in\sem{\G_0}$,
+		     $(\vec{g_1},{e_1})\in\sem{\hat\G_1}$,
+		     $(\vec{d},{f})\in\sem{\hat\D}$,
+		     $(\pi,e')\in\nsem{\phi}$ and
+		     $(\sigma,f')\in\nsem{\psi}$.
+		     We have to show that the following executable is in
+		     $\bbot$:
+		     \begin{eqnarray*}
+		      (\mat{t'}{\hat x}{t_0}{\hat
+		       y}{t_1})[\vec{g_0}/\G_0][v/x][\vec{g_1}/\G_1],\pi\conc \\
+		      u[w/y][\vec d/\hat\D],\sigma\conc e'\conc
+		       {e_0}\conc {e_1}\conc f\conc e'\conc f'\enspace.
+		     \end{eqnarray*}
+		     By (ask) and (cong), this executable reduces to
+		     \begin{align*}
+		      e_{\mathrm r} =&
+		       t'[\vec{g_0}/\G_0],
+		       \mats{\hat x}
+		       {(t_0[x/v][\vec{g_1}/\G_1])}{\pi}{\hat y}
+		       {t_1[x/v][\vec{g_1}/\G_1]}{\pi}\conc \\
+		      &u[w/y][\vec d/\hat\D],\sigma\conc e'\conc
+		       {e_0}\conc {e_1}\conc  f\conc e'\conc f'\enspace.
+		     \end{align*}
+		     By induction hypothesis~\ref{c:second}, for any
+		     $(v_0',e_0')\in\sem{\phi_0}$,
+		     the triple
+		     $(t_0[x/v][\vec{g_1}/\G_1][v_0'/\hat x],
+		     u[w/y][\vec d/\hat \D], e'\conc {e_1}\conc
+		     e_0'\conc  f)$ is in $\sempair{\phi,\psi}$ so
+		     that
+		     $(t_0[x/v][\vec{g_1}/\hat\G_1][v_0'/\hat x],
+		     [u[w/y][\vec d/\hat D],\sigma\conc e'\conc
+		     {e_1}\conc e_0'\conc {f}\conc f''])$ is in
+		     $\sem\phi$.
+		     We have a symmetric fact for $t_1$.
+		     Thus,
+		     \begin{align*}
+		     (
+		      & \mats{\hat x}
+		       {(t_0[x/v][\vec{g_1}/\G_1])}{\pi}{\hat y}
+		       {t_1[x/v][\vec{g_1}/\G_1]}{\pi}, \\ &
+		      [u[w/y][\vec{d}/\hat\D]\conc e'\conc {e_1}\conc
+		       f\conc f'']
+		     )
+		     \end{align*}
+		     is in $\nsem{\phi_0\oplus\phi_1}$.
+		     By induction hypothesis~\ref{c:first},
+		     $(t[\vec{g_0}/\G_0],{e_0})$ is in
+		     $\sem{\phi_0\oplus\phi_1}$.
+		     By definition of $\sem{\phi_0\oplus\phi_1}$,
+		     the reduct $e_{\mathrm r}$ is in $\bbot$.
+		     Since $\bbot$ is closed for $\rev\red$,
+		     the original executable is also in $\bbot$.
+	       \end{description}
 	\end{enumerate}
    \item[(Com, \textminus)]
 	The derivation for $t$ ends in
@@ -598,8 +786,8 @@ the case for Com rule fails.  Thus we deal with two derivations.
 	\DisplayProof\enspace.
 	\]
 	\begin{enumerate}[label=\textit{(\arabic{*})}]
-	\item Take any $(\vec{g_0},\vec{e_0})\in\sem{\G_0}$,
-	      $(\vec{g_1},\vec{e_1})\in\sem{\G_1}$ and
+	\item Take any $(\vec{g_0},{e_0})\in\sem{\G_0}$,
+	      $(\vec{g_1},{e_1})\in\sem{\G_1}$ and
 	      $(\pi,e')\in\nsem{\phi}$.
 	      By Prop.~\ref{comod-type}, we have
 	      $(\comodL,\comodR,\emptyset)\in\sempair{\phi_0\limp\phi_1,\phi_1\limp\phi_0}$.
@@ -607,43 +795,57 @@ the case for Com rule fails.  Thus we deal with two derivations.
 	      $t'_0=t_0[\comodL/\hat{x}][\vec{g_0}/\G_0]$ and
 	      $t'_1=t_1[\comodR/\hat{y}][\vec{g_1}/\G_1]$
 	      satisfy
-	      $(t_0',t_1',\vec{e_0}\conc
-	      \vec{e_1})\in\sempair{\phi,\phi}$.
+	      $(t_0',t_1',{e_0}\conc
+	      {e_1})\in\sempair{\phi,\phi}$.
 	      By Prop.~\ref{squash}, we have $(t'_0\conc t'_1,
-	      \vec{e_0}\conc \vec{e_1})\in\sem{\phi}$.
+	      {e_0}\conc {e_1})\in\sem{\phi}$.
 	\item
 	      Without loss of generality,
-	      we can assume $(\tj x\phi)\in\G_0$ so that
-	      $\G_0 =\tj x\phi, {\hat\G_0}$ up to exchange.
+	      we can assume $(\tj x\theta)\in\G_0$ so that
+	      $\G_0 =\tj x\theta, {\hat\G_0}$ up to exchange.
 	      Take any
 	      $(v,w,e')\in\sempair{\theta,\tau}$,
-	     $(\vec{g_0},\vec{e_0})\in\sem{\hat\G_0}$,
-	     $(\vec{g_1},\vec{e_1})\in\sem{\G_1}$,
-	     $(\vec d,\vec f)\in\sem{\hat\D}$,
+	     $(\vec{g_0},{e_0})\in\sem{\hat\G_0}$,
+	     $(\vec{g_1},{e_1})\in\sem{\G_1}$,
+	     $(\vec d, f)\in\sem{\hat\D}$,
 	     $(\pi,e'')\in\nsem{\phi}$ and
 	     $(\sigma,f'')\in\nsem{\psi}$.
-	      By induction hypothesis~\ref{c:second},
-	      the terms $t_0'=t_0[v/x][\vec
-	      {g_0}/\hat\G_0]$
-	      and
-	      $u'=u[w/y][\vec{d}/\D]$
-	      satisfy
-	      $(t_0',u',\fix{?})\in\sempair{\phi,\psi}$.
-	      By induction hypothesis~\ref{c:first},
-	      $t_1'=t_1[\vec {g_1}/\G_1]$ satisfies
-	     $(t'_1,\fix{?})\in\sem{\phi'}$. \fix{fix later}
-	      From these, respectively, we obtain
-	      $t_0',\pi\conc u',\sigma\in\bbot$
-	      and
-	      $t_1',\pi\in\bbot$.
-	      Since $\bbot$ is closed for $\conc$,
-	      we have $t_0',\pi\conc t_1',\pi\conc u',\sigma\in\bbot$.
-	      By (dist) and (cong),
-	      $(t_0'\conc t_1'),\pi\conc u',\sigma$ reduces
-	      to this executable.
-	      So $(t_0'\conc t_1',u')\in\sem{\phi',\psi'}$
-	      where $t_0'\conc t_1' = (t_0[\comodL/\hat x]\conc
-	      t_1[\comodR/\hat y])[\vec{d_0}/\D_0][\vec{d_1}/\D_1][\vec g/\G]$.
+	     We have to show that this executable is in $\bbot$:
+	     \begin{align*}
+	      & (t_0[\comodL/\hat x][\vec{g_0}/\hat\G_0][v/x]\conc
+	      t_1[\comodR/\hat y][\vec{g_1}/\G_1]),\pi\conc \\
+	      & u[w/y][\vec{d}/\hat\D],\sigma\conc e'\conc
+	      {e_0}\conc {e_1}\conc  f\conc e''\conc f''
+	     \end{align*}
+	     \fix{where...}
+	     This executable reduces to
+	     \[
+	      t'_0,\pi\conc t'_1,\pi\conc u',\sigma\conc e'\conc
+	     {e_0}\conc {e_1}\conc{f}\conc e''\conc f''\enspace.
+	     \]
+	     Consider the derivation consisting of an axiom
+	     $\sequent{\tj{\hat x}{\phi_0\limp\phi_1}}
+	     {\tj{\hat x}{\phi_0\limp\phi_1}}$.
+	     This derivation is shorter than the derivation for $u$
+	     unless the derivation for $u$ also consists of a single axiom.
+	     We can use the induction hypothesis~\ref{c:second} on
+	     this derivation and the derivation of $u$, or, if the
+	     derivation for $u$ also an axiom, we can do the same
+	     argument as in (Ax, Ax) case to prove
+	     statement~\ref{c:second}.
+	     By this, $(\comodL, t_1',{e_1})$ is in
+	     $\sempair{\phi_0\limp\phi_1,\phi}$
+	     because of Prop.~\fix{type of comods?}.
+	     So, program $p =(\comodL,(t_1',\pi\conc{e_1}))$ is in
+	     $\sem{\phi_0\limp\phi_1}$.
+	     By induction hypothesis~\ref{c:second} for the derivation
+	     for $t_0$, especially using the program~$p$ for
+	     substituting~$\hat x$, we can show that
+	     $(t_0',u',(t_1',\pi\conc {e_1}\conc {e_0}\conc
+	     e'\conc {f}))$ is in $\sempair{\phi,\psi}$.
+	     Thus, the reduct is in $\bbot$.
+	     Since $\bbot$ is closed for $\rev\red$, the original
+	     executable is also in $\bbot$.
 	\end{enumerate}
   \item[($\forall$I, \textminus)]
        \fix{reread}
@@ -652,7 +854,7 @@ the case for Com rule fails.  Thus we deal with two derivations.
        \useq{\G}{\tj t{\forall X\phi}}
        \DisplayProof.
        \begin{enumerate}[label=\textit{(\arabic{*})}]
-	\item Take any $(\vec g,\vec{e})\in\sem{\G}$.
+	\item Take any $(\vec g,{e})\in\sem{\G}$.
 	      Since $\G$ does not contain $X$ freely,
 	      $\sem\G$ does not change whatever
 	      $\nsem{X}_0$ is.
@@ -669,7 +871,7 @@ the case for Com rule fails.  Thus we deal with two derivations.
 	      \bbot$.
 	\item Take any
 	      $(v,w,e')\in\sempair{\theta,\tau}$,
-	      $(\vec g,\vec e)   \in\sem{\hat\G}$,
+	      $(\vec g, e)   \in\sem{\hat\G}$,
 	      $(\pi,e'')\in\nsem{\forall X\phi}$ and
 	      $(\sigma,f'')\in\nsem{\psi}$.
 	      We can replace $X$ in the derivation of $t$ with
@@ -680,14 +882,14 @@ the case for Com rule fails.  Thus we deal with two derivations.
 	      Since $\theta$ and $\hat\G$ do not contain
 	      $X$ freely, we have
 	      $(v,w,e')\in\sem{\theta[X'/X],\tau}$,
-	      $(\vec{g},\vec{e})\in\sem{\hat\G[X'/X]}$ and $(\pi,e'')\in
+	      $(\vec{g},{e})\in\sem{\hat\G[X'/X]}$ and $(\pi,e'')\in
 	      \nsem{\forall X'\phi[X'/X]}$.
 	      By induction hypothesis~\ref{c:second}
 	      on the renamed derivation,
 	      the terms
 	      $t' = t[v/x][\vec g/\G]$ and
 	      $u' = u[w/y][\vec d/\D]$ satisfy
-	      $(t',u',\vec e\conc \vec f)\in\sem{\phi[X'/X],\psi'}$ for any $\nsem{X'}_0$.
+	      $(t',u', e\conc  f)\in\sem{\phi[X'/X],\psi'}$ for any $\nsem{X'}_0$.
 	      That is, for $\mathcal Z\in 2^E$ that makes
 	      $(\pi,e'')\in\nsem{\phi[X'/X][\mathcal Z/X']}$ and
 	      $(\sigma,f'')\in\nsem{\psi[\mathcal Z/X']}$,
@@ -701,18 +903,21 @@ the case for Com rule fails.  Thus we deal with two derivations.
        \useq{\G}{\tj t{\phi[\psi/X]}}
        \DisplayProof.
        Both statements follow immediately from the induction hypotheses
-       because $\nsem{\phi[\psi/X]}$ is a subset of $\nsem{\forall X\phi}$.
+       because $\nsem{\phi[\psi/X]}$ is a subset of $\nsem{\forall
+       X\phi}$.
+   \item[(Other cases)]
+	We can swap $t$ and $u$ to find a symmetric case above.
  \end{description}
  \end{proof}
-Note that \ref{c:first} uses \ref{c:second} and vice versa, for example in the (Com, \textminus) case.
+Note that \ref{c:first} uses \ref{c:second} in the (Com, \textminus)
+case
+and \ref{c:second} uses \ref{c:first} in the ($\limp$E, \textminus).
 
 \begin{proposition}
+ \label{prop:exec-on-pole}
  The following set is a pole: the set of executables that reduces to
  an executable containing an element of a fixed set of executables.
 \end{proposition}
-\begin{proof}
- \fix{fill}
-\end{proof}
 
 \begin{proposition}
  Let
@@ -725,20 +930,66 @@ Note that \ref{c:first} uses \ref{c:second} and vice versa, for example in the (
  derivable.
  For all terms $\rho,\sigma, r$ and for all stacks $\pi, \pi_A$ and
  $\pi_B$,
- if $[(\rho)d  ,\pi]\reduce [d,a\cdot \pi_B]$ and
-    $[(\sigma)f,\pi]\reduce [f,b\cdot \pi_A]$ hold for all $d$ and $f$,
+ if $[(\rho)d  ,\pi]\red [d,a\cdot \pi_B]$ and
+    $[(\sigma)f,\pi]\red [f,b\cdot \pi_A]$ hold for all $d$ and $f$,
  then
  $[(c)(\rho)\sigma,\pi],S_\epsilon$ reduces to a multiset containing an
  element of
  $\{(a,\pi_A),(b,\pi_B)\}$.
 \end{proposition}
 \begin{proof}
+ We denote by $\bbot$ the set of executables that reduce to a multiset
+ containing an element of $\{(a,\pi_A), (b,\pi_B)\}$.
+ By Prop.~\ref{prop:exec-on-pole},
+ this is a pole.
+ Take $\nsem{A}_0 =\{(\pi_A,\emptyset)\}$, $\nsem{B}_0 =
+ \{(\pi_B,\emptyset)\}$ and $\nsem{X}_0=\{(\pi,\emptyset)\}$.
+ We have $a\in\sem{A}$ and $b\in\sem{B}$.
+ We claim $(\rho,\emptyset)\in\sem{(A\limp B)\limp X}$.
+ Take any $(d,e)\in\sem{A\limp B}$.
+ By assumption and (cong),
+ $[(\rho)d,\pi\conc e]$ reduces to $[d,a\cdot\pi_B\conc e]$,
+ where the reduct is in $\bbot$ because $(d,e)$ is in $\sem{A\limp B}$.
+ Since $\bbot$ is closed for $\rev\red$,
+ $[(\rho)d,\pi\conc e]$ is also in $\bbot$, making
+ $(\rho,\emptyset)$ a member of $\sem{(A\limp B)\limp X}$.
+ Likewise,
+ $(\sigma,\emptyset)$ is a member of $\sem{(B\limp A)\limp X}$.
+\end{proof}
+
+% not really useful
+% \begin{proposition}
+%  The set of executables which do not reduce to $\emptyset$ forms a pole.
+% \end{proposition}
+% \begin{proof}
+%  This is a special case of Prop.~\ref{prop:exec-on-pole}
+% \end{proof}
+
+Another important property of an executable is
+non-abortfullness
+which states that the executable has no reduction sequence leading to
+$\emptyset,S$.
+The name comes from hyper-lambda calculus formulation in~\citep{hiraiflops2012},
+where a term sometimes turns into $\mathsf{abort}$ and there the property
+stated that a hyperterm has no reduction sequence leading to a hyperterm
+full of $\mathsf{abort}'s$.
+This property is necessary for terms to denote
+constructive content of proofs.
+
+\begin{proposition}[Non-abortfullness]
+ Let $\tr\tj t\psi$ be derivable, then,
+ $[t,\pi]$ does not reduce to $\emptyset$ for
+ any $\pi$.
+\end{proposition}
+\begin{proof}
+ By definition of $\red$.
 \end{proof}
 
 \subsection{Adding Exponentials}
-
+\fix{add if resources allow}
 
 \section{Asynchronous Semantics}
+\label{sec:async}
 
 A \textit{term}~$t$ is defined by BNF:
 \[
@@ -750,7 +1001,7 @@ A \textit{term}~$t$ is defined by BNF:
  \mid \comod c c
  \mid \reader  c
 \]
-where $x$ is a variable and $c\colon\phi$ is a channel.
+where $x$ is a variable and $c$ is a channel.
 A \textit{stack}~$\pi$ is defined by BNF:
 \[
  \pi ::= \epsilon
@@ -775,7 +1026,7 @@ paired with a store.
 
 % 2a' reduction
 We have reduction relation~$\red$ on executables,
-which is defined to be the smallest binary relation
+which is defined to be the smallest binary preorder
 that satisfies:
 \begin{description}
  \item[(cong)] if
@@ -824,10 +1075,10 @@ that satisfies:
 	    $
 	    \enspace.
 \end{description}
-We denote the reflexive transitive closure of $\red$ as $\reduce$.
-
-
-We can implement something similar to Lafont's example,
+Differently from the synchronous case in Sect.~\ref{sec:sync},
+we do not use an external schedule relation on channels.
+Instead, nondeterminism appears spontaneously.
+We can implement something similar to Lafont's example~\fix{cite},
 showing that confluence does not hold.
 Suppose $\G\tr\tj t\phi$ and $\G\tr\tj u\phi$ are both derivable.
 Then, by induction on the derivation,
@@ -842,39 +1093,6 @@ can reduce both to $[t,\pi], S_\epsilon[c\mapsto u, \co c\mapsto t]$
 and to $[u,\pi], S_\epsilon[c\mapsto u,\co c\mapsto t]$.
 Since $t$ and $u$ were taken arbitrarily, we cannot distinguish terms
 of the same type if we equate a term with what it reduces to.
-
-
-Another important property of an executable is
-non-abortfullness
-which states that the executable has no reduction sequence leading to
-$\emptyset,S$.
-The name comes from hyper-lambda calculus formulation in \fix{cite},
-where a term sometimes turns into $\mathsf{abort}$ and there the property
-stated that a hyperterm has no reduction sequence leading to a hyperterm
-full of $\mathsf{abort}'s$.
-This property is important because it ensures existence of
-constructive content of proofs.
-
-Non-abortfullness cannot be verified using poles
-because any pole must have $\emptyset,S$ as an element for
-any store~$S$.
-This condition for poles is used in the
-communication case of the proof of adequacy.
-In order to prove non-abortfullness as a logical property,
-we define another variant of poles called scheduled poles.
-
-
-\fix{find a property that can only be verified using scheduled poles}.
-\fix{maybe exact specification}
-
-
-\begin{proposition}[Non-abortfullness]
-Let $\tr\tj t\psi$ be derivable, then,
- $[t,\epsilon], S_\epsilon$ has no run leading to $\emptyset, S'$ for
- any store $S'$.
-\end{proposition}
-\begin{proof}
-\end{proof}
 
 
 %%%%%%%% some texts

@@ -27,6 +27,7 @@ LaTeXDocument(hirai-thesis, hirai-thesis)
 
 .DEFAULT: hirai-thesis.pdf
         cp ./hirai-thesis.pdf ~/Dropbox/hirai-thesis.pdf
+	cp ./*.tex ~/Dropbox/
 
 clean:
 	rm -f hirai-thesis.dvi hirai-thesis.pdf hirai-thesis.aux hirai-thesis.bbl
