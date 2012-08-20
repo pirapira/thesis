@@ -36,23 +36,23 @@
 \citet{danos-krivine} investigate
 the computational semantics of disjunctive tautologies
 such as the excluded middle and the symmetric excluded middle.
-They state that those tautologies are synchronizasion schemes.
+They state that those tautologies are synchronization schemes.
 Indeed in their formalism, reduction of one term can wait
-for another, making synchronisation.
+for another, making synchronization.
 However,
 one can find no communication among different
 concurrent elements in an executable.
 In the current paper, we show that logical axioms can specify how
 concurrent threads exchange information.
 
-We observe the computational behaviour of prelinearity axiom
+We observe the computational behavior of prelinearity axiom
 $(\phi\limp\psi)\oplus(\psi\limp\phi)$
 on top of IMALL2, which is the fragment of second order
 intuitionistic linear logic with connectives $\{\forall, \limp,
 \oplus\}$.
 We interpret the disjunction~$\oplus$ in the axiom
 nondeterministically: whether
-one theread can give information to the other or
+one thread can give information to the other or
 vice versa.
 In Sect.~\ref{sec:sync}, where threads wait for others,
 we externally specify such nondeterministic choice.
@@ -65,7 +65,7 @@ asynchronous case to the synchronous case.
 
 Our computational semantics here is closely related to
 \citet{hiraiflops2012}'s for G\"odel--Dummett logic,
-which is axiomatized by Dummet axiom $(\phi\imp\psi)\lor(\psi\imp\phi)$
+which is axiomatized by Dummett axiom $(\phi\imp\psi)\lor(\psi\imp\phi)$
 on top of intuitionistic logic.
 
 
@@ -85,6 +85,7 @@ on top of intuitionistic logic.
 \newcommand{\comod}[2]{\ast^{\rightarrow {#2}}_{\leftarrow{#1}}}
 \newcommand{\reader}[1]{\ast_{\leftarrow{#1}}}
 
+\subsection{Dynamics}
 We consider a programming language, which is a modification of
 Danos and Krivine's.
 We assume a set~$\pvar$ of propositional variables whose cardinality is
@@ -165,10 +166,7 @@ Below, we sometimes omit the outermost parentheses (i.e. [ and ]) for multisets.
 
 % 2b type system -- remove pierce -- add com'
 
-\fix{describe a sequent; we do not allow multiple occurrences of the
-same variable}
-\fix{say, up to external exchange, we identify}
-
+\subsection{Statics}
 For a set~$S$,
 $\form(S)$ is the set of formulas~$\phi$:
 \[
@@ -183,7 +181,12 @@ $\phi_0\limp\phi_1\limp\cdots\limp\phi_n$ is defined inductively on~$n$
 as
 $\phi_0\limp(\phi_1\limp\cdots\limp\phi_n)$.
 A type is an element of $\form(\emptyset)$.
-The derivation rules follow.\\ \noindent
+
+A \textit{sequent} $\sequent{\G}{\tj t\phi}$ consists of a
+context~$\G$ and a term~$t$ associated with a type~$\phi$.
+The \textit{context} is a finite sequence of variables associated with types.
+
+A \textit{derivation} is a tree composed of the derivation rules below:\\ \noindent
 
 \AxiomC{}
 \LL  {Ax}
@@ -264,9 +267,9 @@ which satisfies
  \item \label{conc-closed} if $e$ or $f$ is in $\bbot$
        then $e\conc f\in\bbot$.
 \end{enumerate}
-Condition~\ref{conc-closed}. is different from \citet{danos-krivine}'s
-definition of poles.
-There, the condition said if $e$ \textit{and} $f$ \textit{are} in
+Condition~\ref{conc-closed}. is different from that from \citet{danos-krivine}'s
+definition.
+There, the condition says if $e$ \textit{and} $f$ \textit{are} in
 $\bbot$, then $e\conc f$ is in $\bbot$.  Our choice here is influenced
 by hypersequents~\citep{avron91} and hyper-lambda
 calculi~\citep{hiraiflops2012},
@@ -286,7 +289,7 @@ such $\mathcal Z$ that $\mathcal X = \mathcal Z\rightarrow \bbot$.
 We define programs and environments because if we continue using
 terms and stacks, the proof of adequacy (Prop.~\ref{c:adequacy}) does
 not go through the case for
-($\limp$E, \textminus), \ref{c:second}.
+($\limp$E,~\textminus), \ref{c:second}.
 
 \renewcommand{\sem}[1]{|{#1}|}
 \newcommand{\nsem}[1]{\sem{#1}^-}
@@ -489,7 +492,7 @@ same time.
 	       {e_0})\in\sem{\phi'\limp\phi}$
 	       and
 	       $(t_1[\vec{g_1}/\G_1],{e_1})\in\sem{\phi'}$.
-	       By the lattar, we have $(t_1[\vec{g_1}/\G_1]\cdot\pi,
+	       By the latter, we have $(t_1[\vec{g_1}/\G_1]\cdot\pi,
 	       {e_1}\conc e'')\in\nsem{\phi'\limp\phi}$.
 	       By definition of $\sem{\phi'\limp\phi}$, we have shown that the
 	       reduct is in $\bbot$.
@@ -688,7 +691,7 @@ same time.
 		     $(\vec d, f)\in\sem{\hat\D}$,
 		     $(\pi,e')\in\nsem{\phi}$ and
 		     $(\sigma,f')\in\nsem\psi$.
-		     We have to show tht the following executable is in
+		     We have to show that the following executable is in
 		     $\bbot$:
 		     \begin{eqnarray*}
 		     (\mat{t'}{\hat x}{t_0}{\hat
@@ -812,13 +815,15 @@ same time.
 	     $(\sigma,f'')\in\nsem{\psi}$.
 	     We have to show that this executable is in $\bbot$:
 	     \begin{align*}
-	      & (t_0[\comodL/\hat x][\vec{g_0}/\hat\G_0][v/x]\conc
-	      t_1[\comodR/\hat y][\vec{g_1}/\G_1]),\pi\conc \\
-	      & u[w/y][\vec{d}/\hat\D],\sigma\conc e'\conc
+	      & (t_0'\conc
+	      t'_1),\pi\conc
+	      u',\sigma\conc e'\conc
 	      {e_0}\conc {e_1}\conc  f\conc e''\conc f''
 	     \end{align*}
-	     \fix{where...}
-	     This executable reduces to
+	     where $t_0' = t_0[\comodL/\hat
+	     x][\vec{g_0}/\hat\G_0][v/x]$,
+	     $t'_1 = t_1[\comodR/\hat y][\vec{g_1}/\G_1]$ and $u' = u[w/y][\vec{d}/\hat\D]$.
+	     By (dist) and (cong), this executable reduces to
 	     \[
 	      t'_0,\pi\conc t'_1,\pi\conc u',\sigma\conc e'\conc
 	     {e_0}\conc {e_1}\conc{f}\conc e''\conc f''\enspace.
@@ -835,7 +840,7 @@ same time.
 	     statement~\ref{c:second}.
 	     By this, $(\comodL, t_1',{e_1})$ is in
 	     $\sempair{\phi_0\limp\phi_1,\phi}$
-	     because of Prop.~\fix{type of comods?}.
+	     because of Prop.~\ref{comod-type}.
 	     So, program $p =(\comodL,(t_1',\pi\conc{e_1}))$ is in
 	     $\sem{\phi_0\limp\phi_1}$.
 	     By induction hypothesis~\ref{c:second} for the derivation
@@ -848,7 +853,6 @@ same time.
 	     executable is also in $\bbot$.
 	\end{enumerate}
   \item[($\forall$I, \textminus)]
-       \fix{reread}
        The derivation for $t$ ends in
        \aseq{\G}{\tj t\phi}
        \useq{\G}{\tj t{\forall X\phi}}
@@ -858,7 +862,7 @@ same time.
 	      Since $\G$ does not contain $X$ freely,
 	      $\sem\G$ does not change whatever
 	      $\nsem{X}_0$ is.
-	      On the other hand, since the indcution
+	      On the other hand, since the induction
 	      hypothesis~\ref{c:first}
 	      holds for arbitrary $\nsem{X}_0$,
 	      the program $t[\vec g/\G]$ is in
@@ -894,7 +898,7 @@ same time.
 	      $(\pi,e'')\in\nsem{\phi[X'/X][\mathcal Z/X']}$ and
 	      $(\sigma,f'')\in\nsem{\psi[\mathcal Z/X']}$,
 	      $t'\pi\conc u',\sigma\conc e''\conc f''$ is in $\bbot$,
-	      making $t',\pi\conc u',\sigma$ an elment of
+	      making $t',\pi\conc u',\sigma$ an element of
 	      $\bbot$..
        \end{enumerate}
   \item[($\forall$E, \textminus)]
@@ -909,9 +913,9 @@ same time.
 	We can swap $t$ and $u$ to find a symmetric case above.
  \end{description}
  \end{proof}
-Note that \ref{c:first} uses \ref{c:second} in the (Com, \textminus)
+Note that \ref{c:first} uses \ref{c:second} in the (Com,~\textminus)
 case
-and \ref{c:second} uses \ref{c:first} in the ($\limp$E, \textminus).
+and \ref{c:second} uses \ref{c:first} in the ($\limp$E,~\textminus).
 
 \begin{proposition}
  \label{prop:exec-on-pole}
@@ -920,6 +924,7 @@ and \ref{c:second} uses \ref{c:first} in the ($\limp$E, \textminus).
 \end{proposition}
 
 \begin{proposition}
+ \label{prop:spec}
  Let
  $\sequent{}{}{\tj c
  {\forall X\forall A\forall B
@@ -971,7 +976,7 @@ which states that the executable has no reduction sequence leading to
 $\emptyset,S$.
 The name comes from hyper-lambda calculus formulation in~\citep{hiraiflops2012},
 where a term sometimes turns into $\mathsf{abort}$ and there the property
-stated that a hyperterm has no reduction sequence leading to a hyperterm
+stated that a hyper-term has no reduction sequence leading to a hyper-term
 full of $\mathsf{abort}'s$.
 This property is necessary for terms to denote
 constructive content of proofs.
@@ -1094,6 +1099,11 @@ and to $[u,\pi], S_\epsilon[c\mapsto u,\co c\mapsto t]$.
 Since $t$ and $u$ were taken arbitrarily, we cannot distinguish terms
 of the same type if we equate a term with what it reduces to.
 
+\begin{proposition}
+ If $e\red e'$ in the synchronous case then $e, S_\epsilon \red e', S'$
+ in the asynchronous case for some store~$S'$.
+\end{proposition}
+\fix{prove}
 
 %%%%%%%% some texts
 
