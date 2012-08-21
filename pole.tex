@@ -242,9 +242,9 @@ A \textit{derivation} is a tree composed of the derivation rules below:\\ \noind
 \newcommand{\comodL}{\comod c{\co c}}
 \newcommand{\comodR}{\comod{\co c}c}
 \aseq{\tj{x}{\phi\limp\psi},\G}{\tj t\theta}
-\aseq{\tj{y}{\psi\limp\phi},\G}{\tj u\theta}
+\aseq{\tj{y}{\psi\limp\phi},\D}{\tj u\theta}
 \LL{Com}
-\bseq{\G}{\tj{(t[\comodL/x]\conc u[\comodR/y])}{\theta}}
+\bseq{\G,\D}{\tj{(t[\comodL/x]\conc u[\comodR/y])}{\theta}}
 \DisplayProof
 \ruleskip
 %
@@ -253,6 +253,7 @@ A \textit{derivation} is a tree composed of the derivation rules below:\\ \noind
 \useq{\G,\tj{y}{\psi},\tj{x}{\phi},\D}{\tj{t}{\theta}}
 \DisplayProof
 
+\fix{because of Com rule, it is affine?}
 
 \subsection{Specification Using Poles}
 
