@@ -38,3 +38,15 @@
 /interim/hirai-thesis.pdf
 hirai-thesis.lot
 /pole.log
+*-converted-to.pdf
+*~
+*.aux
+*.fls
+*.out
+*.toc
+.omakedb
+.omakedb.lock
+*.log
+*.snm
+*.nav
+*.omc
