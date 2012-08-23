@@ -934,17 +934,17 @@ where $s_i = \tuple{p,x}$:
  u_i & =
  \begin{cases}
  \tuple{p',x}  & (\text{if } p = l
- \leftarrow E; p' \text{ and }\sem{E}_{x,\vec v} \neq \epsilon)
+ \leftarrow E; p' \text{ and }\semo{E}_{x,\vec v} \neq \epsilon)
  \\
  \tuple{\epsilon,x}  & (\text{if } p = l
- \leftarrow E; p' \text{ and }\sem{E}_{x,\vec v} = \epsilon)
+ \leftarrow E; p' \text{ and }\semo{E}_{x,\vec v} = \epsilon)
  \\
- \tuple{p', x[\p x \mapsto \sem{E}_{x, \vec v}]}&
+ \tuple{p', x[\p x \mapsto \semo{E}_{x, \vec v}]}&
                        (\text{if } p = \p x \leftarrow E; p', \quad
- x(\p x) = \epsilon  \text{ and } \sem{E}_{x, \vec v} \neq \epsilon) \\
+ x(\p x) = \epsilon  \text{ and } \semo{E}_{x, \vec v} \neq \epsilon) \\
  \tuple{\epsilon, x}&
                       (\text{if } p = \p x \leftarrow E; p',  \quad
- x(\p x) = \epsilon  \text{ and } \sem{E}_{x, \vec v} = \epsilon) \\
+ x(\p x) = \epsilon  \text{ and } \semo{E}_{x, \vec v} = \epsilon) \\
  \tuple{\epsilon, x} & (\text{if } p = \p x \leftarrow E; p' \text{
  and }
  x(\p x) \neq \epsilon) \\
@@ -952,13 +952,13 @@ where $s_i = \tuple{p,x}$:
  \end{cases}\\
  \vg m l & =
  \begin{cases}
- \sem{E}_{x, \vec v} & (\text{if } p = l \leftarrow E; p',\quad g(l)= i \text{
+ \semo{E}_{x, \vec v} & (\text{if } p = l \leftarrow E; p',\quad g(l)= i \text{
  and } \vg v l = \epsilon) \\
  \vg v l &(\text{otherwise})
  \end{cases}\\
  \vd m l &=
  \begin{cases}
-\sem{E}_{x, \vec v} &
+\semo{E}_{x, \vec v} &
   (\text{if } p = l \leftarrow E; p',\quad d(l)= i \text{
  and } \vd v l = \epsilon) \\
  \vd v l &(\text{otherwise})
@@ -968,14 +968,14 @@ with the following notations.
 We let $i(l)$ to be $\vg v l$ if $d(l)=i$ and
 $\vd v l$ if $g(l) = i$.
 The term
-$\sem{E}_{x, \vec v}$ is defined as the unique normal form
+$\semo{E}_{x, \vec v}$ is defined as the unique normal form
 %{show, show, show}
 of $E[x(\vec{\p y}) / \vec{\p y}][\vec{i(l)}/\vec l]$, where
 every program variable~$\p y$ is replaced by $x(\p y)$ and the
 uniqueness is guaranteed by the absence of $\overleftarrow l$ or
 $\overrightarrow l$.
 If any of the substitutes is $\epsilon$,
-$\sem{E}_{x, \vec v}$ is $\epsilon$.
+$\semo{E}_{x, \vec v}$ is $\epsilon$.
 
 A \textit{schedule} is an infinite sequence of nonempty subsets of~$\processes$,
 which looks like $\sigma = \sigma_0\sigma_1\sigma_2\cdots$.
@@ -1091,20 +1091,20 @@ $\varphi_{k'}^+$.
 
 For a typed 
 hyperterm~$\hypert$,
-we will give $\sem{\hypert}$, which is a tuple of programs indexed
+we will give $\semo{\hypert}$, which is a tuple of programs indexed
 by~$\processes$.
-Also, we define $\semi{\hypert}$ at the same time as
-$\sem{\hypert}$, where
-$\semi{\hypert}$ is a sequence of finite sets of investigators whose
+Also, we define $\semoi{\hypert}$ at the same time as
+$\semo{\hypert}$, where
+$\semoi{\hypert}$ is a sequence of finite sets of investigators whose
 length is the same as that of $\hypert$.
-We refer to the last element of $\semi{\hypert\hmid M}$ as
-$\semi{\hypert\hmid \hat{M}}$, the second to last element of
-$\semi{\hypert\hmid M\hmid N}$ as 
-$\semi{\hypert\hmid \hat M\hmid N}$ and so on.
-We denote the right projection of $\semi{\hypert\hmid \hat{M}}$ as
-$\semi{\hypert\hmid \hat{M}}'$.
-If two sequents of investigator sets $\semi{\hypert}$ and $\semi{\hypert'}$
-have the same length, we define $\semi{\hypert}\cup \semi{\hypert'}$ to
+We refer to the last element of $\semoi{\hypert\hmid M}$ as
+$\semoi{\hypert\hmid \hat{M}}$, the second to last element of
+$\semoi{\hypert\hmid M\hmid N}$ as 
+$\semoi{\hypert\hmid \hat M\hmid N}$ and so on.
+We denote the right projection of $\semoi{\hypert\hmid \hat{M}}$ as
+$\semoi{\hypert\hmid \hat{M}}'$.
+If two sequents of investigator sets $\semoi{\hypert}$ and $\semoi{\hypert'}$
+have the same length, we define $\semoi{\hypert}\cup \semoi{\hypert'}$ to
 be the elementwise union.
 
 We let $\epsilon$ denote $(p_i)_{i\in\processes}$ where $p_i=\epsilon$
@@ -1119,55 +1119,55 @@ Below, we always choose fresh program variables.
 The definition is inductive over the type derivation.
 {\footnotesize
 \begin{align*}
- \sem{\cotuple{\hypert_0,\hypert_1}\hmid \ltor j l \Delta M\hmid \rtol i l\Gamma N}
- =& \sem{\hypert_0\hmid M};
- \sem{\hypert_1\hmid N};\\
- &(l\leftarrow \semi{\hypert_0\hmid\hat M}'; \p
+ \semo{\cotuple{\hypert_0,\hypert_1}\hmid \ltor j l \Delta M\hmid \rtol i l\Gamma N}
+ =& \semo{\hypert_0\hmid M};
+ \semo{\hypert_1\hmid N};\\
+ &(l\leftarrow \semoi{\hypert_0\hmid\hat M}'; \p
  y\leftarrow l;)_j; \\
- &(l\leftarrow \semi{\hypert_1\hmid\hat N}'; \p
+ &(l\leftarrow \semoi{\hypert_1\hmid\hat N}'; \p
  x\leftarrow l;)_i\enspace,\\
- \semi{\cotuple{\hypert_0,\hypert_1}\hmid\ltor j l \Delta M\hmid \rtol i l\Gamma N} =&
- \semi{\hat \hypert_0\hmid M} \cup \semi{\hat \hypert_1\hmid N} \hmid\\& \tuple{\{j,\p
+ \semoi{\cotuple{\hypert_0,\hypert_1}\hmid\ltor j l \Delta M\hmid \rtol i l\Gamma N} =&
+ \semoi{\hat \hypert_0\hmid M} \cup \semoi{\hat \hypert_1\hmid N} \hmid\\& \tuple{\{j,\p
  y\}}\hmid \{\tuple{i,\p x}\}\enspace,\\
- \sem{\hypert\hmid \abort}=\sem{\hypert}\enspace,\quad
- \semi{\hypert\hmid\abort}=&\semi{\hypert}\hmid \emptyset\enspace,\quad
- \sem{x}= \epsilon \enspace,\\
- \semi{x}=& \{\tuple{i,\p x_x}\} \text{ where $[i]\varphi$ is the type
+ \semo{\hypert\hmid \abort}=\semo{\hypert}\enspace,\quad
+ \semoi{\hypert\hmid\abort}=&\semoi{\hypert}\hmid \emptyset\enspace,\quad
+ \semo{x}= \epsilon \enspace,\\
+ \semoi{x}=& \{\tuple{i,\p x_x}\} \text{ where $[i]\varphi$ is the type
  of $x$}\enspace,\\
- \sem{\hypert\hmid \gpair{M,N}}=&
- \sem{\hypert\hmid M}; \sem{\hypert\hmid N}\enspace,\\
- \semi{\hypert\hmid \gpair{M,N}} =&
- \semi{\hypert\hmid M}\cup \semi{\hypert\hmid N}\enspace,\\
- \sem{\hypert\hmid \pi_a^\g(M)}=&\sem{\hypert\hmid M}\enspace,\\
- \semi{\hypert\hmid\pi_a^\g(M)}=&\semi{\hypert\hmid M}\enspace,\\
-  \sem{\cotuple{\cotuple{\hypert_0,\hypert_1},\hypert_2}\hmid
+ \semo{\hypert\hmid \gpair{M,N}}=&
+ \semo{\hypert\hmid M}; \semo{\hypert\hmid N}\enspace,\\
+ \semoi{\hypert\hmid \gpair{M,N}} =&
+ \semoi{\hypert\hmid M}\cup \semoi{\hypert\hmid N}\enspace,\\
+ \semo{\hypert\hmid \pi_a^\g(M)}=&\semo{\hypert\hmid M}\enspace,\\
+ \semoi{\hypert\hmid\pi_a^\g(M)}=&\semoi{\hypert\hmid M}\enspace,\\
+  \semo{\cotuple{\cotuple{\hypert_0,\hypert_1},\hypert_2}\hmid
    \gmat  M x {N_0} y {N_1}}
- =&\sem{\hypert_0\hmid M}; \\
-  \p{x}_x \leftarrow \lmat {\semi{\hypert_0\hmid \hat M}'} {x} {x} {y} {\epsilon}; &\sem{\hypert_1 \hmid N_0}; \\
-  \p{x}_y \leftarrow \lmat {\semi{\hypert_0\hmid \hat M}'} {x} {\epsilon} {y} {y}; &\sem{\hypert_2 \hmid N_1}\enspace,\\
-  \semi{\cotuple{\cotuple{\hypert_0,\hypert_1},\hypert_2}\hmid \gmat  M x {N_0} y {N_1}}
- =&\semi{\hypert_1 \hmid N_0}\cup \semi{\hypert_2 \hmid N_1}\enspace,\\
- \sem{\hypert\hmid \lambda x.M}=& \sem{\hypert\hmid M}; \p z\leftarrow
- \lambda x. \semi{\hypert\hmid\hat M}' \enspace,\\
- \sem{\cotuple{\hypert_0,\hypert_1}\hmid MN}=& \sem{\hypert_0\hmid M}; \sem{\hypert_1\hmid N}; \\&
- \p z\leftarrow \semi{\hypert_0\hmid \hat M}'\semi{\hypert_1\hmid \hat N}'\enspace,\\
- \semi{\cotuple{\hypert_0,\hypert_1}\hmid MN} =& (\semi{\hat \hypert_0 \hmid M}\cup
- \semi{\hat\hypert_1\hmid N})\hmid \{\tuple{i,\p z}\}\enspace, \\
- \sem{\hypert\hmid \lpil M} =& \sem{\hypert\hmid M}; \p z \leftarrow
- \lpil {\semi{\hypert\hmid\hat M}'}\enspace, \\
- \semi{\hypert\hmid \lpil M}=& \semi{\hat \hypert\hmid M}\hmid
+ =&\semo{\hypert_0\hmid M}; \\
+  \p{x}_x \leftarrow \lmat {\semoi{\hypert_0\hmid \hat M}'} {x} {x} {y} {\epsilon}; &\semo{\hypert_1 \hmid N_0}; \\
+  \p{x}_y \leftarrow \lmat {\semoi{\hypert_0\hmid \hat M}'} {x} {\epsilon} {y} {y}; &\semo{\hypert_2 \hmid N_1}\enspace,\\
+  \semoi{\cotuple{\cotuple{\hypert_0,\hypert_1},\hypert_2}\hmid \gmat  M x {N_0} y {N_1}}
+ =&\semoi{\hypert_1 \hmid N_0}\cup \semoi{\hypert_2 \hmid N_1}\enspace,\\
+ \semo{\hypert\hmid \lambda x.M}=& \semo{\hypert\hmid M}; \p z\leftarrow
+ \lambda x. \semoi{\hypert\hmid\hat M}' \enspace,\\
+ \semo{\cotuple{\hypert_0,\hypert_1}\hmid MN}=& \semo{\hypert_0\hmid M}; \semo{\hypert_1\hmid N}; \\&
+ \p z\leftarrow \semoi{\hypert_0\hmid \hat M}'\semoi{\hypert_1\hmid \hat N}'\enspace,\\
+ \semoi{\cotuple{\hypert_0,\hypert_1}\hmid MN} =& (\semoi{\hat \hypert_0 \hmid M}\cup
+ \semoi{\hat\hypert_1\hmid N})\hmid \{\tuple{i,\p z}\}\enspace, \\
+ \semo{\hypert\hmid \lpil M} =& \semo{\hypert\hmid M}; \p z \leftarrow
+ \lpil {\semoi{\hypert\hmid\hat M}'}\enspace, \\
+ \semoi{\hypert\hmid \lpil M}=& \semoi{\hat \hypert\hmid M}\hmid
  \{\tuple{i, \p z}\}\enspace, \\
- \sem{\hypert\hmid \lpir M} =& \sem{\hypert\hmid M}; \p z \leftarrow
- \lpir{ \semi{\hypert\hmid\hat M}' }\enspace, \\
- \semi{\hypert\hmid \lpir M}=& \semi{\hat \hypert\hmid M}\hmid
+ \semo{\hypert\hmid \lpir M} =& \semo{\hypert\hmid M}; \p z \leftarrow
+ \lpir{ \semoi{\hypert\hmid\hat M}' }\enspace, \\
+ \semoi{\hypert\hmid \lpir M}=& \semoi{\hat \hypert\hmid M}\hmid
  \{\tuple{i, \p z}\}\enspace, \\
- \sem{\hypert\hmid \linl{M}} =& \sem{\hypert\hmid M}; \p z \leftarrow
- \linl{ \semi{\hypert\hmid\hat M}'}\enspace, \\
- \semi{\hypert\hmid \linl M}=& \semi{\hat \hypert\hmid M}\hmid
+ \semo{\hypert\hmid \linl{M}} =& \semo{\hypert\hmid M}; \p z \leftarrow
+ \linl{ \semoi{\hypert\hmid\hat M}'}\enspace, \\
+ \semoi{\hypert\hmid \linl M}=& \semoi{\hat \hypert\hmid M}\hmid
  \{\tuple{i, \p z}\}\enspace, \\
- \sem{\hypert\hmid \linr M} =& \sem{\hypert\hmid M}; \p z \leftarrow
- \linr{\semi{\hypert\hmid\hat M}'}\enspace, \\
- \semi{\hypert\hmid \linr{M}}=& \semi{\hat \hypert\hmid M}\hmid
+ \semo{\hypert\hmid \linr M} =& \semo{\hypert\hmid M}; \p z \leftarrow
+ \linr{\semoi{\hypert\hmid\hat M}'}\enspace, \\
+ \semoi{\hypert\hmid \linr{M}}=& \semoi{\hat \hypert\hmid M}\hmid
  \{\tuple{i, \p z}\}\enspace.
 \end{align*} }
 When $(\tj{x_i}{[i]\iota_i})_{i\in\processes}
@@ -1177,7 +1177,7 @@ we can define a protocol using the above translation.
 We set $\mathtt i_i$ to be ${\p x}_{x_i}$, ${\p o}_i$ to be arbitrarily
 chosen fresh program variables, $L$ to be the set of locations
 occurring in the derivation, we set the family of programs to be
-$\sem{M}; ({\p o}_i\leftarrow \pi_i(\semi{\hat M}'))_{i\in\processes}$,
+$\semo{M}; ({\p o}_i\leftarrow \pi_i(\semoi{\hat M}'))_{i\in\processes}$,
 where $\pi_i$ is obtained by composing $i$~times $\pi_{\mathrm r}$ to
 $\pi_{\mathrm l}$.
 We set $g,d,t_i$ accordingly so that the program is typed.

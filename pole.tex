@@ -18,18 +18,6 @@
 
 % \maketitle
 
-\renewcommand{\vec}{\overrightarrow}
-\newcommand{\sche}{\sqsubseteq}
-
-
-\newcommand{\sequent}[2]{{#1}\tr{#2}}
-\newcommand{\aseq}[2]{\AxiomC{$\sequent{#1}{#2}$}}
-\newcommand{\useq}[2]{\UnaryInfC{$\sequent{#1}{#2}$}}
-\newcommand{\bseq}[2]{\BinaryInfC{$\sequent{#1}{#2}$}}
-\newcommand{\tseq}[2]{\TrinaryInfC{$\sequent{#1}{#2}$}}
-
-\newcommand{\limp}{\multimap}
-
 
 \section{Summary}
 %%% abstract
@@ -81,10 +69,6 @@ on top of intuitionistic logic.
 
 % 2a terms -- unchanged -- remove pi or anything
 
-\newcommand{\conc}{\parallel}
-\newcommand{\comod}[2]{\ast^{\rightarrow {#2}}_{\leftarrow{#1}}}
-\newcommand{\reader}[1]{\ast_{\leftarrow{#1}}}
-
 \subsection{Dynamics}
 We consider a programming language, which is a modification of
 Danos and Krivine's.
@@ -115,7 +99,6 @@ We write the set of terms as $\Lambda$ and stacks~$\Pi$.
 An \textit{executable}~$e$ is a multiset on $\Lambda\times\Pi$.
 
 % 2a' reduction
-\newcommand{\red}{\succ}
 A \textit{schedule}~$\sche$ is a total order on channels.
 The \textit{reduction} relation~$\red$ on executables
 is defined to be the smallest preorder
@@ -239,8 +222,6 @@ A \textit{derivation} is a tree composed of the derivation rules below:\\ \noind
 \DisplayProof
 \ruleskip
 %
-\newcommand{\comodL}{\comod c{\co c}}
-\newcommand{\comodR}{\comod{\co c}c}
 \aseq{\tj{x}{\phi\limp\psi},\G}{\tj t\theta}
 \aseq{\tj{y}{\psi\limp\phi},\D}{\tj u\theta}
 \LL{Com}
@@ -253,7 +234,17 @@ A \textit{derivation} is a tree composed of the derivation rules below:\\ \noind
 \useq{\G,\tj{y}{\psi},\tj{x}{\phi},\D}{\tj{t}{\theta}}
 \DisplayProof
 
-\fix{because of Com rule, it is affine?}
+Note that Com rule introduces weakening on the left.\\
+\AxiomC{}
+\useq{\phi\limp\phi}{\phi\limp\phi}
+\aseq{\G}{\phi}
+\bseq{\phi\limp\phi,\G}{\phi}
+\AxiomC{}
+\useq{\phi\limp\phi}{\phi\limp\phi}
+\aseq{\G}{\phi}
+\bseq{\phi\limp\phi,\G}{\phi}
+\bseq{\G,\G}{\phi}
+\DisplayProof
 
 \subsection{Specification Using Poles}
 
@@ -292,11 +283,8 @@ terms and stacks, the proof of adequacy (Prop.~\ref{c:adequacy}) does
 not go through the case for
 ($\limp$E,~\textminus), \ref{c:second}.
 
-\renewcommand{\sem}[1]{|{#1}|}
-\newcommand{\nsem}[1]{\sem{#1}^-}
-\newcommand{\sempair}[1]{\sem{(#1)}}
 For $\phi\in\form(2^E)$ and $|\cdot|^-_0\colon\pvar\rightarrow 2^E$,
-we define $\nsem{\phi}\colon \form(2^E)\rightarrow
+we define $\nsem{\phi}\colon 
 2^E$ inductively as
 \begin{align*}
  \nsem{\mathcal Z} &= \mathcal Z \\
@@ -939,7 +927,7 @@ and \ref{c:second} uses \ref{c:first} in the ($\limp$E,~\textminus).
  if $[(\rho)d  ,\pi]\red [d,a\cdot \pi_B]$ and
     $[(\sigma)f,\pi]\red [f,b\cdot \pi_A]$ hold for all $d$ and $f$,
  then
- $[(c)(\rho)\sigma,\pi],S_\epsilon$ reduces to a multiset containing an
+ $[(c)(\rho)\sigma,\pi]$ reduces to a multiset containing an
  element of
  $\{(a,\pi_A),(b,\pi_B)\}$.
 \end{proposition}
