@@ -2,12 +2,11 @@
 \usepackage{bussproofs}
 \EnableBpAbbreviations
 %\usepackage[bars]{beamerthemetree} % Beamer theme v 2.2
-\usetheme{Antibes} % Beamer theme v 3.0
+\usetheme{Darmstadt} % Beamer theme v 3.0
 \usecolortheme{lily} % Beamer color theme
 %% above from Beamer v3.0 Guide
 
 \input{macros}
-
 % macro for english japanese
 \newcommand{\ej}[2]{#1} % english
 %\newcommand{\ej}[2]{#2} % japanese
@@ -16,7 +15,8 @@
 
 \title{Concurrent Computational Interpretation of Dummett's Axiom and Prelinearity}
 \author{Yoichi Hirai}
-\institute{Univ. of Tokyo, JSPS research fellow}
+\institute{Univ. of Tokyo, JSPS research fellow, \\
+visiting Univ. of Amsterdam (until today)}
 \date{2012-08-27, Birmingham}
 \begin{document}
 
@@ -24,22 +24,19 @@
   \titlepage
  \end{frame}
 
- \begin{frame}
-  \tableofcontents[section]
- \end{frame}
-
- \section{Kripke Models}
 
 \newcommand{\NJ}{\mathbf{NJ}}
 
+ \section{G\"odel--Dummett Logic}
   \begin{frame}
+   \frametitle{Dummett's axiom}
    \begin{tabular}{|l|l|c|}
     \hline
     Name & Aximatization & frame condition\\ \hline\hline
     Intuitionistic & $\NJ$ & Preorder \\ \hline
     Classical & $\NJ + (\phi\rightarrow \psi)\lor(\psi\rightarrow \theta) $
     & Singleton \\ \hline
-    \alert{G\"odel--Dummett} & $\NJ + (\phi\rightarrow \psi)\lor(\psi\rightarrow \phi)$ &
+    {G\"odel--Dummett} & $\NJ + \alert{(\phi\rightarrow \psi)\lor(\psi\rightarrow \phi)}$ &
 	    Total Order
 	    \\ \hline
    \end{tabular}
@@ -48,6 +45,9 @@
    but why did you try to relate this to concurrent computation?
    \vfill
   \end{frame}
+
+ \section{Kripke Models}
+\frame{\tableofcontents[currentsection]}
 
   \begin{frame}
    \frametitle{Detour: Extending BHK-Interpretation with Knowledge}
@@ -60,7 +60,7 @@
 	    and a proof of $\psi$.
  \item[(H2)] A proof of $\varphi\vee\psi$ is given by presenting either a proof of
 	    $\varphi$ or a proof of $\psi$ (plus \ldots).
- \item[(H3)] A proof of $\varphi\supset\psi$ is a construction which permits us to
+ \item[(H3)] A proof of $\varphi\rightarrow\psi$ is a construction which permits us to
 	    transform any proof of $\varphi$ into a proof of $\psi$.
  \item[(H4)] Absurdity $\bot$ has no proof.
 \end{description}
@@ -92,14 +92,11 @@ Define $w \models \varphi$ for a state $w\in W$ and a formula $\varphi$:
  w\models \psi_0\mbox{ and }w\models \psi_1\mbox{ hold} \\
  w\models \psi_0\vee\psi_1 \quad & \Leftrightarrow\mbox{ either }
  w\models \psi_0\mbox{ or }w\models \psi_1\mbox{ holds} \\
- w\models \psi_0\supset\psi_1 \quad & \Leftrightarrow
+ w\models \psi_0\rightarrow\psi_1 \quad & \Leftrightarrow
  v\models \psi_0\mbox{ implies }
 	   v\models \psi_1 \mbox{ for any }v\succeq w.
 \end{align*}}
 
-   \only<2>{
-   It turns out to be IS4 + $K_p(\phi\lor\psi) \rightarrow (K_p\phi \lor K_p\psi)$.
-   }
   \end{frame}
 
  \begin{frame}
@@ -119,6 +116,17 @@ Define $w \models \varphi$ for a state $w\in W$ and a formula $\varphi$:
 \vfill
  \end{frame}
 
+ \begin{frame}
+  \frametitle{Extending Kripke Models for Intuitionistic Logic with
+   Knowledge}
+ \begin{itemize}
+  \item    IS4 + $K_p(\phi\lor\psi) \rightarrow (K_p\phi \lor K_p\psi)$\\
+	   is sound and strongly complete
+  \item finite model property
+  \item disjunction property
+ \end{itemize}
+ \end{frame}
+
 \begin{frame}
  \frametitle{Sequential Consistency of Shared Memory}
 
@@ -134,9 +142,12 @@ For two memory states, either $\preceq$ or $\succeq$ holds.
    (Hirai, LPAR-16)
 
  $\mathbf{SC} = \text{Int. {Epistemic} logic}
- + (\alert{K_\memory}\varphi\supset \alert{K_\memory}\psi)\vee
- (\alert{K_\memory}\psi\supset \alert{K_\memory}\varphi)$:\\
- \hskip 2cm Intuitionistic epistemic logic $\subsetneq \mathbf{SC} \subsetneq $ Classical logic
+ + (\alert{K_\memory}\varphi\rightarrow \alert{K_\memory}\psi)\vee
+ (\alert{K_\memory}\psi\rightarrow \alert{K_\memory}\varphi)$:\\
+ \hskip 2cm Intuitionistic epistemic logic $\subsetneq \mathbf{SC}
+ \subsetneq $ Classical logic
+ \vfill
+ (note the axiom is a restricted form of Dummett's axiom)
 
  \vfill
 A result:\\
@@ -149,7 +160,7 @@ A result:\\
  \begin{frame}
 \frametitle{An example theorem under sequential consistency} 
 
- $\vdashsc ((K_p K_m K_p I) \wedge K_q K_m K_q J) \supset 
+ $\vdashsc ((K_p K_m K_p I) \wedge K_q K_m K_q J) \rightarrow 
  ((K_q K_p I) \vee K_p K_q J)$
 
 \vskip 7mm
@@ -165,37 +176,56 @@ A result:\\
 
   \begin{frame}
    \vfill
-   If you are interested in propositinoal logics and computation,\\
-   try lambda calculi!  (or logic programming?)
+   \large
+   If you are interested in constructive logics and computation,\\
+   try lambda calculi!
    \vfill
   \end{frame}
 
   \section{Lambda Calculi}
-
+\frame{\tableofcontents[currentsection]}
   \begin{frame}
    \frametitle{I did not find $\lambda$, but cut elimination for
    hypersequents}
 
-   Avron's communication rule.
+   Hypersequent: sequence of sequents (interpreted disjunctively)
+   \vfill
 
-   \fix{add the rule}
+   Avron's communication rule.
+   \only<1>{
+   \BinaryRule
+   {$\hyper\hmid\Gamma,\D\vdash \varphi$}
+   {$\hyper\hmid\G,\Delta\vdash \psi$}
+   {com'}
+   {$\hyper\hmid\Gamma\vdash \psi\hmid\Delta\vdash \varphi$}
+   }
+
+   \only<2->{
+   \BinaryRule
+   {$\phi,\psi\vdash \phi$}
+   {$\phi,\psi\vdash \psi$}
+   {com'}
+   {$\phi\vdash \psi\hmid\psi\vdash \varphi$}
+   }
 
    \vfill
-   There were works on natural deduction, but no reductions were given.
+   \only<3->{
+   I found atural deduction [Baaz, Ciabattoni and
+   Ferm\"uller, 2001],
+   \\but no reductions.
    They did
    \[
     \text{nd} \rightarrow \text{hyperseq
    with cuts} \rightarrow \text{ hyperseq without cuts} \rightarrow
    \text{normal form nd}
    \]
+   }
    \vfill
   \end{frame}
 
  \begin{frame}
-  {
-  \frametitle{I had a strong intuition on $(O\rightarrow
+  \frametitle{I had an intuition on $(O\rightarrow
   A)\lor (A\rightarrow O)$}
-  }
 
   { Case 1: The car above is faster }
   \only<1>{\includegraphics[height=0.8\textheight]{d1.eps}}
@@ -207,10 +237,8 @@ A result:\\
  \end{frame}
 
  \begin{frame}
-  {
-  \frametitle{I had a strong intuition on $(O\rightarrow
+  \frametitle{I had an intuition on $(O\rightarrow
   A)\lor (A\rightarrow O)$}
-  }
 
   { Case 2: The car below is faster}
   \only<1>{\includegraphics[height=0.8\textheight]{e1.eps}}
@@ -224,7 +252,7 @@ A result:\\
 
  \begin{frame}
   \ej{
-  \frametitle{I had a strong intuition on $(O\rightarrow
+  \frametitle{I had an intuition on $(O\rightarrow
   A)\lor (A\rightarrow O)$}
   }
   {
@@ -244,35 +272,220 @@ A result:\\
  \end{frame}
 
  \begin{frame}
+  \ej
+  {
+  \frametitle{
+  Synchronization is not necessary to implement $(O\rightarrow  A)\lor (A\rightarrow O)$
+  }
+  }
+  {
   \frametitle{ダメット公理$(O\rightarrow  A)\lor (A\rightarrow O)$
   の実装に\\待ち合わせは不要}
+  }
 
   \includegraphics[height=0.8\textheight]{d.eps}
  \end{frame}
 
   \begin{frame}
    \frametitle{Implementation}
+
+\begin{enumerate}
+ \item
+      \structure{
+      \ej
+      {Adding thread labels to types}
+      {論理式=型にスレッドを表す様相を追加}
+      }\\
+      $\alert{[0]}(O\rightarrow
+      A)\lor \alert{[1]}(A\rightarrow O)$
+       \hfill (distributes all connectives)
+ \item \structure{
+       \ej
+       {Use a hypersequent-like formulation}
+       {従来の証明=プログラムの列を扱う}
+       }
+       \\
+       \ej
+       {
+       $
+       \G_1 \tr \tj{t_1}{\phi_1} \alert{\hmid}
+       \G_2 \tr \tj{t_2}{\phi_2} \alert{\hmid}
+       \G_3 \tr \tj{t_3}{\phi_3}
+       $
+       }
+       {
+       $\text{前提1} \tr \text{結論1} \alert{\hmid} \text{前提
+       2} \tr \text{結論2} \alert{\hmid} \text{前提3} \tr \text{結
+       論3}
+       $
+       } \\
+       \ej{meaning: at least one of $t_1, t_2$ and $t_3$ succeed}
+       {1〜3のいずれかが成功するという意味}
+ \item
+      \structure{\ej{Adding an inference rule and terms}{推論規則=項を追
+      加}} (full rules later)\\
+      \ej{(Avron's communication rule)}{(Avron 1991のcom'規則)}
+  \AxiomC{$
+  \tj{x}{[0]O},
+  \tj{y}{[1]A}
+  \tr
+  \tj{x}{[0]O}
+  $}
+  \AxiomC{$
+  \tj{x}{[0]O},
+  \tj{y}{[1]A}
+  \tr
+  \tj{y}{[1]A}
+  $}
+  \BinaryInfC{$
+  \tj{x}{[0]O}
+  \tr
+  \tj{\alert{\ltor{}{\ell}{}{x}}}{[0]A}
+  \hmid
+  \tj{y}{[1]A}\tr
+  \tj{\alert{\rtol{}{\ell}{}{y}}}{[1]O}
+  $}
+  \DisplayProof
+ \item \structure{
+       \ej
+       {Adding rules for shared memory write/read (details later)}
+       {共有メモリへの読み書き簡約を追加}
+       }
+\end{enumerate}
   \end{frame}
 
+ \newcommand{\m}[1]{{#1}^+}
+
+\begin{frame}
+ \frametitle{Hypersequent-style natural deduction}
+ \small
+  \textbf{External Rules}
+   \vskip 2mm
+%%communication
+   \BinaryRule
+   {$\hyper\hmid\Gamma,\Delta\vdash[i]\varphi$}
+   {$\hyper\hmid\Gamma,\Delta\vdash[j]\psi$}
+   {com'}
+   {$\hyper\hmid\Gamma\vdash[i]\psi\hmid\Delta\vdash[j]\varphi$}
+  \hfill
+%% external structural
+   EW, EC, EE
+ \vskip 2mm
+\textbf{Inner Rules for Labelled Formulas}
+\vskip 2mm
+%% structural
+%% local conj intro
+  \BinaryRule
+   {$\hyper\hmid\Gamma\vdash \m\varphi$}
+   {$\hyper\hmid\Gamma\vdash \m\psi$}
+   {$\wedge\intro$}
+   {$\hyper\hmid\Gamma\vdash \m\varphi\wedge\m\psi$}
+   \hfill
+   IE, IC, IW,
+   {$\wedge\elim$},
+   {$\vee\intro$},
+   {$\vee\elim$},
+   {$\mathord\rightarrow\intro$},
+   {$\mathord\rightarrow\elim$}
+\vskip 2mm
+\textbf{Inner Rules Inside Labels}
+\vskip 2mm
+%% axiom
+  \UnaryRule{}{$[i]$Ax}
+   {$[i]\varphi,\Gamma\vdash [i]\varphi$}
+   \hfill
+%% bot elim
+ \UnaryRule{$\hyper\hmid\Gamma\vdash[i]\bot$}
+   {$[i]\bot\elim$}
+   {$\hyper\hmid\Gamma\vdash[i]\varphi$}
+   \vskip 2mm
+%% local imp intro
+  \UnaryRule{$\hyper\hmid[i]\varphi,\Gamma\vdash [i]\psi$}
+  {$[i]\rightarrow\intro$}
+  {$\hyper\hmid\Gamma\vdash [i](\varphi\rightarrow \psi)$}
+  \hfill
+  {$[i]\rightarrow\elim$},
+   {$[i]\wedge\intro$},
+   {$[i]\wedge\elim$},
+   {$[i]\vee\intro$},
+   {$[i]\vee\elim$}
+\end{frame}
+
+ \begin{frame}
+  \frametitle{Reductions involving shared memory}
+
+\structure{writing}
+ \begin{itemize}
+  \item $\conf{}{[l\mapsto\alert\epsilon]}{\rtol i l \Gamma {\alert{M}}}
+	\wreduce
+	\conf{}{[l\mapsto \alert{M}]}{\rtol i l \Gamma M}
+	$\enspace,
+ \end{itemize}
+
+\structure{reading}
+  \begin{itemize}
+   \item  $\conf{[l\mapsto \alert{N}]}{[l\mapsto M']}{\rtol i l\Gamma M}\rreduce
+	  \conf{[l\mapsto {N}]}{[l\mapsto M']}{\alert{N}}$
+   \item  $\conf{[l\mapsto \alert{\epsilon}]}
+	  {[l\mapsto M']}{\rtol i l\Gamma M}\rreduce
+	  \conf{[l\mapsto \epsilon]}{[l\mapsto M']}{\alert{\abort}}$
+  \end{itemize}
+  \vfill
+ \end{frame}
+
   \begin{frame}
-   \frametitle{Results}
+   \frametitle{Properties}
+
+   \structure{Reduction is Nondeterministic}\\
+   because we can implement the oranges-and-apples example.
+
+   \vfill
+   \structure{Other Properties} [Hirai, FLOPS2012]
+  \begin{enumerate}
+   \item   \ej{A task (in distributed computation) is}{分散計算のタスクは}
+  \ej{waitfreely solvable}{waitfree(待ち合わせ無し)に解ける}
+ \ej{iff}
+ {ときに限って}
+  \ej{solvable by a typed \lgd term}
+     {ゲーデル・ダメット論理の\\
+      型付きラムダ計算で解ける}
+   \item Strong normalization (by simulation)
+   \item Typed term never reduces to $\abort$ (by schedule oracle).
+  \end{enumerate}
   \end{frame}
+
 
   \section{Parametricity}
-
+\frame{\tableofcontents[currentsection]}
   \begin{frame}
-   \frametitle{Danos and Krivine}
+   \frametitle{Danos and Krivine: Disjunctive tautologies as synchronisation schemes, 2000}
 
-   Similar interests.
+   (Tadeusz Litak told me about this paper thus this talk)
+   \vfill
 
-   Possibly multiple components in executables.
+   \structure{Common Features}
+   \begin{itemize}
+    \item Interpreting logical axioms as specifying temporal properties
+	  of computation
+    \item Possibly multiple components in executables
+   \end{itemize}
 
-   No communication among them.  Only\\
-   (dist)
+   \vfill
+   \structure{Difference}
+   \begin{itemize}
+    \item No communication among different components.  Only
+	     \[
+	     \text{(dist)}\quad [(t\conc u),\pi]  \red [(t,\pi)\conc (u,\pi)]
+	     \]
+    \item Synchronization among different subterms.
+    \item Classical realizability.
+   \end{itemize}
+
+   \vfill
   \end{frame}
 
   \begin{frame}
-   \frametitle{A Second Order Formulation}
+   \frametitle{A Second Order Affine Logic with Perlinearity}
    \aseq{\xphi,\G}{\tj t\psi}
    \LL{$\limp$I}
    \useq{\G}{\tj{\lambda x.t}{\phi\limp\psi}}
@@ -316,61 +529,60 @@ A result:\\
    \aseq{\tj{y}{\psi\limp\phi},\D}{\tj u\theta}
    \LL{Com}
    \bseq{\G,\D}{\tj{(t[\comodL/x]\conc u[\comodR/y])}{\theta}}
-   \DisplayProof
+   \DisplayProof\hfill
+   and Exchange
    \ruleskip
 
-   Note that Com rule introduces weakening on the left.\\
-   \AxiomC{}
-   \useq{\phi\limp\phi}{\phi\limp\phi}
-   \aseq{\G}{\phi}
-   \bseq{\phi\limp\phi,\G}{\phi}
-   \AxiomC{}
-   \useq{\phi\limp\phi}{\phi\limp\phi}
-   \aseq{\G}{\phi}
-   \bseq{\phi\limp\phi,\G}{\phi}
-   \bseq{\G,\G}{\phi}
-   \DisplayProof
-
-   Note the com rule introduces left weakening.
+   Com introduces weakening on the left: wasting oranges or apples.\\
   \end{frame}
 
   \begin{frame}
    \frametitle{An Easier Operational Semantics without Stores}
+   Reduction on multisets of term-stack pairs $(t,\pi)$.
    \begin{description}
+    \only<1->{
     \item[(cong)] if
 	 $e_0         \red e_1$
 	 then
-	 $(e_0 \conc e) \red (e_1\conc e)$
-    \item[(push)]
+	 $[e_0 \conc e] \red [e_1\conc e]$
+    \item[(dist)]
+	 $[(t\conc u),\pi]  \red [t,\pi\conc u,\pi]$ }
+	 \only<2->{
+    \item[(push)] 
 	 $[(t)u,\pi]      \red [t,u\cdot\pi]$
     \item[(store)]
 	 $[\lambda x.t,u\cdot\pi]
 	 \red
-	 [t[\ast_u/x],      \pi]$
+	 [t[\ast_u/x],      \pi]$ 
     \item[(load)]
-	 $[\ast_u,\pi]\red [u,\pi]$
-    \item[(dist)]
-	 $[(t\conc u),\pi]  \red [t,\pi\conc u,\pi]$
-    \item[(ask)]
-	 $[\mat t x u y v,\pi]\red [t,\mats x u \pi y v \pi]$
+	 $[\ast_u,\pi]\red [u,\pi]$} \only<3>{
+    \item[(ask)]{
+	 $[\mat t x u y v,\quad \alert{\pi}]\red
+	 [t,\quad \mats x u {\alert{\pi}} y v {\alert{\pi}}]$}
     \item[(ansL)]
 	 $[\inl{v}, \mats xt\pi yu\sigma] \red [t[v/x],\pi] $
     \item[(ansR)]
-	 $[\inr{w}, \mats xt\pi yu\sigma] \red [u[w/y],\sigma] $
+	 $[\inr{w}, \mats xt\pi yu\sigma] \red [u[w/y],\sigma] $}
+	 \only<4-> {
     \item[(com0)]
-	 $[\comod c{\co c}, t\cdot\pi\conc \comod{\co c}c,
+	 $[\comod c{d}, t\cdot\pi\conc \comod{d}c,
 	 u\cdot\sigma] \red
-	 [u,\pi]$\enspace(if $\co c\sche c$ but $c\not\sche \co c$)
+	 [u,\pi]$\enspace(if $d\sche c$ but $c\not\sche d$)
     \item[(com1)]
-	 $[\comod c{\co c}, t\cdot\pi\conc \comod{\co c}c,
+	 $[\comod c{d}, t\cdot\pi\conc \comod{d}c,
 	 u\cdot\sigma] \red
-	 [t,\sigma]$\enspace(if $c\sche \co c$ but $\co c\not\sche c$)
+	 [t,\sigma]$\enspace(if $c\sche d$ but $d\not\sche c$)
     \item[(com2)]
-	 $[\comod c{\co c}, t\cdot\pi\conc \comod{\co c}c,
+	 $[\comod c{d}, t\cdot\pi\conc \comod{d}c,
 	 u\cdot\sigma] \red
-	 [u,\pi\conc t,\sigma]$\enspace(if $c\sche \co c$ and $\co c\sche
-	 c$)\enspace.
+	 [u,\pi\conc t,\sigma]$\enspace\\
+	 (if $c\sche d$ and $d\sche
+	 c$)\enspace}
    \end{description}
+   \only<4>{
+   The operational semantics depends on a total order $\sche$ on
+   channels.
+   }
   \end{frame}
 
   \begin{frame}
@@ -378,18 +590,18 @@ A result:\\
    \begin{proposition}
     \label{prop:spec}
     Let
-    $\sequent{}{}{\tj c
+    $\sequent{}{}{\tj g
     {\forall X\forall A\forall B
     [((A\limp B)\limp X)
     \limp((B\limp A)\limp X)
     \limp X]}}$
     be
     derivable;
-    $\rho,\sigma, r$ terms and $\pi, \pi_A,
+    $\rho,\sigma, a,b$ terms and $\pi, \pi_A,
     \pi_B$ stacks. \\
     Given $[(\rho)d  ,\pi]\red [d,a\cdot \pi_B]$ and
     $[(\sigma)f,\pi]\red [f,b\cdot \pi_A]$ for all $d, f$,\\
-    $[(c)(\rho)\sigma,\pi]$ reduces to a multiset containing an
+    $[(g)(\rho)\sigma,\pi]$ reduces to a multiset containing an
     element of
     $\{(a,\pi_A),(b,\pi_B)\}$.
    \end{proposition}
@@ -440,13 +652,30 @@ A result:\\
    \structure{Proof attempt.}
    By induction on \#steps of derivations.
 
-   Com gets stuck.
-   \fix{how}
+   Com case gets stuck:\\
+   \aseq{\tj{x}{\phi\limp\psi},\G}{\tj t\theta}
+   \aseq{\tj{y}{\psi\limp\phi},\D}{\tj u\theta}
+   \LL{Com}
+   \bseq{\G,\D}{\tj{(t[\comodL/x]\conc u[\comodR/y])}{\theta}}
+   \DisplayProof
+
+   \vfill
+
+   \begin{itemize}
+    \item    for the induction hypotheses,
+   we have to substitute $x$ and $y$ with $\sem{\phi\limp\psi}$ and
+	     $\sem{\psi\limp\phi}$
+    \item instead we have a pair $(\comodL, \comodR)$
+   \end{itemize}
+
+   \vfill
+
+
   \end{frame}
 
   \begin{frame}
    \frametitle{Adequacy on Two Derivations}
-   \begin{proposition}[Adequacy]
+   \begin{proposition}[?]
     Let these sequents be derivable:
     $  \sequent{\G}{\tj{t}{\phi}} $
     and
@@ -463,22 +692,23 @@ A result:\\
      \item \label{prop}
 	   when $\G$ and $\D$ are respectively
 	   equal to $\tj x\theta, \hat\G$ and $\tj y\tau, \hat\D$ up to exchange,
-	   the following pair is in $\sempair{\phi,\psi}$:
+	   the following pair is in $\alert{\sempair{\phi,\psi}}$:
 	   \[\left(
 	   t[v/x][\vec g/\hat \G],\quad
 	   u[w/y][\vec d/\hat \D]
 	   \right)
 	   \]
 	   for any
-	   $(v,w)\in\sempair{\theta,\tau}$,
+	   $(v,w)\in\alert{\sempair{\theta,\tau}}$,
 	   $\vec g\in\sem{\hat\G}$ and
 	   $\vec d\in\sem{\hat\D}$.
     \end{enumerate}
-    where $(v,w)\in \sempair{\phi,\psi}\Longleftrightarrow v,\pi_\phi\conc
+    where $(v,w)\in \alert{\sempair{\phi,\psi}}\Longleftrightarrow v,\pi_\phi\conc
     w,\pi_\psi \in \bbot$
    \end{proposition}
+   \structure{Proof attempt.}
    By induction on the sum of \#steps of
-   derivations, \ldots\\
+   derivations, \\
    the $\limp$E case gets stuck for \ref{prop}.
   \end{frame}
 
@@ -518,11 +748,11 @@ A result:\\
   \end{frame}
 
   \begin{frame}
-   An \textit{environment} $(t,\pi)\in E = \Lambda\times\Pi$\\
+   An \alert{\textit{environment}} is a pair of a stack and an executables  $(\pi,\alert{e})$\\
    For a set~$\mathcal Z$ of environments, $\mathcal Z\rightarrow\bbot$ denotes
-   the set of programs $(t,e)$ such that
-   for any environment $(\pi,e')\in \mathcal Z$,
-   the executable $t,\pi\conc e \conc e'$ is in $\bbot$.
+   the set of programs $(t,\alert{e})$ such that
+   for any environment $(\pi,\alert{e'})\in \mathcal Z$,
+   the executable $t,\pi\conc \alert{e \conc e'}$ is in $\bbot$.
 
    For $\phi\in\form(2^E)$ and $|\cdot|^-_0\colon\pvar\rightarrow 2^E$,
    we define $\nsem{\phi}\colon
@@ -531,12 +761,15 @@ A result:\\
     \nsem{\mathcal Z} &= \mathcal Z \\
     \nsem{X}&= |X|_0^- \\
     \nsem{\phi\limp\psi}&=
-    \{(t\cdot\pi, e_0\conc e_1)\mid
-    (t,e_0)\in\nsem\phi\rightarrow\bbot \text{ and }(\pi,e_1)\in\nsem\psi\}\\
+    \{(t\cdot\pi, \alert{e_0}\conc \alert{e_1})\mid
+    (t,\alert{e_0})\in\nsem\phi\rightarrow\bbot \text{ and }(\pi,\alert{e_1})\in\nsem\psi\}\\
     \nsem{\phi\oplus\psi}=& \{(\mats x{t}{\pi}y{u}{\sigma}, f)\mid\\ &
-    t[v/x],\pi\conc f\conc f'\in\bbot \text{ for all } (v,f')\in\nsem{\phi}\rightarrow\bbot\text{
+    t[v/x],\pi\conc \alert{f}\conc \alert{f'}\in\bbot
+    \text{ for all } (v,\alert{f'})\in\nsem{\phi}\rightarrow\bbot\text{
     and }\\ &
-    u[w/y],\sigma\conc f\conc f'\in\bbot \text{ for all } (w,f')\in\nsem{\psi}\rightarrow\bbot\}
+    u[w/y],\sigma\conc \alert{f}\conc \alert{f'}\in\bbot \text{ for all
+    }
+    (w,\alert{f'})\in\nsem{\psi}\rightarrow\bbot\}
     \\
     \nsem{\forall X\phi}=&
     \bigcup_{\mathcal Z\in 2^\Pi} \nsem{\phi[\mathcal Z/X]}\enspace.
@@ -547,8 +780,10 @@ A result:\\
   \begin{frame}
    \frametitle{Todo}
    \begin{itemize}
-    \item Add exponentials or intuitionistic implication.
-    \item Try the technique of communication encapsulation $\sempair{\phi,\psi}$ on process calculi.
+    \item relate this to the operational semantics with the stores
+    \item do something about $(\phi\limp\psi)\oplus (\psi\limp\theta)$
+    \item add intuitionistic implication (by exponentials or anyhow)
+    \item try the technique of communication encapsulation $\sempair{\phi,\psi}$ on process calculi.
    \end{itemize}
   \end{frame}
 

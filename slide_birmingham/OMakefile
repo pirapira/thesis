@@ -26,8 +26,8 @@ DOC = hirai-midland
 LaTeXDocument($(DOC), $(DOC))
 
 .DEFAULT: $(DOC).pdf
-        cp ./$(DOC).pdf ~/Dropbox/hirai-midland/$(DOC).pdf
-	cp ./*.tex ~/Dropbox/hirai-midland/
+        #cp ./$(DOC).pdf ~/Dropbox/hirai-midland/$(DOC).pdf
+	#cp ./*.tex ~/Dropbox/hirai-midland/
 
 clean:
 	rm -f $(DOC).dvi $(DOC).pdf $(DOC).aux $(DOC).bbl
