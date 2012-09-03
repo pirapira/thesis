@@ -49,9 +49,11 @@ exchange information, the faster process can pass information to the
 slower one, but not always vice versa because the slower process might
 start after the faster one finishes.
 So, the computation is nondeterministic.
+\fix{add history of waitfree}
 The contribution of this paper is capturing
 this nondeterminism using the nondeterministic $\lambda$-calculus for
-G\"odel--Dummett logic: in Sect.~\ref{comparison}, we show that the
+G\"odel--Dummett logic.  \fix{herlihyのコの字型の例}
+In Sect.~\ref{comparison}, we show that the
 $\lambda$-terms in the calculus can solve a typed input-output
 problems if and only if it is waitfreely solvable.
 
@@ -61,7 +63,7 @@ problems if and only if it is waitfreely solvable.
 We first present a proof system for G\"odel--Dummet logic.
 Then we turn the proof system into typing rules for $\lambda$-terms
 of~\lgd, give a set of reductions and prove strong-normalization and
-non-abortfullness.
+non-abortfullness.  \fix{hyperについてのべる}
 
 \subsection{Logic}
 
@@ -103,7 +105,7 @@ we omit all the modalities, these rules characterize
 G\"odel--Dummett logic.
 However, the modalities have at least some sense: while
 $([0]\varphi\supset[0]\psi)\vee([1]\psi\supset[1]\varphi)$ is provable,
-$([0]\varphi\supset[1]\psi)\vee([0]\psi\supset[1]\varphi)$ is not.
+$([0]\varphi\supset[1]\psi)\vee([0]\psi\supset[1]\varphi)$ is not (Remark~\fix{add}).
 A semantics will be given in Sect.~\ref{comparison}.
 
 \begin{figure}
@@ -252,7 +254,7 @@ A semantics will be given in Sect.~\ref{comparison}.
  $\hyper^+$ stands for a nonempty hypersequent.
  $\Gamma$ and $\Delta$ stand for possibly empty contexts.
  The most important com' rule is based on a rule by
- Avron~\cite{avron96}.
+ Avron~\cite{avron96}.  \fix{explain inner local and inner global}
  }
 \label{fig:logic}
 \end{figure}
@@ -293,7 +295,8 @@ All variable occurrences (including those in $\Gamma$)
 except the first clause are
 binding.
 The constructs with a~$\g$ represent the global rules and the
-constructs without a~$\g$ represent the local rules.
+constructs without a~$\g$ represent the local rules. \fix{explain global
+and local}.
 
 We extend a \textit{sequent}
 to $\Gamma\tr \tj M{\m \varphi}$, where $\Gamma$ is
@@ -308,6 +311,7 @@ A \textit{hypersequent} is a finite sequence of sequents (called
 where the same
 variable has the same type even if it appears in different components.
 The typing rules for the terms are given in Fig.~\ref{termassign}.
+\fix{give example}
 
 \begin{figure}[p]
  \small
@@ -490,6 +494,7 @@ To complete the definition of \lgd,
  require all instances
  of $\rightsquigarrow_\spadesuit$ to avoid free variable captures.
  Below, $\square$ and $\blacksquare$ match $\g$ or nothing.
+ \fix{example for square and blacksquare}
 
 \begin{definition}[Basic Reduction]
  The basic reduction $\breduce$ is the smallest congruence containing
@@ -517,7 +522,7 @@ a store, it does not abort but the store is not updated.
 The formal definition follows.
 \begin{definition}[Write Reduction]
  The write reduction $\wreduce$ is the smallest congruence
- containing the followings where $M$ is a local term:
+ containing the followings where $M$ is a local term \fix{defined?}:
  \begin{itemize}
   \item $\conf{}{[l\mapsto\epsilon]}{\rtol i l \Gamma M}
 	\wreduce
@@ -1397,6 +1402,8 @@ hints broader correspondence between
 proof theory and distributed computation.
 
 \section{About the modality}
+
+compare with the intuitionistic epistemic logic
 
 consider the Kripke model.
 

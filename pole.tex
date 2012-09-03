@@ -107,7 +107,7 @@ that satisfies:
  \item[(cong)] if
       $e_0         \red e_1$
       then
-      $(e_0 \conc e) \red (e_1\conc e)$\enspace;
+      $[e_0 \conc e] \red [e_1\conc e]$\enspace;
  \item[(push)]
 	    $[(t)u,\pi]      \red [t,u\cdot\pi]$      \enspace;
  \item[(store)]
@@ -915,19 +915,19 @@ and \ref{c:second} uses \ref{c:first} in the ($\limp$E,~\textminus).
 \begin{proposition}
  \label{prop:spec}
  Let
- $\sequent{}{}{\tj c
+ $\sequent{}{}{\tj g
  {\forall X\forall A\forall B
  [((A\limp B)\limp X)
   \limp((B\limp A)\limp X)
   \limp X]}}$
  be
  derivable.
- For all terms $\rho,\sigma, r$ and for all stacks $\pi, \pi_A$ and
+ For all terms $\rho,\sigma, a,b$ and for all stacks $\pi, \pi_A$ and
  $\pi_B$,
  if $[(\rho)d  ,\pi]\red [d,a\cdot \pi_B]$ and
     $[(\sigma)f,\pi]\red [f,b\cdot \pi_A]$ hold for all $d$ and $f$,
  then
- $[(c)(\rho)\sigma,\pi]$ reduces to a multiset containing an
+ $[(g)(\rho)\sigma,\pi]$ reduces to a multiset containing an
  element of
  $\{(a,\pi_A),(b,\pi_B)\}$.
 \end{proposition}
