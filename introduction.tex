@@ -1,5 +1,15 @@
 \chapter{Introduction}
 
+\section{General Description of this Thesis}
+
+% \section{An Introduction for Computer Scientists}
+
+% \section{An Introduction for Proof Theorists}
+
+% \section{An Introduction for Functional Programmers}
+
+% \section{An Introduction for Philosophers}
+
 At the core of computer science lies the interplay of static formalism
 and dynamic behaviour.  We can find examples in typed lambda calculi,
 where static formalism of type derivations interacts with dynamic
@@ -7,25 +17,29 @@ behaviour of lambda terms.
 Type derivations of static objects associtating lambda terms to types.
 The reduction on terms gives dynamics, defining which term reduce
 to which.  Static type derivations can guarantee dynamic properties of
-terms such as strong normalization \fix{cite}, deadlock freedom
+programs such as strong normalization \fix{cite}, deadlock freedom
 \fix{cite}
 and so on.
 
 Dynamic behaviour involves time.
 One simple notion of time is that of totally-ordered events where
-one event happens before the other or the other before one.
-This sentence is syntactically similar to the Dummett axiom that states
+one event happens before the other or the other before one \fix{cite something}.
+This sentence is syntactically similar to Dummett's axiom that states
 one proposition implies the other or the other implies one.
-We investigate whether this syntactic similarity is reflected semantically.
+We investigate whether this syntactic similarity is reflected
+in the dynamic semantics of logics: namely, the lambda calculi.
 
-\subsection{\fix{subsection}}
+\fix{describe lambda}
 
-The Curry--Howard isomorphism isused to give computational content
+Our investigation is guided by the Curry--Howard isomorphism.
+We look at proofs as programs and propositions as types.
+The Curry--Howard isomorphism is used to give computational content
 to mathematical proofs, and on the other hand to give mathematical
 guarantees to computer programs.
 
 
-There have been several attempts.
+There have been several attempts of finding computational meaning of
+Dummett's axiom.  \fix{name examples}
 The best thing we can hope is that the computational
 interpretation coincides with something we know already.
 That is the case indeed.
@@ -33,17 +47,14 @@ That is the case indeed.
 We extended the Curry--Howard correspondence to G\"odel--Dummett logic.
 The Curry--Howard correspondence is \fix{add}
 
-G\"odel--Dummett logic is an intermediate logic \fix{cite} between
+G\"odel--Dummett logic is an intermediate logic~\citep{umezawa} between
 classical logic and intuitionistic logic.  Every theorem in
 intuitionistic logic is a theorem in G\"odel--Dummet logic and every
 theorem in G\"odel--Dummett logic is a theorem in classical logic.
-The inclusion is strict.  The law of excluded middle
+These inclusions are strict.  The law of excluded middle
 $\varphi\vee(\varphi\supset \bot)$ is not a theorem in G\"odel--Dummett
 logic and $(\varphi\supset\psi)\vee(\psi\supset\varphi)$ is not a
 theorem in intuitionistic logic.
-
-Without modalities.
-
 
 In terms of Kripke semantics, the axiom is sound and complete for
 requiring that the models are linearly ordered.
@@ -53,11 +64,18 @@ usage of ``truth values'' correct? }
 In terms of computation, what is it?
 
 
-who said logic is about temporality.
-Waitfreedom is a kind of temporality appeared in computer science.
-This research shows that the proof theory is not only about abstract
-notions of temporality, but also about concrete notions of temporality
-appearing in computer science.
+Our first contribution is identifying the computational ability of the
+G\"odel--Dummett logic with waitfreedom.
+
+Our second contribution is finding a way to develop lambda calculi using
+the hypoersequent calculus.
+
+Our third contribution is related to the second:
+finding a method for implementing hypersequent-based lambda calculi in a
+functional programming language Haskell on the Glasgow Haskell Compiler.
+
+Our fourth contribution is developing a parametricity argument for
+concurrent processes.
 
 \section{Curry--Howard Correspondence for Different Logics}
 
@@ -68,6 +86,8 @@ Pfenning
 Davies--Pfenning S4 A Modal Analysis of Staged Computation
 
 Curien
+
+Murphey 7
 
 Hypersequent
 
@@ -82,3 +102,10 @@ Hypersequents were born to solve proof theoretical difficulties, but we
 apply hypersequents to solve distributed computational difficulties.
 
 \section{Properties}
+
+
+\section{Preliminaries}
+
+We use set-theoretic concepts such as sets, relations and functions.
+The largest cardinality in this thesis is that of the
+powerset of the powerset of the set of natural numbers.

@@ -1,0 +1,72 @@
+\begin{eabstract}
+ We give a computational interpretation of G\"odel--Dummett logic, based
+ on the Curry--Howard isomorphism.  This leads to characterization
+ of waitfree computation, which is a class of distributed
+ computation.  Although both G\"odel--Dummett logic and waitfree computation are
+ important players in their respective areas, their connection has not
+ been known.  G\"odel--Dummett logic is an intermediate logic---a
+ logic between classical and intuitionistic logics.
+ Waitfree computation is a class of distributed computation where no process can
+ wait for another.  Our contribution is defining a typed lambda calculus
+ for G\"odel--Dummett logic, which can solve
+ exactly the same problems solvable by waitfree computation.
+ This is the first result characterizing shared memory consistency using
+ a type system, marking an important step in
+ an emerging area of research to be called ``implicit shared
+ memory consistency.''
+
+ In his Master's Thesis, the author sensed some semantic connection
+ between G\"odel--Dummett logic and a degree of shared memory consistency
+ called sequential consistency.
+ However, we are heavily indebted to Arnon
+ Avron's paper in 1991.  Our typed lambda calculus is based on Avron's
+ hypersequents.
+ Our problem comes from Avron's question
+ ``it seems to us extremely important to determine the exact
+ computational content of them [the logics with cut-elimination
+ using hypersequents] and to develop corresponding $\lambda$-calculi.''
+ To this twenty-year-old question, we give an answer for a typical
+ example of G\"odel--Dummett logic.
+ We show that the computational content of G\"odel--Dummett logic is
+ waitfree computation.
+
+ Technically, this research studies a typed lambda calculus.
+ We show three theorems:
+ no typed term can reduce infinitely often;
+ no typed term can reduce to a term representing failure;
+ and a typed term can solve a problem if and only if a waitfree protocol
+ can solve the problem.
+\end{eabstract}
+
+\begin{jabstract}
+ カリー・ハワード対応に基づいた，ゲーデル・ダメット論理の計算的解釈を与え
+ る．すると，分散計算の問題クラスであるwaitfree計算を特徴づけられる．
+ ゲーデル・ダメット論理もwaitfree計算も，それぞれの分野で重要であるのに，
+ これらの関連は，これまで知られていなかった．ゲーデル・ダメット論理は中
+ 間論理(直観主義論理と古典論理の間の論理)の一つである．Waitfree計算は，プロセスが他の
+ プロセスを待てないという制限で決まる，分散計算のクラスである．
+ 本研究の貢献は，ゲーデル・ダメット論理の型付きラムダ計算を定義して，
+ ちょうどwaitfree計算で解ける問題だけを解けると示したことである．
+ 本研究は，
+ 共有メモリの一貫性を，型システムで特徴づけた初めての研究であって，
+ 興りつつある「非明示メモリ一貫性」と呼ぶべき研究分野の重要な一歩である．
+
+ 著者は修士論文で，ゲーデル・ダメット論理と共有メモリ一貫性の一種である
+ 逐次一貫性との意味論的な関連に気づいていた．
+ しかし，本研究の手法も問題も
+ Arnon Avronの1991年の論文によるところが大きい．
+ まず，その論文でAvronが提案したハイパーシーケントが，
+ 本研究の型付きラムダ計算の基礎である．
+ さらに，その論文でAvronが提起した問題
+ 「ハイパーシーケントでカット除去できる論理の計算的意味はなにか」
+ が，本研究で探求する問題である．
+ この二十年来の問題の典型例であるゲーデル・ダメット論理の場合に，解答を
+ 与える．ゲーデル・ダメット論理の計算的意味は，waitfree計算であると示す．
+
+ 技術的に，本研究は型付きラムダ計算の研究である．
+ 示した定理は，
+ 型が付いた項の簡約が無限に続かないことと，
+ 型が付いた項の簡約が失敗を表す項で終わらないことと，
+ 型が付いた項で解ける問題がwaitfreeに解ける問題と
+ 一致することの三つである．
+\end{jabstract}

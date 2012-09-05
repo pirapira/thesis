@@ -11,17 +11,12 @@ setspace, float, amsthm}
 \DefineVerbatimEnvironment{spec}{Verbatim}{fontsize=\small}
 \newcommand{\ignore}[1]{}
 
-
-%%% from master thesis
-
 \usepackage{rotating}
 
 \usepackage{bussproofs,stmaryrd, amssymb, amsmath, amsthm, showlabels}
 \EnableBpAbbreviations
 \usepackage{graphicx}	% required for `\includegraphics' (yatex added)
 \usepackage[numbers,sort&compress]{natbib}
-
-%%% end from master thesis
 
 %%% from haskell symposium submitted paper
 \usepackage{graphicx}
@@ -43,58 +38,27 @@ setspace, float, amsthm}
 
 \begin{document}
 
-\begin{eabstract}
- We give a computational interpretation of G\"odel--Dummett logic, based
- on the Curry--Howard isomorphism.  This leads to characterization
- of waitfreedom, which is a class of problems in distributed
- computation.  Although both G\"odel--Dummett logic and waitfreedom are
- important players in their respective areas, their connection has not
- been known.  G\"odel--Dummett logic is a typical intermediate logic---a
- logic between classical and intuitionistic logics.
- Waitfreedom is a class of distributed computation where no process can
- wait for another.  Both concepts has attracted attention since 1990's.
-\end{eabstract}
-
-\begin{jabstract}
- カリー・ハワード対応に基づき、ゲーデル・ダメット論理の計算的解釈を与え
- る。すると、分散計算の問題クラスであるwaitfree計算を特徴づけられる。
- ゲーデル・ダメット論理もwaitfree計算も、それぞれの分野で重要であるのに、
- これらの関連は、これまで知られていなかった。
-\end{jabstract}
+\input{abstract.tex}
 
 \maketitle
 
-\begin{acknowledge}
-The work about Hyper $\lambda$ calculus is encouraged by feedbacks from
-ACAN (Algebraic and
-Coalgebraic
-Approaches to
-Non-Classical Logics Workshop) and OPLSS'11 participants,
-supported by Grant-in-Aid for JSPS Fellows 23-6978,
-and partly prepared during the author's stay in
-ILPS, the University of Amsterdam.
-
-
-Many of the contents also appear in the author's Master's Thesis \fix{cite}.
-\end{acknowledge}
+\input{acknowledge.tex}
 
 \frontmatter
 \tableofcontents
 
 \listoffigures
-\listoftables
+% XXX because empty %\listoftables
 
 \mainmatter
 
-%\input{introduction.tex}
-%\input{seqcon.tex}
+\input{introduction.tex}
+\input{prelim.tex}
+\input{seqcon.tex}
 \input{lambda.tex}
-%\input{pole.tex}
-%\input{haskell.tex}
+\input{haskell.tex}
+\input{pole.tex}
 
-
-This research was partially supported by the Ministry of Education,
-Science, Sports and Culture, Grant-in-Aid for JSPS Fellows, 23-6978, 2011.
 
 
 
@@ -103,9 +67,11 @@ Science, Sports and Culture, Grant-in-Aid for JSPS Fellows, 23-6978, 2011.
 
 
 \paragraph{Acknowledgement.}
+This research was partially supported by the Ministry of Education,
+Science, Sports and Culture, Grant-in-Aid for JSPS Fellows, 23-6978, 2011.
 This research was partially supported by
 Grant-in-Aid for JSPS Fellows, 23-6978, 2011.
-We thank Tadeusz Litak for informing the author of
+The author thank Tadeusz Litak for informing the author of
 Danos and Krivine's work.
 
 \appendix

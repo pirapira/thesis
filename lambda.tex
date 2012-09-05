@@ -3,9 +3,9 @@
 \subsection{Summary}
 
 We propose a typed lambda calculus based on Avron's hypersequent
-calculus for G\"odel--Dummett logic.  This calculus turns out to model
-waitfree computation.
-Besides strong normalization and non-abortfullness, 
+calculus~\citep{avron91} for G\"odel--Dummett logic.  This calculus turns out to model
+waitfree computation~\citep{Herlihy88,Saks:1993vq}.
+Besides strong normalization and non-abortfullness,
 we give soundness and completeness of
 the calculus against the typed version of waitfree protocols.
 The calculus is not only proof theoretically interesting,
@@ -26,12 +26,12 @@ computation without synchronization among processes.
 
 We connect G\"odel--Dummett logic and waitfreedom using
 Avron's hypersequent calculus~\cite{avron91}.
-We respond to his suggestion:
+In doing that, we respond to his suggestion:
 \begin{quote}
 it seems to us extremely important to determine the exact
        computational content of them~[intermediate logics] ---
        and {to develop corresponding `$\lambda$-calculi'}
-       ---Avron~\cite{avron91}. 
+       ---Avron~\cite{avron91}.
 \end{quote}
 Differently from intuitionistic logic, G\"odel--Dummett logic validates
 all formulae of the form
@@ -39,7 +39,7 @@ all formulae of the form
 Our aim is building a typed lambda calculus
 with some terms witnessing those formulae.
 Such a term
-$\tj{M}{(\varphi\supset\psi)\vee(\psi\supset\varphi)}$ must choose 
+$\tj{M}{(\varphi\supset\psi)\vee(\psi\supset\varphi)}$ must choose
 $M\reduction \linl\cdots$ or $M\reduction \linr\cdots$.
 We devise a nondeterministic $\lambda$-calculus in Sect.~\ref{lgd}.
 
@@ -50,9 +50,11 @@ slower one, but not always vice versa because the slower process might
 start after the faster one finishes.
 So, the computation is nondeterministic.
 \fix{add history of waitfree}
+
 The contribution of this paper is capturing
 this nondeterminism using the nondeterministic $\lambda$-calculus for
 G\"odel--Dummett logic.  \fix{herlihyのコの字型の例}
+
 In Sect.~\ref{comparison}, we show that the
 $\lambda$-terms in the calculus can solve a typed input-output
 problems if and only if it is waitfreely solvable.
@@ -64,6 +66,22 @@ We first present a proof system for G\"odel--Dummet logic.
 Then we turn the proof system into typing rules for $\lambda$-terms
 of~\lgd, give a set of reductions and prove strong-normalization and
 non-abortfullness.  \fix{hyperについてのべる}
+We present the proof system using the hypersequent
+style~\citep{avron91}.
+In the usual sequent calculi, each reasoning step concludes a sequent
+$\G\vdash\phi$ where $\G$ is a sequence of formulae.
+In the hypersequent calculi, each reasoning step concludes a
+hypersequent, which is a finite, non-empty sequence of sequents.
+Of the hypersequent
+$\G_0\vdash\phi_0\hmid\G_1\vdash\phi_1\hmid\cdots\hmid\G_n\vdash\phi_n$,
+each sequent $\G_i\vdash\phi_i$ is called a \textit{component}.
+Each component $\G_i\vdash\phi_i$ is interpreted as an implication: the
+conjunction of $\G_i$ implies $\phi_i$.
+The whole hypersequent is interpreted as disjunction of implications.
+When we introduce terms, we still interpret the components
+disjunctively: namely, a derivation tree concluding a hypersequent
+represents a sequence of concurrent processes at least one of which is
+guaranteed to succeed.
 
 \subsection{Logic}
 
@@ -103,10 +121,40 @@ A \textit{hypersequent} is a finite sequence of sequents.
 The underlying logic has the derivation rules in Fig.~\ref{fig:logic}.  If
 we omit all the modalities, these rules characterize
 G\"odel--Dummett logic.
-However, the modalities have at least some sense: while
-$([0]\varphi\supset[0]\psi)\vee([1]\psi\supset[1]\varphi)$ is provable,
-$([0]\varphi\supset[1]\psi)\vee([0]\psi\supset[1]\varphi)$ is not (Remark~\fix{add}).
-A semantics will be given in Sect.~\ref{comparison}.
+Indeed,
+$[0](\varphi\supset\psi)\vee[1](\psi\supset\varphi)$ is provable as follows.
+
+\AxiomC{}
+\LL{[0]Ax}
+\UnaryInfC{$[0]P,[1]Q\vdash [0]P$}
+
+\AxiomC{}
+\LL{[1]Ax}
+\UnaryInfC{$[0]P,[1]Q\vdash[1]Q$}
+
+\LL{com'}
+\BinaryInfC{$[0]P\vdash[0]Q\hmid [1]Q\vdash[1]P$}
+\LL{$[0]\supset$I}
+\UnaryInfC{$\vdash[0](P\supset Q)\hmid [1]Q\vdash[1]P$}
+\LL{$[1]\supset$I}
+\UnaryInfC{$\vdash[0](P\supset Q)\hmid \vdash[1](Q\supset P)$}
+\LL{$\vee$I}
+\UnaryInfC{$\vdash[0](P\supset Q) \lor [1](Q\supset P)\hmid \vdash[1](Q\supset P)$}
+\LL{$\vee$I}
+\UnaryInfC{$\vdash[0](P\supset Q) \lor [1](Q\supset P)\hmid
+[0](P\supset Q) \lor [1](Q\supset P)$}
+\LL{EC}
+\UnaryInfC{$
+\vdash [0](P\supset Q)\lor [1](Q\supset P) $}
+\DisplayProof
+
+\section{About the modality}
+
+\fix{compare with the intuitionistic epistemic logic}
+
+\fix{consider the Kripke model.}
+
+\fix{translation back and forth.}
 
 \begin{figure}
  \small
@@ -120,7 +168,7 @@ A semantics will be given in Sect.~\ref{comparison}.
    {com'}
    {$\hyper\hmid\Gamma\vdash[i]\psi\hmid\Delta\vdash[j]\varphi$}
   \hfill
-%% external structural   
+%% external structural
  \UnaryRule
  {$\hyper^+$}
  {EW}
@@ -195,7 +243,7 @@ A semantics will be given in Sect.~\ref{comparison}.
   \UnaryRule{}{$[i]$Ax}
    {$[i]\varphi,\Gamma\vdash [i]\varphi$}
    \hfill
-%% bot elim   
+%% bot elim
  \UnaryRule{$\hyper\hmid\Gamma\vdash[i]\bot$}
    {$[i]\bot\elim$}
    {$\hyper\hmid\Gamma\vdash[i]\varphi$}
@@ -205,7 +253,7 @@ A semantics will be given in Sect.~\ref{comparison}.
   {$[i]\supset\intro$}
   {$\hyper\hmid\Gamma\vdash [i](\varphi\supset \psi)$}
   \hfill
-%% local imp elim   
+%% local imp elim
   \BinaryRule
   {$\hyper\hmid\Gamma\vdash [i](\varphi\supset\psi)$}
   {$\hyper\hmid\Gamma\vdash [i]\varphi$}
@@ -254,7 +302,7 @@ A semantics will be given in Sect.~\ref{comparison}.
  $\hyper^+$ stands for a nonempty hypersequent.
  $\Gamma$ and $\Delta$ stand for possibly empty contexts.
  The most important com' rule is based on a rule by
- Avron~\cite{avron96}.  \fix{explain inner local and inner global}
+ Avron~\cite{avron96}.
  }
 \label{fig:logic}
 \end{figure}
@@ -269,7 +317,7 @@ and
 Locations are denoted by~$l$; process~$i,j, \ldots$ and variables~$x,
 y, \ldots$.
 Later, locations will be used to specify a pair of stores
-holding terms.  
+holding terms.
 Like in the $\lambda$-calculus, some terms reduces to other
 terms, but in this calculus, terms may interact with the store (like
 a program written in Haskell or OCaml does with an i-var).
@@ -283,7 +331,7 @@ where $\Gamma$ is a sequence of variables:
  \gpair {\term,\term}\mid
  \gpil \term \mid \gpir \term \mid
  \ginl\term \mid
- \ginr\term \mid \\ & \gmat \term x\term y \term \mid 
+ \ginr\term \mid \\ & \gmat \term x\term y \term \mid
  \cotuple{\term,\term} \mid \abort \mid
   \lpil \term \mid \lpir \term \mid
  \lpair {\term,\term}\mid \\&
@@ -295,9 +343,14 @@ All variable occurrences (including those in $\Gamma$)
 except the first clause are
 binding.
 The constructs with a~$\g$ represent the global rules and the
-constructs without a~$\g$ represent the local rules. \fix{explain global
-and local}.
+constructs without a~$\g$ represent the local rules.
+Informally, the constructs without $\mathtt{g}$ represent parts of
+programs executed by the processes while the constructs with
+$\mathtt{g}$ represent parts of programs that are used for preparing
+inputs for processes and collecting outputs of the processes.
+For example, \fix{add example}.
 
+Using these terms, we annotate the hypersequent system in Fig.~\ref{fig:logic}.
 We extend a \textit{sequent}
 to $\Gamma\tr \tj M{\m \varphi}$, where $\Gamma$ is
 a sequence like $\tj{x}{\m\psi}, \tj{y}{\m\theta}$ and $M$ is a term.
@@ -306,12 +359,36 @@ $\Gamma$ to be distinct from each other.
 A \textit{contexted type}
  $\Gamma\tr\m\varphi$ is a sequent without a term but with variables in
  $\Gamma$.
-A \textit{hypersequent} is a finite sequence of sequents (called
-\textit{components})
+A \textit{hypersequent} is a finite sequence of sequents (each called
+a \textit{component})
 where the same
 variable has the same type even if it appears in different components.
 The typing rules for the terms are given in Fig.~\ref{termassign}.
-\fix{give example}
+\fix{add terms to the following example}
+\AxiomC{}
+\LL{[0]Ax}
+\UnaryInfC{$[0]P,[1]Q\vdash [0]P$}
+
+\AxiomC{}
+\LL{[1]Ax}
+\UnaryInfC{$[0]P,[1]Q\vdash[1]Q$}
+
+\LL{com'}
+\BinaryInfC{$[0]P\vdash[0]Q\hmid [1]Q\vdash[1]P$}
+\LL{$[0]\supset$I}
+\UnaryInfC{$\vdash[0](P\supset Q)\hmid [1]Q\vdash[1]P$}
+\LL{$[1]\supset$I}
+\UnaryInfC{$\vdash[0](P\supset Q)\hmid \vdash[1](Q\supset P)$}
+\LL{$\vee$I}
+\UnaryInfC{$\vdash[0](P\supset Q) \lor [1](Q\supset P)\hmid \vdash[1](Q\supset P)$}
+\LL{$\vee$I}
+\UnaryInfC{$\vdash[0](P\supset Q) \lor [1](Q\supset P)\hmid
+[0](P\supset Q) \lor [1](Q\supset P)$}
+\LL{EC}
+\UnaryInfC{$
+\vdash [0](P\supset Q)\lor [1](Q\supset P) $}
+\DisplayProof
+
 
 \begin{figure}[p]
  \small
@@ -326,7 +403,7 @@ The typing rules for the terms are given in Fig.~\ref{termassign}.
    {$\cotuple{\hypert_0,\hypert_1}\hmid\Gamma\tr\tj{\ltor i{l}\Delta{M}}{[i]\psi}\hmid
    \Delta\tr\tj{\rtol j{l}\Gamma {N}}{[j]\varphi}$}
 \hfill
-%% external structural   
+%% external structural
  \UnaryRule
  {$\hypert^+$}
  {}
@@ -400,10 +477,10 @@ The typing rules for the terms are given in Fig.~\ref{termassign}.
 \vskip 2mm
 \textbf{Inner Local Rules}
 \vskip 2mm
-%% axiom   
+%% axiom
   \UnaryRule{}{}{$\tj x{[i]\varphi}, \Gamma\tr \tj x{[i]\varphi}$}
                        \hfill
-%% bot elim   
+%% bot elim
  \UnaryRule
    {$\hypert\hmid\Gamma\tr \tj M{[i]\bot}$} {}
    {$\hypert\hmid\Gamma\tr \tj{\abort}{[i]\varphi}$}
@@ -485,6 +562,7 @@ For a store~$\sigma$, the updated store $\sigma[l\mapsto x]$ maps $l$ to
 $x$ and $l'$ to $\sigma(l')$ if $l'$ is different from~$l$.
 A \textit{configuration} is a triple $\conf{}{}\hypert$ of two
 stores $\lstore, \rstore$ and a hyperterm~$\hypert$.
+A \textit{typed configuration} is a \fix{add.. stores are empty}.
 
 To complete the definition of \lgd,
  we define the \textit{reductions} $\reduce_\spadesuit$ of
@@ -518,7 +596,9 @@ In summary, $\rtol i l \Gamma N$ tries to write to the right store and read from
 the left store of the configuration.
 If a term tries to read from an empty location of a store,
 the term changes into $\abort$.  If a term writes to a full location of
-a store, it does not abort but the store is not updated.
+a store, it does not abort but the store is not updated.  In fact, the
+store contents are never updated after being written.
+This property will be used in the proof of Thm.~\ref{first:sn}.
 The formal definition follows.
 \begin{definition}[Write Reduction]
  The write reduction $\wreduce$ is the smallest congruence
@@ -565,8 +645,8 @@ The formal definition follows.
  \item  $\conf{}{}{C[\abort]}\areduce
  \conf{}{}{\abort}$
 \end{itemize}
- where $C[\bullet]$ is 
-$\bullet N$, 
+ where $C[\bullet]$ is
+$\bullet N$,
 ${M \bullet}$,
 $\ltor i l \Delta \bullet$,
 $\rtol i l \Gamma \bullet$,
@@ -577,11 +657,12 @@ $\spair {M, \bullet}$,
 $\pi^\square_i \bullet$.
 $\smat M x N y \bullet$,
 $\smat  \bullet x N y O$, or  \\
-$\smat  M x \bullet y O$ 
+$\smat  M x \bullet y O$
 \end{definition}
 In order to obtain subformula property
  via proof normalization
 we add yet another kind of reduction rules.
+\fix{state and prove subformula property somewhere}
 \begin{definition}[Permutative Reduction]
  The permutative reduction~$\preduce$ is the smallest congruence
  containing the followings:
@@ -598,7 +679,7 @@ we add yet another kind of reduction rules.
                           {\left(\bsmat  M x N y O\right)}
                           u P v Q
                       }\preduce$ \\
-       $(\lstore, \rstore, 
+       $(\lstore, \rstore,
         \mathsf{match}^{\blacksquare}\,{M}\,\mathsf{of}\, \bsinl{x}. {
                           {\left(\smat N u P v Q\right)}
        } /$ \\ \phantom{mmmmmmmmmmm}$
@@ -627,15 +708,18 @@ $\mathcal{D}$ with $\mathcal{C}\reduce \mathcal{D}$.
 A term~$M$ is \textit{normal} when the configuration $\conf{}{}{M}$ is
 normal (the choice of $\lstore$ and $\rstore$ is irrelevant).
 
+\fix{add reduction example from the term example and explain the
+communicating behaviour}
+
 \subsection{Properties}
 
 An important property of
-\lgd is \textit{strong normalization}:
-every typed hyperterm has a maximal number of reductions it can
+\lgd\, is \textit{strong normalization}:
+every typed hyperterm has a finite, maximal number of reductions it can
 take.
 Another is \textit{non-abortfullness}: although some reductions yield
 $\abort$ terms, a typed hyperterm never reduces to a hyperterm that only
-contains $\abort$'s.  We show this first for its simpler proof.
+contains $\abort$'s.  We show the second property first for its simpler proof.
 
 \begin{theorem}[Non-abortfullness]
  \label{nab}
@@ -644,7 +728,7 @@ contains $\abort$'s.  We show this first for its simpler proof.
 \end{theorem}
 \begin{proof}
  When a reduction sequence is fixed, for any location~$l$, depending on
- whether the right or the left store is filled first, 
+ whether the right or the left store is filled first,
  either:
  (i) no ${\ltor i l \Delta M} \reduce {\abort}$ occurs for any~$i$, or
  (ii) no ${\rtol i l\Gamma M} \reduce {\abort}$ occurs for any~$i$.
@@ -672,9 +756,9 @@ into successive external weakening occurrences
  \DisplayProof
 \end{center}
  where $\Gamma^j$ and $\Delta^j$ can be obtained from the originals
- by changing every
- modality~$[k]$ to $[j]$.
-In the lattar case, we can do the symmetric.
+ by changing every modality to $[j]$. \fix{state and prove that this
+ preserves deductions}
+ In the lattar case, we can do the symmetric.
 
 After these rewritings for all appearing locations,
 we obtain a derivation not containing
@@ -687,17 +771,18 @@ hyperterm has a component not containing $\abort$.
 \end{proof}
 
 \begin{theorem}[Strong Normalization]
+ \label{first:sn}
  \lgd\, is strongly normalizing.
 \end{theorem}
 \begin{proof}
 For proving this, we consider the \textit{local fragment} that does not contain
 $\ltor i l \Delta M$, $\rtol j l\Gamma N$ or any construct with $\g$.
 We first reduce the strong
-normalization of the \lgd\, to that of the local fragment, and 
+normalization of the \lgd\, to that of the local fragment, and
 ultimately to that of de Groote's
 natural deduction with permutation-conversion~\cite{Philippe2002js}%
 \footnote{
-To the 
+To the
 same effect, we might be able to use other strong normalization
  results for lambda calculi with commutative conversions, like Balat,
  Di~Cosmo
@@ -712,12 +797,12 @@ $
 \conf{_1}{_1}{\hypert_1}
 \reduce
 \conf{_2}{_2}{\hypert_2}
-\reduce\cdots 
+\reduce\cdots
 $.  From this, we are going to construct an infinite sequence of
 reductions in the local fragment.
 
 For that, we first
-build an infinite reduction sequence with constant stores. 
+build an infinite reduction sequence with constant stores.
 Using the original infinite sequence, we define a pair of stores called the
 \textit{store prophecy} $(\lstore_\infty, \rstore_\infty)$ where
 $ \lstore_\infty(l)= \epsilon$ if $\lstore_k(l)=\epsilon$ for all
@@ -771,12 +856,13 @@ invariant inductively on the number of steps
         \conf{_\infty}{_\infty}{\hypc{'}{N'}}$.
 \end{itemize}
 Here, we have to show that the translated sequence is infinite.
-For that, we can use the facts that
+\fix{fix english below}
+ For that, we can use the facts that
  there are only finite
-number of usedlocations each of which allows only one write, and that
+number of used locations each of which allows only one write, and that
 an $\abort$ propagation always
-strictly shortens the term under operation. 
- 
+strictly shortens the term under operation.
+
  After that, we can replace
  every ${\rtol i l\Gamma M}$ with
  $\rstore_\infty(l)$.
@@ -787,7 +873,7 @@ strictly shortens the term under operation.
  Replacing every such occurrences
  makes an infinite reduction sequence where every occurring term is
  in the local fragment.
- Moreover, 
+ Moreover,
  the result of the translation is also well-typed.
  A typing derivation of the resulting hyperterm can be obtained by
  replacing com' rules with EW rules and changing the process number in
@@ -798,11 +884,12 @@ by de Groote~\cite{Philippe2002js}.
 Since we have eliminated $\ltor i l \Delta M$ or $\rtol i l\Gamma N$ occurrences,
 the remaining difference is small: some $\abort$ propagation reductions
  and some permutative reductions involving $\cotuple{\term,\term'}$.
+ \fix{justify}
 We just have to make sure that there are no infinite reduction sequences
 that consist of these two kinds of reductions only.
 We can deal with the permutative reductions following de
  Groote~\cite{Philippe2002js}'s strategy for introducing~$\bot$.
-For $\abort$ propagation, we can apply the previous argument.
+For $\abort$ propagation, we can apply the previous argument \fix{what?}.
 \end{proof}
 
 \section{Typed Waitfreedom}
@@ -823,11 +910,15 @@ processes, an input-output problem decides whether the processes have
 succeeded or not.
 We change the standard definition and have typed terms as inputs and
 outputs.
+This change is necessary because according to the original definition of
+waitfreedom,
+a single process waitfree protocol can solve any undecidable problem
+because a waitfree protocol can contain arbitrary functions.
 
 For that, we let $\lterm(\varphi)$ denote the set of closed, local terms of
 type~$\varphi$,
 and $\lval(\varphi)$ denote the set of normal terms in $\lterm(\varphi)$.
-For a finite set of processes~$\processes$, 
+For a finite set of processes~$\processes$,
 a \textit{typed input-output problem} consists of each process's input type
 $(\iota_i)_{i\in \processes}$, each process's output type $(o_i)_{i\in
 \processes}$, and a
@@ -864,11 +955,12 @@ a program variable (resp. location) first appears in a $\p x\leftarrow E$
 (resp. $l\leftarrow E$)
 sentence, and
 after that, only appears in expressions.
+In other words, we assume a program to be in the single assignment form.
 For a contexted type $t = (\Gamma\tr\m\varphi)$,
 we write $\tj{M}{t}$ for
 $\Gamma\tr\tj{M}{\m\varphi}$.
 For input types $(\iota_i)_{i\in\processes}$
-and output types $(o_i)_{i\in\processes}$, 
+and output types $(o_i)_{i\in\processes}$,
 a \textit{typed protocol} has:
 \begin{itemize}
  \item two program variables
@@ -887,12 +979,19 @@ a \textit{typed protocol} has:
        $t_i(\p i_i)= \iota_i$;
  \item a typed program~$p_i$ for each $i\in \processes$,
        where
-a \textit{typed program} is a well-formed program where all
-sentences are typed according to $(t,g,d,i,\Wg, \Wd)$.
-A sentence $\p x \leftarrow E$ is typed  iff $E\colon t(\p x)$ is derivable with
-assumptions of the form $\tr\tj{\p y}{t(\p y)}$,\quad
-$\tr\tj{l}{W_{\mathrm d}}(l)$ and
-$\tr\tj{l}{W_{\mathrm g}}(l)$.
+       a \textit{typed program} is a well-formed program where all
+       sentences are typed according to the rules below.
+       A sentence $\p x \leftarrow E$ is typed  iff $\tr E\colon t(\p x)$ is derivable with
+       assumptions of the form $\tr\tj{\p y}{t(\p y)}$,\quad
+       $\tr\tj{l}{W_{\mathrm d}}(l)$ and
+       $\tr\tj{l}{W_{\mathrm g}}(l)$.
+       A sentence $\ell\leftarrow E$ is typed iff
+       $g(\ell)=i$ and $\tr\tj{E}{\Wg(\ell)}$ is derivable or
+       $d(\ell)=i$ and $\tr\tj{E}{\Wd(\ell)}$ is derivable
+       with
+       assumptions of the form $\tr\tj{\p y}{t(\p y)}$,\quad
+       $\tr\tj{l}{W_{\mathrm d}}(l)$ and
+       $\tr\tj{l}{W_{\mathrm g}}(l)$.
 \end{itemize}
 
 \subsection{Typed Waitfree Computation}
@@ -903,7 +1002,7 @@ These definitions are transferred from \cite{Saks:1993vq}.
 
 Let $\processes$ be $\{0,\ldots, n-1\}$ and fix
 a typed protocol.
-A \textit{program variable content} $m$ for $i\in\processes$ is a
+A \textit{program variable content} for $i\in\processes$ is a
 partial
 function
 that maps a program variable to a term of $t_i(\p x)$.
@@ -927,7 +1026,7 @@ $.
 
 For a nonempty subset~$J$ of $\processes$, we define an operator $\update J$ that
 takes a system snapshot and produces a system snapshot.
-This operator depicts a computation step where the processes in~$J$
+This operator depicts a computational step where the processes in~$J$
 are fired.
 
 We define $
@@ -986,7 +1085,7 @@ A \textit{schedule} is an infinite sequence of nonempty subsets of~$\processes$,
 which looks like $\sigma = \sigma_0\sigma_1\sigma_2\cdots$.
 We say $i$ is \textit{nonfaulty} in $\sigma$
 if it appears infinitely often.
-When every process is nonfaulty, the schedule is \textit{fair}.
+% probably not used anywhere % When every process is nonfaulty, the schedule is \textit{fair}.
 
 A \textit{run} is a triple $\tuple{\Pi, \vec x, \sigma}$,
 where $\Pi$ is a typed protocol,
@@ -1025,17 +1124,17 @@ schedule~$\sigma$,
  the decision value of every nonfaulty process~$i$ is a term
        $M$ not $\epsilon$, and
  there is a vector $\vec b\in \prod_{i\in \processes}(\lval (o_i))$
-with $\tuple{\vec x, \vec b} \in R$ which is compatible with the
+ with $\tuple{\vec x, \vec b} \in R$ which is compatible with the
  decision vector~$\vec d$.
-A typed protocol is \textit{waitfree} iff it solves
-the problem on every schedule $\sigma$.
-In that case, the typed input-output problem is 
-\textit{waitfreely solvable}.
+ A typed protocol is \textit{waitfree} iff it solves
+ the problem on every schedule~$\sigma$.
+ In that case, the typed input-output problem is
+ \textit{waitfreely solvable}.
 
 \section{Characterization of Waitfreedom and \lgd}
 \label{comparison}
 
-We compare the ability of the waitfree protocols and \lgd\,.
+We show that the ability of the waitfree protocols and \lgd\, are the same.
 \begin{definition}
  A typed input-output problem
  $\tuple{(\iota_i)_{i\in \processes}, (o_i)_{i\in \processes}, R}$ is
@@ -1043,7 +1142,7 @@ We compare the ability of the waitfree protocols and \lgd\,.
  $M$ of contexted type
  $\left(\tj{x_i}{[i]\iota_i}\right)_{i\in\processes}
  \tr\left(\wwedge_{i\in
- \processes}[i]o_i\right)$ 
+ \processes}[i]o_i\right)$
  iff
  for any closed $(N_i)_{i\in \processes}$ of $\iota_i$,
  all normal forms of $M[\vec{N_i}/\vec{x_i}]$
@@ -1071,7 +1170,7 @@ $s_i(\p x)$ is an expression of $\varphi$.
 For a set of investigators~$I$,
 a system snapshot satisfies
 $I([i]\varphi)$ iff it satisfies
-$\tuple{i, \p x}(\varphi)$ for some $\p x$ with
+$\tuple{i, \p x}(\varphi)$ for at least one
 $\tuple{i,\p x}\in I$.
 This can be extended to all global formulae, as
 $I(\m\varphi\wedge\m\psi)$ iff $I(\m\varphi)$ and $I(\m\psi)$;
@@ -1090,11 +1189,11 @@ for any initial system snapshot satisfying
 every~$\Gamma_{k'}$,
 there exists a family of investigator sets
 $(I_{k'})_{k'\in\{0,\ldots,k\}}$ and,
-when $p$ is executed with any fair schedule,
-the resulting system snapshots eventually always satisfies at least one of
+when $p$ is executed with any schedule,
+the resulting system snapshots eventually satisfy at least one of
 $\varphi_{k'}^+$.
 
-For a typed 
+For a typed
 hyperterm~$\hypert$,
 we will give $\semo{\hypert}$, which is a tuple of programs indexed
 by~$\processes$.
@@ -1104,7 +1203,7 @@ $\semoi{\hypert}$ is a sequence of finite sets of investigators whose
 length is the same as that of $\hypert$.
 We refer to the last element of $\semoi{\hypert\hmid M}$ as
 $\semoi{\hypert\hmid \hat{M}}$, the second to last element of
-$\semoi{\hypert\hmid M\hmid N}$ as 
+$\semoi{\hypert\hmid M\hmid N}$ as
 $\semoi{\hypert\hmid \hat M\hmid N}$ and so on.
 We denote the right projection of $\semoi{\hypert\hmid \hat{M}}$ as
 $\semoi{\hypert\hmid \hat{M}}'$.
@@ -1190,7 +1289,7 @@ We can simulate a reduction sequence of
 the hyperterm using a fair execution of the protocol.
 
 
-And, since the protocol solves a problem for any fair schedule, it 
+And, since the protocol solves a problem for any fair schedule, it
 solves the problem waitfreely.
 If we deny the claim, there must be an execution where a nonfaulty
 process
@@ -1205,7 +1304,7 @@ the process.
 
 \begin{theorem}[Completeness]
 If there exists a typed protocol that solves a typed input-output
- problem, 
+ problem,
 the problem is solvable by a term.
 \end{theorem}
 
@@ -1244,13 +1343,13 @@ The additional typing rules involving $\Id$ are as follows, where $2 = (\bot\sup
 \end{center}
 The additional reduction is
 \[
- c_m == c_n \reduce 
+ c_m == c_n \reduce
 \begin{cases}
  \linl{\lambda x.x}& (\text{if } m = n)\\
  \linr{\lambda x.x}& (\text{otherwise})\enspace.
 \end{cases}
 \]
-Also, 
+Also,
 ${\ifte M {N_0} {N_1}}$
 is an abbreviation for
 ${\lmat M x {N_0} y {N_1}}$.
@@ -1258,7 +1357,7 @@ ${\lmat M x {N_0} y {N_1}}$.
 We represent a finite set of id's as a
 typed lambda term, whose type is $[i](\Id\supset 2)$.  Intuitively, a
 set takes an id and decides whether it is \textit{in} or \textit{out}.
-The emptyset is represented by a term $\lambda x. \linr {\bullet}$.  
+The emptyset is represented by a term $\lambda x. \linr {\bullet}$.
 When a finite set~$S$ is represented by a term~$M$,
 the set $S \cup \{c\}$ is represented by a term
 $\lambda x.\left(\ifte{x==c}{\linl {\bullet}}{Mx}\right)$.
@@ -1302,7 +1401,7 @@ Moreover, the same initial configuration can reduce to
  \concreteconf{[l\mapsto c_0]}{[l\mapsto c_1]}{\gpair{\{c_1,c_0\},
  \{c_1\}}}\text{ or }
  \concreteconf{[l\mapsto c_0]}{[l\mapsto c_1]}{\gpair{\{c_1,c_0\},
- \{c_0, c_1\}}}\enspace. 
+ \{c_0, c_1\}}}\enspace.
 \]
 There are no other normal forms.
 These three normal forms correspond to the three answers for the
@@ -1327,7 +1426,7 @@ cut-elimination.
 Their cut-elimination proof is general but it does not
 obviously reveal the computational content.
 
-Baaz, Ciabattoni and Ferm\"uller~\cite{natural} propose a 
+Baaz, Ciabattoni and Ferm\"uller~\cite{natural} propose a
 hypersequent-style natural deduction for G\"odel--Dummett logic, but
 did not define reduction.
 Ferm\"uller~\cite{parallel} gives a game semantics for G\"odel--Dummett
@@ -1343,7 +1442,7 @@ deterministic
 \cite[Theorem~7.9]{abramsky1993computational} so that it is
 impossible to model
 waitfreedom using $\mathsf{PE}_2$.
-The $\pi$-calculus~\cite{milner1999communicating}, 
+The $\pi$-calculus~\cite{milner1999communicating},
 Join calculus~\cite{join},
 and even asynchronous
 $\pi$-calculus \cite{hondatokoro}
@@ -1392,19 +1491,12 @@ If that succeeds for classical logic, it will be interesting%
 \section{Conclusion}
 \label{conc}
 We proposed \lgd, a lambda calculus
-based on hypersequent calculus of 
+based on hypersequent calculus of
 G\"odel--Dummett logic.
 We proved normalization and non-abortfullness.
 The calculus characterizes
 the typed version of waitfree computation.
-Our result 
+Our result
 hints broader correspondence between
 proof theory and distributed computation.
 
-\section{About the modality}
-
-compare with the intuitionistic epistemic logic
-
-consider the Kripke model.
-
-translation back and forth.

@@ -1,11 +1,11 @@
-\chapter{Capturing Waitfreedom in Hypersequents}
+\chapter{Hypersequents in Haskell}
 
 \subsection{Summary}
 
  We investigate the computational meaning of hypersequents and realize
  it as a Haskell library.
  Hypersequent calculus is introduced by mathematical logicians in order
- to obtain cut-free deduction systems for more logics.  
+ to obtain cut-free deduction systems for more logics.
  However, its
  computational meaning has been unknown.  We propose using hypersequents
  for representing asynchronous communication.  Logically, a hypersequent
@@ -215,10 +215,10 @@ printTaken th ((h, selfs), peers) = do
 twoPrints :: K ZeroT ((Handle, String), String) :*: K (SucT ZeroT) ((Handle, String), String) :*: HNil
               -> IO (K ZeroT () :*: K (SucT ZeroT) () :*: HNil)
 twoPrints = printTaken -*- printTaken -*- return
-               
+
 rerror :: Thread t => t -> (Handle, a) -> IO ()
 rerror th (h, _) = hPutStrLn h $ "Thread " ++ (show $ atid th) ++ " failed to read peer's input."
-               
+
 content ::  IO (K ZeroT () :*: K (SucT ZeroT) () :*: HNil)
 content = comm (readH $ PortNumber 6000) rerror (readH $ PortNumber 6001) rerror >>= twoPrints
 
@@ -306,7 +306,7 @@ we prepare a hypersequent containing this computation.  For that, we can use
 a library function~@single@ that creates a hypersequent containing
 a single clause.
 \begin{spec}
-prepareHandle :: Thread t => 
+prepareHandle :: Thread t =>
                  PortID -> IO (K t Handle :*: HNil)
 prepareHandle p = single $ handle p
 \end{spec}
@@ -317,7 +317,7 @@ When a type~@t@ is of the type class~@Thread@, we can obtain the
 thread's number via @atid@ function (@atid@ stands for Abstract Thread
 ID).
 \begin{spec}
-readLine :: Thread t => 
+readLine :: Thread t =>
             t -> Handle -> IO ((Handle, String), String)
 readLine th h = do
   hPutStr h $ (show $ atid th) ++ " requiring input: "
@@ -345,7 +345,7 @@ The first argument says either @t@'s computation of a value of type
 @(b,a)@ or one of the clauses of the hypersequent~@l@ succeeds.
 The second argument says the same thing for @s@'s @(d,c)@ and @l'@.
 If any clause in @l@ or @l'@ is successful, that clause witnesses the
-resulting hypersequent.  Otherwise, when 
+resulting hypersequent.  Otherwise, when
 thread @t@
 computes @(b,a)@ value and
 @s@ computes @(d,c)@ value successfully, the @comm@ function guarantees either
@@ -370,7 +370,7 @@ the next section.
 \subsection{What is a Hypersequent}
 We expressed hypersequents as heterogeneous collections by \citet{hetero}
 with a slight modification.  We required each element to be a thread's
-computation. 
+computation.
 We expressed threads as type level natural numbers, which is obtained by
 simplifying heterogeneous lists.
 Each thread is expressed as a singleton type containing a single value.
@@ -398,7 +398,7 @@ Internally, it is a pair of thread and a computation of @JobStatus a@.
 A @JobStatus@ can be @Done TryAnotherJob@ or @Done Finished@ after the
 thread fails to read from the shared memory.
 \begin{code}
-newtype K t a = K (t, IO (JobStatus a)) 
+newtype K t a = K (t, IO (JobStatus a))
 
 data JobStatus a = Having a | Done ThreadStatus
 data ThreadStatus = TryAnotherJob | Finished
@@ -420,7 +420,7 @@ instance HyperSequent l =>
 infixr 5 :*:
 type e :*: l = HCons e l
 \end{code}
-In our framework, every hypersequent is contained in IO monad 
+In our framework, every hypersequent is contained in IO monad
 so that hypersequent derivations can contain MVar
 cells. The MVar cells are used for implementing the communication
 rule. Although we use MVar cells, which are capable of supporting full
@@ -443,7 +443,7 @@ type L = (AbstractThreadId, IO ThreadStatus)
 
 Local computations are then transformed into a finite map from thread
 identifiers to channels containing computations. Each thread reads the list for
-its own identifier and execute the computations in the list one by one. 
+its own identifier and execute the computations in the list one by one.
 \begin{code}
 class Lconvertible l where
     htol :: l -> [L]
@@ -456,9 +456,9 @@ instance (Thread t, Lconvertible l) =>
     htol (HCons (K (th, result)) rest) =
       (atid th, fmap jth2th result) : htol rest
 
-jth2th :: JobStatus ThreadStatus -> ThreadStatus 
+jth2th :: JobStatus ThreadStatus -> ThreadStatus
 jth2th (Having x) = x
-jth2th (Done x) = x 
+jth2th (Done x) = x
 \end{code}
 
 We construct a list of computations for each thread.  The lists are
@@ -468,7 +468,7 @@ called @JobChannel@s.  The @JobChannel@s are put in a finite map called
 \begin{code}
 type JobChannel = [IO ThreadStatus]
 
-type JobPool = 
+type JobPool =
     Map.Map AbstractThreadId JobChannel
 
 constructJobPool :: [L] -> JobPool
@@ -646,7 +646,7 @@ infixr 4 -*-
       return $ Having y
 
 progress_ :: (HyperSequent l, HyperSequent l') =>
-            (a -> b) -> (l -> IO l') -> HCons a l -> 
+            (a -> b) -> (l -> IO l') -> HCons a l ->
             IO (HCons b l')
 progress_ hdf tlf (HCons ax bl) = do
   newtl <- tlf bl
@@ -658,8 +658,8 @@ the extending function must receive the result of the previous function.
 This is achieved with the help of @peek@ function.
 \begin{code}
 peek :: Thread t =>
-  (t -> JobStatus a -> IO b) -> K t a -> IO b 
-peek f (K (th, content)) = content >>= f th 
+  (t -> JobStatus a -> IO b) -> K t a -> IO b
+peek f (K (th, content)) = content >>= f th
 \end{code}
 
 The communication rule says two threads compute something, write it to
@@ -686,7 +686,7 @@ comm x terror y serror = do
   HCons (K (scT, sdc)) l' <- y
   abox <- newEmptyMVar
   cbox <- newEmptyMVar
-  return $ let 
+  return $ let
       tbc = comm_part tba abox cbox terror taT
       sda = comm_part sdc cbox abox serror scT
     in
@@ -767,7 +767,7 @@ three__ = cycling $ comm twoBeforeComm putTwoResults hOwnId failOut
 
 printThreeResults0 :: (Thread u, Thread s, Thread t, Thread v) => u -> (s,(t,v)) -> IO ThreadStatus
 printThreeResults0 owner (c0, (c1, c2)) = putResult owner $ show $ [atid c0, atid c1, atid c2]
-           
+
 printThreeResults1 :: (Thread u, Thread s, Thread t, Thread v) => u -> ((s,t),v) -> IO ThreadStatus
 printThreeResults1 owner ((c0, c1), c2) = putResult owner $ show $ [atid c0, atid c1, atid c2]
 
@@ -781,7 +781,7 @@ twoLast = comm hOwnId putOneResult hOwnId putOneResult >>= (putTwoResults -*- pu
 
 twoMid :: IO ((K ZeroT ThreadStatus) :*: (K SecondT ThreadStatus) :*: HNil)
 twoMid = comm hOwnId putOneResult hOwnId failOut >>= (putTwoResults -*- putTwoResults -*- return)
-        
+
 main :: IO ()
 main = execute (three `follows` twoMid `follows` twoLast)
 
@@ -882,7 +882,7 @@ main = execute $three `follows` twoMid `follows` twoLast
 
 There are many functional programming languages (OCaml, Haskell, Clean
 etc.) that employs intuitionistic logic for their type systems.
-The hypersequent formulation that we employed is very similar to that of 
+The hypersequent formulation that we employed is very similar to that of
 G\"odel--Dummett logic, which is among
 intermediate logics~\citep{intermediate} between intuitionistic and
 classical logics.
@@ -892,7 +892,7 @@ obtained by adding axioms of the form
 $(\varphi\rightarrow\psi)\vee(\psi\rightarrow\varphi)$ to
 intuitionistic propositional logic.　　
 
-\citet{avron91} proposed an alternative formulation of the same logic.  
+\citet{avron91} proposed an alternative formulation of the same logic.
  Instead of the axioms
  $(\varphi\rightarrow\psi)\vee(\psi\rightarrow\varphi)$, he included
 the ``communication rule'' on hypersequent derivations:
@@ -936,7 +936,7 @@ are provable in G\"odel--Dummett
 logic than in intuitionistic logic.  So, if we want to encode G\"odel--Dummett
 logic faithfully, we do not have to introduce modalities such as @K t@.
 Even without such modalities, we can regard each clause of a
-hypersequent as a thread. However, 
+hypersequent as a thread. However,
 If we abandon modalities and regard clauses of a hypersequent as
 threads, the participating set problem cannot be solved because the communication rule
 splits the threads into two separate groups and any prior
@@ -1054,7 +1054,7 @@ these different tasks separately.
  than a finite set of threads specified at compile-time.
 
 Although we were able to implement the participating set problem,
-the implementation is not short nor symmetric.  
+the implementation is not short nor symmetric.
 There seems to be room for more elegant abstraction for symmetric
 protocols such as
 a rule contains more than two threads and a more direct embedding of the
@@ -1063,6 +1063,6 @@ participating set problem.
 Another remaining task is to formalise the strong normalization theorem
 formally in a proof assistant like Coq or Isabelle.
 Lindley~\fix{cite} provided a concise proof of strong normalization of
-the natural deduction for 
+the natural deduction for
 intuitionistic propositional logic, containing disjunction.
 Lindley's proof was formalized in Nominal Isabelle by \fix{whom}.
