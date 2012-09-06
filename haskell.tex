@@ -225,7 +225,8 @@ content = comm (readH $ PortNumber 6000) rerror (readH $ PortNumber 6001) rerror
 main :: IO ()
 main = execute content
 \end{spec}
- \caption[An example program.\fix{for what}]
+ \caption[An example program that provides waitfree communication to two
+ clients.]
  {An example program.  This spawns two threads each waiting for
  a TCP connection.  The two threads do waitfree communication, so the
  slowest thread obtains the inputs for all threads. }
