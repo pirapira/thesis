@@ -243,7 +243,7 @@
 
   \begin{definition}
    \label{formula}
-   We define a \index{\iec-formula} $\varphi$ by the BNF:
+   We define a \iec-formula\index{\iec-formula} $\varphi$ by the BNF:
    \[
    \varphi ::= \bot\mid P\mid
    (K_a\varphi)\mid(\varphi\vee\varphi)\mid(\varphi\land\varphi)\mid
@@ -460,7 +460,7 @@
   \newcommand{\model}[1]{\tuple{W#1, \preceq#1, (f_a#1)_{a\in A}, \rho#1}}
   \begin{definition}
    \label{model}
-   A \index{model} $\tuple{W,\preceq, (f_a)_{a\in A}, \rho}$ is a tuple with following properties:
+   A model\index{model} $\tuple{W,\preceq, (f_a)_{a\in A}, \rho}$ is a tuple with following properties:
    \begin{enumerate}
     \item $\tuple{W,\preceq}$ is a partial order,
     \item $f_a\colon W\rightarrow W$ is a~function satisfying
@@ -486,7 +486,7 @@
        The valuation~$\rho$ for propositional variables in $\pvar$ is extended into validity
        relation~$\models$ for all \iec-formulae in $\fml$.
        \begin{definition}
-	We define the \index{satisfaction relation} $\models$ of a~model
+	We define the satisfaction relation\index{satisfaction relation} $\models$ of a~model
 	$\tuple{W,\preceq,(f_a)_{a\in A},\rho}$, a~state~$w\in W$ of the model and an
 	\iec-formula~$\varphi$.
 	Let us fix a model $M=\tuple{W,\preceq,(f_a)_{a\in A},\rho}$.
@@ -629,7 +629,8 @@
   \begin{definition}
    \label{saturated-set}
    For a set of formulae $\Omega$,
-   a set of \iec-formulae $\Gamma\subseteq\Omega$ is \index{$\Omega$-saturated} if and only if
+   a set of \iec-formulae $\Gamma\subseteq\Omega$ is $\Omega$-saturated%
+   \index{$\Omega$-saturated} if and only if
    \begin{enumerate}
     \item $\Gamma$ is $\Omega$-deductively closed, i.e., $\Gamma\vdash\varphi\in
 	  \Omega\Rightarrow
@@ -1011,17 +1012,17 @@ Proof to be found in the author's Master's thesis.
 
   \begin{definition}
    Assume there is a vector of atomic formulae $(I_a)_{a\in P}$.
-   A~\index{waitfree protocol description} $\varphi$ is an \iec-formula of the form
+   A~waitfree protocol description\index{waitfree protocol description} $\varphi$ is an \iec-formula of the form
    \[
    \varphi = \bigwedge_{a\in P} K_a K_\memory K_a \cdots K_a I_a
    \]
    where $K_a$ and $K_\memory$ appear alternatively in ``$\cdots$''.
-   A~\index{waitfree task specification} $\psi$ is defined with the BNF:
+   A~waitfree task specification\index{waitfree task specification} $\psi$ is defined with the BNF:
    \[
    \psi ::= K_a\psi\mid \psi\land\psi\mid \psi\vee\psi\mid I_a
    \]
    where $a$ stands for a process in $P$.
-   A~\index{waitfree assertion} is an \iec-formula~$\varphi\supset\psi$ where $\varphi$ is a
+   A~waitfree assertion\index{waitfree assertion} is an \iec-formula~$\varphi\supset\psi$ where $\varphi$ is a
    waitfree protocol description and $\psi$ is a waitfree task specification.
   \end{definition}
 
@@ -1040,7 +1041,7 @@ Proof to be found in the author's Master's thesis.
    $count_a(\varphi)$ is the number of $K_\memory$ occurrences in $K_aK_\memory \cdots
    K_a I_a$.
 
-   A partial schedule $\sigma$ is \index{compatible} to a waitfree
+   A partial schedule $\sigma$ is compatible\index{compatible} to a waitfree
    protocol description $\varphi$ if
    $count_a(\varphi) = count_a(\sigma)$ for any process $a\in P$.
   \end{definition}

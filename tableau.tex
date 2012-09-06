@@ -68,8 +68,9 @@
   and the intuitionistic epistemic logic proposed by
   Hirai~\cite{hirailpar}.
   Let us assume that
-  there are a countably infinite set~$\pvar$ of \index{propositional variables} and a
-  finite set~$\agents$ of \index{agents}.
+  there are a countably infinite set~$\pvar$ of propositional
+  variables\index{propositional variable} and a
+  finite set~$\agents$ of agents\index{agents}.
 
   \begin{definition}
    We define the set~$\fml$ of formulae by BNF:
@@ -85,7 +86,7 @@
   $\{K_a\varphi\mid\varphi\in\Gamma\}$\enspace.
 
   \begin{definition}[Kripke frame]
-   A \index{frame} $\tuple{W,\preceq,(f_a)_{a\in \agents}}$ is a tuple where
+   A frame\index{frame} $\tuple{W,\preceq,(f_a)_{a\in \agents}}$ is a tuple where
    \begin{itemize}
     \item $\tuple{W,\preceq}$ is a partially ordered set, and
     \item each $f_a\colon W\rightarrow W$ is a monotonic function with
@@ -94,7 +95,7 @@
   \end{definition}
 
   \begin{definition}[Kripke model]
-   A \index{model} $\tuple{W,\preceq, (f_a)_{a\in \agents},\rho}$ is a tuple where
+   A model\index{model} $\tuple{W,\preceq, (f_a)_{a\in \agents},\rho}$ is a tuple where
    \begin{itemize}
     \item $\tuple{W,\preceq,(f_a)_{a\in \agents}}$ is a frame, and
     \item $\rho\colon \pvar\rightarrow 2^W$ is a function that maps every
@@ -105,17 +106,17 @@
   We are going to prove finite model property for a class of
   intermediate modal logics.  The logics are parametrized with
   world restriction sets,  which we are going to define.
-  We assume that there is a countably infinite set of \index{world
+  We assume that there is a countably infinite set of world variables\index{world
   variables}~$\wvar$.
   We use $\mathsf v, \mathsf w,\ldots$ to denote world variables.
-  We define \index{world terms} using BNF:
+  We define world terms\index{world terms} using BNF:
   \[
   \mathsf s::=\mathsf v\mid \mathsf s.a
   \]
   where $a$ is an agent.
   Every world term can be written as $\mathsf v.s$ where $s$ is a fintie sequence
   of agents (a postfix).
-  A \index{world inequality} is an inEquation of the form $\mathsf s\le
+  A world inequality\index{world inequality} is an inEquation of the form $\mathsf s\le
   \mathsf t$ where $\mathsf s$ and $\mathsf t$ are world terms.
   \begin{definition}
    A world restriction is a sequence of world inequalities jointed
@@ -128,9 +129,9 @@
     \item (single postfix) $s_i = t_i = s_j = t_{j}$ for $0\le i,j\le n$.
    \end{itemize}
   \end{definition}
-  A \index{world restriction set} is a finite set of world restrictions.
+  A world restriction set\index{world restriction set} is a finite set of world restrictions.
 
-  A \index{world valuation} maps a world variable into a world of a frame.
+  A world valuation\index{world valuation} maps a world variable into a world of a frame.
   We extend a world valuation on world variables
   $\delta\colon\mathcal V_W\rightarrow W$ to that on world terms
   inductively as $\delta(\mathsf s.a)=f_a(\delta(\mathsf s))$.
@@ -147,7 +148,7 @@
 
 
   \begin{definition}
-   We define the \index{satisfying relation} $M,w\models\varphi$ over a model
+   We define the satisfying relation\index{satisfying relation} $M,w\models\varphi$ over a model
    $M = \tuple{W,\preceq,(f_a)_{a\in \agents},\rho}$, a state~$w\in W$ and a
    formula~$\varphi$ inductively on $\varphi$.
    In this definition, let
@@ -171,7 +172,7 @@
 	 $w'\models\psi_1$ for any $w'\in W$\enspace.
    \end{itemize}
   \end{definition}
-  A model~$M$ \index{satisfies} $\varphi$ iff $M,w\models\varphi$ holds for any
+  A model~$M$ satisfies\index{satisfaction} $\varphi$ iff $M,w\models\varphi$ holds for any
   state~$w$ of~$M$.
   A formula~$\varphi$ is \index{valid under} $\mathsf R$ iff
   every $\mathsf R$-model~$M$ satisfies $M\models \varphi$.
@@ -462,12 +463,12 @@
 
    \subsubsection{\LB}
 
-   The deduction system\,\LB\,uses \index{prefixed formulae}.  A
+   The deduction system\,\LB\,uses prefixed formulae\index{prefixed formula}.  A
    prefixed formula is shaped like $\mathsf s::\varphi$ where $\mathsf s $
    is a world term and $\varphi$ is a formula.
    Informally, this prefixed formula means that the formula~$\varphi$ is
    satisfied in a state referenced by~$\mathsf s$.
-   A \index{sequent} is shaped like
+   A sequent\index{sequent} is shaped like
    $\Theta\parallel \Gamma\longrightarrow \Delta$ where
    $\Theta$ is a finite set of world inequalities and both
    $\Gamma$ and $\Delta$ are finite sets of prefixed formulae.
@@ -476,7 +477,7 @@
    for any world term $\mathsf s$ occurring in $\Delta$ or $\Gamma$.
 
    A set~$\Theta$ of world inequalities
-   \index{conforms to} world restriction set~$\mathsf R$ when all of the
+   conforms to\index{conforms to} world restriction set~$\mathsf R$ when all of the
    following hold:
    \begin{itemize}
     \item $\mathsf s\le \mathsf t, \mathsf t\le \mathsf u\in
@@ -593,7 +594,7 @@
   prefixed formulae, $\delta(\Gamma)$ denotes the conjunction
   of $\delta(t_i::\varphi_i)$ taken over $i\in I$.
    We say a pair
-   $\tuple{M,\delta}$ \index{satisfies}
+   $\tuple{M,\delta}$ satisfies\index{satisfaction}
    $\Theta\parallel\Gamma\longrightarrow\Delta$ when $\delta(\Theta)$ and
    $\delta(\Gamma)$ implies $\delta(\varphi)$ for some $\varphi$
    in~$\Delta$.
@@ -760,7 +761,7 @@
   at least one interleaving \textrm{R$\supset$} rule between $S$ and $T$
   has its left formula not introduced by thinning~(LT).
   \begin{definition}
-   A \index{refutation ladder} is a ladder made of the rules in
+   A refutation laddar\index{refutation ladder} is a ladder made of the rules in
    Fig.~\ref{refladder} that satisfies
    \begin{description}
     \item[ (R1)] Thinning \textrm{(LT)} occurs only immediately above \textrm{R$\supset$} for the
@@ -792,7 +793,7 @@
 	 in the ladder, $\Theta$ conforms to~$\mathsf R$.
    \end{description}
   \end{definition}
-  A \index{refutation ladder of a sequent}~$S$ is a refutation ladder
+  A refutation ladder of a sequent\index{refutation ladder of a sequent}~$S$ is a refutation ladder
   with
   $S$ at the bottom.
   The conditions \textbf{(R2)} and \textbf{(R3)} ensure that every
@@ -819,7 +820,7 @@
   \end{proof}
 
   \begin{definition}
-   A \index{complete refutation ladder} of~$S$ is a refutation ladder which is
+   A complete refutation ladder\index{complete refutation ladder} of~$S$ is a refutation ladder which is
    \begin{itemize}
     \item maximal: not a proper sub-ladder of any
 	  refutation ladder of~$S$
@@ -879,7 +880,7 @@
    \left(\bigcup_i\Delta_i\right)$ where $i$ runs over
    each sequent $\Theta_i\parallel \Gamma_i\longrightarrow\Delta_i$
    occurring in~$L$.
-   We say $L$ is \index{unprovable} when $\cup L$ is.
+   We say $L$ is unprovable\index{unprovable} when $\cup L$ is.
 
    \begin{lemma}
     \label{comprefl}

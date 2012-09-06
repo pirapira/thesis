@@ -81,7 +81,7 @@ countably infinite.
 Channels have involution $c\mapsto\co c$ with
 $c\neq \co c$ and
 $\co{\co c} = c$.
-A \index{term}~$t$ is defined by BNF:
+A term\index{term}~$t$ is defined by BNF:
 \[
  t::= x
  \mid (t)t
@@ -92,7 +92,7 @@ A \index{term}~$t$ is defined by BNF:
  \mid \mat t x t x t
 \]
 where $x$ is a variable and $c$ is a channel.
-A \index{stack}~$\pi$ is defined by BNF:
+A stack\index{stack}~$\pi$ is defined by BNF:
 \[
  \pi ::= \epsilon
  \mid t\cdot \pi
@@ -100,12 +100,12 @@ A \index{stack}~$\pi$ is defined by BNF:
  \enspace.
 \]
 We write the set of terms as $\Lambda$ and stacks~$\Pi$.
-An \index{executable} is a multiset on $\Lambda\times\Pi$.
+An executable\index{executable} is a multiset on $\Lambda\times\Pi$.
 We use $\conc$ for delimiting elements in an executable.
 
 % 2a' reduction
-A \index{schedule} is a total order on channels.
-Given a fixed schedule~$\sche$, the \index{reduction} relation~$\red$
+A schedule\index{schedule} is a total order on channels.
+Given a fixed schedule~$\sche$, the reduction\index{reduction} relation~$\red$
 on executables
 is defined to be the smallest preorder
 that satisfies:
@@ -171,11 +171,11 @@ as
 $\phi_0\limp(\phi_1\limp\cdots\limp\phi_n)$.
 A type is an element of $\form(\emptyset)$.
 
-A \index{sequent} $\sequent{\G}{\tj t\phi}$ consists of a
+A sequent\index{sequent} $\sequent{\G}{\tj t\phi}$ consists of a
 context~$\G$ and a term~$t$ associated with a type~$\phi$.
-The \index{context} is a finite sequence of variables associated with types.
+The context\index{context} is a finite sequence of variables associated with types.
 
-A \index{derivation} is a tree composed of the derivation rules below
+A derivation\index{derivation} is a tree composed of the derivation rules below
 whose top rules are Ax:\\ \noindent
 
 \AxiomC{}
@@ -271,7 +271,7 @@ appearing in $\phi$ or $\psi$.
 % 2C truth values and models. make them disjunctive!
 %    so that the empty set does not count as successful.
 %    Also, make it closed for ``for all''
-A \index{pole}~$\bbot$ is a set of executables
+A pole\index{pole}~$\bbot$ is a set of executables
 which satisfies
 \begin{enumerate}
  \item \label{red-closed} $e$ is in $\bbot$ if $e\red e'$ and
@@ -288,9 +288,9 @@ calculi~\citep{hiraiflops2012},
 where
 components are interpreted disjunctively.
 
-An \index{environment} is a pair of a stack and an executable.
+An environment\index{environment} is a pair of a stack and an executable.
 The set of environments is written as~$E$.
-A \index{program} is a pair of a term an executable.
+A program\index{program} is a pair of a term an executable.
 For a set~$\mathcal Z$ of environments, $\mathcal Z\rightarrow\bbot$ denotes
 the set of programs $(t,e)$ such that
 for any environment $(\pi,e')\in \mathcal Z$,
@@ -1002,7 +1002,7 @@ constructive content of proofs.
 \section{Asynchronous Semantics}
 \label{sec:async}
 
-A \index{term}~$t$ is defined by BNF:
+A term\index{term}~$t$ is defined by BNF:
 \[
  t::= x
  \mid (t)t
@@ -1013,20 +1013,20 @@ A \index{term}~$t$ is defined by BNF:
  \mid \reader  c
 \]
 where $x$ is a variable and $c$ is a channel.
-A \index{stack}~$\pi$ is defined by BNF:
+A stack\index{stack}~$\pi$ is defined by BNF:
 \[
  \pi ::= \epsilon
  \mid t\cdot \pi
  \enspace.
 \]
 We write the set of terms as $\Lambda$ and stacks~$\Pi$.
-A \index{store} is a partial mapping from locations to
+A store\index{store} is a partial mapping from locations to
 terms, equivalently, a mapping from locations to terms and $\bot$'s.
-The \index{empty store}~$S_\epsilon$ maps any channel to $\bot$.
+The empty store\index{empty store}~$S_\epsilon$ maps any channel to $\bot$.
 For a store $S$, we define a store $S[c\colon\phi\mapsto x]$ to be
 the same as $S$ except that $S[c\colon\phi\mapsto x](c\colon\phi\mapsto
 x)$ is $x$.
-An \index{executable} is a finite multiset on $\Lambda \times \Pi$,
+An executable\index{executable} is a finite multiset on $\Lambda \times \Pi$,
 paired with a store.
 
 % 2a' reduction
