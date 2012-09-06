@@ -4,6 +4,9 @@
 setspace, float, amsthm}
 \usepackage{enumitem}
 \usepackage{textcomp}
+\usepackage{makeidx}
+
+\makeindex
 
 %% from http://yav.purely-functional.net/haskell_latex.html
 \usepackage{fancyvrb}
@@ -60,25 +63,11 @@ setspace, float, amsthm}
 \input{haskell.tex}
 \input{pole.tex}
 
-
-
-
-% % The bibliography should be embedded for final submission.
-
-
-
-\paragraph{Acknowledgement.}
-This research was partially supported by the Ministry of Education,
-Science, Sports and Culture, Grant-in-Aid for JSPS Fellows, 23-6978, 2011.
-This research was partially supported by
-Grant-in-Aid for JSPS Fellows, 23-6978, 2011.
-The author thank Tadeusz Litak for informing the author of
-Danos and Krivine's work.
-
-\appendix
+\printindex
 
 \bibliographystyle{plainnat}
 \bibliography{hirai-thesis}
 
+\appendix
 
 \end{document}

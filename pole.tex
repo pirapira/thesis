@@ -19,7 +19,7 @@
 % \maketitle
 
 
-\section{Summary}
+\subsection{Summary}
 %%% abstract
 \citet{danos-krivine} investigate
 the computational semantics of disjunctive tautologies
@@ -84,7 +84,7 @@ countably infinite.
 Channels have involution $c\mapsto\co c$ with
 $c\neq \co c$ and
 $\co{\co c} = c$.
-A \textit{term}~$t$ is defined by BNF:
+A \index{term}~$t$ is defined by BNF:
 \[
  t::= x
  \mid (t)t
@@ -94,19 +94,19 @@ A \textit{term}~$t$ is defined by BNF:
  \mid (t\conc t)
 \]
 where $x$ is a variable and $c$ is a channel.
-A \textit{stack}~$\pi$ is defined by BNF:
+A \index{stack}~$\pi$ is defined by BNF:
 \[
  \pi ::= \epsilon
  \mid t\cdot \pi
  \enspace.
 \]
 We write the set of terms as $\Lambda$ and stacks~$\Pi$.
-An \textit{executable} is a multiset on $\Lambda\times\Pi$.
+An \index{executable} is a multiset on $\Lambda\times\Pi$.
 We use $\conc$ for delimiting elements in an executable.
 
 % 2a' reduction
-A \textit{schedule} is a total order on channels.
-Given a fixed schedule~$\sche$, the \textit{reduction} relation~$\red$
+A \index{schedule} is a total order on channels.
+Given a fixed schedule~$\sche$, the \index{reduction} relation~$\red$
 on executables
 is defined to be the smallest preorder
 that satisfies:
@@ -161,11 +161,12 @@ as
 $\phi_0\limp(\phi_1\limp\cdots\limp\phi_n)$.
 A type is an element of $\form(\emptyset)$.
 
-A \textit{sequent} $\sequent{\G}{\tj t\phi}$ consists of a
+A \index{sequent} $\sequent{\G}{\tj t\phi}$ consists of a
 context~$\G$ and a term~$t$ associated with a type~$\phi$.
-The \textit{context} is a finite sequence of variables associated with types.
+The \index{context} is a finite sequence of variables associated with types.
 
-A \textit{derivation} is a tree composed of the derivation rules below:\\ \noindent
+A \index{derivation} is a tree composed of the derivation rules below
+whose top rules are Ax:\\ \noindent
 
 \AxiomC{}
 \LL  {Ax}
@@ -275,7 +276,7 @@ of the following partial derivation:\\
 % 2C truth values and models. make them disjunctive!
 %    so that the empty set does not count as successful.
 %    Also, make it closed for ``for all''
-A \textit{pole}~$\bbot$ is a set of executables
+A \index{pole}~$\bbot$ is a set of executables
 which satisfies
 \begin{enumerate}
  \item \label{red-closed} $e$ is in $\bbot$ if $e\red e'$ and
@@ -292,9 +293,9 @@ calculi~\citep{hiraiflops2012},
 where
 components are interpreted disjunctively.
 
-An \textit{environment} is a pair of a stack and an executable.
+An \index{environment} is a pair of a stack and an executable.
 The set of environments is written as~$E$.
-A \textit{program} is a pair of a term an executable.
+A \index{program} is a pair of a term an executable.
 For a set~$\mathcal Z$ of environments, $\mathcal Z\rightarrow\bbot$ denotes
 the set of programs $(t,e)$ such that
 for any environment $(\pi,e')\in \mathcal Z$,
@@ -303,12 +304,12 @@ A set $\mathcal X$ of programs is called a truth value
 iff there exists
 such $\mathcal Z$ that $\mathcal X = \mathcal Z\rightarrow \bbot$.
 We define programs and environments because if we continue using
-terms and stacks, the proof of adequacy (Prop.~\ref{c:adequacy}) does
+terms and stacks, the proof of adequacy (Proposition~\ref{c:adequacy}) does
 not go through the case for
 ($\limp$E,~\textminus), \ref{c:second}.
 
 For $\phi\in\form(2^E)$ and $|\cdot|^-_0\colon\pvar\rightarrow 2^E$,
-we define $\nsem{\phi}\colon 
+we define $\nsem{\phi}\colon
 2^E$ inductively as
 \begin{align*}
  \nsem{\mathcal Z} &= \mathcal Z \\
@@ -607,7 +608,7 @@ same time.
 	\item Take any $(\vec{g_0},{e_0})\in\sem{\G_0}$,
 	      $(\vec{g_1},{e_1})\in\sem{\G_1}$ and
 	      $(\pi,e')\in\nsem{\phi}$.
-	      By Prop.~\ref{comod-type}, we have
+	      By Proposition~\ref{comod-type}, we have
 	      $(\comodL,\comodR,\emptyset)\in\sempair{\phi_0\limp\phi_1,\phi_1\limp\phi_0}$.
 	      By induction hypothesis~\ref{c:second}, the terms
 	      $t'_0=t_0[\comodL/\hat{x}][\vec{g_0}/\G_0]$ and
@@ -615,7 +616,7 @@ same time.
 	      satisfy
 	      $(t_0',t_1',{e_0}\conc
 	      {e_1})\in\sempair{\phi,\phi}$.
-	      By Prop.~\ref{squash}, we have $(t'_0\conc t'_1,
+	      By Proposition~\ref{squash}, we have $(t'_0\conc t'_1,
 	      {e_0}\conc {e_1})\in\sem{\phi}$.
 	\item
 	      Without loss of generality,
@@ -655,7 +656,7 @@ same time.
 	     statement~\ref{c:second}.
 	     By this, $(\comodL, t_1',{e_1})$ is in
 	     $\sempair{\phi_0\limp\phi_1,\phi}$
-	     because of Prop.~\ref{comod-type}.
+	     because of Proposition~\ref{comod-type}.
 	     So, program $p =(\comodL,(t_1',\pi\conc{e_1}))$ is in
 	     $\sem{\phi_0\limp\phi_1}$.
 	     By induction hypothesis~\ref{c:second} for the derivation
@@ -760,7 +761,7 @@ and \ref{c:second} uses \ref{c:first} in the ($\limp$E,~\textminus).
 \begin{proof}
  We denote by $\bbot$ the set of executables that reduce to a multiset
  containing an element of $\{(a,\pi_A), (b,\pi_B)\}$.
- By Prop.~\ref{prop:exec-on-pole},
+ By Proposition~\ref{prop:exec-on-pole},
  this is a pole.
  Take $\nsem{A}_0 =\{(\pi_A,\emptyset)\}$, $\nsem{B}_0 =
  \{(\pi_B,\emptyset)\}$ and $\nsem{X}_0=\{(\pi,\emptyset)\}$.
@@ -808,7 +809,7 @@ constructive content of proofs.
 \section{Asynchronous Semantics}
 \label{sec:async}
 
-A \textit{term}~$t$ is defined by BNF:
+A \index{term}~$t$ is defined by BNF:
 \[
  t::= x
  \mid (t)t
@@ -819,26 +820,20 @@ A \textit{term}~$t$ is defined by BNF:
  \mid \reader  c
 \]
 where $x$ is a variable and $c$ is a channel.
-A \textit{stack}~$\pi$ is defined by BNF:
+A \index{stack}~$\pi$ is defined by BNF:
 \[
  \pi ::= \epsilon
  \mid t\cdot \pi
  \enspace.
 \]
 We write the set of terms as $\Lambda$ and stacks~$\Pi$.
-A \textit{store} is a partial mapping from locations to
+A \index{store} is a partial mapping from locations to
 terms, equivalently, a mapping from locations to terms and $\bot$'s.
-The \textit{empty store}~$S_\epsilon$ maps any channel to $\bot$.
+The \index{empty store}~$S_\epsilon$ maps any channel to $\bot$.
 For a store $S$, we define a store $S[c\colon\phi\mapsto x]$ to be
 the same as $S$ except that $S[c\colon\phi\mapsto x](c\colon\phi\mapsto
 x)$ is $x$.
-A \textit{store} is a partial mapping from locations to
-terms, equivalently, a mapping from locations to terms and $\bot$'s.
-The \textit{empty store}~$S_\epsilon$ maps any channel to $\bot$.
-For a store $S$, we define a store $S[c\colon\phi\mapsto x]$ to be
-the same as $S$ except that $S[c\colon\phi\mapsto x](c\colon\phi\mapsto
-x)$ is $x$.
-An \textit{executable} is a finite multiset on $\Lambda \times \Pi$,
+An \index{executable} is a finite multiset on $\Lambda \times \Pi$,
 paired with a store.
 
 % 2a' reduction

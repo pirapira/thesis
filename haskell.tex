@@ -127,7 +127,7 @@ $\Gamma$, the whole term~$t$ can be typed as $A$.
 
 A hypersequent is a finite sequence of sequents and a derivation
 looks like this.  Each hypersequent consists of a finite number of
-sequents called \textit{clauses}.  Rules from ordinary sequent calculus
+sequents called \index{components}.  Rules from ordinary sequent calculus
 can be accommodated in a hypersequent calculus by allowing external
 contexts from different branches to merge simply.  The derivation below
 is based on such an accommodated rule.
@@ -139,7 +139,7 @@ is based on such an accommodated rule.
 \DisplayProof
 \end{center}
 
-The hypersequent below the line means that at least one clause will be
+The hypersequent below the line means that at least one component will be
 successful.
 More formally, a hypersequent
 $\Gamma_0\vdash\varphi_0\hmid\Gamma_1\vdash\varphi_1\hmid\cdots\hmid
@@ -170,15 +170,15 @@ and it is decided at execution time which one can send information to
 the other.  This phenomenon can be understood as a set of computations
 of which at least one is guaranteed to be successful.  Such a set of
 computations can be represented as a hypersequent.
-@K s a@ as thread @s@'s computation yielding a value of type @a@ and
-@K t b@ as thread @t@'s computation yielding a value of type @b@,
+\verb@K s a@ as thread \verb@s@'s computation yielding a value of type \verb@a@ and
+\verb@K t b@ as thread \verb@t@'s computation yielding a value of type \verb@b@,
 the waitfree protocol described at the end of Subsection~\ref{subsect:wf}
-witnesses the following derivation because either @t@ obtains @b@ or @s@
-obtains @a@ after executing the protocol.
+witnesses the following derivation because either \verb@t@ obtains \verb@b@ or \verb@s@
+obtains \verb@a@ after executing the protocol.
 \begin{center}
- \AxiomC{@K t a@}
- \AxiomC{@K s b@}
- \BinaryInfC{$@K t b@\hmid @K s a@$}
+ \AxiomC{\tt K t a}
+ \AxiomC{\tt K s b}
+ \BinaryInfC{$\mathtt{K t b}\hmid \mathtt{K s a}$}
  \DisplayProof
 \end{center}
 However, this derivation only contains types but not programs.  In this
@@ -293,7 +293,7 @@ In either case, either thread 0 obtains thread 1's input or 1 obtains
 We look at the source code of this sample program.
 
 An obvious thing to do is to establish a TCP connection.  This is done
-by a function called @handle@.
+by a function called \verb@handle@.
 \begin{spec}
 handle :: PortID -> IO Handle
 handle p = withSocketsDo $ do
@@ -304,8 +304,8 @@ handle p = withSocketsDo $ do
 \end{spec}
 Since this connection establishment should be done by a thread,
 we prepare a hypersequent containing this computation.  For that, we can use
-a library function~@single@ that creates a hypersequent containing
-a single clause.
+a library function~\verb@single@ that creates a hypersequent containing
+a single component.
 \begin{spec}
 prepareHandle :: Thread t =>
                  PortID -> IO (K t Handle :*: HNil)
@@ -314,8 +314,8 @@ prepareHandle p = single $ handle p
 
 The next thing to do is asking the user to provide an input.
 In doing that, showing the name of the current thread is useful.
-When a type~@t@ is of the type class~@Thread@, we can obtain the
-thread's number via @atid@ function (@atid@ stands for Abstract Thread
+When a type~\verb@t@ is of the type class~\verb@Thread@, we can obtain the
+thread's number via \verb@atid@ function (\verb@atid@ stands for Abstract Thread
 ID).
 \begin{spec}
 readLine :: Thread t =>
@@ -325,45 +325,45 @@ readLine th h = do
   str <- hGetLine h
   return ((h, str), str)
 \end{spec}
-The result of this interaction is stored in a tuple @((h, str), str)@,
+The result of this interaction is stored in a tuple \verb@((h, str), str)@,
 whose left part contains things to be used locally, and whose right
 part contains things to be used remotely in the other thread.
 
 This distinction of local and remote usage is apparent in the type of
-@comm@ function, which provides the simplest waitfree communication.
+\verb@comm@ function, which provides the simplest waitfree communication.
 \begin{spec}
 comm :: (Thread s, Thread t, HAppend l l' l'') =>
          IO (K t (b,a) :*: l)
          -> IO (K s (d,c) :*: l')
          -> IO (K t (b, c) :*: K s (d, a) :*: l'')
 \end{spec}
-The @comm@ function assumes that the types @s@ and @t@ are @Thread@s and
-that a hypersequent @l''@ is the concatenation of @l@ and @l'@.
-Under this assumption, the function takes two hypersequents in @IO@
+The \verb@comm@ function assumes that the types \verb@s@ and \verb@t@ are \verb@Thread@s and
+that a hypersequent \verb@l''@ is the concatenation of \verb@l@ and \verb@l'@.
+Under this assumption, the function takes two hypersequents in \verb@IO@
 monad and returns
-a hypersequent in @IO@ monad.
-The first argument says either @t@'s computation of a value of type
-@(b,a)@ or one of the clauses of the hypersequent~@l@ succeeds.
-The second argument says the same thing for @s@'s @(d,c)@ and @l'@.
-If any clause in @l@ or @l'@ is successful, that clause witnesses the
+a hypersequent in \verb@IO@ monad.
+The first argument says either \verb@t@'s computation of a value of type
+\verb@(b,a)@ or one of the components of the hypersequent~\verb@l@ succeeds.
+The second argument says the same thing for \verb@s@'s \verb@(d,c)@ and \verb@l'@.
+If any component in \verb@l@ or \verb@l'@ is successful, that component witnesses the
 resulting hypersequent.  Otherwise, when
-thread @t@
-computes @(b,a)@ value and
-@s@ computes @(d,c)@ value successfully, the @comm@ function guarantees either
-@t@ obtains the @c@ value or @s@ obtains the @a@ value.  The @b@ value
-and the @d@ value are only used locally.  Without this distinction of
+thread \verb@t@
+computes \verb@(b,a)@ value and
+\verb@s@ computes \verb@(d,c)@ value successfully, the \verb@comm@ function guarantees either
+\verb@t@ obtains the \verb@c@ value or \verb@s@ obtains the \verb@a@ value.  The \verb@b@ value
+and the \verb@d@ value are only used locally.  Without this distinction of
 local and remote usage, the TCP connections would be communicated
 together with the inputs so that the connections are not closed until all
 threads terminates.
 
 The final agenda is to output the obtained inputs.  This is done by the
-@printTaken@ function.
-Similarly to @readLine@ function, the @printTaken@ function takes the
+\verb@printTaken@ function.
+Similarly to \verb@readLine@ function, the \verb@printTaken@ function takes the
 thread and the result of the last computation.
 
-Everything is wrapped up into a hyperseqeunt~@content@ of the type
-@IO (K ZeroT () :*: K (SucT ZeroT) () :*: HNil)@
-and it is @execute@d.  The content of @execute@ function is explained in
+Everything is wrapped up into a hyperseqeunt~\verb@content@ of the type
+\verb@IO (K ZeroT () :*: K (SucT ZeroT) () :*: HNil)@
+and it is \verb@execute@d.  The content of \verb@execute@ function is explained in
 the next section.
 
 \section{Implementation}
@@ -375,8 +375,8 @@ computation.
 We expressed threads as type level natural numbers, which is obtained by
 simplifying heterogeneous lists.
 Each thread is expressed as a singleton type containing a single value.
-When that value is passed to the @atid@ function, the function returns
-an @AbstractThreadId@, which is tentatively defined to be @Int@.
+When that value is passed to the \verb@atid@ function, the function returns
+an \verb@AbstractThreadId@, which is tentatively defined to be \verb@Int@.
 \begin{code}
 class Thread t where
     t :: t
@@ -394,9 +394,9 @@ instance Thread t => Thread (SucT t) where
 
 type AbstractThreadId = Int
 \end{code}
-Thread~@t@'s computation of type~@a@ is represented as @K t a@.
-Internally, it is a pair of thread and a computation of @JobStatus a@.
-A @JobStatus@ can be @Done TryAnotherJob@ or @Done Finished@ after the
+Thread~\verb@t@'s computation of type~\verb@a@ is represented as \verb@K t a@.
+Internally, it is a pair of thread and a computation of \verb@JobStatus a@.
+A \verb@JobStatus@ can be \verb@Done TryAnotherJob@ or \verb@Done Finished@ after the
 thread fails to read from the shared memory.
 \begin{code}
 newtype K t a = K (t, IO (JobStatus a))
@@ -404,7 +404,7 @@ newtype K t a = K (t, IO (JobStatus a))
 data JobStatus a = Having a | Done ThreadStatus
 data ThreadStatus = TryAnotherJob | Finished
 \end{code}
-A hypersequent is either @HNil@ or @HCons (K t e) l@ where @l@ is a
+A hypersequent is either \verb@HNil@ or \verb@HCons (K t e) l@ where \verb@l@ is a
 hypersequent.  This inductive definition realizes the idea of a
 heterogeneous list of threads' computations.  This construction is an
 adaptation of \citep{hetero}.
@@ -427,7 +427,7 @@ cells. The MVar cells are used for implementing the communication
 rule. Although we use MVar cells, which are capable of supporting full
 synchronization among threads, we only use a limited set of functions
 that only allows waitfree communication. For instance, we do not use
-@takeMVar@ or @putMVar@ because they are blocking operations.
+\verb@takeMVar@ or \verb@putMVar@ because they are blocking operations.
 
 \subsection{How to Execute a Hypersequent}
 Of course we can execute a hypersequent after we construct it.  The
@@ -435,9 +435,9 @@ execution takes three steps: preparing computations, spawning
 threads and waiting for them.
 
 After a hypersequent derivation is constructed, it is turned into a list
-of local computations.  The type @L@ is internally used to represent a
-local computation.  Each computation results in either @TryAnotherJob@
-or @Finished@.  These decide whether the thread continues to operate or stops.
+of local computations.  The type \verb@L@ is internally used to represent a
+local computation.  Each computation results in either \verb@TryAnotherJob@
+or \verb@Finished@.  These decide whether the thread continues to operate or stops.
 \begin{code}
 type L = (AbstractThreadId, IO ThreadStatus)
 \end{code}
@@ -463,9 +463,9 @@ jth2th (Done x) = x
 \end{code}
 
 We construct a list of computations for each thread.  The lists are
-called @JobChannel@s.  The @JobChannel@s are put in a finite map called
-@JobPool@.  The @JobPool@ maps each @AbstractThreadId@ to a
-@JobChannel@.  Later, the worker threads look at this map to take jobs.
+called \verb@JobChannel@s.  The \verb@JobChannel@s are put in a finite map called
+\verb@JobPool@.  The \verb@JobPool@ maps each \verb@AbstractThreadId@ to a
+\verb@JobChannel@.  Later, the worker threads look at this map to take jobs.
 \begin{code}
 type JobChannel = [IO ThreadStatus]
 
@@ -481,7 +481,7 @@ constructJobPool ((aid, action) : tl) =
 \end{code}
 
 At last, threads are spawned.  Each thread's operation is defined in
-@worker@ function.  It takes two arguments.  The first argument is a
+\verb@worker@ function.  It takes two arguments.  The first argument is a
 channel containing jobs.  The other argument is a MVar cell for telling
 termination.
 \begin{code}
@@ -495,7 +495,7 @@ worker (hd : tl) fin = do
 \end{code}
 
 When the main thread spawns the worker threads, it has their
-@ThreadId@s and the termination MVar cells in a finite map.
+\verb@ThreadId@s and the termination MVar cells in a finite map.
 After spawning the worker threads, the main thread waits for each
 thread to terminate and then kills it.
 \begin{code}
@@ -520,7 +520,7 @@ threadWait (thid, fin) w = do
     w
 \end{code}
 
-At last, everything is wrapped up into a function called @execute@.
+At last, everything is wrapped up into a function called \verb@execute@.
 \begin{code}
 execute :: Lconvertible l => IO l -> IO ()
 execute ls = do
@@ -533,8 +533,8 @@ run = Map.foldrWithKey threadSpawn $ return Map.empty
 \subsection{How to Construct a Hypersequent}
 Since a hypersequent represents a finite multiset of computations of which
 at least one succeeds, there cannot be an empty hypersequent.  Thus, the
-simplest hypersequent is a hypersequent consisting of a single clause.
-This can be build with @single@ function.
+simplest hypersequent is a hypersequent consisting of a single component.
+This can be build with \verb@single@ function.
 \begin{code}
 single :: Thread t => (t -> IO a) -> IO (K t a :*: HNil)
 single f = return $ HCons (remote $ f t) HNil
@@ -542,25 +542,25 @@ single f = return $ HCons (remote $ f t) HNil
     remote y = K (t, fmap Having y)
 \end{code}
 
-As we want to regard a hypersequent as a multiset of clauses, we allow
+As we want to regard a hypersequent as a multiset of components, we allow
 permutation and concatenation of hypersequents.
-First, @exchange@ function changes the positions of the first two
-clauses:
+First, \verb@exchange@ function changes the positions of the first two
+components:
 \begin{code}
 exchange :: K t a :*: K s b :*: l ->
             IO (K s b :*: K t a :*: l)
 exchange (HCons x (HCons y rest)) =
   return $ HCons y $ HCons x rest
 \end{code}
-Second, @cycling@ functions puts the last clause in the first position.
+Second, \verb@cycling@ functions puts the last component in the first position.
 In order to implement this function, we defined a type class called
-@HLast@.
-The type class instance @HLast l a heads@ means that the hypersequent @l@
-is a concatenation of @heads@ and a singleton list made of @a@.  In
-other words, the last element of @l@ is @a@ and the rest is @heads@.
+\verb@HLast@.
+The type class instance \verb@HLast l a heads@ means that the hypersequent \verb@l@
+is a concatenation of \verb@heads@ and a singleton list made of \verb@a@.  In
+other words, the last element of \verb@l@ is \verb@a@ and the rest is \verb@heads@.
 This tactic of defining a type class is taken from the paper for
 heterogeneous collections~\citep{hetero}.
-By @exchange@ and @cycling@, we can perform all permutations of
+By \verb@exchange@ and \verb@cycling@, we can perform all permutations of
 hypersequents.
 \begin{code}
 class HLast l a heads | l -> a, l -> heads
@@ -582,9 +582,9 @@ cycling :: HLast l last heads =>
   IO l -> IO (HCons last heads)
 cycling = fmap cycling_
 \end{code}
-Finally, we provide concatenation of hypersequents with @follows@
+Finally, we provide concatenation of hypersequents with \verb@follows@
 function.
-Again, we prepare a type class called @HAppend@ for this.
+Again, we prepare a type class called \verb@HAppend@ for this.
 \begin{code}
 follows :: HAppend l l' l'' => IO l -> IO l' -> IO l''
 follows l0 l1 = do
@@ -605,9 +605,9 @@ instance (HyperSequent l, HAppend l l' l'')
 
 In addition to simple permutations of hypersequents, we have another
 structural rule called external contraction.  When a hypersequent begins
-with two clauses of the same type, they can be merged into one.  The
-resulting clause represents the computation of trying the original
-clauses one by one until one of them is successful.
+with two componentss of the same type, they can be merged into one.  The
+resulting component represents the computation of trying the original
+components one by one until one of them is successful.
 \begin{code}
 choice :: Thread t => K t a :*: K t a :*: l -> IO (K t a :*: l)
 choice (HCons (K (_, comp0))
@@ -624,7 +624,7 @@ choice (HCons (K (_, comp0))
 
 It is possible to compose a local computation with another computation
 and obtain a new local computation.
-For that purpose, we prepare @extend@ function.
+For that purpose, we prepare \verb@extend@ function.
 \begin{code}
 extend :: Thread t =>
   (K t a -> IO (JobStatus b)) -> K t a -> K t b
@@ -656,7 +656,7 @@ progress_ hdf tlf (HCons ax bl) = do
 
 In such transformations,
 the extending function must receive the result of the previous function.
-This is achieved with the help of @peek@ function.
+This is achieved with the help of \verb@peek@ function.
 \begin{code}
 peek :: Thread t =>
   (t -> JobStatus a -> IO b) -> K t a -> IO b
@@ -670,11 +670,11 @@ upto the write and the other from the read operation. The former part is
 hidden in the local computation whereas the latter part is stored in the
 hypersequent so that the types of the latest computation is visible to
 the user of the library.
-@comm@ stands for communication.  @comm@ combines two hypersequents with
+\verb@comm@ stands for communication.  \verb@comm@ combines two hypersequents with
 a communicating component from each hypersequent.
-It can be used in the form @comm hypersequent1 error1 hypersequent2
-error2@ where @error1@ and
-@error2@ specifies what to do in case of read failure.
+It can be used in the form
+\verb@comm hypersequent1 error1 hypersequent2 error2@ where \verb@error1@ and
+\verb@error2@ specifies what to do in case of read failure.
 \begin{code}
 comm :: (Thread s, Thread t, HAppend l l' l'') =>
         IO (HCons (K t (b,a)) l)
@@ -717,8 +717,8 @@ using this library (completeness).
 
 \subsection{Soundness}
 
-In the library code, the worker threads only use non-blocking @MVar@
-operations (a blocking operation @readMVar@ is used but by the main thread).
+In the library code, the worker threads only use non-blocking \verb@MVar@
+operations (a blocking operation \verb@readMVar@ is used but by the main thread).
 This ensures that only waitfree computation can be implemented using this
 library unless the user uses other communication primitives explicitly.
 
@@ -816,22 +816,22 @@ However, we have to decompose this intuitive solution into pieces of
 two-thread communication.
 
 As an example, we treat the three-thread case.  The three threads are
-named @ZeroT@, @FirstT@ and @SecondT@.
+named \verb@ZeroT@, \verb@FirstT@ and \verb@SecondT@.
 This time, we do not follow all the details but just look at the types.
 
 First, each thread computes its own id and stores it in a tuple.
 \begin{spec}
 hOwnId :: Thread t => IO (K t (t, t) :*: HNil)
 \end{spec}
-Then, @ZeroT@ and @FirstT@ compete.  This results in the
-following hypersequent, which means that either @ZeroT@ obtains
-@FirstT@'s id or @FirstT@ obtains @ZeroT@'s id.
+Then, \verb@ZeroT@ and \verb@FirstT@ compete.  This results in the
+following hypersequent, which means that either \verb@ZeroT@ obtains
+\verb@FirstT@'s id or \verb@FirstT@ obtains \verb@ZeroT@'s id.
 \begin{spec}
 IO (K ZeroT (ZeroT, FirstT) :*:
     K FirstT (FirstT, ZeroT) :*: HNil)
 \end{spec}
 
-Before @SecondT@ is put in consideration, we make the first two threads
+Before \verb@SecondT@ is put in consideration, we make the first two threads
 to duplicate their possessions so that they can retain the possessions
 and communicate the possessions at the same time.
 \begin{spec}
@@ -841,17 +841,17 @@ twoBeforeComm :: IO (
                         HNil)
 \end{spec}
 
-After @SecondT@ competes with @ZeroT@, we obtain the following
-hypersequent.  @FirstT@'s possessions are not changed, but @ZeroT@ and
-@SecondT@ tries to exchange their possessions.
+After \verb@SecondT@ competes with \verb@ZeroT@, we obtain the following
+hypersequent.  \verb@FirstT@'s possessions are not changed, but \verb@ZeroT@ and
+\verb@SecondT@ tries to exchange their possessions.
 \begin{spec}
 three__ :: IO
   (K FirstT ((FirstT, ZeroT), (FirstT, ZeroT)) :*:
    K ZeroT ((ZeroT, FirstT), SecondT) :*:
    K SecondT (SecondT, (ZeroT, FirstT)) :*: HNil)
 \end{spec}
-Again, @SecondT@ competes with @FirstT@.  This makes a hypersequent with
-any clause containing all threads.  Since at least one clause succeeds,
+Again, \verb@SecondT@ competes with \verb@FirstT@.  This makes a hypersequent with
+any component containing all threads.  Since at least one component succeeds,
 at least one thread obtain all threads' ids.
 
 However, the participating set problem requires more.  The following
@@ -864,8 +864,8 @@ Thread 0: obtained [0]
 Thread 2: obtained [2]
 \end{verbatim}
 In this case threads 0 and 2 have to compete in order to decide which
-is later.  In general, either @ZeroT@--@SecondT@ or
-@FirstT@--@SecondT@ competition is required so we do both and
+is later.  In general, either \verb@ZeroT@--\verb@SecondT@ or
+\verb@FirstT@--\verb@SecondT@ competition is required so we do both and
 concatenate the three competitions as one derivation.
 Both of the two thread competition is similar to the simplest nontrivial
 waitfree protocol already explained so we omit the details.  The whole
@@ -909,9 +909,9 @@ This communication rule inspired me to model waitfree computation using
 hypersequents by using a rule
 \begin{center}
 \begin{center}
- \AxiomC{$\hyper_0\hmid@K t a@$}
- \AxiomC{$\hyper_1\hmid@K s b@$}
- \BinaryInfC{$\hyper_0\hmid\hyper_1\hmid @K t b@\hmid @K s a@$}
+ \AxiomC{$\hyper_0\hmid\mathtt{K t a}$}
+ \AxiomC{$\hyper_1\hmid\mathtt{K s b}$}
+ \BinaryInfC{$\hyper_0\hmid\hyper_1\hmid \mathtt{K t b}\hmid \mathtt{K s a}$}
  \DisplayProof
 \end{center}
 \end{center}
@@ -935,10 +935,10 @@ same as intuitionistic or classical logic.  The only difference of
 G\"odel--Dummett logic from intuitionistic logic is that more formulas
 are provable in G\"odel--Dummett
 logic than in intuitionistic logic.  So, if we want to encode G\"odel--Dummett
-logic faithfully, we do not have to introduce modalities such as @K t@.
-Even without such modalities, we can regard each clause of a
+logic faithfully, we do not have to introduce modalities such as \verb@K t@.
+Even without such modalities, we can regard each component of a
 hypersequent as a thread. However,
-If we abandon modalities and regard clauses of a hypersequent as
+If we abandon modalities and regard components of a hypersequent as
 threads, the participating set problem cannot be solved because the communication rule
 splits the threads into two separate groups and any prior
 inter-group communication is prohibited.
@@ -946,21 +946,21 @@ inter-group communication is prohibited.
 This restriction would be OK if we were only interested in making sure that
 at least one thread knows every other thread.  However, since the
 participating set problem does not allow any two threads to be ignorant
-of each other, the @comm@ rule cannot provide enough communication power
-to solve participating set problem for the clauses of a hypersequent.
+of each other, the \verb@comm@ rule cannot provide enough communication power
+to solve participating set problem for the components of a hypersequent.
 
 When we look at the hypersequent derivations as proofs, since we are only
 interested in the constructive content, we are only looking at one
-successful clause.  However, when we regard hypersequent derivations as
-communicating threads, we have to look at what every clause does, not
+successful component.  However, when we regard hypersequent derivations as
+communicating threads, we have to look at what every component does, not
 only the successful one.  So, the meaning of a hypersequent derivation
 should not be exactly
 $\left(\bigwedge\Gamma_0\rightarrow\varphi_0\right)\vee\left(\bigwedge\Gamma_1\rightarrow\varphi_1\right)\vee\cdots\vee\left(\bigwedge
-\Gamma_n\rightarrow\varphi_n\right)$, which assures at least one clause
+\Gamma_n\rightarrow\varphi_n\right)$, which assures at least one component
 succeeds.
-Rather, it would be a disjunction of all permutations of the clauses:
+Rather, it would be a disjunction of all permutations of the components:
 i.e., the disjunction of all possible outputs of the participating set problem.
-And a permutation of the clauses can only be represented using a
+And a permutation of the components can only be represented using a
 non-commutative operator.  Is the non-commutative operators of
 full Lambek calculus suffice?  If that is the case, there is a hope that
 we can study

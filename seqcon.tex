@@ -175,10 +175,11 @@
     has simpler syntax than many other logics for communication.
 
     We give a deduction system and show
-    soundness (Theorem~\ref{soundness}), disjunction property (Theorem~\ref{disjunction-property}),
+    soundness (Proposition~\ref{soundness}),
+    disjunction property (Proposition~\ref{disjunction-property}),
     strong completeness
-    (Theorem~\ref{strong-completeness}), finite model property
-    (Theorem~\ref{thm:fmp}) and decidability (Theorem~\ref{decidability}).
+    (Proposition~\ref{strong-completeness}), finite model property
+    (Proposition~\ref{thm:fmp}) and decidability (Proposition~\ref{decidability}).
 
   \subsection{Application to Waitfree Communication}
 
@@ -191,8 +192,8 @@
        in the logic \iec\, for asynchronous computation.
        Technically, we defined a class of models called sequential models
        and proved soundness
-       (Lemma~\ref{sc-sound}) and completeness
-       (Theorem~\ref{sc-comp}) of the axiom type with respect to the sequential models.
+       (Proposition~\ref{sc-sound}) and completeness
+       (Proposition~\ref{sc-comp}) of the axiom type with respect to the sequential models.
 
     \paragraph{Waitfree communication}
     A waitfree protocol over shared memory~\cite{herlihy1991wait}
@@ -228,9 +229,9 @@
     or not.
     When tasks are restricted to communication defined by
     a class of logical formulae that we call waitfree assertions,
-    we can characterise waitfreely available communication logically (Theorem~\ref{sc-comp})
+    we can characterise waitfreely available communication logically (Proposition~\ref{sc-comp})
     and
-    it is decidable whether a task is waitfreely solvable or not (Theorem~\ref{wf-dec}).
+    it is decidable whether a task is waitfreely solvable or not (Proposition~\ref{wf-dec}).
 
 
 
@@ -242,7 +243,7 @@
 
   \begin{definition}
    \label{formula}
-   We define a \textit{formula} $\varphi$ by the BNF:
+   We define a \index{formula} $\varphi$ by the BNF:
    \[
    \varphi ::= \bot\mid P\mid
    (K_a\varphi)\mid(\varphi\vee\varphi)\mid(\varphi\land\varphi)\mid
@@ -459,7 +460,7 @@
   \newcommand{\model}[1]{\tuple{W#1, \preceq#1, (f_a#1)_{a\in A}, \rho#1}}
   \begin{definition}
    \label{model}
-   A \textit{model} $\tuple{W,\preceq, (f_a)_{a\in A}, \rho}$ is a tuple with following properties:
+   A \index{model} $\tuple{W,\preceq, (f_a)_{a\in A}, \rho}$ is a tuple with following properties:
    \begin{enumerate}
     \item $\tuple{W,\preceq}$ is a partial order,
     \item $f_a\colon W\rightarrow W$ is a~function satisfying
@@ -485,7 +486,7 @@
        The valuation~$\rho$ for propositional variables in $\pvar$ is extended into validity
        relation~$\models$ for all formulae in $\fml$.
        \begin{definition}
-	We define the \textit{satisfaction relation} $\models$ of a~model
+	We define the \index{satisfaction relation} $\models$ of a~model
 	$\tuple{W,\preceq,(f_a)_{a\in A},\rho}$, a~state~$w\in W$ of the model and a
 	formula~$\varphi$.
 	Let us fix a model $M=\tuple{W,\preceq,(f_a)_{a\in A},\rho}$.
@@ -516,14 +517,16 @@
 
        Next, we show that the monotonicity condition on the valuation~$\rho$ of
        propositional variables is preserved by the extension
-       to satisfaction~$\models$ of formulae. Informally, this theorem presents the limitation of the logic \iec:
+       to satisfaction~$\models$ of formulae. Informally, this
+       proposition
+       reveals the limitation of the logic \iec:
        it can only deal with propositions whose satisfaction is preserved by progress with respect to
        the partial order $\preceq$.
-       \begin{theorem}[Kripke monotonicity]
+       \begin{proposition}[Kripke monotonicity]
 	\label{kripke}
 	$M,w\models \varphi$ and $w\preceq v$ imply
 	$M,v\models \varphi$.
-       \end{theorem}
+       \end{proposition}
        \begin{proof}
 	Straightforward using the monotonicity of $f_a$.
        \end{proof}
@@ -578,10 +581,10 @@
   a formula provable under a set of assumptions is always valid whenever the assumptions are
   valid.
 
-  \begin{theorem}[Soundness]
+  \begin{proposition}[Soundness]
    \label{soundness}
    $\Gamma\vdash\varphi$ implies $\Gamma\models\varphi$.
-  \end{theorem}
+  \end{proposition}
   Proof found in the author's Master's thesis.
 
   \subsection{Disjunction Property}
@@ -591,17 +594,17 @@
   disjunction property is the test for constrictive logics.
   \fix{really they say so?}
 
-   \begin{theorem}[Disjunction property]
+   \begin{proposition}[Disjunction property]
     \label{disjunction-property}
     If $\vdash\varphi\vee\psi$ holds, either $\vdash\varphi$ or $\vdash\psi$ holds.
-   \end{theorem}
+   \end{proposition}
    Proof to be found in the author's Master's thesis.
 
   \subsection{Strong Completeness and Finite Model Property}
 
   In this subsection, we show strong completeness and finite model property.
   Since both proofs contain model construction,
-  most parts of both proofs can be written in the same lemmas.
+  most parts of both proofs can be written in the same propositions.
   This utilisation of similarity of finite model property and strong completeness
   is originally the idea of
   Sato~\cite{sato13study}.
@@ -626,7 +629,7 @@
   \begin{definition}
    \label{saturated-set}
    For a set of formulae $\Omega$,
-   a set of formulae $\Gamma\subseteq\Omega$ is \textit{$\Omega$-saturated} if and only if
+   a set of formulae $\Gamma\subseteq\Omega$ is \index{$\Omega$-saturated} if and only if
    \begin{enumerate}
     \item $\Gamma$ is $\Omega$-deductively closed, i.e., $\Gamma\vdash\varphi\in
 	  \Omega\Rightarrow
@@ -657,33 +660,33 @@
   $K_aK_a$ occurrences left.
 
   \fix{is this lemma necessary?}
-  \begin{lemma}
+  \begin{proposition}
    \label{fpreserve}
    For a hereditary $f'$-subformula-closed set $\Omega$,
    if $\Gamma$ is an $\Omega$-saturated set,
    $f_a(\Gamma)$ is an $f'_a(\Omega)$-saturated set.
-  \end{lemma}
+  \end{proposition}
 
   \newcommand{\natpls}{{\mathbb N}^{+}}
 
   \fix{add strong completeness and finite model property}
-\begin{theorem}[Finite model property]
+\begin{proposition}[Finite model property]
  \label{fmp}
  If $\varphi$ is not a theorem of $\iec$,
  there is a finite model $M$ with $M\not\models\varphi$.
-\end{theorem}
+\end{proposition}
 Proof to be found in the author's Master's thesis.
 
-\begin{theorem}[Strong completeness]
+\begin{proposition}[Strong completeness]
  \label{strong-completeness}
  $\Gamma\models\varphi$ implies $\Gamma\vdash\varphi$.
-\end{theorem}
+\end{proposition}
 Proof to be found in the author's Master's thesis.
 
-\begin{theorem}
+\begin{proposition}[Decidability]
  \label{decidability}
  It is decidable whether a formula~$\varphi$ is a theorem of $\iec$ or not.
-\end{theorem}
+\end{proposition}
 Proof to be found in the author's Master's thesis.
 
   \section{Axiom Type for Sequential Consistency}
@@ -751,18 +754,18 @@ Proof to be found in the author's Master's thesis.
   This is the merit of using intuitionistic logic rather than classical logic.
 
   \subsection{Soundness}
-  \begin{lemma}
+  \begin{proposition}
    \label{sc-sound}
    $\vdash_{SC} \varphi \Rightarrow M\models\varphi$ for any sequential model~$M$.
-  \end{lemma}
+  \end{proposition}
   Proof to be found in the author's Master's thesis.)
 
   \subsection{Strong Completeness}
-  \begin{theorem}[Strong completeness for sequential consistency]
+  \begin{proposition}[Strong completeness for sequential consistency]
    \label{sc-comp}
    $\Gamma\vdashsc\varphi$ holds if $M\models \Gamma$ implies $M\models\varphi$ for every
    sequential model~$M$.
-  \end{theorem}
+  \end{proposition}
   Proof to be found in the author's Master's thesis.
 
 
@@ -1007,17 +1010,17 @@ Proof to be found in the author's Master's thesis.
 
   \begin{definition}
    Assume there is a vector of atomic formulae $(I_a)_{a\in P}$.
-   A~\textit{waitfree protocol description} $\varphi$ is a formula of the form
+   A~\index{waitfree protocol description} $\varphi$ is a formula of the form
    \[
    \varphi = \bigwedge_{a\in P} K_a K_\memory K_a \cdots K_a I_a
    \]
    where $K_a$ and $K_\memory$ appear alternatively in ``$\cdots$''.
-   A~\textit{waitfree task specification} $\psi$ is defined with the BNF:
+   A~\index{waitfree task specification} $\psi$ is defined with the BNF:
    \[
    \psi ::= K_a\psi\mid \psi\land\psi\mid \psi\vee\psi\mid I_a
    \]
    where $a$ stands for a process in $P$.
-   A~\textit{waitfree assertion} is a formula~$\varphi\supset\psi$ where $\varphi$ is a
+   A~\index{waitfree assertion} is a formula~$\varphi\supset\psi$ where $\varphi$ is a
    waitfree protocol description and $\psi$ is a waitfree task specification.
   \end{definition}
 
@@ -1036,7 +1039,7 @@ Proof to be found in the author's Master's thesis.
    $count_a(\varphi)$ is the number of $K_\memory$ occurrences in $K_aK_\memory \cdots
    K_a I_a$.
 
-   A partial schedule $\sigma$ is \textit{compatible} to a waitfree
+   A partial schedule $\sigma$ is \index{compatible} to a waitfree
    protocol description $\varphi$ if
    $count_a(\varphi) = count_a(\sigma)$ for any process $a\in P$.
   \end{definition}
@@ -1173,14 +1176,13 @@ Proof to be found in the author's Master's thesis.
   specifications are recursively enumerable because partial schedule-induced
   models are recursively enumerable.
 
-  \begin{theorem}
+  \begin{proposition}
    \label{wf-dec}
    It is decidable whether a waitfree task
    specification is solvable or not.
-  \end{theorem}
+  \end{proposition}
   \begin{proof}
-   These two facts imply that it is decidable whether a waitfree task
-   specification is solvable or not.
+   By the previous two facts.
   \end{proof}
 
   This does not contradict to the undecidability

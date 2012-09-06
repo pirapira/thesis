@@ -87,8 +87,10 @@ guaranteed to succeed.
 
 \newcommand{\m}[1]{{#1}^+}
 
-Let us assume a countably infinite set of \textit{propositional variables}.
-We define \textit{local formulae} $\varphi, \psi$ by the following BNF,
+Let us assume a countably infinite set of \index{propositional
+variables}.
+The set of propositional variables is written~$\pvar$.
+We define \index{local formulae} $\varphi, \psi$ by the following BNF,
 where $I$ is a
 propositional variable%
 \footnote{We include $\bot$ because G\"odel--Dummett logic has it
@@ -98,25 +100,25 @@ although $\bot$ is not necessary for us to encode waitfree computation.}%
  \varphi,\psi ::= \bot \mid I \mid (\varphi\supset\psi) \mid (\varphi\wedge\psi) \mid
  (\varphi\vee\psi)\enspace.
 \]
-Further, we define \textit{global formulae} $\m\varphi, \m\psi$ with the following
+Further, we define \index{global formulae} $\m\varphi, \m\psi$ with the following
 BNF:
 \[
  \m\varphi,\m\psi :: = [i]\varphi \mid
  (\m\varphi\wedge\m\psi)\mid (\m\varphi\vee\m\psi)
 \]
 where $i$ is a natural number (representing a process).  The unary operators $[0],
-[1],\ldots$ are called \textit{modalities}.
+[1],\ldots$ are called \index{modalities@modality}.
 We omit parentheses following the usual convention.
 Informally, the local formulae describe datatypes used by each process.
 The global formulae describe inputs or outputs of all
 processes together.
 
-A \textit{context} (denoted by $\Gamma$ and $\Delta$ possibly
+A \index{context} (denoted by $\Gamma$ and $\Delta$ possibly
 subscripted) is a potentially empty
 finite sequence of global formulae.
-A \textit{sequent}~$\Gamma\vdash\m\varphi$ is a pair of a context and a
+A \index{sequent}~$\Gamma\vdash\m\varphi$ is a pair of a context and a
 global formula.
-A \textit{hypersequent} is a finite sequence of sequents.
+A \index{hypersequent} is a finite sequence of sequents.
 
 The underlying logic has the derivation rules in Fig.~\ref{fig:logic}.  If
 we omit all the modalities, these rules characterize
@@ -310,10 +312,10 @@ $[0](\varphi\supset\psi)\vee[1](\psi\supset\varphi)$ is provable as follows.
 \subsection{Term Assignment}
 \label{term}
 
-We assume distinct, countably infinite sets of \textit{variables},
-\textit{locations}
+We assume distinct, countably infinite sets of \index{variables},
+\index{locations}
 and
-\textit{processes}.
+\index{processes}.
 Locations are denoted by~$l$; process~$i,j, \ldots$ and variables~$x,
 y, \ldots$.
 Later, locations will be used to specify a pair of stores
@@ -323,7 +325,7 @@ terms, but in this calculus, terms may interact with the store (like
 a program written in Haskell or OCaml does with an i-var).
 This behavior will be shown later in the definition of reductions.
 
-We define \textit{terms}~$\term$ by the BNF
+We define \index{terms}~$\term$ by the BNF
 where $\Gamma$ is a sequence of variables:
 \begin{align*}
 \term ::=&\,
@@ -351,16 +353,16 @@ inputs for processes and collecting outputs of the processes.
 For example, \fix{add example}.
 
 Using these terms, we annotate the hypersequent system in Fig.~\ref{fig:logic}.
-We extend a \textit{sequent}
+We extend a \index{sequent}
 to $\Gamma\tr \tj M{\m \varphi}$, where $\Gamma$ is
 a sequence like $\tj{x}{\m\psi}, \tj{y}{\m\theta}$ and $M$ is a term.
 In a sequent $\Gamma\tr\tj{M}{\m\varphi}$, we require the variables in
 $\Gamma$ to be distinct from each other.
-A \textit{contexted type}
+A \index{contexted type}
  $\Gamma\tr\m\varphi$ is a sequent without a term but with variables in
  $\Gamma$.
-A \textit{hypersequent} is a finite sequence of sequents (each called
-a \textit{component})
+A \index{hypersequent} is a finite sequence of sequents (each called
+a \index{component})
 where the same
 variable has the same type even if it appears in different components.
 The typing rules for the terms are given in Fig.~\ref{termassign}.
@@ -553,16 +555,16 @@ The typing rules for the terms are given in Fig.~\ref{termassign}.
 A term~$M$ is \textit{of} type~$\m\varphi$ iff there is a derivation of
 $\Gamma\tr
 \tj{M}{\m\varphi}$.
-A \textit{local} term is a term without $\overleftarrow l$,
+A \index{local term} is a term without $\overleftarrow l$,
 $\overrightarrow l$ or any $\g$ constructs.
-A \textit{hyperterm}~$\hypert$ is a nonempty sequence of terms.
-A \textit{store} maps a location to a
+A \index{hyperterm}~$\hypert$ is a nonempty sequence of terms.
+A \index{store} maps a location to a
 local term or $\epsilon$.
 For a store~$\sigma$, the updated store $\sigma[l\mapsto x]$ maps $l$ to
 $x$ and $l'$ to $\sigma(l')$ if $l'$ is different from~$l$.
-A \textit{configuration} is a triple $\conf{}{}\hypert$ of two
+A \index{configuration} is a triple $\conf{}{}\hypert$ of two
 stores $\lstore, \rstore$ and a hyperterm~$\hypert$.
-A \textit{typed configuration} is a \fix{add.. stores are empty}.
+A \index{typed configuration} is a \fix{add.. stores are empty}.
 
 To complete the definition of \lgd,
  we define the \textit{reductions} $\reduce_\spadesuit$ of
@@ -598,7 +600,7 @@ If a term tries to read from an empty location of a store,
 the term changes into $\abort$.  If a term writes to a full location of
 a store, it does not abort but the store is not updated.  In fact, the
 store contents are never updated after being written.
-This property will be used in the proof of Thm.~\ref{first:sn}.
+This property will be used in the proof of Theorem~\ref{first:sn}.
 The formal definition follows.
 \begin{definition}[Write Reduction]
  The write reduction $\wreduce$ is the smallest congruence
@@ -702,10 +704,10 @@ We define $\reduce$ to be the union of $\breduce$, $\wreduce$, $\rreduce$,
 $\areduce$ and $\preduce$.
 The reflexive transitive closure of $\reduce$ is
 written as~$\reduction$.
-A \textit{redex} is a subterm that can be rewritten by a reduction.
-A configuration~$\mathcal{C}$ is \textit{normal} when there is no configuration
+A \index{redex} is a subterm that can be rewritten by a reduction.
+A configuration~$\mathcal{C}$ is \index{normal} when there is no configuration
 $\mathcal{D}$ with $\mathcal{C}\reduce \mathcal{D}$.
-A term~$M$ is \textit{normal} when the configuration $\conf{}{}{M}$ is
+A term~$M$ is \index{normal} when the configuration $\conf{}{}{M}$ is
 normal (the choice of $\lstore$ and $\rstore$ is irrelevant).
 
 \fix{add reduction example from the term example and explain the
@@ -714,10 +716,10 @@ communicating behaviour}
 \subsection{Properties}
 
 An important property of
-\lgd\, is \textit{strong normalization}:
+\lgd\, is \index{strong normalization}:
 every typed hyperterm has a finite, maximal number of reductions it can
 take.
-Another is \textit{non-abortfullness}: although some reductions yield
+Another is \index{non-abortfullness}: although some reductions yield
 $\abort$ terms, a typed hyperterm never reduces to a hyperterm that only
 contains $\abort$'s.  We show the second property first for its simpler proof.
 
@@ -775,7 +777,7 @@ hyperterm has a component not containing $\abort$.
  \lgd\, is strongly normalizing.
 \end{theorem}
 \begin{proof}
-For proving this, we consider the \textit{local fragment} that does not contain
+For proving this, we consider the \index{local fragment} that does not contain
 $\ltor i l \Delta M$, $\rtol j l\Gamma N$ or any construct with $\g$.
 We first reduce the strong
 normalization of the \lgd\, to that of the local fragment, and
@@ -804,7 +806,7 @@ reductions in the local fragment.
 For that, we first
 build an infinite reduction sequence with constant stores.
 Using the original infinite sequence, we define a pair of stores called the
-\textit{store prophecy} $(\lstore_\infty, \rstore_\infty)$ where
+\index{store prophecy} $(\lstore_\infty, \rstore_\infty)$ where
 $ \lstore_\infty(l)= \epsilon$ if $\lstore_k(l)=\epsilon$ for all
  $k\in\omega$ and
 $ \lstore_\infty(l)=M $ if $\lstore_k(l)=M$ for some $k\in\omega$
@@ -877,7 +879,7 @@ strictly shortens the term under operation.
  the result of the translation is also well-typed.
  A typing derivation of the resulting hyperterm can be obtained by
  replacing com' rules with EW rules and changing the process number in
- types of some variables (c.f. the proof of Thm.~\ref{nab}).
+ types of some variables (c.f. the proof of Theorem~\ref{nab}).
 
 We are aiming at reducing the problem to the strong normalization result
 by de Groote~\cite{Philippe2002js}.
@@ -919,7 +921,7 @@ For that, we let $\lterm(\varphi)$ denote the set of closed, local terms of
 type~$\varphi$,
 and $\lval(\varphi)$ denote the set of normal terms in $\lterm(\varphi)$.
 For a finite set of processes~$\processes$,
-a \textit{typed input-output problem} consists of each process's input type
+a \index{typed input-output problem} consists of each process's input type
 $(\iota_i)_{i\in \processes}$, each process's output type $(o_i)_{i\in
 \processes}$, and a
 task $R\subseteq \prod_{i\in \processes}\left(\lterm(\iota_i)\right)\times
@@ -933,13 +935,13 @@ set of program variables $\ProV =\{\p x, \p y, \p z, \ldots\}$.
 We assume an injection from variables to program variables $x\mapsto
 \p{x}_x$, whose image leaves infinitely many unused program variables.
 
-A \textit{program} is defined by BNF:
+A \index{program} is defined by BNF:
 \[
  p ::= \epsilon\mid
  \p x\leftarrow E; p \mid
  l \leftarrow E; p
 \]
-where an \textit{expression} is
+where an \index{expression} is
 \begin{align*}
  E
  ::=\,\,
@@ -950,7 +952,7 @@ where an \textit{expression} is
 
 \newcommand{\Wg}{W_{\mathrm g}}
 \newcommand{\Wd}{W_{\mathrm d}}
-A program is \textit{well-formed} when
+A program is \index{well-formed} when
 a program variable (resp. location) first appears in a $\p x\leftarrow E$
 (resp. $l\leftarrow E$)
 sentence, and
@@ -961,7 +963,7 @@ we write $\tj{M}{t}$ for
 $\Gamma\tr\tj{M}{\m\varphi}$.
 For input types $(\iota_i)_{i\in\processes}$
 and output types $(o_i)_{i\in\processes}$,
-a \textit{typed protocol} has:
+a \index{typed protocol} has:
 \begin{itemize}
  \item two program variables
       $\p i_i$ and $\p o_i$ for each process~$i$;
@@ -979,7 +981,7 @@ a \textit{typed protocol} has:
        $t_i(\p i_i)= \iota_i$;
  \item a typed program~$p_i$ for each $i\in \processes$,
        where
-       a \textit{typed program} is a well-formed program where all
+       a \index{typed program} is a well-formed program where all
        sentences are typed according to the rules below.
        A sentence $\p x \leftarrow E$ is typed  iff $\tr E\colon t(\p x)$ is derivable with
        assumptions of the form $\tr\tj{\p y}{t(\p y)}$,\quad
@@ -1002,18 +1004,18 @@ These definitions are transferred from \cite{Saks:1993vq}.
 
 Let $\processes$ be $\{0,\ldots, n-1\}$ and fix
 a typed protocol.
-A \textit{program variable content} for $i\in\processes$ is a
+A \index{program variable content} for $i\in\processes$ is a
 partial
 function
 that maps a program variable to a term of $t_i(\p x)$.
 A term~$M$ \textit{is of} a contexted type $\Gamma\tr\varphi$ when
 $\Gamma\tr
 \tj M\varphi$ is derivable.
-A \textit{process snapshot} of $i\in\processes$ is a tuple
+A \index{process snapshot} of $i\in\processes$ is a tuple
 $\tuple{p,m}$ where $p$ is either a program or $\abort$ and $m$ is a
 program variable content for $i$.
 We let $S_i$ denote the set of process snapshots for~$i$.
-A \textit{system snapshot}
+A \index{system snapshot}
 is a pair $\tuple{\vec s, \vec v}$, where $\vec s = \tuple{s_0,
 {s_1,{\ldots,s_{n-1}}}} \in
 \prod_{i\in \processes}\left(S_i\right)
@@ -1081,17 +1083,17 @@ $\overrightarrow l$.
 If any of the substitutes is $\epsilon$,
 $\semo{E}_{x, \vec v}$ is $\epsilon$.
 
-A \textit{schedule} is an infinite sequence of nonempty subsets of~$\processes$,
+A \index{schedule} is an infinite sequence of nonempty subsets of~$\processes$,
 which looks like $\sigma = \sigma_0\sigma_1\sigma_2\cdots$.
-We say $i$ is \textit{nonfaulty} in $\sigma$
+We say $i$ is \index{nonfaulty} in $\sigma$
 if it appears infinitely often.
 % probably not used anywhere % When every process is nonfaulty, the schedule is \textit{fair}.
 
-A \textit{run} is a triple $\tuple{\Pi, \vec x, \sigma}$,
+A \index{run} is a triple $\tuple{\Pi, \vec x, \sigma}$,
 where $\Pi$ is a typed protocol,
 $\vec x \in \prod_{i\in \processes} \lterm(\iota_i)$ is the input,
 and $\sigma$ is a schedule.
-The \textit{execution} associated to the run
+The \index{execution} associated to the run
 is defined as the infinite sequence of system snapshots
 $C_0C_1C_2\cdots$, where $C_0 = \tuple{\vec{s^0}, \vec{v^0}}$ is
 defined by $\vec{s^0_i} = \tuple{p_i, [\p i_i\mapsto x_i]}$ and
@@ -1099,7 +1101,7 @@ $\vg v l  = \vd v l = \epsilon$,
 and $C_{k+1} = C_{k}\update
 \sigma_{i+1}$.
 
-Process~$i$'s \textit{output}~$\hat{o_k}$ at step~$k$ is
+Process~$i$'s \index{output}~$\hat{o_k}$ at step~$k$ is
 $M$ if the $i$-th process snapshot of $C_k$ is
 $(p, x)$ and the $x[\p{o}_i] = M$, which can be $\epsilon$.
 The decision value of $i$ on the run $\tuple{\Pi,\vec x,\sigma}$,
@@ -1111,13 +1113,13 @@ $\epsilon$ if such element does not exist.
 The $n$-tuple~$\vec d$ is defined by $d_i$'s.
 
 A vector $\vec b\in \prod_{i\in \processes}(\lval(o_i))$
-is \textit{compatible with} $\vec d \in \prod_{i\in
+is \index{compatible with} $\vec d \in \prod_{i\in
 \processes}\left(\lval(o_i)\cup\{\epsilon\}\right)$ iff
 $d_i = b_i$ or $d_i = \epsilon$ holds for any process~$i$.
 An input~$\vec x\in \prod_{i\in \processes}\lterm(\iota_i)$
-is \linebreak[2] $R$-\textit{permissible} iff there is at least one
+is \linebreak[2] $R$-\index{permissible} iff there is at least one
 vector $\vec d\in \prod_{i\in \processes}(\lval(o_i))$ with $(\vec x, \vec b)\in R$.
-A typed protocol~$\Pi$ \textit{solves} the typed input-output problem
+A typed protocol~$\Pi$ \index{solves} the typed input-output problem
   $\tuple{(\iota_i)_{i\in \processes}, (o_i)_{i\in \processes}, R}$ on
 schedule~$\sigma$ iff for all $R$-permissible inputs~$\vec x$ and a
 schedule~$\sigma$,
@@ -1126,10 +1128,10 @@ schedule~$\sigma$,
  there is a vector $\vec b\in \prod_{i\in \processes}(\lval (o_i))$
  with $\tuple{\vec x, \vec b} \in R$ which is compatible with the
  decision vector~$\vec d$.
- A typed protocol is \textit{waitfree} iff it solves
+ A typed protocol is \index{waitfree} iff it solves
  the problem on every schedule~$\sigma$.
  In that case, the typed input-output problem is
- \textit{waitfreely solvable}.
+ \index{waitfreely solvable}.
 
 \section{Characterization of Waitfreedom and \lgd}
 \label{comparison}
@@ -1161,7 +1163,7 @@ there exists a typed protocol that solves the problem.
 We are going to translate a typed hyperterm into a protocol inductively
 on the type derivation.
 To make induction work, we use the following auxiliary notions.
-An \textit{investigator} $\tuple{i, \p x}$ is a pair of a process and a program
+An \index{investigator} $\tuple{i, \p x}$ is a pair of a process and a program
 variable.
 For a local formula~$\varphi$, a system snapshot $\tuple{\vec s,\vec v}$
 satisfies
@@ -1175,13 +1177,13 @@ $\tuple{i,\p x}\in I$.
 This can be extended to all global formulae, as
 $I(\m\varphi\wedge\m\psi)$ iff $I(\m\varphi)$ and $I(\m\psi)$;
 $I(\m\varphi\vee\m\psi)$ iff $I(\m\varphi)$ or $I(\m\psi)$.
-A \textit{system snapshot satisfies a global formula}~$\m\varphi$
+A \index{system snapshot satisfies a global formula}~$\m\varphi$
 iff there exists a
 finite set of
 investigators~$I$ such that the system snapshot satisfies $I(\m\varphi)$.
-A \textit{system snapshot satisfies a context} iff it
+A \index{system snapshot satisfies a context} iff it
 satisfies every global formula in the context.
-A \textit{protocol} $p$ \textit{realizes a hypersequent}~$
+A \index{protocol} $p$ \textit{realizes a hypersequent}~$
 \left(\Gamma_0\vdash
 \m\varphi_0 \hmid \cdots\hmid\Gamma_{k}\vdash \m\varphi_{k}\right)$
 iff
@@ -1315,7 +1317,7 @@ the two-party participating set problem.
 It suffices to show a \lgd\, term solving the two-party problem.
 
 
-In the \textit{participating set problem}~\cite{borowsky},
+In the \index{participating set problem}~\cite{borowsky},
 each process~$i$ receives an id $c_i$ and
 returns a set of id's $S_i$.
 The outputs must satisfy (i)~$i\in S_i$; (ii)~either $S_i\subseteq S_j$
