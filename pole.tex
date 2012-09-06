@@ -31,7 +31,7 @@ However,
 one can find no communication among different
 concurrent elements in an executable.
 In the current paper, we show that logical axioms can specify how
-concurrent threads exchange information asynchronously.
+concurrent processes exchange information asynchronously.
 
 We observe the computational behavior of prelinearity axiom
 $(\phi\limp\psi)\oplus(\psi\limp\phi)$ and left weakening
@@ -43,12 +43,12 @@ We encode the disjunction~$\vee$ using the second order quantifier as
 $\phi\oplus\psi\equiv \forall X((\phi\limp X)\limp (\psi\limp X)\limp X)$.
 We interpret the disjunction~$\vee$ in the prelinearity axiom
 nondeterministically: whether
-one thread can give information to the other or
+one process can give information to the other or
 vice versa.
-In Sect.~\ref{sec:sync}, where threads wait for others,
+In Sect.~\ref{sec:sync}, where processes wait for others,
 we externally specify such nondeterministic choice.
-In Sect.~\ref{sec:async}, where threads do not wait for others,
-the nondeterminism appears automatically as a slower thread cannot pass
+In Sect.~\ref{sec:async}, where processes do not wait for others,
+the nondeterminism appears automatically as a slower process cannot pass
 information to a faster one.
 We adapt \citet{danos-krivine}'s realizability argument to our
 synchronous case and give simulation from the
