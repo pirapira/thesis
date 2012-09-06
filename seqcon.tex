@@ -243,7 +243,7 @@
 
   \begin{definition}
    \label{formula}
-   We define a \index{formula} $\varphi$ by the BNF:
+   We define a \index{\iec-formula} $\varphi$ by the BNF:
    \[
    \varphi ::= \bot\mid P\mid
    (K_a\varphi)\mid(\varphi\vee\varphi)\mid(\varphi\land\varphi)\mid
@@ -257,7 +257,7 @@
   We sometimes omit the parentheses when no confusion occurs. We use $=$ for syntactic
   equality of formulae.  The notation $(\neg \varphi)$ stands for $(\varphi\supset \bot)$.
   The notation~$\top$ stands for $(\bot\supset\bot)$.
-  For a sequence of formulae $\Gamma = (\varphi_i)_{i\in I}$ or a set of formulae~$\Gamma$,
+  For a sequence of \iec-formulae $\Gamma = (\varphi_i)_{i\in I}$ or a set of \iec-formulae~$\Gamma$,
   the notation $K_a \Gamma$ stands for the sequence $(K_a \varphi_i)_{i\in I}$ or the set
   $\{K_a\varphi\mid \varphi\in \Gamma\}$ respectively.
 
@@ -431,18 +431,18 @@
     we are informally
     assuming logical omniscience of the agents by rule (nec),
     that is, we assume agents have complete
-    command on intuitionistic epistemic logic so that they acknowledge every formulae
-    deducible from the set of formulae they acknowledge.
+    command on intuitionistic epistemic logic so that they acknowledge every \iec-formulae
+    deducible from the set of \iec-formulae they acknowledge.
 
     \paragraph{Notational conventions}
-    For a set of formulae~$\Gamma$ and a~formula~$\varphi$, $\Gamma\vdash
+    For a set of \iec-formulae~$\Gamma$ and an~\iec-formula~$\varphi$, $\Gamma\vdash
     \varphi$ denotes a~relation where
     there is such a~finite sequence~$\Gamma_0$ that
     $\Gamma_0\vdash
     \varphi$ is deducible and that $\Gamma_0$ is contained in $\Gamma$.
 
   \subsection{Semantics}
-  We define validity of a~formula on a~state in a~model.
+  We define validity of a~\iec-formula on a~state in a~model.
   A~model is a~Kripke model for propositional intuitionistic logic
   equipped with an additional
   mapping $f_a: W\rightarrow W$ for each agent $a\in A$ where $W$ is the
@@ -484,11 +484,11 @@
        there is no distinction between global states and local states.
 
        The valuation~$\rho$ for propositional variables in $\pvar$ is extended into validity
-       relation~$\models$ for all formulae in $\fml$.
+       relation~$\models$ for all \iec-formulae in $\fml$.
        \begin{definition}
 	We define the \index{satisfaction relation} $\models$ of a~model
-	$\tuple{W,\preceq,(f_a)_{a\in A},\rho}$, a~state~$w\in W$ of the model and a
-	formula~$\varphi$.
+	$\tuple{W,\preceq,(f_a)_{a\in A},\rho}$, a~state~$w\in W$ of the model and an
+	\iec-formula~$\varphi$.
 	Let us fix a model $M=\tuple{W,\preceq,(f_a)_{a\in A},\rho}$.
 	\newcommand{\m}{M}
 	The definition of $M,w\models\varphi$ is inductive on the structure of $\varphi$.
@@ -517,7 +517,7 @@
 
        Next, we show that the monotonicity condition on the valuation~$\rho$ of
        propositional variables is preserved by the extension
-       to satisfaction~$\models$ of formulae. Informally, this
+       to satisfaction~$\models$ of \iec-formulae. Informally, this
        proposition
        reveals the limitation of the logic \iec:
        it can only deal with propositions whose satisfaction is preserved by progress with respect to
@@ -542,30 +542,30 @@
     \begin{notation}
      For a~model~$M$ and a~state~$w$ of the model,
      we write $M,w\models \Gamma$ when the validity
-     $M,w\models\varphi$ holds for any formula $\varphi$ in $\Gamma$.
+     $M,w\models\varphi$ holds for any \iec-formula $\varphi$ in $\Gamma$.
     \end{notation}
 
     \begin{notation}
-     $\Gamma\models\varphi$ stands for the relation of formula
-     sequences $\Gamma$ and a~formula
+     $\Gamma\models\varphi$ stands for the relation of \iec-formula
+     sequences $\Gamma$ and an \iec-formula
      $\varphi$ that holds if and only if for any model $M$
      and $w\in M$, $M,w\models \Gamma$ implies
      $M,w\models \varphi$.
     \end{notation}
 
     \begin{definition}
-     $\Gamma\models\varphi$ stands for the relation of a set of a formulae
-     $\Gamma$ and a formula~$\varphi$ where $M,w\models \Gamma$ implies
+     $\Gamma\models\varphi$ stands for the relation of a set of \iec-formulae
+     $\Gamma$ and an \iec-formula~$\varphi$ where $M,w\models \Gamma$ implies
      $M,w\models \varphi$ for any model~$M$
      and a~state~$w\in M$.
     \end{definition}
-    For a~sequence of formulae $\Gamma$, we let $u(\Gamma)$ denote the set of formulae
+    For a~sequence of \iec-formulae $\Gamma$, we let $u(\Gamma)$ denote the set of \iec-formulae
     appearing in $\Gamma$.  We abbreviate $u(\Gamma)\models\varphi$ into
     $\Gamma\models\varphi$. We will write $\Gamma$ instead of $u(\Gamma)$ for the
     sake of brevity.
 
     \begin{definition}
-     A set of formulae $\Gamma$ is consistent if and only if $\Gamma\not\models \bot$.
+     A set of \iec-formulae $\Gamma$ is consistent if and only if $\Gamma\not\models \bot$.
     \end{definition}
 
   \subsection{Soundness}
@@ -576,9 +576,9 @@
   main reason for using a formal deductive system is it ensures correct reasoning.
   We regard the defined semantics as a standard for correct reasoning and show that the
   deduction systems of \iec\, meets that standard.
-  Soundness ensures a formula provable in \iec\, is valid in any state of any model.
+  Soundness ensures an \iec-formula provable in \iec\, is valid in any state of any model.
   At the same time, we show a stronger notion:
-  a formula provable under a set of assumptions is always valid whenever the assumptions are
+  an \iec-formula provable under a set of assumptions is always valid whenever the assumptions are
   valid.
 
   \begin{proposition}[Soundness]
@@ -618,10 +618,10 @@
   \end{definition}
 
   For some pages, we argue about a
-  set of formula $\Omega$. Later, when we show
-  strong completeness, we take $\Omega$ to be the whole set of well formed formulae.  Also,
+  set of \iec-formula $\Omega$. Later, when we show
+  strong completeness, we take $\Omega$ to be the whole set of well formed \iec-formulae.  Also,
   when we show finite model property, we take $\Omega$ to be the set of the subformulae of a
-  certain formula.  This model construction is inspired by
+  certain \iec-formula.  This model construction is inspired by
   Sato's paper~\cite{sato13study}
   and Troelstra and van Dalen's textbook~\cite{troelstra1988constructivism}.
   However, the notion of $f'$-subformula-closed sets is new and original.
@@ -629,7 +629,7 @@
   \begin{definition}
    \label{saturated-set}
    For a set of formulae $\Omega$,
-   a set of formulae $\Gamma\subseteq\Omega$ is \index{$\Omega$-saturated} if and only if
+   a set of \iec-formulae $\Gamma\subseteq\Omega$ is \index{$\Omega$-saturated} if and only if
    \begin{enumerate}
     \item $\Gamma$ is $\Omega$-deductively closed, i.e., $\Gamma\vdash\varphi\in
 	  \Omega\Rightarrow
@@ -685,7 +685,7 @@ Proof to be found in the author's Master's thesis.
 
 \begin{proposition}[Decidability]
  \label{decidability}
- It is decidable whether a formula~$\varphi$ is a theorem of $\iec$ or not.
+ It is decidable whether an \iec-formula~$\varphi$ is a theorem of $\iec$ or not.
 \end{proposition}
 Proof to be found in the author's Master's thesis.
 
@@ -712,6 +712,7 @@ Proof to be found in the author's Master's thesis.
 
   \subsection{Definitions}
 
+  \fix{read around here}
   Sequential consistency requires
   the memory states to line up in a total order.
   A straightforward way to model sequential consistency might be
@@ -737,7 +738,7 @@ Proof to be found in the author's Master's thesis.
   \end{definition}
 
   \begin{definition}
-   We let $SC$ be the set of formula of the form
+   We let $SC$ be the set of \iec-formula of the form
    $(K_\memory \varphi\supset K_\memory \psi)\vee (K_\memory
    \psi\supset K_\memory \varphi)$.
 
@@ -933,7 +934,7 @@ Proof to be found in the author's Master's thesis.
   computation is in this fact, which makes testing harder.}.
   The a correct distributed program can be described as
   a distributed program which gives correct behaviour under any schedule.
-  This form of definition is similar to that of validity of logical a formula:
+  This form of definition is similar to that of validity of logical formulae:
   a valid logical formula is a formula which is satisfied by any model.
   We consider the schedule v.s. distributed program relation is similar to
   the formula v.s. model relation.
@@ -1010,7 +1011,7 @@ Proof to be found in the author's Master's thesis.
 
   \begin{definition}
    Assume there is a vector of atomic formulae $(I_a)_{a\in P}$.
-   A~\index{waitfree protocol description} $\varphi$ is a formula of the form
+   A~\index{waitfree protocol description} $\varphi$ is an \iec-formula of the form
    \[
    \varphi = \bigwedge_{a\in P} K_a K_\memory K_a \cdots K_a I_a
    \]
@@ -1020,7 +1021,7 @@ Proof to be found in the author's Master's thesis.
    \psi ::= K_a\psi\mid \psi\land\psi\mid \psi\vee\psi\mid I_a
    \]
    where $a$ stands for a process in $P$.
-   A~\index{waitfree assertion} is a formula~$\varphi\supset\psi$ where $\varphi$ is a
+   A~\index{waitfree assertion} is an \iec-formula~$\varphi\supset\psi$ where $\varphi$ is a
    waitfree protocol description and $\psi$ is a waitfree task specification.
   \end{definition}
 
