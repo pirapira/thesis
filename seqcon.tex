@@ -656,74 +656,38 @@
   \noindent The function $s_a$ replaces every $K_aK_a$ with $K_a$ repeatedly so that there are no
   $K_aK_a$ occurrences left.
 
+  \fix{is this lemma necessary?}
   \begin{lemma}
    \label{fpreserve}
    For a hereditary $f'$-subformula-closed set $\Omega$,
    if $\Gamma$ is an $\Omega$-saturated set,
    $f_a(\Gamma)$ is an $f'_a(\Omega)$-saturated set.
   \end{lemma}
-  \begin{proof}
-   We first make sure that $f_a(\Gamma)$ is a subset of $f'_a(\Omega)$.
-   By definition of $f_a$, $f_a(\Gamma) = g_a(\Gamma)\cup
-   K_ag_a(\Gamma)\cup\{\bot\in\fml\mid \Gamma\vdash\bot\}$.
-   Since $\Gamma$ is an $\Omega$-saturated set, $\Gamma\not\vdash\bot$ so that
-   $f_a(\Gamma) = g_a(\Gamma)\cup K_ag_a(\Gamma)$.
-   On the other hand, $f'_a(\Omega) = g_a(\Omega)\cup K_ag_a(\Omega)$.
-   Since $g_a(\Gamma)\subseteq g_a(\Omega)$
-   by Proposition~\ref{g_mono}, $f_a(\Gamma)\subseteq f'_a(\Omega)$ holds.
-
-   We check each condition of Definition~\ref{saturated-set} to make sure
-   that $f_a(\Gamma)$ is
-   actually an~$f'_a(\Omega)$-saturated set.
-   \begin{enumerate}
-    \item Assume $f_a(\Gamma)\vdash\varphi$ and $\varphi\in f'_a(\Omega)$.
-	  $\varphi\in g_a(\Omega)\cup K_ag_a(\Omega)$ holds.
-	  \begin{description}
-	   \item[ (Case $\varphi\in g_a(\Omega)$)]
-		Note that $\varphi$ does not begin with $K_a$.
-		By definition of $g_a$,
-		$(K_a)^+\varphi\in\Omega$.
-		Since $\Omega$ is subformula-closed,
-		$K_a\varphi\in\Omega$ holds.
-		By $\Gamma\vdash K_a\varphi$, since $\Gamma$ is $\Omega$-saturated,
-		$K_a\varphi\in \Gamma$.
-		Thus, $\varphi\in f_a(\Gamma)$.
-	   \item[ (Case $\varphi\in K_ag_a(\Omega)$)]
-		$\varphi = K_a\varphi'$ and $\varphi'\in g_a(\Omega)$ hold.
-		Note that $\varphi'$ does not begin with $K_a$.
-		By definition of $g_a$,
-		$(K_a)^+\varphi'\in\Omega$.
-		This implies $K_a\varphi'\in\Omega$.
-		Since $\Gamma\vdash K_aK_a\varphi'$,
-		$\Gamma\vdash K_a\varphi'$ holds.
-		Thus, since $\Gamma$ is $\Omega$-saturated,
-		$K_a\varphi'\in \Gamma$ holds.
-		This means $\varphi = K_a\varphi' \in f_a(\Gamma)$.
-	  \end{description}
-    \item Assume $f_a(\Gamma)\vdash\varphi\vee\psi$ and
-	  $\varphi,\psi\in f'_a(\Omega)$.
-	  By rule~(nec), $K_af_a(\Gamma)\vdash K_a(\varphi\vee\psi)$ holds.
-	  By~Proposition~\ref{wakame},
-	  the formulae in $K_af_a(\Gamma)$ are deducible from $\Gamma$.
-	  Thus, $\Gamma\vdash K_a(\varphi\vee\psi)$ holds.
-	  By rule ($\vee K$) and the fact that $\Gamma$ is saturated,
-	  either $K_as_a(\varphi)\in\Gamma$ or $K_as_a(\psi)\in\Gamma$ holds.
-	  We can assume $K_as_a(\varphi)\in\Gamma$ without loss of generality.
-	  This implies $f_a(\Gamma)\vdash\varphi$ and then
-	  $\varphi\in f_a(\Gamma)$.
-    \item Seeking contradiction, assume $f_a(\Gamma)\vdash\bot$.
-	  Since $\Gamma\vdash K_a\bot$, the deducibility
-	  $\Gamma\vdash\bot$ holds, which contradicts the fact that
-	  $\Gamma$ is an $\Omega$-saturated set.
-   \end{enumerate}
-  \end{proof}
 
   \newcommand{\natpls}{{\mathbb N}^{+}}
 
   \fix{add strong completeness and finite model property}
+\begin{theorem}[Finite model property]
+ \label{fmp}
+ If $\varphi$ is not a theorem of $\iec$,
+ there is a finite model $M$ with $M\not\models\varphi$.
+\end{theorem}
+Proof to be found in the author's Master's thesis.
+
+\begin{theorem}[Strong completeness]
+ \label{strong-completeness}
+ $\Gamma\models\varphi$ implies $\Gamma\vdash\varphi$.
+\end{theorem}
+Proof to be found in the author's Master's thesis.
+
+\begin{theorem}
+ \label{decidability}
+ It is decidable whether a formula~$\varphi$ is a theorem of $\iec$ or not.
+\end{theorem}
+Proof to be found in the author's Master's thesis.
 
   \section{Axiom Type for Sequential Consistency}
- \label{sc}
+  \label{sc}
 
  A schedule determines temporal partial order of events such as
  message sending and receiving.
@@ -799,7 +763,8 @@
    $\Gamma\vdashsc\varphi$ holds if $M\models \Gamma$ implies $M\models\varphi$ for every
    sequential model~$M$.
   \end{theorem}
-  Proof to be found in the author's Master's thesis.)
+  Proof to be found in the author's Master's thesis.
+
 
     \paragraph{Example Theorem}
 

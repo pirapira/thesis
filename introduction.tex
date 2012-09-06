@@ -1,5 +1,46 @@
 \chapter{Introduction}
 
+\subsection{Our Contribution in the Historical Perspective}
+
+The Curry--Howard isomorphism~\citep{curryhoward} is \fix{what}.
+The double discovery is considered~\citep{wadler2012propositions}
+to affirm the importance of the typed lambda calculi.
+In this thesis we witness a replay of the double discovery with
+different casts: G\"odel--Dummett logic and the waitfreedom.
+Both of these were born in the early eras of their respective academic
+disciplines:
+mathematical logic bore G\"odel Dummett logic in
+1950's~\citep{dummett59}
+and the
+computer science bore waitfree computation in
+1970's~\citep{lamport1979make}.
+This thesis is about the connection between these two,
+which has been unknown.
+
+We list our contributions from the most important:
+\begin{enumerate}
+ \item identifying the computational ability of the
+G\"odel--Dummett logic with waitfreedom
+ \item finding a way to develop lambda calculi using
+       the hypoersequent calculus
+ \item developing a parametricity argument for
+       concurrent processes performing waitfree communication.
+ \item finding a method for implementing hypersequent-based lambda calculi in a
+       functional programming language Haskell on the Glasgow Haskell
+       Compiler
+ \item finding a terminating tableau system for the sequential
+       consistency logic.
+\end{enumerate}
+
+Our first and second contribution... \fix{fill}
+Relies on hypersequent calculi... \fix{write}
+
+Our fifth contribution is about proof searching, which is another
+computation appearing from propositional logic.
+The lambda calculi is about removing detours from proofs while the proof
+searching is about finding a proof or a counterexample for a given
+conclusion.
+
 \section{General Description of this Thesis}
 
 % \section{An Introduction for Computer Scientists}
@@ -62,20 +103,6 @@ In terms of algebraic semantics, the axiom is sound and complete for
 requiring that the truth values are linearly ordered.  \fix{ is this
 usage of ``truth values'' correct? }
 In terms of computation, what is it?
-
-
-Our first contribution is identifying the computational ability of the
-G\"odel--Dummett logic with waitfreedom.
-
-Our second contribution is finding a way to develop lambda calculi using
-the hypoersequent calculus.
-
-Our third contribution is related to the second:
-finding a method for implementing hypersequent-based lambda calculi in a
-functional programming language Haskell on the Glasgow Haskell Compiler.
-
-Our fourth contribution is developing a parametricity argument for
-concurrent processes.
 
 \section{Curry--Howard Correspondence for Different Logics}
 
