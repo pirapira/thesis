@@ -601,7 +601,7 @@ If a term tries to read from an empty location of a store,
 the term changes into $\abort$.  If a term writes to a full location of
 a store, it does not abort but the store is not updated.  In fact, the
 store contents are never updated after being written.
-This property will be used in the proof of Theorem~\ref{first:sn}.
+This property will be used in the proof of \thref{first:sn}.
 The formal definition follows.
 \begin{definition}[Write Reduction]
  The write reduction $\wreduce$ is the smallest congruence
@@ -880,7 +880,7 @@ strictly shortens the term under operation.
  the result of the translation is also well-typed.
  A typing derivation of the resulting hyperterm can be obtained by
  replacing com' rules with EW rules and changing the process number in
- types of some variables (c.f. the proof of Theorem~\ref{nab}).
+ types of some variables (c.f. the proof of \thref{nab}).
 
 We are aiming at reducing the problem to the strong normalization result
 by de Groote~\cite{Philippe2002js}.
@@ -1511,4 +1511,3 @@ the typed version of waitfree computation.
 Our result
 hints broader correspondence between
 proof theory and distributed computation.
-

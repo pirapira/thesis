@@ -175,11 +175,11 @@
     has simpler syntax than many other logics for communication.
 
     We give a deduction system and show
-    soundness (Proposition~\ref{soundness}),
-    disjunction property (Proposition~\ref{disjunction-property}),
+    soundness (\thref{soundness}),
+    disjunction property (\thref{disjunction-property}),
     strong completeness
-    (Proposition~\ref{strong-completeness}), finite model property
-    (Proposition~\ref{thm:fmp}) and decidability (Proposition~\ref{decidability}).
+    (\thref{strong-completeness}), finite model property
+    (\thref{thm:fmp}) and decidability (\thref{decidability}).
 
   \subsection{Application to Waitfree Communication}
 
@@ -192,8 +192,8 @@
        in the logic \iec\, for asynchronous computation.
        Technically, we defined a class of models called sequential models
        and proved soundness
-       (Proposition~\ref{sc-sound}) and completeness
-       (Proposition~\ref{sc-comp}) of the axiom type with respect to the sequential models.
+       (\thref{sc-sound}) and completeness
+       (\thref{sc-comp}) of the axiom type with respect to the sequential models.
 
     \paragraph{Waitfree communication}
     A waitfree protocol over shared memory~\cite{herlihy1991wait}
@@ -229,11 +229,9 @@
     or not.
     When tasks are restricted to communication defined by
     a class of logical formulae that we call waitfree assertions,
-    we can characterise waitfreely available communication logically (Proposition~\ref{sc-comp})
+    we can characterise waitfreely available communication logically (\thref{sc-comp})
     and
-    it is decidable whether a task is waitfreely solvable or not (Proposition~\ref{wf-dec}).
-
-
+    it is decidable whether a task is waitfreely solvable or not (\thref{wf-dec}).
 
   \subsection{Formulae}
 
@@ -939,7 +937,7 @@ Proof to be found in the author's Master's thesis.
   a valid logical formula is a formula which is satisfied by any model.
   We consider the schedule v.s. distributed program relation is similar to
   the formula v.s. model relation.
-  In section~\ref{sc},
+  \fix{strange} In Section~\ref{sc},
   in this section, we express waitfreedom as a class of formulae.
 
   A distributed program specifies

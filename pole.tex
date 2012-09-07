@@ -42,9 +42,9 @@ We interpret the disjunction~$\oplus$ in the prelinearity axiom
 nondeterministically: whether
 one process can give information to the other or
 vice versa.
-In Sect.~\ref{sec:sync}, where processes wait for others,
+In Section~\ref{sec:sync}, where processes wait for others,
 we externally specify such nondeterministic choice.
-In Sect.~\ref{sec:async}, where processes do not wait for others,
+In Section~\ref{sec:async}, where processes do not wait for others,
 the nondeterminism appears automatically as a slower process cannot pass
 information to a faster one.
 We adapt \citet{danos-krivine}'s realizability argument to our
@@ -299,7 +299,7 @@ A set $\mathcal X$ of programs is called a truth value
 iff there exists
 such $\mathcal Z$ that $\mathcal X = \mathcal Z\rightarrow \bbot$.
 We define programs and environments because if we continue using
-terms and stacks, the proof of adequacy (Proposition~\ref{c:adequacy}) does
+terms and stacks, the proof of adequacy (\thref{c:adequacy}) does
 not go through the case for
 ($\limp$E,~\textminus), \ref{c:second}.
 
@@ -801,7 +801,7 @@ same time.
 	\item Take any $(\vec{g_0},{e_0})\in\sem{\G_0}$,
 	      $(\vec{g_1},{e_1})\in\sem{\G_1}$ and
 	      $(\pi,e')\in\nsem{\phi}$.
-	      By Proposition~\ref{comod-type}, we have
+	      By \thref{comod-type}, we have
 	      $(\comodL,\comodR,\emptyset)\in\sempair{\phi_0\limp\phi_1,\phi_1\limp\phi_0}$.
 	      By induction hypothesis~\ref{c:second}, the terms
 	      $t'_0=t_0[\comodL/\hat{x}][\vec{g_0}/\G_0]$ and
@@ -809,7 +809,7 @@ same time.
 	      satisfy
 	      $(t_0',t_1',{e_0}\conc
 	      {e_1})\in\sempair{\phi,\phi}$.
-	      By Proposition~\ref{squash}, we have $(t'_0\conc t'_1,
+	      By \thref{squash}, we have $(t'_0\conc t'_1,
 	      {e_0}\conc {e_1})\in\sem{\phi}$.
 	\item
 	      Without loss of generality,
@@ -849,7 +849,7 @@ same time.
 	     statement~\ref{c:second}.
 	     By this, $(\comodL, t_1',{e_1})$ is in
 	     $\sempair{\phi_0\limp\phi_1,\phi}$
-	     because of Proposition~\ref{comod-type}.
+	     because of \thref{comod-type}.
 	     So, program $p =(\comodL,(t_1',\pi\conc{e_1}))$ is in
 	     $\sem{\phi_0\limp\phi_1}$.
 	     By induction hypothesis~\ref{c:second} for the derivation
@@ -954,7 +954,7 @@ and \ref{c:second} uses \ref{c:first} in the ($\limp$E,~\textminus).
 \begin{proof}
  We denote by $\bbot$ the set of executables that reduce to a multiset
  containing an element of $\{(a,\pi_A), (b,\pi_B)\}$.
- By Proposition~\ref{prop:exec-on-pole},
+ By \thref{prop:exec-on-pole},
  this is a pole.
  Take $\nsem{A}_0 =\{(\pi_A,\emptyset)\}$, $\nsem{B}_0 =
  \{(\pi_B,\emptyset)\}$ and $\nsem{X}_0=\{(\pi,\emptyset)\}$.
@@ -976,7 +976,7 @@ and \ref{c:second} uses \ref{c:first} in the ($\limp$E,~\textminus).
 %  The set of executables which do not reduce to $\emptyset$ forms a pole.
 % \end{proposition}
 % \begin{proof}
-%  This is a special case of Prop.~\ref{prop:exec-on-pole}
+%  This is a special case of \thref{prop:exec-on-pole}
 % \end{proof}
 
 Another important property of an executable is
@@ -1080,7 +1080,7 @@ that satisfies:
 	    $
 	    \enspace.
 \end{description}
-Differently from the synchronous case in Sect.~\ref{sec:sync},
+Differently from the synchronous case in Section~\ref{sec:sync},
 we do not use an external schedule relation on channels.
 Instead, nondeterminism appears spontaneously.
 We can implement something similar to Lafont's example~\fix{cite},
