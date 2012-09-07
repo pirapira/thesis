@@ -1,4 +1,5 @@
 \chapter{A Hyper $\lambda$-Calculus for G\"odel--Dummett Logic}
+\label{ch:lambda}
 
 \subsection{Summary}
 
@@ -577,7 +578,7 @@ To complete the definition of \lgd,
  Below, $\square$ and $\blacksquare$ match $\g$ or nothing.
  \fix{example for square and blacksquare}
 
-\begin{definition}[Basic Reduction]
+\begin{definition}[Basic reduction]
  The basic reduction $\breduce$ is the smallest congruence containing
  the followings:
  \begin{itemize}
@@ -603,7 +604,7 @@ a store, it does not abort but the store is not updated.  In fact, the
 store contents are never updated after being written.
 This property will be used in the proof of \thref{first:sn}.
 The formal definition follows.
-\begin{definition}[Write Reduction]
+\begin{definition}[Write reduction]
  The write reduction $\wreduce$ is the smallest congruence
  containing the followings where $M$ is a local term \fix{defined?}:
  \begin{itemize}
@@ -618,7 +619,7 @@ The formal definition follows.
  \end{itemize}
 \end{definition}
 
-\begin{definition}[Read Reduction]
+\begin{definition}[Read reduction]
  \label{read}
  The read reduction $\rreduce$ is the smallest congruence
  containing the
@@ -636,7 +637,7 @@ The formal definition follows.
 \end{itemize}
 \end{definition}
 
-\begin{definition}[Abort Propagation Reduction]
+\begin{definition}[Abort propagation reduction]
  The abort propagation reduction $\areduce$ is the smallest
  congruence containing the
  followings:
@@ -666,7 +667,7 @@ In order to obtain subformula property
  via proof normalization
 we add yet another kind of reduction rules.
 \fix{state and prove subformula property somewhere}
-\begin{definition}[Permutative Reduction]
+\begin{definition}[Permutative reduction]
  The permutative reduction~$\preduce$ is the smallest congruence
  containing the followings:
 \begin{itemize}
@@ -773,7 +774,7 @@ resulting hyperterm.  And, even after reductions, the resulting
 hyperterm has a component not containing $\abort$.
 \end{proof}
 
-\begin{theorem}[Strong Normalization]
+\begin{theorem}[Strong normalization]
  \label{first:sn}
  \lgd\, is strongly normalizing.
 \end{theorem}
@@ -859,10 +860,9 @@ invariant inductively on the number of steps
         \conf{_\infty}{_\infty}{\hypc{'}{N'}}$.
 \end{itemize}
 Here, we have to show that the translated sequence is infinite.
-\fix{fix english below}
  For that, we can use the facts that
  there are only finite
-number of used locations each of which allows only one write, and that
+number of mentioned locations each of which allows only one write, and that
 an $\abort$ propagation always
 strictly shortens the term under operation.
 
