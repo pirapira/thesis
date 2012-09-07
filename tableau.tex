@@ -54,10 +54,10 @@
  successful acknowledgement from the shared memory and the other
  process~$b$ does the same with information~$J$, it is not always the
  case that process~$b$ has obtained information~$I$\kern -2pt.
- In other words, there are executions without this property.
- This can be confirmed via
+ Indeed, a finite execution can be constructed using
  finite model property for sequential consistency logic.
- We show this property in a generalized form.
+ We show this finite model property in a generalized form using the
+ method of terminating tableau.
 
   \section{The Target Logics}
   \label{logic}
@@ -116,7 +116,7 @@
   where $a$ is an agent.
   Every world term can be written as $\mathsf v.s$ where $s$ is a fintie sequence
   of agents (a postfix).
-  A world inequality\index{world inequality} is an inEquation of the form $\mathsf s\le
+  A world inequality\index{world inequality} is an inequation of the form $\mathsf s\le
   \mathsf t$ where $\mathsf s$ and $\mathsf t$ are world terms.
   \begin{definition}
    A world restriction is a sequence of world inequalities jointed
@@ -129,6 +129,8 @@
     \item (single postfix) $s_i = t_i = s_j = t_{j}$ for $0\le i,j\le n$.
    \end{itemize}
   \end{definition}
+  The condition of world restrictions being single clause or single
+  postfix will be used in the proof of soundness (Proposition~\ref{sound-nat-kripke}).
   A world restriction set\index{world restriction set} is a finite set of world restrictions.
 
   A world valuation\index{world valuation} maps a world variable into a world of a frame.
@@ -221,7 +223,7 @@
     We define $\mathbf{Ax}(\mathsf R)$ to be the substitution closure of
     $\{[\mathsf r]\mid \mathsf r\in \mathsf R\}$.
     The substitution closure of a set~$S$ of formulae is defined as
-    $\{\varphi[\psi/P]\}$ where $\psi$ run freely on~$\fml$ and $P$ on~$\pvar$.
+    $\{\phi[\psi/P]\mid \phi\in S\}$ where $\psi$ run freely on~$\fml$ and $P$ on~$\pvar$.
 
     \begin{figure}[t]
      \begin{center}
@@ -301,7 +303,8 @@
       \DisplayProof
       \hfill
       \AxiomC{}
-      \LeftLabel{($\varphi\in \mathbf{Ax}(\mathsf R)$)}
+      \LeftLabel{($\mathbf{Ax}$)}
+      \RightLabel{($\varphi\in \mathbf{Ax}(\mathsf R)$)}
       \UnaryInf$\fCenter\varphi$
       \DisplayProof
       \ruleskip
@@ -322,9 +325,10 @@
      \label{sound-comp-nat-kripke}
      $\Gamma\vdashR\varphi\Longleftrightarrow\Gamma\modelsR \varphi$\enspace.
     \end{theorem}
-    \begin{lemma}[Soundness]
+    \begin{proposition}[Soundness]
+     \label{sound-nat-kripke}
      $\Gamma\modelsR\varphi\Longleftarrow\Gamma\vdashR\varphi$
-    \end{lemma}
+    \end{proposition}
     \begin{proof}
      We show $\Gamma\modelsR\varphi$ inductively
      on the definition of $\Gamma\vdashR\varphi$.
@@ -363,12 +367,11 @@
 	   for any $0\le i\le n$.
 	   When $\mathsf r$ is single clause,
 	   $\mathsf r = \mathsf v.s\le\mathsf v.t$.
-	   Let $\delta(\mathsf v)$ be $v_0$.
-	   Since $M$ is an $\mathsf R$-model,
-	   $f_s(v_0)\preceq f_t(v_0)$ holds.
-	   Since $n=0$,
-	   we have $M,v_0\models K_s\varphi_0$ but $M,v_0\not\models
-	   K_t\varphi_0$.
+	   Since $M$ is an $\mathsf R$-model, world valuations mapping
+	   $\mathsf v$ to $v_0$ witnesses
+	   $f_s(v_0)\preceq f_t(v_0)$.
+	   We have $M,v_0\models K_s\varphi_0$ but $M,v_0\not\models
+	   K_t\varphi_0$ becasue $n$ is zero.
 	   This contradicts Kripke monotonicity.
 	   Otherwise, when $\mathsf r$ is single postfix,
 	   $\mathsf r = \mathsf v_0.s\le\mathsf
@@ -393,7 +396,7 @@
 
    \subsection{Examples}
 
-    \paragraph{Classical logic.}
+    \paragraph{\fix{find} logic.}
     When
     $\mathsf R = \{\mathsf v\le\mathsf w\wor\mathsf w\le\mathsf x\wor\mathsf x\le\mathsf
     v\}$,
@@ -404,10 +407,10 @@
      I_{\mathsf x})\vee (I_{\mathsf x}\supset I_{\mathsf v})
      \\
      \mathbf{Ax}(\mathsf R) = \mathbf{Ax}(\{\mathsf v\le\mathsf w\wor \mathsf
-     w\le \mathsf x \wor \mathsf x\le\mathsf v\}) &= \{(\varphi\supset\psi)\vee(\psi\supset\chi)\vee(\chi\supset\varphi)\}.
+     w\le \mathsf x \wor \mathsf x\le\mathsf v\}) &= \{(\varphi\supset\psi)\vee(\psi\supset\chi)\vee(\chi\supset\varphi)\}
     \end{align*}
-    $\mathbf{Ax}(\mathsf R)$ is equivalent to the excluded middle so $\mathsf R$ defines
-    classical logic.
+    where $\phi,\psi$ and $\chi$ run over the set of formulae.
+    This characterizes \fix{what}
 
     \paragraph{G\"{o}del--Dummett logic.}
     When $\mathsf R=\{\mathsf v\le\mathsf w\wor\mathsf w\le\mathsf v\}$,
@@ -418,9 +421,10 @@
      I_{\mathsf v})\\
      \mathbf{Ax}(\mathsf R) = \mathbf{Ax}(\{\mathsf v\le\mathsf w\wor \mathsf
      w\le \mathsf v\}) &= \{(\varphi\supset\psi)\vee(\psi\supset\varphi)\mid
-     \varphi,\psi\colon\mbox{formula}\}.
+     \varphi,\psi\colon\mbox{formula}\}\enspace.
     \end{align*}
-    $\mathbf{Ax}(\mathsf R)$ coincides with the axioms of
+    $\mathbf{Ax}(\mathsf R)$ coincides with Dummett's axiom,  Thus,
+    $\mathsf R$ characterizes
     G\"{o}del--Dummett logic~\cite{dummett59}.
 
     \paragraph{Sequential consistency logic.}
@@ -437,7 +441,7 @@
   \section{Finite Model Property}
   \label{fmp-proof}
 
-  This is our main result.
+  This is the main result of this chapter.
   \begin{theorem}
    \label{thm:fmp}
    $\vdashR\varphi$ holds iff $M\models \varphi$ holds
@@ -459,7 +463,7 @@
    Lemma~\ref{R-fmp}})\enspace .
   \end{align*}
   This method extends Waaler
-  and Wallen's method for intuitionistic logic~\cite{waaler1999tableaux}.
+  and Wallen's method for intuitionistic first order predicate logic~\cite{waaler1999tableaux}.
 
    \subsubsection{\LB}
 
@@ -478,20 +482,20 @@
 
    A set~$\Theta$ of world inequalities
    conforms to\index{conforms to} world restriction set~$\mathsf R$ when all of the
-   following hold:
+   following conditions hold:
    \begin{itemize}
     \item $\mathsf s\le \mathsf t, \mathsf t\le \mathsf u\in
 	  \Theta\Longrightarrow
 	  \mathsf s\le \mathsf u\in\Theta$,
-    \item If $\mathsf{s_0}\le \mathsf{t_0} \wor \mathsf{s_1}\le \mathsf
-	  {t_1}\wor
-	  \cdots\wor \mathsf{s_n}\le
-	  \mathsf{t_n}\in \bar{\mathsf R}$ and all of
-	  $\mathsf{s_0},\mathsf{s_1},\ldots,\mathsf{s_n},
-	  \mathsf{t_0},\mathsf{t_1},\ldots, \mathsf{t_n}$ appear in~$\Theta$, then,
-	  $\mathsf{s_i}\le \mathsf{t_i}\in\Theta$ for at least
-	  one~$\mathsf{i}$, where $\bar {\mathsf R}$ is the substitution
-	  closure of~$\mathsf R$,
+    \item If $\mathsf{s}_0\le \mathsf{t}_0 \wor \mathsf{s}_1\le \mathsf
+	  {t}_1\wor
+	  \cdots\wor \mathsf{s}_n\le
+	  \mathsf{t}_n$ is in the substitution
+	  closure of~$\mathsf R$  and all of
+	  $\mathsf{s}_0,\mathsf{s}_1,\ldots,\mathsf{s}_n,
+	  \mathsf{t}_0,\mathsf{t}_1,\ldots, \mathsf{t}_n$ appear in~$\Theta$, then,
+	  $\mathsf{s}_i\le \mathsf{t}_i\in\Theta$ for at least
+	  one~${i}$,
     \item If $\mathsf s\le\mathsf t\in\Theta$ and both $\mathsf s.a$ and
 	  $\mathsf t.a$ appear in~$\Theta$, then $\mathsf s.a\le\mathsf
 	  t.a\in \Theta$.
@@ -745,7 +749,7 @@
    \end{center}
   \end{figure}
 
-  We are going to use yet another derivation called the refutation
+  We are going to use a kind of tableau system called the refutation
   ladder in order to construct a finite model from an unprovable sequent.
   Refutation ladders have rules in Fig.~\ref{refladder}.
   If the assumption of a rule is unprovable, so is the conclusion of the rule.
