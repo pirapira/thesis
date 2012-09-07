@@ -396,22 +396,6 @@
 
    \subsection{Examples}
 
-    \paragraph{\fix{find} logic.}
-    When
-    $\mathsf R = \{\mathsf v\le\mathsf w\wor\mathsf w\le\mathsf x\wor\mathsf x\le\mathsf
-    v\}$,
-    the corresponding axioms can be obtained as follows:
-    \begin{align*}
-     [ \mathsf v\le \mathsf w\wor \mathsf w\le\mathsf x\wor \mathsf x\le\mathsf v ] &=
-     (I_{\mathsf v}\supset I_{\mathsf w})\vee (I_{\mathsf w}\supset
-     I_{\mathsf x})\vee (I_{\mathsf x}\supset I_{\mathsf v})
-     \\
-     \mathbf{Ax}(\mathsf R) = \mathbf{Ax}(\{\mathsf v\le\mathsf w\wor \mathsf
-     w\le \mathsf x \wor \mathsf x\le\mathsf v\}) &= \{(\varphi\supset\psi)\vee(\psi\supset\chi)\vee(\chi\supset\varphi)\}
-    \end{align*}
-    where $\phi,\psi$ and $\chi$ run over the set of formulae.
-    This characterizes \fix{what}
-
     \paragraph{G\"{o}del--Dummett logic.}
     When $\mathsf R=\{\mathsf v\le\mathsf w\wor\mathsf w\le\mathsf v\}$,
     the corresponding axioms can be obtained as follows:
@@ -474,8 +458,10 @@
    satisfied in a state referenced by~$\mathsf s$.
    A sequent\index{sequent} is shaped like
    $\Theta\parallel \Gamma\longrightarrow \Delta$ where
-   $\Theta$ is a finite set of world inequalities and both
-   $\Gamma$ and $\Delta$ are finite sets of prefixed formulae.
+   $\Theta$ is a finite set of world inequalities (called sidenotes\index{sidenote})
+   and both
+   $\Gamma$ and $\Delta$ are finite multisets of prefixed formulae so
+   that the order in $\G$ and $\D$ are ignored.
    In a sequent, world inequality
    $\mathsf s\le \mathsf s$ must be in $\Theta$
    for any world term $\mathsf s$ occurring in $\Delta$ or $\Gamma$.
@@ -523,7 +509,6 @@
     \def\fCenter{\longrightarrow}
     \small
     \begin{center}
-     \fix{state that the order within a context is ignored}\\
      \Axiom$\Theta\parallel\Gamma\fCenter \Delta$
      \RightLabel{LT}
      \UnaryInf$\Theta\parallel\mathsf t::\phi,\quad \Gamma\fCenter \Delta$
@@ -554,18 +539,18 @@
      \UnaryInf$\Theta, \mathsf t\le \mathsf s\parallel \mathsf{s}::\phi\fCenter\mathsf t::\phi$
      \DisplayProof
      \ruleskip
-     \Axiom$\Theta\parallel \Gamma\fCenter \mathsf s::\varphi,\Delta$
-     \Axiom$\Theta\parallel \Gamma, \mathsf t::\psi \fCenter \Delta$
+     \Axiom$\Theta\parallel \Gamma\fCenter \mathsf s::\varphi,\quad\Delta$
+     \Axiom$\Theta\parallel \Gamma,\quad \mathsf t::\psi \fCenter \Delta$
      \RightLabel{L$\supset$}
-     \BinaryInf$\Theta, \mathsf s\le \mathsf t\parallel \Gamma, \mathsf t::\varphi\supset\psi
+     \BinaryInf$\Theta, \mathsf s\le \mathsf t\parallel \Gamma,\quad \mathsf t::\varphi\supset\psi
      \fCenter \Delta$
      \DisplayProof
      \ruleskip
-     \Axiom$\Theta'\parallel \Gamma, \mathsf w::\varphi\fCenter
-     \mathsf w::\psi,\Delta\quad\mbox{ for every }\Theta'\in \mathsf
+     \Axiom$\Theta'\parallel \Gamma,\quad \mathsf w::\varphi\fCenter
+     \mathsf w::\psi,\quad\Delta\quad\mbox{ for every }\Theta'\in \mathsf
      R(\Theta\cup\{\mathsf s\le \mathsf w\})$
      \RightLabel{R$\supset$}
-     \UnaryInf$\Theta\parallel \Gamma \fCenter \mathsf s::\varphi\supset\psi, \Delta$
+     \UnaryInf$\Theta\parallel \Gamma \fCenter \mathsf s::\varphi\supset\psi,\quad \Delta$
      \DisplayProof\\ ($\mathsf w$ does not appear in the conclusion)
      \ruleskip
      \Axiom$\Theta\parallel\Gamma,\quad \mathsf
@@ -596,14 +581,14 @@
      t::\varphi\vee\psi,\quad \Delta$
      \DisplayProof
      \ruleskip
-     \Axiom$\Theta\parallel \Gamma, \mathsf s.a::\varphi\fCenter\Delta$
+     \Axiom$\Theta\parallel \Gamma,\quad \mathsf s.a::\varphi\fCenter\Delta$
      \RightLabel{L$a$}
-     \UnaryInf$\Theta\parallel \Gamma, \mathsf s::K_a\varphi\fCenter\Delta$
+     \UnaryInf$\Theta\parallel \Gamma,\quad \mathsf s::K_a\varphi\fCenter\Delta$
      \DisplayProof
      \hfill
-     \Axiom$\Theta\parallel \Gamma\fCenter\Delta, \mathsf s.a::\varphi$
+     \Axiom$\Theta\parallel \Gamma\fCenter\Delta,\quad \mathsf s.a::\varphi$
      \RightLabel{R$a$}
-     \UnaryInf$\Theta\parallel\Gamma\fCenter\Delta, \mathsf s :: K_a\varphi$
+     \UnaryInf$\Theta\parallel\Gamma\fCenter\Delta,\quad \mathsf s :: K_a\varphi$
      \DisplayProof
     \end{center}
     \caption[The inference rules of \LB.]
@@ -611,7 +596,7 @@
     Waaler and Wallen~\cite{waaler1999tableaux}.
     Since $\mathsf R(\Theta\cup\{\mathsf s\le\mathsf w\})$ is finite,
     R$\supset$
-    is finitely branching. \fix{align spaces between formula and context}}
+    is finitely branching.}
     \label{LB}
    \end{figure}
 
@@ -826,31 +811,29 @@
    A refutation laddar\index{refutation ladder} is a ladder made of the rules in
    Figure~\ref{refladder} that satisfies
    \begin{description}
-    \item[ (R1)] Thinning \textrm{(LT)} occurs only immediately above \textrm{R$\supset$} for the
-	 left side formula of the \textrm{R$\supset$} occurrence.
-    \item[ (R2)]
-	 On the other hand, if an \textrm{R$\supset$} occurrence
+    \item[ (R1)]
+	 If an \textrm{R$\supset$} occurrence
 	 for a formula
 	 $\mathsf s::\varphi\supset\psi$ has $\mathsf t\le \mathsf s$
 	 in the sidenote of the assumption and
-	 $\mathsf t::\varphi$ in the left hand side of the assumption,
+	 $\mathsf t::\varphi$ in the left hand side of the conclusion,
 	 then,
 	 there is a thinning just above the R$\supset$ introducing
 	 $\mathsf w::\varphi$ where $\mathsf w$ is the world variable
 	 introduced by the \textrm{R$\supset$} occurrence.
-    \item[ (R3)]
-	 If there are two \textrm{LC$\supset_0$} occurrences one above the
+    \item[ (R2)]
+	 Assume there are two \textrm{LC$\supset_0$} occurrences one above the
 	 other.
 	 Let $S$ be former occurrence's conclusion and $T$ be latter occurrence's
 	 conclusion.
 	 Then, $T\prec S$ holds.
-    \item[ (R4)]
+    \item[ (R3)]
 	 The conclusion of \textrm{R$\supset$} must not be a
-	 possible conclusion of any other rule.
+	 possible conclusion of any other rule except (LT).
 	 In other words, when building up a refutation ladder from
-	 bottom to up, avoid using R$\supset$ whenever some other
-	 rules are applicable.
-    \item[ (R5)]
+	 bottom to up, avoid using R$\supset$ whenever any other
+	 rules except (LT) is applicable.
+    \item[ (R4)]
 	 For every sequent $\Theta\parallel \Gamma\rightarrow\Delta$
 	 in the ladder, $\Theta$ conforms to~$\mathsf R$.
    \end{description}
@@ -858,41 +841,41 @@
   A refutation ladder of a sequent\index{refutation ladder of a sequent}~$S$ is a refutation ladder
   with
   $S$ at the bottom.
-  The conditions \textbf{(R2)} and \textbf{(R3)} ensure that every
+  The conditions \textbf{(R1)} and \textbf{(R2)} ensure that every
   refutation ladder is finite~(\thref{refladder-finite}).
-  Some other conditions \textbf{(R1)} and \textbf{(R4)} ensure
-  that thinning is not applied to non-atomic formulae.
-
 
   \begin{proposition}
    \label{refladder-finite}
-   Every refutation ladder is finite.
+   Every refutation ladder is finite.  Moreover, the height of a
+   refutation ladder is within a constant number for a given endsequent.
   \end{proposition}
   \begin{proof}
    If a refutation ladder is infinite,
-   it must contain infinitely many $\supset$LC$_0$ occurrences.
-   By \textbf{(R3)}, there must also be infinitely many R$\supset$ rule
+   it must contain infinitely many $\supset$LC$_0$ occurrences because
+   otherwise every rule strictly decreases the number of logical connectives from
+   bottom to top.
+   By \textbf{(R2)}, there must also be infinitely many R$\supset$ rule
    occurrences.
    Moreover, by the definition of~$\prec$,
    those occurrences have left-side formula not
    introduced by thinning.
    The number of such formulae is not more than the number of subformulae
    in the endsequent because thinning occurs whenever it is possible as
-   \textbf{(R2)} states.
+   \textbf{(R1)} states.
   \end{proof}
 
   \begin{definition}
    A complete refutation ladder\index{complete refutation ladder} of~$S$ is a refutation ladder which is
    \begin{itemize}
-    \item maximal: not a proper sub-ladder of any
+    \item maximal\index{maximal} when the refutation ladder is not a proper sub-ladder of any
 	  refutation ladder of~$S$
-    \item open:
+    \item open\index{open} when,
 	  for any sequent~$\Theta\parallel \Gamma\longrightarrow \Delta$,
-	  the prefixed formula~$\mathsf t::\bot$ is not contained in~$\Gamma$.
-	  Either
-	  $\mathsf t::\varphi\notin \Gamma$ or
+	  the prefixed formula~$\mathsf t::\bot$ is not contained
+	  in~$\Gamma$, and at least one of
+	  $\mathsf t::\varphi\notin \Gamma$,
 	  $\mathsf s::\varphi\notin\Delta$ or $\mathsf t\le \mathsf s\notin
-	  \Theta$.
+	  \Theta$ hold.
    \end{itemize}
   \end{definition}
 
@@ -934,6 +917,7 @@
 	  \mathsf R(\Theta\cup\{\mathsf s\le \mathsf w\})$. Since every one of these is
 	  provable in \LB,
 	  the endsequent is also provable in \LB.
+     \item[ (Case LT)] Immediate.
     \end{description}
    \end{proof}
 
@@ -942,7 +926,8 @@
    \left(\bigcup_i\Delta_i\right)$ where $i$ runs over
    each sequent $\Theta_i\parallel \Gamma_i\longrightarrow\Delta_i$
    occurring in~$L$.
-   We say $L$ is unprovable\index{unprovable} when $\cup L$ is.
+   We say $L$ is unprovable\index{unprovable} when $\cup L$ is
+   unprovable in \LB.
 
    \begin{proposition}
     \label{comprefl}
@@ -953,17 +938,25 @@
     $S = \Theta\parallel \Gamma\longrightarrow\Delta$
     is unprovable.
     Let $L$ be the set of refutation ladders of~$S$ and
-    let $\bar L$ be the set of maximal such refutation ladders.
+    let $\overline L$ be the set of maximal refutation ladders in $L$.
     We collect unprovable refutation ladders in~$L$ and call them~$L_u$.
-    Again, $\bar L_u$ denotes the maximal elements of~$L_u$.
+    Again, $\overline L_u$ denotes the maximal elements of~$L_u$.
     The ladder consisting of only~$S$ is an element of~$L_u$
     so that $L_u$ is not empty.
     Moreover, every refutation ladder in~$L_u$ is finite.
-    These combined implies existence of maximal elements in $L_u$ so that $\bar L_u$ is not empty.
-    By the contraposition of \thref{chooser}, the set $\bar L_u$ is included in $\bar L$.
-    Thus, there is an unprovable ladder~$l$ in~$\bar L$.
-    Since $l$ is unprovable, $l$ is open.
-    We can conclude that $l$ is a complete refutation ladder.
+    We claim that
+    $\overline L_u$ is not empty: on the contrary,
+    suppose $\overline{L_u}$ is empty, then any element of $L_u$ is not
+    maximal, meaning that it can be extended upwards and turned into
+    another element of $L_u$ by \thref{chooser} so, $L_u$ contains
+    arbitrarily tall refutation ladders.  This contradicts
+    \thref{refladder-finite} because we have already fixed an
+    endsequent~$S$.
+    Thus,
+    there is an unprovable ladder~$l$ in~$\overline L$.
+    Since $l$ is unprovable, $l$ is open: otherwise, $\cup l$ would
+    become an axiom and hense $l$ would be provable.
+    We conclude that $l$ is a complete refutation ladder.
    \end{proof}
 
 
@@ -1047,7 +1040,7 @@
     $\cup L$ is a Hintikka sequent.
    \end{proposition}
    \begin{proof}
-    By openness, maximality and rules \textbf{(R3)}, \textbf{(R4)}.
+    By openness, maximality and rules \textbf{(R2)}, \textbf{(R3)}.
    \end{proof}
 
    \begin{proposition}
@@ -1062,6 +1055,7 @@
     provable in \LB.
     By \thref{comprefl},
     there is a complete refutation ladder~$L$ for the sequent.
+    By \thref{refladder-finite}, $L$ is finite.
     By \thref{completehintikka},
     $\cup L = L$  forms a Hintikka
     sequent.
@@ -1073,136 +1067,6 @@
     we obtain a finite $\mathsf R$-model.
     Moreover, the state $\mathsf w$ of the model does not satisfy~$\varphi$.
    \end{proof}
-   Now we can carry out the proof strategy for \thref{thm:fmp} described
-   at the beginning of Section~\ref{fmp-proof}.
-
-  \section{Application to Sequential Consistency Logic}
-
-  Sequential consistency logic can be defined with the following world
-  restrictions:
-  \begin{itemize}
-   \item $\mathsf v.a\le\mathsf v.a.a$ for all $a\in\agents$,
-   \item $\mathsf v.a\le\mathsf v$ for all $a\in\agents$,
-   \item $\mathsf v.m\le\mathsf w.m$ where $m\in\agents$ is a special
-	 agent called shared memory.
-  \end{itemize}
-
-  Let us consider a formula $K_a K_m K_a P\supset K_a K_m K_b Q\supset
-  (K_a Q\wedge K_b P)$.
-  Informally, this formula means that whenever processes $a$ and $b$ have
-  made a round-trip communication with the shared memory, each process is
-  guaranteed to have received the other process's initial knowledge (with
-  an assumption a message carries all of sender's knowledge).
-  We can build a countermodel for this formula by the method described in
-  this paper, by building
-  a complete refutation ladder for the formula~(Figure~\ref{compex})
-  \begin{figure}
-   \tiny
-   \def\fCenter{\longrightarrow}
-   \begin{center}
-    \Axiom$cl(\Theta_2, \mathsf x.b.m.b\le\mathsf x.b.m, \mathsf
-    x.a\le\mathsf x)\parallel\mathsf v.a.m.a::P, \mathsf
-    x.b.m.b::Q\fCenter \mathsf x.a::Q$
-    \RightLabel{R$a$}
-    \UnaryInf$cl(\Theta_2,\mathsf x.b.m.b\le\mathsf x.b.m)\parallel\mathsf
-    v.a.m.a::P, \mathsf x.b.m.b::Q\fCenter\mathsf x::K_a Q$
-    \RightLabel{R$\wedge_0$}
-    \UnaryInf$cl(\Theta_2, \mathsf x.b.m.b\le\mathsf
-    x.b.m)\parallel\mathsf v.a.m.a::P, \mathsf x.b.m.b::Q\fCenter\mathsf
-    x::K_a Q\wedge K_a P$
-    \RightLabel{L$b$}
-    \UnaryInf$\Theta_2=cl(\Theta_1,\mathsf x.b\le\mathsf x,\mathsf
-    x.b.m\le\mathsf x.b,\mathsf v.a.m\le\mathsf x.b.m)\parallel\mathsf
-    v.a.m.a::P, \mathsf x.b.m::K_b Q\fCenter \mathsf x::K_a Q\wedge K_b P$
-    \RightLabel{L$b$}
-    \UnaryInf$cl(\Theta_1, \mathsf x.b\le\mathsf x)\parallel
-    \mathsf v.a.m.a::P, \mathsf x.b::K_m K_b Q\fCenter x::K_a Q\wedge K_b
-    P$
-    \RightLabel{L$b$}
-    \UnaryInf$\Theta_1=cl(\Theta_0,\mathsf v\le\mathsf x, \mathsf
-    v.a.m.a\le \mathsf v.a.m)\parallel\mathsf v.a.m.a::P, \mathsf x::K_b
-    K_m K_b Q\fCenter x::K_a Q\land K_b P$
-    \RightLabel{R$\supset$}
-    \UnaryInf$cl(\Theta_0,\mathsf v.a.m.a\le\mathsf v.a.m)\parallel
-    \mathsf v.a.m.a::P\fCenter \mathsf v:: K_b K_m K_b Q\supset (K_a
-    Q\land K_b P)$
-    \RightLabel{L$a$}
-    \UnaryInf$\Theta_0=cl(\mathsf w\le\mathsf v, \mathsf v.a\le\mathsf v,
-    \mathsf v.a.m\le\mathsf v.a)\parallel\mathsf v.a.m::K_a P\fCenter
-    \mathsf v::K_b K_m K_b Q\supset (K_a Q\land K_b P)$
-    \RightLabel{L$a$}
-    \UnaryInf$cl(\mathsf w\le\mathsf v, \mathsf v.a\le\mathsf
-    v)\parallel\mathsf v.a::K_m K_a P\fCenter \mathsf v::K_b K_m K_b
-    Q\supset (K_a Q\land K_b P)$
-    \RightLabel{L$a$}
-    \UnaryInf$cl(\mathsf w\le\mathsf v)\parallel \mathsf v:: K_a K_m K_a P
-    \fCenter \mathsf v:: K_b K_m K_b Q\supset (K_a Q\land K_b P)$
-    \RightLabel{R$\supset$}
-    \UnaryInf$\mathsf w\le \mathsf w\parallel\fCenter \mathsf w:: K_a K_m K_a
-    P\supset K_b K_m K_b Q\supset (K_a Q\land K_b P)$
-    \DisplayProof
-   \end{center}
-   \caption[A complete refutation ladder for the \fix{which} considered formula.]
-   {A complete refutation ladder for the considered formula.
-   $cl(\Theta)$ denotes the reflexive transitive closure of~$\Theta$.}
-   \label{compex}
-  \end{figure}
-
-
- \section{Related Work}
-
-    \paragraph{Work on intuitionistic modal logics.}
-
-    Amati and Pirri~\cite{amati94} presented a uniform tableau method for a number of
-    intuitionistic modal logics whose language contains two modalities
-    $\square$ and $\lozenge$.
-    However, they did not consider the functional modality where the two
-    modalities coincide.  Nor did they consider the multimodal case.
-    Their uniform tableau method uses boxes around some sequents of the
-    tableaux.  This boxing method does not trivially encode our tableaux since our
-    tableau method utilizes sequents whose different formulae are prefixed
-    with different world terms.
-
-    Baldoni, Giordano and Martelli~\cite{baldoni98} presented a tableau
-    calculus for a class of multimodal logics called grammar logics.
-    Their method is similar to our method in that worlds are denoted by
-    variables and the relationship between the worlds are kept as a
-    sidenote.
-    However, their method does not parametrize logics with conditions involving
-    disjunction while our method parametrizes logics with conditions
-    involving $\wor$.
-
-    \paragraph{Work on intermediate logics.}
-
-    Sonobe~\cite{sonobe} gave a Gentzen-style formulation of some
-    intermediate logics, the simplest of which is G\"{o}del--Dummett logic.
-    He wrote his result ``was first obtained by way of tableau method.''
-    Thus both Sonobe's and our method contain a tableau formalization for
-    G\"{o}del--Dummett logic.  However, there are some differences even when
-    we compare Sonobe's formalization of G\"odel--Dummett logic and our
-    specialized method for G\"odel--Dummett logic.
-    In our formalization\,\LB, branches are for different shapes of Kripke
-    frames.  In Sonobe's formalization, branches are made for different
-    states in a Kripke model.
-
-    Avron~\cite{avron2000} presented a tableau system of G\"odel--Dummett logic
-    based on a hypersequent calculus.
-    As he points out, the system has an advantage of not using a rule with
-    arbitrary number of
-    premises.  Our tableau system does not have this advantage.
-    Larchey-Wendling~\cite{countermodelsearch} proposes an efficient parallel
-    countermodel searching method for G\"odel--Dummett logic.
-    It would be interesting to try to extend their methods to the
-    class of logics considered in this paper.
-
- \section{Conclusion}
-
- We have extended Waaler and Wallen's tableau method~\cite{waaler1999tableaux} for intuitionistic
- logic in two ways: adding functional modalities, and adding restrictions on the Kripke frames.
- This resulted in the finite model property of sequential consistency
- logic~\cite{hirailpar} and a class of intermediate logics with
- functional modalities.
-
   \subsection{Completeness}
   We prove completeness via
   adaptation of the standard saturated set construction (see Troelstra
@@ -1277,29 +1141,29 @@
    \label{pseudo-real}
    For a pseudo $\mathsf R$-model~$M$ and a state $w$ of $M$ with
    $M,w\models\varphi$,
-   there exists an $\mathsf R$-model $\bar M$ and a state $\bar w$
-   with $\bar M,\bar w\models\varphi$.
+   there exists an $\mathsf R$-model $\overline M$ and a state $\overline w$
+   with $\overline M,\overline w\models\varphi$.
   \end{proposition}
   \begin{proof}
    A deep postfix is a postfix~$s$ that contains any sequence of agents
    encountered during parsing~$\varphi$ in the top-down direction.
    Let $s$ be a deep postfix for~$\varphi$. Let $M$ be
    $\tuple{W,\preceq,(f_a)_{a\in\agents},\rho}$.
-   We define $\bar M$ to be $\tuple{\bar W,\bar\preceq,
-   (\bar f_a)_{a\in\agents},\bar \rho}$ where
-   $\bar W=\{v\in W\mid v\succeq f_s(w)\}$,$\bar\preceq =
-   \preceq\cap (\bar W\times\bar W)$,
-   $\bar f_a(w)= \begin{cases}
-		  f_a(w)&(\mbox{if }f_a(w)\in\bar W)\\
+   We define $\overline M$ to be $\tuple{\overline W,\overline\preceq,
+   (\overline f_a)_{a\in\agents},\overline \rho}$ where
+   $\overline W=\{v\in W\mid v\succeq f_s(w)\}$,$\overline\preceq =
+   \preceq\cap (\overline W\times\overline W)$,
+   $\overline f_a(w)= \begin{cases}
+		  f_a(w)&(\mbox{if }f_a(w)\in\overline W)\\
 		  w&(\mbox{otherwise})\enspace,
 		 \end{cases}$
-   and $\bar \rho(P) =\rho(P)\cap\bar W$.
-   We define $\bar w$ to be $w$.
-   The new model~$\bar M$ simulates the original model~$M$ well enough
-   to make $\bar M,\bar w\models\varphi$ hold.
-   Since $\bar M$ is a restriction of $M$, $\bar M$ is a pseudo
+   and $\overline \rho(P) =\rho(P)\cap\overline W$.
+   We define $\overline w$ to be $w$.
+   The new model~$\overline M$ simulates the original model~$M$ well enough
+   to make $\overline M,\overline w\models\varphi$ hold.
+   Since $\overline M$ is a restriction of $M$, $\overline M$ is a pseudo
    $\mathsf R$-model.
-   Moreover, since $\bar M$ has the minimum state, $\bar M$ is an
+   Moreover, since $\overline M$ has the minimum state, $\overline M$ is an
    $\mathsf R$-model.
   \end{proof}
 
@@ -1352,7 +1216,138 @@
    a saturated set~$\Gamma^\omega$ with $\Gamma^\omega\not\vdashR\varphi$.
    By \thref{X}, $\R M, \Gamma^\omega\not\models\varphi$.
    By \thref{pseudo-real}, there exists an
-   $\mathsf R$-model $\bar M$ and a state~$\bar w$ of $\bar M$
-   with $\bar M,\bar w\not\models \varphi$.
+   $\mathsf R$-model $\overline M$ and a state~$\overline w$ of $\overline M$
+   with $\overline M,\overline w\not\models \varphi$.
    This witnesses $\not\modelsR\varphi$.
   \end{proof}
+
+   Now we can carry out the proof strategy for \thref{thm:fmp} described
+   at the beginning of Section~\ref{fmp-proof}.
+
+  \section{Application to Sequential Consistency Logic}
+
+  Sequential consistency logic can be defined with the following world
+  restrictions:
+  \begin{itemize}
+   \item $\mathsf v.a\le\mathsf v.a.a$ for all $a\in\agents$,
+   \item $\mathsf v.a\le\mathsf v$ for all $a\in\agents$,
+   \item $\mathsf v.m\le\mathsf w.m\wor\mathsf w.m\le\mathsf v.m$ where $m\in\agents$ is a special
+	 agent called shared memory.
+  \end{itemize}
+
+  Let us consider a formula $K_a K_m K_a P\supset K_a K_m K_b Q\supset
+  (K_a Q\wedge K_b P)$.
+  Informally, this formula means that whenever processes $a$ and $b$ have
+  made a round-trip communication with the shared memory, each process is
+  guaranteed to have received the other process's initial knowledge (with
+  an assumption a message carries all of sender's knowledge).
+  We can build a countermodel for this formula by the method described in
+  this paper, by building
+  a complete refutation ladder for the formula~(Figure~\ref{compex})
+  \begin{sidewaysfigure}
+   \def\fCenter{\longrightarrow}
+   \begin{center}
+    \Axiom$cl(\Theta_2, \mathsf x.b.m.b\le\mathsf x.b.m, \mathsf
+    x.a\le\mathsf x)\parallel\mathsf v.a.m.a::P, \mathsf
+    x.b.m.b::Q\fCenter \mathsf x.a::Q$
+    \RightLabel{R$a$}
+    \UnaryInf$cl(\Theta_2,\mathsf x.b.m.b\le\mathsf x.b.m)\parallel\mathsf
+    v.a.m.a::P, \mathsf x.b.m.b::Q\fCenter\mathsf x::K_a Q$
+    \RightLabel{R$\wedge_0$}
+    \UnaryInf$cl(\Theta_2, \mathsf x.b.m.b\le\mathsf
+    x.b.m)\parallel\mathsf v.a.m.a::P, \mathsf x.b.m.b::Q\fCenter\mathsf
+    x::K_a Q\wedge K_a P$
+    \RightLabel{L$b$}
+    \UnaryInf$\Theta_2=cl(\Theta_1,\mathsf x.b\le\mathsf x,\mathsf
+    x.b.m\le\mathsf x.b,\mathsf v.a.m\le\mathsf x.b.m)\parallel\mathsf
+    v.a.m.a::P, \mathsf x.b.m::K_b Q\fCenter \mathsf x::K_a Q\wedge K_b P$
+    \RightLabel{L$b$}
+    \UnaryInf$cl(\Theta_1, \mathsf x.b\le\mathsf x)\parallel
+    \mathsf v.a.m.a::P, \mathsf x.b::K_m K_b Q\fCenter x::K_a Q\wedge K_b
+    P$
+    \RightLabel{L$b$}
+    \UnaryInf$\Theta_1=cl(\Theta_0,\mathsf v\le\mathsf x, \mathsf
+    v.a.m.a\le \mathsf v.a.m)\parallel\mathsf v.a.m.a::P, \mathsf x::K_b
+    K_m K_b Q\fCenter x::K_a Q\land K_b P$
+    \RightLabel{R$\supset$}
+    \UnaryInf$cl(\Theta_0,\mathsf v.a.m.a\le\mathsf v.a.m)\parallel
+    \mathsf v.a.m.a::P\fCenter \mathsf v:: K_b K_m K_b Q\supset (K_a
+    Q\land K_b P)$
+    \RightLabel{L$a$}
+    \UnaryInf$\Theta_0=cl(\mathsf w\le\mathsf v, \mathsf v.a\le\mathsf v,
+    \mathsf v.a.m\le\mathsf v.a)\parallel\mathsf v.a.m::K_a P\fCenter
+    \mathsf v::K_b K_m K_b Q\supset (K_a Q\land K_b P)$
+    \RightLabel{L$a$}
+    \UnaryInf$cl(\mathsf w\le\mathsf v, \mathsf v.a\le\mathsf
+    v)\parallel\mathsf v.a::K_m K_a P\fCenter \mathsf v::K_b K_m K_b
+    Q\supset (K_a Q\land K_b P)$
+    \RightLabel{L$a$}
+    \UnaryInf$cl(\mathsf w\le\mathsf v)\parallel \mathsf v:: K_a K_m K_a P
+    \fCenter \mathsf v:: K_b K_m K_b Q\supset (K_a Q\land K_b P)$
+    \RightLabel{R$\supset$}
+    \UnaryInf$\mathsf w\le \mathsf w\parallel\fCenter \mathsf w:: K_a K_m K_a
+    P\supset K_b K_m K_b Q\supset (K_a Q\land K_b P)$
+    \DisplayProof
+   \end{center}
+   \caption
+   {A complete refutation ladder for the considered formula $K_a K_m K_a P\supset K_a K_m K_b Q\supset
+  (K_a Q\wedge K_b P)$.
+   $cl(\Theta)$ denotes the reflexive transitive closure
+   of~$\Theta$. \fix{check the derivation}}
+   \label{compex}
+  \end{sidewaysfigure}
+
+
+ \section{Related Work}
+
+    \paragraph{Work on intuitionistic modal logics.}
+
+    Amati and Pirri~\cite{amati94} presented a uniform tableau method for a number of
+    intuitionistic modal logics whose language contains two modalities
+    $\square$ and $\lozenge$.
+    However, they did not consider the functional modality where the two
+    modalities coincide.  Nor did they consider the multimodal case.
+    Their uniform tableau method uses boxes around some sequents of the
+    tableaux.  This boxing method does not trivially encode our tableaux since our
+    tableau method utilizes sequents whose different formulae are prefixed
+    with different world terms.
+
+    Baldoni, Giordano and Martelli~\cite{baldoni98} presented a tableau
+    calculus for a class of multimodal logics called grammar logics.
+    Their method is similar to our method in that worlds are denoted by
+    variables and the relationship between the worlds are kept as a
+    sidenote.
+    However, their method does not parametrize logics with conditions involving
+    disjunction while our method parametrizes logics with conditions
+    involving $\wor$.
+
+    \paragraph{Work on intermediate logics.}
+
+    Avron~\cite{avron2000} presented a tableau system of G\"odel--Dummett logic
+    based on a hypersequent calculus.
+    As he points out, the system has an advantage of not using a rule with
+    arbitrary number of
+    premises.  Our tableau system does not have this advantage.
+    Larchey-Wendling~\cite{countermodelsearch} proposes an efficient parallel
+    countermodel searching method for G\"odel--Dummett logic.
+    It would be interesting to try to extend their methods to the
+    class of logics considered in this chapter.
+
+    Sonobe~\cite{sonobe} gave a Gentzen-style formulation of some
+    intermediate logics, the simplest of which is G\"{o}del--Dummett logic.
+    He wrote his result ``was first obtained by way of tableau method.''
+    Thus both Sonobe's and our method contain a tableau formalization for
+    G\"{o}del--Dummett logic.  However, there are some differences even when
+    we compare Sonobe's formalization of G\"odel--Dummett logic and our
+    specialized method for G\"odel--Dummett logic.
+    In our formalization\,\LB, branches are for different shapes of Kripke
+    frames.  In Sonobe's formalization, branches are made for different
+    states in a Kripke model.
+
+ \section{Conclusion}
+
+ We have generalized Waaler and Wallen's tableau method~\cite{waaler1999tableaux} for intuitionistic
+ logic in two ways: adding functional modalities, and adding restrictions on the Kripke frames.
+ This resulted in the finite model property of sequential consistency
+ logic~\cite{hirailpar} and a class of intermediate logics with
+ functional modalities.
