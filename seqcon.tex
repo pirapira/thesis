@@ -1,6 +1,5 @@
-\chapter{Inuitionistic Epistemic Logic}
+\chapter{Sequential Consistency Logic}
 \label{ch:seqcon}
-
 
   \subsection{Summary}
 
@@ -241,7 +240,7 @@
 
   \begin{definition}
    \label{formula}
-   We define a \iec-formula\index{\iec-formula} $\varphi$ by the BNF:
+   We define a \iec-formula\index{formula!\iec-formula} $\varphi$ by the BNF:
    \[
    \varphi ::= \bot\mid P\mid
    (K_a\varphi)\mid(\varphi\vee\varphi)\mid(\varphi\land\varphi)\mid
@@ -484,7 +483,7 @@
        The valuation~$\rho$ for propositional variables in $\pvar$ is extended into validity
        relation~$\models$ for all \iec-formulae in $\fml$.
        \begin{definition}
-	We define the satisfaction relation\index{satisfaction relation} $\models$ of a~model
+	We define the satisfaction relation\index{satisfaction} $\models$ of a~model
 	$\tuple{W,\preceq,(f_a)_{a\in A},\rho}$, a~state~$w\in W$ of the model and an
 	\iec-formula~$\varphi$.
 	Let us fix a model $M=\tuple{W,\preceq,(f_a)_{a\in A},\rho}$.
@@ -628,7 +627,7 @@
    \label{saturated-set}
    For a set of formulae $\Omega$,
    a set of \iec-formulae $\Gamma\subseteq\Omega$ is $\Omega$-saturated%
-   \index{$\Omega$-saturated} if and only if
+   \index{saturated!$\Omega$-saturated} if and only if
    \begin{enumerate}
     \item $\Gamma$ is $\Omega$-deductively closed, i.e., $\Gamma\vdash\varphi\in
 	  \Omega\Rightarrow
@@ -1010,17 +1009,17 @@ Proof to be found in the author's Master's thesis.
 
   \begin{definition}
    Assume there is a vector of atomic formulae $(I_a)_{a\in P}$.
-   A~waitfree protocol description\index{waitfree protocol description} $\varphi$ is an \iec-formula of the form
+   A~waitfree protocol description\index{waitfree!--- protocol description} $\varphi$ is an \iec-formula of the form
    \[
    \varphi = \bigwedge_{a\in P} K_a K_\memory K_a \cdots K_a I_a
    \]
    where $K_a$ and $K_\memory$ appear alternatively in ``$\cdots$''.
-   A~waitfree task specification\index{waitfree task specification} $\psi$ is defined with the BNF:
+   A~waitfree task specification\index{waitfree!--- task specification} $\psi$ is defined with the BNF:
    \[
    \psi ::= K_a\psi\mid \psi\land\psi\mid \psi\vee\psi\mid I_a
    \]
    where $a$ stands for a process in $P$.
-   A~waitfree assertion\index{waitfree assertion} is an \iec-formula~$\varphi\supset\psi$ where $\varphi$ is a
+   A~waitfree assertion\index{waitfree!--- assertion} is an \iec-formula~$\varphi\supset\psi$ where $\varphi$ is a
    waitfree protocol description and $\psi$ is a waitfree task specification.
   \end{definition}
 

@@ -69,8 +69,8 @@
   Hirai~\cite{hirailpar}.
   Let us assume that
   there are a countably infinite set~$\pvar$ of propositional
-  variables\index{propositional variable} and a
-  finite set~$\agents$ of agents\index{agents}.
+  variables\index{variable!propositional}\index{propositional variable|see{variable}} and a
+  finite set~$\agents$ of agents\index{agent}.
 
   \begin{definition}
    We define the set~$\fml$ of formulae by BNF:
@@ -109,7 +109,7 @@
   We assume that there is a countably infinite set of world variables\index{world
   variables}~$\wvar$.
   We use $\mathsf v, \mathsf w,\ldots$ to denote world variables.
-  We define world terms\index{world terms} using BNF:
+  We define world terms\index{term!world}\index{world term|see {term}} using BNF:
   \[
   \mathsf s::=\mathsf v\mid \mathsf s.a
   \]
@@ -150,7 +150,7 @@
 
 
   \begin{definition}
-   We define the satisfying relation\index{satisfying relation} $M,w\models\varphi$ over a model
+   We define the satisfaction relation\index{satisfaction} $M,w\models\varphi$ over a model
    $M = \tuple{W,\preceq,(f_a)_{a\in \agents},\rho}$, a state~$w\in W$ and a
    formula~$\varphi$ inductively on $\varphi$.
    In this definition, let
@@ -174,7 +174,7 @@
 	 $w'\models\psi_1$ for any $w'\in W$\enspace.
    \end{itemize}
   \end{definition}
-  A model~$M$ satisfies\index{satisfaction} $\varphi$ iff $M,w\models\varphi$ holds for any
+  A model~$M$ satisfies\index{satisfy} $\varphi$ iff $M,w\models\varphi$ holds for any
   state~$w$ of~$M$.
   A formula~$\varphi$ is \index{valid under} $\mathsf R$ iff
   every $\mathsf R$-model~$M$ satisfies $M\models \varphi$.
@@ -451,7 +451,7 @@
 
    \subsubsection{\LB}
 
-   The deduction system\,\LB\,uses prefixed formulae\index{prefixed formula}.  A
+   The deduction system\,\LB\,uses prefixed formulae\index{formula!prefixed}.  A
    prefixed formula is shaped like $\mathsf s::\varphi$ where $\mathsf s $
    is a world term and $\varphi$ is a formula.
    Informally, this prefixed formula means that the formula~$\varphi$ is
@@ -838,7 +838,7 @@
 	 in the ladder, $\Theta$ conforms to~$\mathsf R$.
    \end{description}
   \end{definition}
-  A refutation ladder of a sequent\index{refutation ladder of a sequent}~$S$ is a refutation ladder
+  A refutation ladder of a sequent\index{refutation ladder!--- of a sequent}~$S$ is a refutation ladder
   with
   $S$ at the bottom.
   The conditions \textbf{(R1)} and \textbf{(R2)} ensure that every
@@ -865,11 +865,13 @@
   \end{proof}
 
   \begin{definition}
-   A complete refutation ladder\index{complete refutation ladder} of~$S$ is a refutation ladder which is
+   A complete refutation ladder\index{refutation ladder!complete} of~$S$ is a refutation ladder which is
    \begin{itemize}
-    \item maximal\index{maximal} when the refutation ladder is not a proper sub-ladder of any
+    \item maximal\index{refutation ladder!maximal}
+	  \index{maximal|see{refutation ladder}}
+	  when the refutation ladder is not a proper sub-ladder of any
 	  refutation ladder of~$S$
-    \item open\index{open} when,
+    \item open\index{refutation ladder!open}\index{open|see{refutation ladder}} when,
 	  for any sequent~$\Theta\parallel \Gamma\longrightarrow \Delta$,
 	  the prefixed formula~$\mathsf t::\bot$ is not contained
 	  in~$\Gamma$, and at least one of
@@ -921,12 +923,12 @@
     \end{description}
    \end{proof}
 
-   For a refutation ladder~$L$, we define a sequent $\cup L$ as
+   For a refutation ladder~$l$, we define a sequent $\cup l$ as
    the sequent $\left(\bigcup_i \Theta_i\right)\parallel \left(\bigcup_i \Gamma_i\right)\longrightarrow
    \left(\bigcup_i\Delta_i\right)$ where $i$ runs over
    each sequent $\Theta_i\parallel \Gamma_i\longrightarrow\Delta_i$
-   occurring in~$L$.
-   We say $L$ is unprovable\index{unprovable} when $\cup L$ is
+   occurring in~$l$.
+   We say $l$ is unprovable\index{unprovable} when $\cup l$ is
    unprovable in \LB.
 
    \begin{proposition}
@@ -1036,8 +1038,8 @@
 
    \begin{proposition}
     \label{completehintikka}
-    For a complete refutation ladder~$L$,
-    $\cup L$ is a Hintikka sequent.
+    For a complete refutation ladder~$l$,
+    $\cup l$ is a Hintikka sequent.
    \end{proposition}
    \begin{proof}
     By openness, maximality and rules \textbf{(R2)}, \textbf{(R3)}.
@@ -1054,15 +1056,15 @@
     the sequent $\mathsf w\le\mathsf w\parallel \longrightarrow\varphi$ is not
     provable in \LB.
     By \thref{comprefl},
-    there is a complete refutation ladder~$L$ for the sequent.
-    By \thref{refladder-finite}, $L$ is finite.
+    there is a complete refutation ladder~$l$ for the sequent.
+    By \thref{refladder-finite}, $l$ is finite.
     By \thref{completehintikka},
-    $\cup L = L$  forms a Hintikka
+    $\cup l = l$  forms a Hintikka
     sequent.
     Moreover,
     the union $\bigcup_i\Theta_i$ conforms to~$\mathsf
     R$.
-    Thus, when we construct a model from $\cup L$ with the method described in
+    Thus, when we construct a model from $\cup l$ with the method described in
     the proof of \thref{Hsat},
     we obtain a finite $\mathsf R$-model.
     Moreover, the state $\mathsf w$ of the model does not satisfy~$\varphi$.

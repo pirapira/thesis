@@ -52,7 +52,7 @@ synchronous case and give simulation from the
 asynchronous case to the synchronous case.
 
 Our computational semantics here is closely related to
-the hyperlambda calculus for G\"odel--Dummett logic presented in
+the hyper-olambda calculus for G\"odel--Dummett logic presented in
 Chapter~\ref{ch:lambda}.
 G\"odel--Dummett logic is axiomatized by Dummett axiom $(\phi\imp\psi)\lor(\psi\imp\phi)$
 on top of intuitionistic logic.  \fix{encode and make a better claim}
@@ -182,9 +182,12 @@ A sequent\index{sequent} $\sequent{\G}{\tj t\phi}$ consists of a
 context~$\G$ and a term~$t$ associated with a type~$\phi$.
 The context\index{context} is a finite sequence of variables associated with types.
 
-A derivation\index{derivation} is a tree composed of the derivation rules below
-whose top rules are Ax:\\ \noindent
+A derivation\index{derivation} is a tree composed of the derivation
+rules in Figure~\ref{fig:pole-typing}
+whose top rules are Ax.
 
+ \begin{figure}
+   \begin{center}
 \AxiomC{}
 \LL  {Ax}
 \useq{\xphi}{\xphi}
@@ -195,7 +198,7 @@ whose top rules are Ax:\\ \noindent
 \LL{$\limp$I}
 \useq{\G}{\tj{\lambda x.t}{\phi\limp\psi}}
 \DisplayProof
-\ruleskip
+\hfill
 %
 \aseq{\G}{\tj t{\phi\limp\psi}}
 \aseq{\D}{\tj u\phi}
@@ -208,7 +211,7 @@ whose top rules are Ax:\\ \noindent
 \LL  {$\oplus$I}
 \useq{\G}{\tj{\inl{t}}{\phi\oplus\psi}}
 \DisplayProof
-\ruleskip
+\hfill
 %
 \aseq{\G}{\tj{t}{\psi}}
 \LL  {$\oplus$I}
@@ -228,7 +231,7 @@ whose top rules are Ax:\\ \noindent
 \LL   {$\forall$I}
 \useq\G{\tj t{\forall X\phi}}
 \DisplayProof ($\G$ does not contain $X$ freely)
-\ruleskip
+\hfill
 %
 \aseq{\G}{\tj{t}{\forall X\phi}}
 \LL   {$\forall$E}
@@ -247,8 +250,10 @@ whose top rules are Ax:\\ \noindent
 \LL{Ex}
 \useq{\G,\tj{y}{\psi},\tj{x}{\phi},\D}{\tj{t}{\theta}}
 \DisplayProof
-
-\fix{make these into a figure}
+   \end{center}
+  \caption{Typing derivation rules.}
+  \label{fig:pole-typing}
+ \end{figure}
 
 Note that Com rule introduces a restricted form of weakening on the left.\\
 \AxiomC{}
@@ -264,19 +269,40 @@ Note that Com rule introduces a restricted form of weakening on the left.\\
 
 With these rules, there is a term typed with the prelinearity axiom.
 
-\AxiomC{}
-\useq{\tj{x}{X\limp Y}}{\tj{x}{X\limp Y}}
-\useq{\tj{x}{X\limp Y}}{\tj{\inl{x}}{(X\limp Y)\oplus (Y\limp X)}}
-\AxiomC{}
-\useq{\tj{y}{Y\limp X}}{\tj{y}{Y\limp X}}
-\useq{\tj{y}{Y\limp X}}{\tj{\inr{y}}{(X\limp Y)\oplus(Y\limp X)}}
-\bseq{}{\tj{(\inl{\comodL}\conc\inr{\comodR})}{(X\limp Y)\oplus(Y\limp
-X)}}
-\useq{}{\tj{(\inl{\comodL}\conc\inr{\comodR})}{
-\forall Y((X\limp Y)\oplus(Y\limp X))}}
-\useq{}{\tj{(\inl{\comodL}\conc\inr{\comodR})}{
-\forall X\forall Y((X\limp Y)\oplus(Y\limp X))}}
-\DisplayProof
+ \begin{example}
+  \label{ex:prelin-term}
+  The term $(\inl{\comodL}\conc\inr{\comodR})$ has \fix{define have a
+  term}
+  a type $\forall X\forall Y((X\limp Y)\oplus(Y\limp X))$.  The typing
+  derivation is in Figure~\ref{fig:prelin-term}.
+ \end{example}
+
+ \begin{sidewaysfigure}
+ \begin{center}
+  \AxiomC{}
+  \LL{Ax}
+  \useq{\tj{x}{X\limp Y}}{\tj{x}{X\limp Y}}
+  \LL{$\oplus$I}
+  \useq{\tj{x}{X\limp Y}}{\tj{\inl{x}}{(X\limp Y)\oplus (Y\limp X)}}
+  \AxiomC{}
+  \LL{Ax}
+  \useq{\tj{y}{Y\limp X}}{\tj{y}{Y\limp X}}
+  \LL{$\oplus$I}
+  \useq{\tj{y}{Y\limp X}}{\tj{\inr{y}}{(X\limp Y)\oplus(Y\limp X)}}
+  \LL{Com}
+  \bseq{}{\tj{(\inl{\comodL}\conc\inr{\comodR})}{(X\limp Y)\oplus(Y\limp
+  X)}}
+  \LL{$\forall$I}
+  \useq{}{\tj{(\inl{\comodL}\conc\inr{\comodR})}{
+  \forall Y((X\limp Y)\oplus(Y\limp X))}}
+  \LL{$\forall$I}
+  \useq{}{\tj{(\inl{\comodL}\conc\inr{\comodR})}{
+  \forall X\forall Y((X\limp Y)\oplus(Y\limp X))}}
+  \DisplayProof
+ \end{center}
+  \caption{A derivation tree typing a term with the prelinearity axiom.}
+  \label{fig:prelin-term}
+ \end{sidewaysfigure}
 
 \subsection{Specification Using Poles}
 
@@ -968,7 +994,7 @@ and \ref{c:second} uses \ref{c:first} in the ($\limp$E,~\textminus).
 
 \begin{example}
  Since $g = (\inl{\comodL}\conc\inr{\comodR})$ has the type
- $\forall X\forall Y((X\limp Y)\oplus (Y\limp X))$ (\fix{refer}),
+ $\forall X\forall Y((X\limp Y)\oplus (Y\limp X))$ (\thref{ex:prelin-term}),
  this term satisfies the condition of \thref{spec:prelin}.
  By (dist),
  $\left(g, \mats{z}{z}{x\cdot\pi_Y}{w}{w}{y\cdot\pi_X}\right)$
@@ -1083,7 +1109,8 @@ stacks in the asynchronous case.
 We write the set of terms as $\Lambda$ and stacks~$\Pi$.
 A store\index{store} is a partial mapping from locations to
 terms, equivalently, a mapping from locations to terms and $\bot$'s.
-The empty store\index{empty store}~$S_\epsilon$ maps any channel to $\bot$.
+The empty store\index{store!empty}%
+\index{empty store|see{store}}~$S_\epsilon$ maps any channel to $\bot$.
 For a store $S$, we define a store $S[c\colon\phi\mapsto x]$ to be
 the same as $S$ except that $S[c\colon\phi\mapsto x](c\colon\phi\mapsto
 x)$ is $x$.
@@ -1150,7 +1177,7 @@ that satisfies:
 Differently from the synchronous case in Section~\ref{sec:sync},
 we do not use an external schedule relation on channels.
 Instead, nondeterminism appears spontaneously.
-We can implement something similar to Lafont's example~\fix{cite},
+We can implement something similar to Lafont's example~\citep[B.1]{girard1989proofs},
 showing that confluence does not hold.
 Suppose $\G\tr\tj t\phi$ and $\G\tr\tj u\phi$ are both derivable.
 Then, by induction on the derivation,

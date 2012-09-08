@@ -89,9 +89,11 @@ guaranteed to succeed.
 \newcommand{\m}[1]{{#1}^+}
 
 Let us assume a countably infinite set of propositional variables%
-\index{propositional variables}.
+\index{propositional variable|see{variable}}\index{variable!propositional}.
 The set of propositional variables is written~$\pvar$.
-We define local formulae \index{local formula} $\varphi, \psi$ by the following BNF,
+We define local formulae \index{formula!local}
+\index{local formula|see{formula}}
+$\varphi, \psi$ by the following BNF,
 where $I$ is a
 propositional variable%
 \footnote{We include $\bot$ because G\"odel--Dummett logic has it
@@ -101,7 +103,8 @@ although $\bot$ is not necessary for us to encode waitfree computation.}%
  \varphi,\psi ::= \bot \mid I \mid (\varphi\supset\psi) \mid (\varphi\wedge\psi) \mid
  (\varphi\vee\psi)\enspace.
 \]
-Further, we define global formulae \index{global formula} $\m\varphi, \m\psi$ with the following
+Further, we define global formulae \index{formula!global}
+ \index{global formula|see{formula}}$\m\varphi, \m\psi$ with the following
 BNF:
 \[
  \m\varphi,\m\psi :: = [i]\varphi \mid
@@ -315,9 +318,9 @@ $[0](\varphi\supset\psi)\vee[1](\psi\supset\varphi)$ is provable as follows.
 \label{term}
 
 We assume distinct, countably infinite sets of variables\index{variable},
-locations\index{locations}
+locations\index{location}
 and
-processes\index{processes}.
+processes\index{process}.
 Locations are denoted by~$l$; process~$i,j, \ldots$ and variables~$x,
 y, \ldots$.
 Later, locations will be used to specify a pair of stores
@@ -557,7 +560,7 @@ The typing rules for the terms are given in Fig.~\ref{termassign}.
 A term~$M$ is \textit{of} type~$\m\varphi$ iff there is a derivation of
 $\Gamma\tr
 \tj{M}{\m\varphi}$.
-A local term\index{local term} is a term without $\overleftarrow l$,
+A local term\index{local term|see{term}}\index{term!local} is a term without $\overleftarrow l$,
 $\overrightarrow l$ or any $\g$ constructs.
 A hyperterm\index{hyperterm}~$\hypert$ is a nonempty sequence of terms.
 A store\index{store} maps a location to a
@@ -808,7 +811,7 @@ reductions in the local fragment.
 For that, we first
 build an infinite reduction sequence with constant stores.
 Using the original infinite sequence, we define a pair of stores called the
-store prophecy\index{store prophecy} $(\lstore_\infty, \rstore_\infty)$ where
+store prophecy\index{store!--- prophecy} $(\lstore_\infty, \rstore_\infty)$ where
 $ \lstore_\infty(l)= \epsilon$ if $\lstore_k(l)=\epsilon$ for all
  $k\in\omega$ and
 $ \lstore_\infty(l)=M $ if $\lstore_k(l)=M$ for some $k\in\omega$
@@ -1120,7 +1123,8 @@ $d_i = b_i$ or $d_i = \epsilon$ holds for any process~$i$.
 An input~$\vec x\in \prod_{i\in \processes}\lterm(\iota_i)$
 is \linebreak[2] $R$-permissible\index{permissible} iff there is at least one
 vector $\vec d\in \prod_{i\in \processes}(\lval(o_i))$ with $(\vec x, \vec b)\in R$.
-A typed protocol~$\Pi$ solves\index{solve, typed protocol} the typed input-output problem
+A typed protocol~$\Pi$ solves\index{solve!typed protocol --- typed
+input-output problem} the typed input-output problem
   $\tuple{(\iota_i)_{i\in \processes}, (o_i)_{i\in \processes}, R}$ on
 schedule~$\sigma$ iff for all $R$-permissible inputs~$\vec x$ and a
 schedule~$\sigma$,
@@ -1179,12 +1183,12 @@ This can be extended to all global formulae, as
 $I(\m\varphi\wedge\m\psi)$ iff $I(\m\varphi)$ and $I(\m\psi)$;
 $I(\m\varphi\vee\m\psi)$ iff $I(\m\varphi)$ or $I(\m\psi)$.
 A system snapshot satisfies a global formula%
-\index{system snapshot satisfies a global formula}~$\m\varphi$
+\index{satisfy!system snapshot ---s a global formula}~$\m\varphi$
 iff there exists a
 finite set of
 investigators~$I$ such that the system snapshot satisfies $I(\m\varphi)$.
 A system snapshot satisfies a context%
-\index{system snapshot satisfies a context} iff it
+\index{satisfy!system snapshot ---s a context} iff it
 satisfies every global formula in the context.
 A protocol\index{protocol} $p$ \textit{realizes a hypersequent}~$
 \left(\Gamma_0\vdash
@@ -1474,11 +1478,11 @@ It would be interesting to compare different synchronization primitives
 and different intermediate logics, generalizing waitfreedom and
 G\"odel--Dummett logic.
 For example, it would be tedious but straightforward to adapt the
-hyperlambda calculi here to
+hyper-lambda calculi here to
 the logics characterized by the Kripke frames of bounded
 width~\citet{Ciabattoni01042001} because \lgd\, is a special case of
 width~1.  However, the author has no immediate idea on
-developing a general hyperlambda calculi encompassing
+developing a general hyper-lambda calculi encompassing
 all logics with cut-eliminatable hypersequent calculi.
 
 We are also planning to develop a waitfree protocol verification mechanism in Coq
