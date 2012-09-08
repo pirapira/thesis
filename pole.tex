@@ -91,9 +91,11 @@ A term\index{term}~$t$ is defined by BNF:
  \mid (t)t
  \mid \lambda x.t
  \mid \ast_t
+ \mid \mat t x t x t
+ \mid \inl t
+ \mid \inr t
  \mid \comod c c
  \mid (t\conc t)
- \mid \mat t x t x t
 \]
 where $x$ is a variable and $c$ is a channel.
 A stack\index{stack}~$\pi$ is defined by BNF:
@@ -106,6 +108,7 @@ A stack\index{stack}~$\pi$ is defined by BNF:
 We write the set of terms as $\Lambda$ and stacks~$\Pi$.
 An executable\index{executable} is a multiset on $\Lambda\times\Pi$.
 We use $\conc$ for delimiting elements in an executable.
+We denote the empty multiset by~$\emptyset$.
 
 % 2a' reduction
 A schedule\index{schedule} is a total order on channels.
@@ -391,7 +394,7 @@ However, when we try to prove \ref{c:first} by induction on derivations,
 the case for Com rule fails.  Thus we deal with two derivations at the
 same time.
 
-\begin{proposition}[Adequacy]
+\begin{theorem}[Adequacy]
  \label{c:adequacy}
  Let these sequents be derivable:
  $  \sequent{\G}{\tj{t}{\phi}} $
@@ -421,7 +424,7 @@ same time.
 	$(\vec g, e)\in\sem{\hat\G}$ and
 	$(\vec d, f)\in\sem{\hat\D}$.
   \end{enumerate}
-\end{proposition}
+\end{theorem}
 \begin{proof}
  We prove both statements at the same time by induction on the sum of
  the heights of the derivations.  Here we identify sequents up to exchange.
@@ -942,6 +945,46 @@ and \ref{c:second} uses \ref{c:first} in the ($\limp$E,~\textminus).
 \end{proposition}
 
 \begin{proposition}
+ \label{spec:prelin}
+ Let $\tr\tj{g}{\forall X\forall Y((X\limp Y)\oplus (Y\limp X))}$ be
+ derivable.
+ Then, $\left(g, \mats{z}{z}{x\cdot\pi_Y}{w}{w}{y\cdot\pi_X}\right)$
+ reduces to a multiset containing an element of
+ $\{(x,\pi_X), (y,\pi_Y)\}$.
+\end{proposition}
+\begin{proof}
+ We denote by $\bbot$ the set of executables that reduce to a multiset
+ containing an element of $\{(x,\pi_X), (y,\pi_Y)\}$.
+ By \thref{prop:exec-on-pole}, this is a pole.
+ Take $\nsem{X}_0 = \{(\pi_X,\emptyset)\}$ and
+      $\nsem{Y}_0 = \{(\pi_Y,\emptyset)\}$.
+ We have $x\in\sem{X}$ and $y\in\sem{Y}$.
+ By definition of $\nsem{\cdot}$,
+ $\mats{z}{z}{x\cdot\pi_Y}{w}{w}{y\cdot\pi_X}$ is in $\nsem{(X\limp
+ Y)\oplus (Y\limp X)}$.
+ By adequacy (\thref{c:adequacy}), $\left(g,
+ \mats{z}{z}{x\cdot\pi_Y}{w}{w}{y\cdot\pi_X}\right)$ is in $\bbot$.
+\end{proof}
+
+\begin{example}
+ Since $g = (\inl{\comodL}\conc\inr{\comodR})$ has the type
+ $\forall X\forall Y((X\limp Y)\oplus (Y\limp X))$ (\fix{refer}),
+ this term satisfies the condition of \thref{spec:prelin}.
+ By (dist),
+ $\left(g, \mats{z}{z}{x\cdot\pi_Y}{w}{w}{y\cdot\pi_X}\right)$
+ reduces to
+ \begin{align*}
+  \bigl[& \left(\inl{\comodL},
+  \mats{z}{z}{x\cdot\pi_Y}{w}{w}{y\cdot\pi_X}\right) \\ \conc
+  & \left(\inr{\comodR}, \mats{z}{z}{x\cdot\pi_Y}{w}{w}{y\cdot\pi_X}\right)\bigr]\enspace.
+ \end{align*}
+ By (ansL), (ansR) and (cong), the term above reduces to
+ $[\comodL, x\cdot\pi_Y\conc \comodR,y\cdot\pi_X]$.
+ Depending on the schedule,  the term above reduces to either
+ $[x,\pi_X]$ or $[y,\pi_Y]$ or $[x,\pi_X\conc y,\pi_Y]$.
+\end{example}
+
+\begin{proposition}
  \label{prop:spec}
  Let
  $\sequent{}{}{\tj g
@@ -1000,9 +1043,8 @@ This property is necessary for terms to denote
 constructive content of proofs.
 
 \begin{proposition}[Non-abortfullness]
- Let $\tr\tj t\psi$ be derivable, then,
- $[t,\pi]$ does not reduce to $\emptyset$ for
- any $\pi$.
+ Let $t$ be a term and $\pi$ a stack, then,
+ $[t,\pi]$ does not reduce to $\emptyset$.
 \end{proposition}
 \begin{proof}
  By definition of $\red$.
@@ -1018,16 +1060,26 @@ A term\index{term}~$t$ is defined by BNF:
  \mid t\conc t
  \mid \lambda x.t
  \mid \ast_t
+ \mid \mat t x t x t
+ \mid \inl t
+ \mid \inr t
  \mid \comod c c
  \mid \reader  c
 \]
 where $x$ is a variable and $c$ is a channel.
+Compared with the synchronous case, now we have one additional kind of term
+$\reader c$.
 A stack\index{stack}~$\pi$ is defined by BNF:
 \[
  \pi ::= \epsilon
  \mid t\cdot \pi
+ \mid \mats x t \pi x t \pi
  \enspace.
 \]
+The definition of stacks are not changed from the synchrnous case except
+that the terms in the definition can be $\reader c$.
+Overall, all terms and stacks in the synchronous case are also terms and
+stacks in the asynchronous case.
 We write the set of terms as $\Lambda$ and stacks~$\Pi$.
 A store\index{store} is a partial mapping from locations to
 terms, equivalently, a mapping from locations to terms and $\bot$'s.
@@ -1057,6 +1109,12 @@ that satisfies:
 	     [t[\ast_u/x],      \pi],S$\enspace;
  \item[(load)]
 	    $[\ast_u,\pi],S\red[u,\pi],S$\enspace;
+ \item[(ask)]
+      $[\mat t x u y v,\pi], S\red [t,\mats x u \pi y v \pi], S$\enspace;
+ \item[(ansL)]
+      $[\inl{v}, \mats xt\pi yu\sigma],S \red [t[v/x],\pi],S $ \enspace;
+ \item[(ansR)]
+      $[\inr{w}, \mats xt\pi yu\sigma],S \red [u[w/y],\sigma],S $ \enspace;
  \item[(write)]
 	    $
 	    [\comod c{\co c}, t\cdot\pi], S[\co
@@ -1104,12 +1162,12 @@ $\G\tr\tj{(\comod c{\co c})t\conc(\comod {\co c} c)u}\phi$ is derivable.
 But $[(\comod c{\co c})t\conc (\comod{\co c} c)u,
 \pi],S_\epsilon$
 can reduce both to $[t,\pi], S_\epsilon[c\mapsto u, \co c\mapsto t]$
-and to $[u,\pi], S_\epsilon[c\mapsto u,\co c\mapsto t]$.
+and to $[u,\pi], S_\epsilon[c\mapsto u,\co c\mapsto t]$ (Figure~\fix{add}).
 Since $t$ and $u$ were taken arbitrarily, we cannot distinguish terms
 of the same type if we equate a term with what it reduces to.
 
 \begin{proposition}
- If $e\red e'$ in the synchronous case then $e, S_\epsilon \red e', S'$
+ If $e\red e'$ in the synchronous case on a schedule then $e, S_\epsilon \red e', S'$
  in the asynchronous case for some store~$S'$.
 \end{proposition}
 \fix{prove}
