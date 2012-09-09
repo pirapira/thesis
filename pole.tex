@@ -82,9 +82,8 @@ We consider a programming language, which is a modification of
 Danos and Krivine's.
 We assume a set~$\pvar$ of propositional variables whose cardinality is
 countably infinite.
-Channels have involution $c\mapsto\co c$ with
-$c\neq \co c$ and
-$\co{\co c} = c$.
+We also assume countably infinitely many channels.
+Metavariables $c$ and $d$ run over channels.
 A term\index{term}~$t$ is defined by BNF:
 \[
  t::= x
@@ -138,18 +137,17 @@ that satisfies:
  \item[(ansR)]
            $[\inr{w}, \mats xt\pi yu\sigma] \red [u[w/y],\sigma] $ \enspace;
  \item[(com0)]
-           $[\comod c{\co c}, t\cdot\pi\conc \comod{\co c}c,
+           $[\comod c{d}, t\cdot\pi\conc \comod{d}c,
            u\cdot\sigma] \red
-           [u,\pi]$\enspace(if $\co c\sche c$ but $c\not\sche \co
-       c$)\enspace;
+           [u,\pi]$\enspace(if $d\sche c$ but $c\not\sche d$)\enspace;
  \item[(com1)]
-	    $[\comod c{\co c}, t\cdot\pi\conc \comod{\co c}c,
+	    $[\comod c{d}, t\cdot\pi\conc \comod{d}c,
 	    u\cdot\sigma] \red
-	    [t,\sigma]$\enspace(if $c\sche \co c$ but $\co c\not\sche c$)\enspace; and
+	    [t,\sigma]$\enspace(if $c\sche d$ but $d\not\sche c$)\enspace; and
  \item[(com2)]
-	    $[\comod c{\co c}, t\cdot\pi\conc \comod{\co c}c,
+	    $[\comod c{d}, t\cdot\pi\conc \comod{d}c,
 	    u\cdot\sigma] \red
-	    [u,\pi\conc t,\sigma]$\enspace(if $c\sche \co c$ and $\co c\sche
+	    [u,\pi\conc t,\sigma]$\enspace(if $c\sche d$ and $d\sche
        c$)\enspace.
 \end{description}
 Rules (cong), (push), (store), (load) and (dist) come from \citet{danos-krivine}.
@@ -1144,19 +1142,17 @@ that satisfies:
       $[\inr{w}, \mats xt\pi yu\sigma],S \red [u[w/y],\sigma],S $ \enspace;
  \item[(write)]
 	    $
-	    [\comod c{\co c}, t\cdot\pi], S[\co
-	    c\colon\psi\mapsto\bot]
+	    [\comod c{d}, t\cdot\pi], S[d\colon\psi\mapsto\bot]
 	    \red
 	    [\reader c, \pi],
-	    S[\co c\colon\psi\mapsto t]
+	    S[d\colon\psi\mapsto t]
 	    $\enspace;
  \item[(write')]
 	    $
-	    [\comod c{\co c}, t\cdot\pi], S[\co
-	    c\colon\psi\mapsto u]
+	    [\comod c{d}, t\cdot\pi], S[d\colon\psi\mapsto u]
 	    \red
 	    [\reader c, \pi],
-	    S[\co c\colon\psi\mapsto u]
+	    S[d\colon\psi\mapsto u]
 	    $\enspace;
  \item[(read)]$
 	    [\reader c ,\pi],
@@ -1185,11 +1181,11 @@ both $\G,\tj x{\phi\limp\phi}\tr\tj{(x)t}\phi$
 and $\G,\tj y{\phi\limp\phi}\tr\tj{(y)u}\phi$ are derivable
 for $x$ and $y$ not appearing in $\G$, $u$, or $t$.
 By the communication rule,
-$\G\tr\tj{(\comod c{\co c})t\conc(\comod {\co c} c)u}\phi$ is derivable.
-But $[(\comod c{\co c})t\conc (\comod{\co c} c)u,
+$\G\tr\tj{(\comod c{d})t\conc(\comod {d} c)u}\phi$ is derivable.
+But $[(\comod c{d})t\conc (\comod{d} c)u,
 \pi],S_\epsilon$
-can reduce both to $[t,\pi], S_\epsilon[c\mapsto u, \co c\mapsto t]$
-and to $[u,\pi], S_\epsilon[c\mapsto u,\co c\mapsto t]$ (Figure~\fix{add}).
+can reduce both to $[t,\pi], S_\epsilon[c\mapsto u, d\mapsto t]$
+and to $[u,\pi], S_\epsilon[c\mapsto u,d\mapsto t]$ (Figure~\fix{add}).
 Since $t$ and $u$ were taken arbitrarily, we cannot distinguish terms
 of the same type if we equate a term with what it reduces to.
 
