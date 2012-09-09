@@ -66,7 +66,7 @@ problems if and only if it is waitfreely solvable.
 We first present a proof system for G\"odel--Dummet logic.
 Then we turn the proof system into typing rules for $\lambda$-terms
 of~\lgd, give a set of reductions and prove strong-normalization and
-non-abortfullness.  \fix{hyperについてのべる}
+non-abortfullness.
 We present the proof system using the hypersequent
 style~\citep{avron91}.
 In the usual sequent calculi, each reasoning step concludes a sequent
@@ -129,8 +129,9 @@ The underlying logic has the derivation rules in Fig.~\ref{fig:logic}.  If
 we omit all the modalities, these rules characterize
 G\"odel--Dummett logic.
 Indeed,
-$[0](\varphi\supset\psi)\vee[1](\psi\supset\varphi)$ is provable as follows.
-
+$[0](\varphi\supset\psi)\vee[1](\psi\supset\varphi)$ is provable (Figure~\ref{fig:dummett-modal}).
+\begin{figure}
+ \centering
 \AxiomC{}
 \LL{[0]Ax}
 \UnaryInfC{$[0]P,[1]Q\vdash [0]P$}
@@ -149,11 +150,15 @@ $[0](\varphi\supset\psi)\vee[1](\psi\supset\varphi)$ is provable as follows.
 \UnaryInfC{$\vdash[0](P\supset Q) \lor [1](Q\supset P)\hmid \vdash[1](Q\supset P)$}
 \LL{$\vee$I}
 \UnaryInfC{$\vdash[0](P\supset Q) \lor [1](Q\supset P)\hmid
-[0](P\supset Q) \lor [1](Q\supset P)$}
+\vdash [0](P\supset Q) \lor [1](Q\supset P)$}
 \LL{EC}
 \UnaryInfC{$
 \vdash [0](P\supset Q)\lor [1](Q\supset P) $}
 \DisplayProof
+
+ \caption{Something like Dummett's axiom is provable.}
+ \label{fig:dummett-modal}
+\end{figure}
 
 \section{About the modality}
 
@@ -321,10 +326,10 @@ We assume distinct, countably infinite sets of variables\index{variable},
 locations\index{location}
 and
 processes\index{process}.
-Locations are denoted by~$l$; process~$i,j, \ldots$ and variables~$x,
+Channels are denoted by~$c,d,\ldots$; process~$i,j, \ldots$ and variables~$x,
 y, \ldots$.
-Later, locations will be used to specify a pair of stores
-holding terms.
+Later, channels will be used to specify a store
+holding a term or being empty.
 Like in the $\lambda$-calculus, some terms reduces to other
 terms, but in this calculus, terms may interact with the store (like
 a program written in Haskell or OCaml does with an i-var).
@@ -334,7 +339,8 @@ We define terms\index{term}~$\term$ by the BNF
 where $\Gamma$ is a sequence of variables:
 \begin{align*}
 \term ::=&\,
- x\mid \ltor i l \Gamma \term \mid \rtol i l \Gamma \term \mid
+ x\mid (\comod c c) \term \mid \reader c
+ \mid \rtol i l \Gamma \term \mid
  \gpair {\term,\term}\mid
  \gpil \term \mid \gpir \term \mid
  \ginl\term \mid
@@ -344,18 +350,20 @@ where $\Gamma$ is a sequence of variables:
  \lpair {\term,\term}\mid \\&
   \linl \term \mid  \linr \term \mid
  \lambda x.\term\mid (\term \term)
-\mid \lmat \term x\term y \term \enspace.
+\mid \lmat \term x\term y \term
 \end{align*}
+where $x$ is a variable and $c$ is a channel.
 All variable occurrences (including those in $\Gamma$)
 except the first clause are
 binding.
 The constructs with a~$\g$ represent the global rules and the
 constructs without a~$\g$ represent the local rules.
 Informally, the constructs without $\mathtt{g}$ represent parts of
-programs executed by the processes while the constructs with
+programs executed by the processes.
+Especially, $(\comod c c)t$ and $\reader c$ denote processes' communication.
+The constructs with
 $\mathtt{g}$ represent parts of programs that are used for preparing
 inputs for processes and collecting outputs of the processes.
-For example, \fix{add example}.
 
 Using these terms, we annotate the hypersequent system in Fig.~\ref{fig:logic}.
 We extend a sequent
@@ -371,30 +379,46 @@ a component\index{component})
 where the same
 variable has the same type even if it appears in different components.
 The typing rules for the terms are given in Fig.~\ref{termassign}.
-\fix{add terms to the following example}
+For example, the proof in Figure~\ref{fig:dummett-modal} can be
+annotated as in Figure~\ref{fig:typed-term}.
+\begin{sidewaysfigure}
+ \centering
 \AxiomC{}
 \LL{[0]Ax}
-\UnaryInfC{$[0]P,[1]Q\vdash [0]P$}
+\UnaryInfC{$\tj{x}{[0]P},\tj{y}{[1]Q}\tr \tj{x}{[0]P}$}
 
 \AxiomC{}
 \LL{[1]Ax}
-\UnaryInfC{$[0]P,[1]Q\vdash[1]Q$}
+\UnaryInfC{$\tj{x}{[0]P},\tj{y}{[1]Q}\tr\tj{y}{[1]Q}$}
 
 \LL{com'}
-\BinaryInfC{$[0]P\vdash[0]Q\hmid [1]Q\vdash[1]P$}
+\BinaryInfC{$\tj{x}{[0]P}\tr\tj{(\comodL)x}{[0]Q}\hmid
+ \tj{y}{[1]Q}\tr\tj{(\comodR)y}{[1]P}$}
 \LL{$[0]\supset$I}
-\UnaryInfC{$\vdash[0](P\supset Q)\hmid [1]Q\vdash[1]P$}
+\UnaryInfC{$\tr\tj{\lambda x. (\comodL)x}{[0](P\supset Q)}
+ \hmid \tj{y}{[1]Q}\tr\tj{(\comodR)y}{[1]P}$}
 \LL{$[1]\supset$I}
-\UnaryInfC{$\vdash[0](P\supset Q)\hmid \vdash[1](Q\supset P)$}
+\UnaryInfC{$\tr\tj{\lambda x. (\comodL)x}{[0](P\supset Q)}\hmid \tr
+ \tj{\lambda y.(\comodR)y}{[1](Q\supset P)}$}
 \LL{$\vee$I}
-\UnaryInfC{$\vdash[0](P\supset Q) \lor [1](Q\supset P)\hmid \vdash[1](Q\supset P)$}
+\UnaryInfC{$\tr\tj{\inl{\lambda x. (\comodL)x}}{[0](P\supset Q) \lor
+ [1](Q\supset P)}
+ \hmid
+ \tr\tj{\lambda y.(\comodR)y}{[1](Q\supset P)}$}
 \LL{$\vee$I}
-\UnaryInfC{$\vdash[0](P\supset Q) \lor [1](Q\supset P)\hmid
-[0](P\supset Q) \lor [1](Q\supset P)$}
+\UnaryInfC{$\tr\tj{\inl{\lambda x. (\comodL)x}}{[0](P\supset Q) \lor
+ [1](Q\supset P)}\hmid
+\tr \tj{\inr{\lambda y.(\comodR)y}}{[0](P\supset Q) \lor [1](Q\supset
+ P)}$}
 \LL{EC}
 \UnaryInfC{$
-\vdash [0](P\supset Q)\lor [1](Q\supset P) $}
+\tr \tj{\left[\inl{\lambda x. (\comodL)x} ,\quad \inr{\lambda
+ y.(\comodR)y} \right]}
+ {[0](P\supset Q)\lor [1](Q\supset P)} $}
 \DisplayProof
+ \caption{An example of a typed term in \lgd.}
+ \label{fig:typed-term}
+\end{sidewaysfigure}
 
 
 \begin{figure}[p]
@@ -407,9 +431,10 @@ The typing rules for the terms are given in Fig.~\ref{termassign}.
    {$\hypert_0\hmid\Gamma,\Delta\tr\tj{M}{[i]\varphi}$}
    {$\hypert_1\hmid\Gamma,\Delta\tr\tj{N}{[j]\psi}$}
    {}
-   {$\cotuple{\hypert_0,\hypert_1}\hmid\Gamma\tr\tj{\ltor i{l}\Delta{M}}{[i]\psi}\hmid
-   \Delta\tr\tj{\rtol j{l}\Gamma {N}}{[j]\varphi}$}
-\hfill
+   {$\cotuple{\hypert_0,\hypert_1}\hmid\Gamma\tr\tj{(\comodL)M}{[i]\psi}\hmid
+   \Delta\tr\tj{(\comodR)N}{[j]\varphi}$}
+   where $c$ and $d$ are fresh.
+\vskip 2mm
 %% external structural
  \UnaryRule
  {$\hypert^+$}
@@ -542,7 +567,7 @@ The typing rules for the terms are given in Fig.~\ref{termassign}.
    {$\cotuple{\cotuple{\hypert_0,\hypert_1},\hypert_2}\hmid\Gamma \tr \tj{\lmat M x {N_0} y {N_1}}{[i]\theta}$}
 \vskip 2mm
 \end{center}
- \caption[Term assignment.\fix{of what}]
+ \caption[Term assignment of \lgd.]
  {Term assignment.
  $\hypert$ stands for
  a possibly empty hypersequent (with possible subscripts).
@@ -560,15 +585,16 @@ The typing rules for the terms are given in Fig.~\ref{termassign}.
 A term~$M$ is \textit{of} type~$\m\varphi$ iff there is a derivation of
 $\Gamma\tr
 \tj{M}{\m\varphi}$.
-A local term\index{local term|see{term}}\index{term!local} is a term without $\overleftarrow l$,
-$\overrightarrow l$ or any $\g$ constructs.
+A local term\index{local term|see{term}}\index{term!local} is a term
+without $\comod c c$,
+$\reader c$ or any $\g$ constructs.
 A hyperterm\index{hyperterm}~$\hypert$ is a nonempty sequence of terms.
-A store\index{store} maps a location to a
+A store\index{store} maps a channel to a
 local term or $\epsilon$.
-For a store~$\sigma$, the updated store $\sigma[l\mapsto x]$ maps $l$ to
-$x$ and $l'$ to $\sigma(l')$ if $l'$ is different from~$l$.
-A configuration\index{configuration} is a triple $\conf{}{}\hypert$ of two
-stores $\lstore, \rstore$ and a hyperterm~$\hypert$.
+For a store~$\sigma$, the updated store $\sigma[c\mapsto x]$ maps $c$ to
+$x$ and $d$ to $\sigma(d)$ if $d$ is different from~$c$.
+A configuration\index{configuration} is a pair $\conf{}\hypert$ of a
+store~$\lstore$ and a hyperterm~$\hypert$.
 A typed configuration\index{typed configuration} is a \fix{add.. stores are empty}.
 
 To complete the definition of \lgd,
@@ -585,16 +611,16 @@ To complete the definition of \lgd,
  The basic reduction $\breduce$ is the smallest congruence containing
  the followings:
  \begin{itemize}
-  \item  $\conf{}{}{(\lambda x.M)O}\breduce
- \conf{}{}{M[O/x]}$
-  \item $\conf{}{}{\spil{\spair{M,N}}} \breduce
-	 \conf{}{}{           M   }$
-  \item $\conf{}{}{\spir{\spair{M,N}}} \breduce
-	 \conf{}{}{             N }$
-  \item $\conf{}{}{\smat{\sinl M}x N y O} \breduce
-	 \conf{}{}{              N[M/x]}$
-  \item $\conf{}{}{\smat{\sinr M}x N y O} \breduce
-	 \conf{}{}{                  O[M/y]}$
+  \item  $\conf{}{(\lambda x.M)O}\breduce
+ \conf{}{M[O/x]}$
+  \item $\conf{}{\spil{\spair{M,N}}} \breduce
+	 \conf{}{           M   }$
+  \item $\conf{}{\spir{\spair{M,N}}} \breduce
+	 \conf{}{             N }$
+  \item $\conf{}{\smat{\sinl M}x N y O} \breduce
+	 \conf{}{              N[M/x]}$
+  \item $\conf{}{\smat{\sinr M}x N y O} \breduce
+	 \conf{}{                  O[M/y]}$
  \end{itemize}
 \end{definition}
 
@@ -609,16 +635,13 @@ This property will be used in the proof of \thref{first:sn}.
 The formal definition follows.
 \begin{definition}[Write reduction]
  The write reduction $\wreduce$ is the smallest congruence
- containing the followings where $M$ is a local term \fix{defined?}:
+ containing the followings where $M$ is a local term:
  \begin{itemize}
-  \item $\conf{}{[l\mapsto\epsilon]}{\rtol i l \Gamma M}
-	\wreduce
-	\conf{}{[l\mapsto M]}{\rtol i l \Gamma M}
-	$\enspace,
-  \item $\conf{[l\mapsto\epsilon]}{}{\ltor j l \Delta M}
-	\wreduce
-	\conf{[l\mapsto M]}{}{\ltor j l \Delta M}
-	$\enspace.
+  \item \fix{E}
+  % \item $\conf{}{[l\mapsto\epsilon]}{\rtol i l \Gamma M}
+  % 	\wreduce
+  % 	\conf{}{[l\mapsto M]}{\rtol i l \Gamma M}
+  % 	$\enspace,
  \end{itemize}
 \end{definition}
 
@@ -628,15 +651,11 @@ The formal definition follows.
  containing the
  followings:
 \begin{itemize}
- \item  $\conf{[l\mapsto {N}]}{[l\mapsto M']}{\rtol i l\Gamma M}\rreduce
-	\conf{[l\mapsto {N}]}{[l\mapsto M']}{N}$
- \item  $\conf{[l\mapsto \epsilon]}
-	{[l\mapsto M']}{\rtol i l\Gamma M}\rreduce
-	\conf{[l\mapsto \epsilon]}{[l\mapsto M']}{\abort}$
- \item  $\conf{[l\mapsto M']}{[l\mapsto {N}]}{\ltor i l \Delta M}\rreduce
-	\conf{[l\mapsto M']}{[l\mapsto {N}]}{N}$
- \item  $\conf{[l\mapsto M']}{[l\mapsto \epsilon]}{\ltor i l \Delta M}\rreduce
-	 \conf{[l\mapsto M']}{[l\mapsto \epsilon]}{\abort}$\enspace .
+ \item \fix{F}
+ % \item  $\conf{[l\mapsto M']}{[l\mapsto {N}]}{\ltor i l \Delta M}\rreduce
+ % 	\conf{[l\mapsto M']}{[l\mapsto {N}]}{N}$
+ % \item  $\conf{[l\mapsto M']}{[l\mapsto \epsilon]}{\ltor i l \Delta M}\rreduce
+ % 	 \conf{[l\mapsto M']}{[l\mapsto \epsilon]}{\abort}$\enspace .
 \end{itemize}
 \end{definition}
 
@@ -645,18 +664,17 @@ The formal definition follows.
  congruence containing the
  followings:
 \begin{itemize}
- \item  $\conf{}{}{\cotuple{\abort, M}}\areduce
- \conf{}{}{M}$, and
-   $\conf{}{}{\cotuple{M,\abort}}\areduce
- \conf{}{}{M}$
- \item  $\conf{}{}{C[\abort]}\areduce
- \conf{}{}{\abort}$
+ \item  $\conf{}{\cotuple{\abort, M}}\areduce
+ \conf{}{M}$, and
+   $\conf{}{\cotuple{M,\abort}}\areduce
+ \conf{}{M}$
+ \item  $\conf{}{C[\abort]}\areduce
+ \conf{}{\abort}$
 \end{itemize}
  where $C[\bullet]$ is
 $\bullet N$,
 ${M \bullet}$,
-$\ltor i l \Delta \bullet$,
-$\rtol i l \Gamma \bullet$,
+$(\comod c c)\bullet$,
 $\sinl \bullet$,
 $\sinr \bullet$,
 $\spair {\bullet, N}$,
@@ -675,30 +693,30 @@ we add yet another kind of reduction rules.
  containing the followings:
 \begin{itemize}
  \small
- \item $\conf{}{}{ \left(\smat  M x N y O\right) P }\preduce$ \\
-       $\conf{}{}{ \smat M x {N P} y {O P} }$
- \item $\conf{}{}{ \pi^\square_d \left(\bsmat M x N y
+ \item $\conf{}{ \left(\smat  M x N y O\right) P }\preduce$ \\
+       $\conf{}{ \smat M x {N P} y {O P} }$
+ \item $\conf{}{ \pi^\square_d \left(\bsmat M x N y
        O\right)}\preduce$\\
-       $\conf{}{}{ \bsmat M x
+       $\conf{}{ \bsmat M x
        {\pi^\square_d N} y {\pi^\square_d O} }$
  \item {
-       $\conf{}{}{ \smat
+       $\conf{}{ \smat
                           {\left(\bsmat  M x N y O\right)}
                           u P v Q
                       }\preduce$ \\
-       $(\lstore, \rstore,
+       $(\lstore,
         \mathsf{match}^{\blacksquare}\,{M}\,\mathsf{of}\, \bsinl{x}. {
                           {\left(\smat N u P v Q\right)}
        } /$ \\ \phantom{mmmmmmmmmmm}$
        \bsinr{y}. {\left(\smat  O u P v Q\right)}
                       )
        $}
- \item $\conf{}{}{ \cotuple{M, N} P }\preduce
-        \conf{}{}{ \cotuple{MP, NP} }$
- \item $\conf{}{}{ \pi^\square_d\cotuple{M,N} }\preduce
-        \conf{}{}{ \cotuple{\pi^\square_d M, \pi^\square_d N} }$
- \item $\conf{}{}{ \smat {\cotuple{M,N}} x P y Q }\preduce$\\
-       $\conf{}{}{ \cotuple{
+ \item $\conf{}{ \cotuple{M, N} P }\preduce
+        \conf{}{ \cotuple{MP, NP} }$
+ \item $\conf{}{ \pi^\square_d\cotuple{M,N} }\preduce
+        \conf{}{ \cotuple{\pi^\square_d M, \pi^\square_d N} }$
+ \item $\conf{}{ \smat {\cotuple{M,N}} x P y Q }\preduce$\\
+       $\conf{}{ \cotuple{
                           \smat  M x P y Q,
                           \smat N x P y Q
                         } }$
@@ -712,8 +730,8 @@ written as~$\reduction$.
 A redex\index{redex} is a subterm that can be rewritten by a reduction.
 A configuration~$\mathcal{C}$ is normal\index{normal} when there is no configuration
 $\mathcal{D}$ with $\mathcal{C}\reduce \mathcal{D}$.
-A term~$M$ is normal\index{normal} when the configuration $\conf{}{}{M}$ is
-normal (the choice of $\lstore$ and $\rstore$ is irrelevant).
+A term~$M$ is normal\index{normal} when the configuration $\conf{}{M}$ is
+normal (the choice of $\lstore$ is irrelevant).
 
 \fix{add reduction example from the term example and explain the
 communicating behaviour}
@@ -735,21 +753,22 @@ contains $\abort$'s.  We show the second property first for its simpler proof.
 \end{theorem}
 \begin{proof}
  When a reduction sequence is fixed, for any location~$l$, depending on
- whether the right or the left store is filled first,
+ whether $c$ or $d$ is filled first,
  either:
- (i) no ${\ltor i l \Delta M} \reduce {\abort}$ occurs for any~$i$, or
- (ii) no ${\rtol i l\Gamma M} \reduce {\abort}$ occurs for any~$i$.
+ (i)  no ${(\comodL)M} \reduce {\abort}$ occurs for any~$i$, or
+ (ii) no ${(\comodR)M} \reduce {\abort}$ occurs for any~$i$.
 
 If the former is the case, we can rewrite
 a communication rule occurrence
 \begin{center}
  \BinaryRule
- {$\hypert_0\hmid  \Gamma,\Delta\tr \tj M{[i]\psi}$}
+ {$\hypert_0\hmid \Gamma,\Delta\tr \tj M{[i]\psi}$}
  {$\hypert_1\hmid \Gamma,\Delta\tr \tj N{[j]\tau}$}
  {}
- {$\cotuple{\hypert_0,\hypert_1}\hmid \Gamma\tr \tj
-   {\ltor i l \Delta M}{[i]\tau}\hmid
-   \Delta\tr \tj{\rtol i l\Gamma N}{[j]\psi}$}
+ {$\cotuple{\hypert_0,\hypert_1}\hmid
+ \Gamma\tr \tj
+   {(\comodL)M}{[i]\tau}\hmid
+   \Delta\tr \tj{(\comodR)N}{[j]\psi}$}
 \end{center}
 into successive external weakening occurrences
 \begin{center}
@@ -783,7 +802,7 @@ hyperterm has a component not containing $\abort$.
 \end{theorem}
 \begin{proof}
 For proving this, we consider the local fragment\index{local fragment} that does not contain
-$\ltor i l \Delta M$, $\rtol j l\Gamma N$ or any construct with $\g$.
+$(\comodL)M$, $(\comodR)N$ or any construct with $\g$.
 We first reduce the strong
 normalization of the \lgd\, to that of the local fragment, and
 ultimately to that of de Groote's
@@ -799,11 +818,11 @@ same effect, we might be able to use other strong normalization
 
 We assume an infinite sequence of reductions
 $
-\conf{_0}{_0}{\hypert_0}
+\conf{_0}{\hypert_0}
 \reduce
-\conf{_1}{_1}{\hypert_1}
+\conf{_1}{\hypert_1}
 \reduce
-\conf{_2}{_2}{\hypert_2}
+\conf{_2}{\hypert_2}
 \reduce\cdots
 $.  From this, we are going to construct an infinite sequence of
 reductions in the local fragment.
@@ -811,24 +830,23 @@ reductions in the local fragment.
 For that, we first
 build an infinite reduction sequence with constant stores.
 Using the original infinite sequence, we define a pair of stores called the
-store prophecy\index{store!--- prophecy} $(\lstore_\infty, \rstore_\infty)$ where
+store prophecy\index{store!--- prophecy} $\lstore_\infty$ where
 $ \lstore_\infty(l)= \epsilon$ if $\lstore_k(l)=\epsilon$ for all
  $k\in\omega$ and
-$ \lstore_\infty(l)=M $ if $\lstore_k(l)=M$ for some $k\in\omega$
-; and $\rstore_\infty(l)$ is symmetrically defined.
+$ \lstore_\infty(l)=M $ if $\lstore_k(l)=M$ for some $k\in\omega$.
 Since store contents are never overwritten,
-$\lstore_\infty$ and $\rstore_\infty$ are well-defined.
+$\lstore_\infty$ is well-defined.
 Moreover,
 $\lstore_i(l)$ and $\lstore_\infty(l)$ coincide unless
 $\lstore_i(l)=\epsilon$.
 
 We build another reduction sequence
 $
-\conf{_\infty}{_\infty}{\hypert_0}
+\conf{_\infty}{\hypert_0}
 \reduce^\ast
-\conf{_\infty}{_\infty}{\hypert'_1}
+\conf{_\infty}{\hypert'_1}
 \reduce^\ast
-\conf{_\infty}{_\infty}{\hypert'_2}
+\conf{_\infty}{\hypert'_2}
 \reduce^\ast\cdots
 $
 with the following invariant:
@@ -838,11 +856,11 @@ More specifically, we translate each reduction as follows, keeping the
 invariant inductively on the number of steps
 (the base case is satisfied by $\mathcal M'_0 = \mathcal M_0$ immediately):
 \begin{itemize}
- \item a read reduction $\conf{_k}{_k}{\hypc{}{\rtol i l\Delta M}}
+ \item a read reduction $\conf{_k}{\hypc{}{\rtol i l\Delta M}}
        \rreduce
-       \conf{_{k+1}}{_{k+1}}{\hypc{}{O}}$ is translated into
-       $\conf{_\infty}{_\infty}{\hypc'{\rtol i l\Delta M}} \rreduce
-       \conf{_{k+1}}{_{k+1}}{\hypc'{O'}}$.
+       \conf{_{k+1}}{\hypc{}{O}}$ is translated into
+       $\conf{_\infty}{\hypc'{\rtol i l\Delta M}} \rreduce
+       \conf{_{k+1}}{\hypc'{O'}}$.
        If $\lstore_i(l)$ is a term,
        $\lstore_\infty(l)$ and $O'$ are also identical to the term.
        Otherwise, $O'$ must be $\abort$.
@@ -856,11 +874,11 @@ invariant inductively on the number of steps
        Note that even in that case, the result $\mathcal{M'}_{k+1}$ can
        be obtained by replacing some $\abort$ occurrences in
        $\mathcal{M}_{k+1}$ with other terms;
- \item any other reduction $\conf{_k}{_k}{\hypc{}{M}} \bpreduce
-       \conf{_{k+1}}{_{k+1}}{\hypc{}{N}}$
+ \item any other reduction $\conf{_k}{\hypc{}{M}} \bpreduce
+       \conf{_{k+1}}{\hypc{}{N}}$
        is translated into one similar reduction
-       $\conf{_\infty}{_\infty}{\hypc{'}{M'}}\bpreduce
-        \conf{_\infty}{_\infty}{\hypc{'}{N'}}$.
+       $\conf{_\infty}{\hypc{'}{M'}}\bpreduce
+        \conf{_\infty}{\hypc{'}{N'}}$.
 \end{itemize}
 Here, we have to show that the translated sequence is infinite.
  For that, we can use the facts that
@@ -870,12 +888,11 @@ an $\abort$ propagation always
 strictly shortens the term under operation.
 
  After that, we can replace
- every ${\rtol i l\Gamma M}$ with
- $\rstore_\infty(l)$.
- Since $\rtol i l\Gamma M$ either reduces to $\rstore_\infty(l)$ or $\abort$,
- replacing it with $\rstore_\infty(l)$ will only ``shorten'' the reduction
+ every ${\ltor i l\Gamma M}$ with
+ $\lstore_\infty(l)$.
+ Since $\ltor i l\Gamma M$ either reduces to $\lstore_\infty(l)$ or $\abort$,
+ replacing it with $\lstore_\infty(l)$ will only ``shorten'' the reduction
  sequence for at most one read step.
- We can do the same for $\ltor j l \Gamma N$.
  Replacing every such occurrences
  makes an infinite reduction sequence where every occurring term is
  in the local fragment.
@@ -887,7 +904,7 @@ strictly shortens the term under operation.
 
 We are aiming at reducing the problem to the strong normalization result
 by de Groote~\cite{Philippe2002js}.
-Since we have eliminated $\ltor i l \Delta M$ or $\rtol i l\Gamma N$ occurrences,
+Since we have eliminated $(\comodL)M$ or $(\comodR)N$ occurrences,
 the remaining difference is small: some $\abort$ propagation reductions
  and some permutative reductions involving $\cotuple{\term,\term'}$.
  \fix{justify}
@@ -949,7 +966,7 @@ where an expression\index{expression} is
 \begin{align*}
  E
  ::=\,\,
- &x\mid \p x \mid l \mid (EE)\mid \lambda
+ &x\mid \p x \mid c \mid (EE)\mid \lambda
  x.E\mid \tuple{E,E}\mid \linl{E}\mid \linr{E}\mid \\
  &\lpil{E}\mid\lpir{E}\mid  \lmat E x {E} y {E}\mid \epsilon\enspace.
 \end{align*}
@@ -957,8 +974,8 @@ where an expression\index{expression} is
 \newcommand{\Wg}{W_{\mathrm g}}
 \newcommand{\Wd}{W_{\mathrm d}}
 A program is well-formed\index{well-formed program} when
-a program variable (resp. location) first appears in a $\p x\leftarrow E$
-(resp. $l\leftarrow E$)
+a program variable (resp. channel) first appears in a $\p x\leftarrow E$
+(resp. $c\leftarrow E$)
 sentence, and
 after that, only appears in expressions.
 In other words, we assume a program to be in the single assignment form.
@@ -971,14 +988,12 @@ a \index{typed protocol} has:
 \begin{itemize}
  \item two program variables
       $\p i_i$ and $\p o_i$ for each process~$i$;
- \item a finite set of locations~$L$;
- \item two functions $g\colon L\rightarrow \processes$
-       and $d\colon L\rightarrow
-       \processes$ (specifying the left side writer and the right side writer of
-       each location);
-       $g(l)$ might read what $d(l)$ writes and vice versa;
- \item $\Wg, \Wd$: each maps a location in $L$ to a contexted type;
-       $g(l)$ writes a term of $\Wg(l)$ and $d(l)$ writes a term of $\Wd(l)$;
+ \item a finite set of channels~$C$;
+ \item two functions $w\colon C\rightarrow \processes$
+       and $r\colon C\rightarrow
+       \processes$ (specifying the writer and the reader of
+       each channel);
+ \item $W$: maps a channel in $C$ to a contexted type;
  \item a function $t_i$ for each $i\in \processes$;
        that maps a program variable to a contexted type
        $(\tj{x_k}{\varphi_k})_k \tr[i]\varphi$ with a special condition
@@ -988,23 +1003,18 @@ a \index{typed protocol} has:
        a typed program\index{typed program} is a well-formed program where all
        sentences are typed according to the rules below.
        A sentence $\p x \leftarrow E$ is typed  iff $\tr E\colon t(\p x)$ is derivable with
-       assumptions of the form $\tr\tj{\p y}{t(\p y)}$,\quad
-       $\tr\tj{l}{W_{\mathrm d}}(l)$ and
-       $\tr\tj{l}{W_{\mathrm g}}(l)$.
-       A sentence $\ell\leftarrow E$ is typed iff
-       $g(\ell)=i$ and $\tr\tj{E}{\Wg(\ell)}$ is derivable or
-       $d(\ell)=i$ and $\tr\tj{E}{\Wd(\ell)}$ is derivable
+       assumptions of the form $\tr\tj{\p y}{t(\p y)}$ and $\tr\tj{c}{W(c)}$.
+       A sentence $c\leftarrow E$ is typed iff
+       $\tr\tj{E}{W(c)}$ is derivable
        with
-       assumptions of the form $\tr\tj{\p y}{t(\p y)}$,\quad
-       $\tr\tj{l}{W_{\mathrm d}}(l)$ and
-       $\tr\tj{l}{W_{\mathrm g}}(l)$.
+       assumptions of the form $\tr\tj{\p y}{t(\p y)}$ and $\tr\tj{c}{W(c)}$.
 \end{itemize}
 
 \subsection{Typed Waitfree Computation}
 
 We define when a protocol solves a typed
 input-output problem.
-These definitions are transferred from \cite{Saks:1993vq}.
+These definitions are transferred from \citet{Saks:1993vq}.
 
 Let $\processes$ be $\{0,\ldots, n-1\}$ and fix
 a typed protocol.
@@ -1026,8 +1036,8 @@ is a pair $\tuple{\vec s, \vec v}$, where $\vec s = \tuple{s_0,
 $
 and
 $\vec v =
-\left(\tuple{\vg{v}{l}, \vd{v}{l}}\right)_{l\in L} \in \prod_{l\in
-L}\left((\val(\Wg(l))\cup\{\epsilon\})\times (\val(\Wd(l))\cup\{\epsilon\})\right)
+\left(\vg{v}{l}, \vd{v}{l}\right)_{c\in C} \in \prod_{l\in
+L}(\val(W(c))\cup\{\epsilon\})
 $.
 
 For a nonempty subset~$J$ of $\processes$, we define an operator $\update J$ that
@@ -1390,11 +1400,11 @@ $
 
 One possible reduction sequence is as follows:
 \begin{align*}
- & \conf{[]}{[]}
+ & \conf{[]}
  {\cotuple{\gpair{\{\ltor 0 l \epsilon {c_0}, {c_0}\}, \{{c_1}\}},
  \gpair {\{{c_0}\}, \{\rtol 1 l\epsilon {c_1}, {c_1}\}}}} \\
  \reduction &
- \conf{[l\mapsto {c_0}]}{[]}
+ \conf{[l\mapsto {c_0}]}
  {
  \cotuple{
  \gpair{\{\abort, {c_0}\}, \{{c_1}\}},
