@@ -1,4 +1,4 @@
-\chapter{Dummett's Axiom as an Asynchronous Communication Scheme}
+\chapter{Prelinearity Axiom as an Asynchronous Communication Scheme}
 
 	% packages
 % \usepackage{setspace}
@@ -62,8 +62,8 @@ shared memory using parametricity argument.
 However, since processes can write into and read from shared memory,
 a straightforward approach would lead us to solving mixed-variant domain
 equations or using step-index technique.
-Although dealing with general stores and parametric
-polymorphism\fix{correct term?} is managable \fix{cite},
+Although dealing with general references and parametricity
+is manageable~\citep{birkedal2009relational},
 we choose a simpler, indirect approach.
 First we deal with an operational semantics where communication is made
 synchronously and after that we deal with the original operational
@@ -71,7 +71,8 @@ semantics involving asynchronnous communication using stores.
 Finally, we develop a simulation from the synchronous semantics to the
 asynchronous one, ensuring a reduction sequence in the synchronous
 semantics has a counterpart in the asynchronous semantics.
-\fix{is schedule needed? maybe not.}
+% \fix{is schedule needed? maybe not.}
+% with schedule, the operational semantics becomes deterministic
 
 %%% 2. terms types and _models_?
 \section{Synchronous Semantics}
