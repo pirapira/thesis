@@ -1034,8 +1034,7 @@ is a pair $\tuple{\vec s, \vec v}$, where $\vec s = \tuple{s_0,
 $
 and
 $\vec v =
-\left(\vg{v}{l}, \vd{v}{l}\right)_{c\in C} \in \prod_{l\in
-L}(\val(W(c))\cup\{\epsilon\})
+\left(\vg{v}{l}, \vd{v}{l}\right)_{c\in C} \in \prod_{c\in C}(\val(W(c))\cup\{\epsilon\})
 $.
 
 For a nonempty subset~$J$ of $\processes$, we define an operator $\update J$ that
@@ -1051,10 +1050,10 @@ where $s_i = \tuple{p,x}$:
 \begin{align*}
  u_i & =
  \begin{cases}
- \tuple{p',x}  & (\text{if } p = l
+ \tuple{p',x}  & (\text{if } p = c
  \leftarrow E; p' \text{ and }\semo{E}_{x,\vec v} \neq \epsilon)
  \\
- \tuple{\epsilon,x}  & (\text{if } p = l
+ \tuple{\epsilon,x}  & (\text{if } p = c
  \leftarrow E; p' \text{ and }\semo{E}_{x,\vec v} = \epsilon)
  \\
  \tuple{p', x[\p x \mapsto \semo{E}_{x, \vec v}]}&
@@ -1068,19 +1067,12 @@ where $s_i = \tuple{p,x}$:
  x(\p x) \neq \epsilon) \\
  s_i & (\text{if } p = \epsilon)
  \end{cases}\\
- \vg m l & =
+ \vg m c & =
  \begin{cases}
- \semo{E}_{x, \vec v} & (\text{if } p = l \leftarrow E; p',\quad g(l)= i \text{
- and } \vg v l = \epsilon) \\
- \vg v l &(\text{otherwise})
+ \semo{E}_{x, \vec v} & (\text{if } p = c \leftarrow E; p',\quad w(c)= i \text{
+ and } \vg v c = \epsilon) \\
+ \vg v c &(\text{otherwise})
  \end{cases}\\
- \vd m l &=
- \begin{cases}
-\semo{E}_{x, \vec v} &
-  (\text{if } p = l \leftarrow E; p',\quad d(l)= i \text{
- and } \vd v l = \epsilon) \\
- \vd v l &(\text{otherwise})
- \end{cases}
 \end{align*}
 with the following notations.
 We let $i(l)$ to be $\vg v l$ if $d(l)=i$ and
