@@ -608,9 +608,9 @@
 
   \fix{remove '}
   \begin{definition}
-   We define $f'_a$ as:
+   We define $f_a$ as:
    \[
-   f'_a(\Gamma) = g_a(\Gamma) \cup K_ag_a(\Gamma).
+   f_a(\Gamma) = g_a(\Gamma) \cup K_ag_a(\Gamma).
    \]
   \end{definition}
 
@@ -621,7 +621,7 @@
   certain \iec-formula.  This model construction is inspired by
   Sato's paper~\cite{sato13study}
   and Troelstra and van Dalen's textbook~\cite{troelstra1988constructivism}.
-  However, the notion of $f'$-subformula-closed sets is new and original.
+  However, the notion of $f$-subformula-closed sets is new and original.
 
   \begin{definition}
    \label{saturated-set}
@@ -639,10 +639,10 @@
   \end{definition}
 
   \begin{definition}
-   A hereditary $f'$-subformula-closed set $\Gamma$ is coinductively defined as:
-   $\Gamma$ is a hereditary $f'$-subformula-closed set if and only
-   if $f'_a(\Gamma)$ is hereditary $f'$-closed, $\Gamma$ is closed for taking subformulae and
-   $f'_a(\Gamma)\subseteq \Gamma$.
+   A hereditary $f$-subformula-closed set $\Gamma$ is coinductively defined as:
+   $\Gamma$ is a hereditary $f$-subformula-closed set if and only
+   if $f_a(\Gamma)$ is hereditary $f$-closed, $\Gamma$ is closed for taking subformulae and
+   $f_a(\Gamma)\subseteq \Gamma$.
   \end{definition}
 
   \begin{definition}
@@ -657,27 +657,18 @@
   \noindent The function $s_a$ replaces every $K_aK_a$ with $K_a$ repeatedly so that there are no
   $K_aK_a$ occurrences left.
 
-  \fix{is this lemma necessary?}
-  \begin{proposition}
-   \label{fpreserve}
-   For a hereditary $f'$-subformula-closed set $\Omega$,
-   if $\Gamma$ is an $\Omega$-saturated set,
-   $f_a(\Gamma)$ is an $f'_a(\Omega)$-saturated set.
-  \end{proposition}
-
   \newcommand{\natpls}{{\mathbb N}^{+}}
-
-  \fix{add strong completeness and finite model property}
-\begin{proposition}[Finite model property]
- \label{fmp}
- If $\varphi$ is not a theorem of $\iec$,
- there is a finite model $M$ with $M\not\models\varphi$.
-\end{proposition}
-Proof to be found in the author's Master's thesis.
 
 \begin{proposition}[Strong completeness]
  \label{strong-completeness}
  $\Gamma\models\varphi$ implies $\Gamma\vdash\varphi$.
+\end{proposition}
+Proof to be found in the author's Master's thesis.
+
+\begin{proposition}[Finite model property]
+ \label{fmp}
+ If $\varphi$ is not a theorem of $\iec$,
+ there is a finite model $M$ with $M\not\models\varphi$.
 \end{proposition}
 Proof to be found in the author's Master's thesis.
 
@@ -937,7 +928,7 @@ Proof to be found in the author's Master's thesis.
   We consider the schedule v.s. distributed program relation is similar to
   the formula v.s. model relation.
   \fix{strange} In Section~\ref{sc},
-  in this section, we express waitfreedom as a class of formulae.
+  we express waitfreedom as a class of formulae.
 
   A distributed program specifies
   from which process, to which process, and in what order

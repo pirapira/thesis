@@ -113,7 +113,9 @@
   \[
   \mathsf s::=\mathsf v\mid \mathsf s.a
   \]
-  where $a$ is an agent.
+  where $a$ is an agent.  Especially, a composite world term\index{world
+  term!composite} is a world
+  term not itself being simply a world variable.
   Every world term can be written as $\mathsf v.s$ where $s$ is a fintie sequence
   of agents (a postfix).
   A world inequality\index{world inequality} is an inequation of the form $\mathsf s\le
@@ -1302,6 +1304,18 @@
 
     \paragraph{Work on intuitionistic modal logics.}
 
+    The general method of \citet{Negri::2012} for showing the finite model property
+    for a wide range of multi-modal logics, is not immediately
+    applicable to functional modalities because their formulation
+    requires each modality to be defined using a binary relation $N_A$
+    on the states that satisfies
+    \[
+     \forall x,y,z.(((x\le y)\land(y N_A z))\rightarrow x N_A z)\enspace,
+    \]
+    which our function~$f_a$ (taken as a binary relation) do not
+    satisfy.
+    However, we expect this problem only caused by their particular 
+
     Amati and Pirri~\cite{amati94} presented a uniform tableau method for a number of
     intuitionistic modal logics whose language contains two modalities
     $\square$ and $\lozenge$.
@@ -1332,6 +1346,23 @@
     countermodel searching method for G\"odel--Dummett logic.
     It would be interesting to try to extend their methods to the
     class of logics considered in this chapter.
+
+    The tableau system here is similar to \citet{dyckhoff-negri} in many
+    aspects:
+    \begin{itemize}
+     \item using prefixed formulas
+     \item having inequalities on labels in the logical derivation
+     \item being parametrized by the underlying theory on the order of
+	   labels
+     \item populating inequalities from bottom to upwards in order to make the
+	   frame conditions more concrete.
+    \end{itemize}
+    However, their system lacks composite world terms.  Considering
+    the general class of intermediate logics
+    (containing the classical logic, bounded depth logic,
+    G\"odel--Dummett logic, Smetanich logic and Jankov Logic) in the scope of their
+    technique,
+    it is tempting to extend their system with composite world terms.
 
     Sonobe~\cite{sonobe} gave a Gentzen-style formulation of some
     intermediate logics, the simplest of which is G\"{o}del--Dummett logic.
