@@ -1289,16 +1289,16 @@ are translated as \fix{fill}}%
 \]
 
 We give a translation from MTL formulae to our language as:
-\begin{align*}
- \bar{0}^\bullet &= \forall XX\\
- p^\bullet &= p\\
- (\phi\limp\psi)^\bullet &= \phi^\bullet \limp \psi^\bullet\\
+\begin{align}
+ \bar{0}^\bullet &= \forall XX \nonumber\\
+ p^\bullet &= p \nonumber\\
+ (\phi\limp\psi)^\bullet &= \phi^\bullet \limp \psi^\bullet\nonumber\\
  (\phi\otimes\psi)^\bullet & = \forall
- X((\phi^\bullet\limp\psi^\bullet\limp X)\limp X) \\
+ X((\phi^\bullet\limp\psi^\bullet\limp X)\limp X) \nonumber\\
  (\phi\land \psi)^\bullet &=
  (\phi^\bullet\otimes(\phi^\bullet\limp\psi^\bullet))\oplus
- (\psi^\bullet \otimes(\psi^\bullet \limp\phi^\bullet))
-\end{align*}
+ (\psi^\bullet \otimes(\psi^\bullet \limp\phi^\bullet)) \label{eq:abb}
+\end{align}
 where the translation of $\land$ is a tailor-made one for MTL,
  which is taken from \citep[p.~48]{handbook:fuzzy}.  The translation
 can be traced back to \fix{fill after looking at ``formal systems of fuzzy
@@ -1306,77 +1306,107 @@ logic and their fragments.''}
 We state that any MTL formula~$\phi$ is a theorem in MTL iff
  $\phi^\bullet$ is a theorem in our system extended with left weakening.
 
-As an axiomatization of MTL, we take that of \citep[p.~47]{handbook:fuzzy},
-which can be traced back to \fix{fill in after looking at }.
-The only deduction rule is modus ponens and the aximos are listed below:
-\begin{description}
- \item[\MTLs 1] $(\phi\limp\psi)\limp(\psi\limp\chi)\limp(\phi\limp\chi)$
- \item[\MTLs 2] $\phi\limp\psi\limp\phi$
- \item[\MTLs 3] $(\phi\limp\psi\limp\chi)\limp(\psi\limp\phi\limp\chi)$
- \item[\MTLs 6] $((\phi\limp\psi)\limp\chi)\limp((\psi\limp\phi)\limp\chi)\limp\chi$
- \item[\MTLs 5a] $(\phi\limp\psi\limp\chi)\limp (\phi\otimes\psi)\limp\chi$
- \item[\MTLs 5b] $((\phi\otimes\psi)\limp\chi)\limp (\phi\limp\psi\limp\chi)$
- \item[\MTLs 7]  $\bar 0\limp\phi$
- \item[\MTLs 4$\vee$a] $(\phi\limp\chi)\limp(\psi\limp\chi)\limp((\phi\oplus\psi)\limp\chi)$
- \item[\MTLs 4$\vee$b] $\phi\limp(\phi\oplus\psi)$
- \item[\MTLs 4$\vee$c] $(\phi\oplus\psi)\limp(\psi\oplus\phi)$.
-\end{description}
+As an axiomatization of MTL, we take a hypersequent formulation of
+\citet{baaz2004analytic}, whose rules we show in Figure~\ref{fig:hlbck}.
+ \begin{figure}
+  \centering
+  \fix{add axiom, looking at LBCK in [19], which is Logics without the
+  contraction rule by Komori}
+
+  (Internal and External) Structural rules\\
+  \aseq{\mathcal H\hmid \G}{\phi}
+  \LL{(w,l)}
+  \useq{\mathcal H\hmid \G,\psi}{\phi}
+  \DisplayProof
+  \hfill
+  \aseq{\mathcal H\hmid\G}{\bar{0}}
+  \LL{(w,r)}
+  \useq{\mathcal H\hmid \G}{\phi}
+  \DisplayProof
+  \ruleskip
+  \AxiomC{$\mathcal H$}
+  \LL{(EW)}
+  \useq{\mathcal H\hmid G}{\phi}
+  \DisplayProof
+  \hfill
+  \aseq{\mathcal H\hmid\D_0,\G_0}{\phi}
+  \aseq{\mathcal H\hmid \D_1,\G_1}{\psi}
+  \LL{(com)}
+  \bseq{\mathcal H\hmid \D_0,\D_1}{\phi\hmid\G_0,\G_1\tr \psi}
+  \DisplayProof \ruleskip
+  \aseq{\mathcal H\hmid\G}{\phi}
+  \aseq{\mathcal H\hmid \phi,\D}{\psi}
+  \LL{(cut)}
+  \bseq{\mathcal H\hmid\G,\D}{\psi}
+  \DisplayProof
+  \ruleskip
+  Logical rules (Multiplicative fragment)\ruleskip
+  \aseq{\mathcal H\hmid\G,\phi,\psi}{\chi}
+  \LL{$\otimes$, l}
+  \useq{\mathcal H\hmid \G,\phi\otimes\psi}{\chi}
+  \DisplayProof \hfill
+  \aseq{\mathcal H\hmid\G}{\phi}
+  \aseq{\mathcal H\hmid\D}{\psi}
+  \LL{$\otimes$, r}
+  \bseq{\mathcal H\hmid \G,\D}{\phi\otimes \psi}
+  \DisplayProof \ruleskip
+  \aseq{\mathcal H\hmid\G}{\phi}
+  \aseq{\mathcal H\hmid\D,\psi}{\chi}
+  \LL{$\limp$l}
+  \bseq{\mathcal H\hmid \G,\D,\phi\limp\psi}{\chi}
+  \DisplayProof \hfill
+  \aseq{\mathcal H\hmid\G,\phi}{\psi}
+  \useq{\mathcal H\hmid\G}{\phi\limp\psi}
+  \DisplayProof \ruleskip
+  Logical rules (Additive fragment) \ruleskip
+  \aseq{\mathcal H\hmid\G,\phi}{\chi}
+  \aseq{\mathcal H\hmid\G,\psi}{\chi}
+  \LL{($\vee$, l)}
+  \bseq{\mathcal H\hmid\G,\phi\lor\psi}{\chi}
+  \DisplayProof
+  \hfill
+  \aseq{\mathcal H\hmid \G}{\phi_i}
+  \LL{($\vee$, r)}
+  \useq{\mathcal H\hmid \G}{\phi_0\lor \phi_1}
+  \DisplayProof
+
+  \caption[The rules in $\HLBCK$~\citep{baaz2004analytic}, which
+  characterizes monoidal t-norm logic.]
+  {The rules in $\HLBCK$~\citep{baaz2004analytic}, which
+  characterizes monoidal t-norm logic.  Axioms are not shown in
+  \citet{baaz2004analytic} so we took them from \fix{cite ono,komori}
+  The (cut) rule is eliminatable by
+  \citet[Theorem~3.2]{baaz2004analytic}.
+  We removed the rules about $\wedge$ because the connective $\wedge$ is
+  definable as in Equation~(\ref{eq:abb})}
+  \label{fig:hlbck}
+ \end{figure}
 
 \subsubsection{Soundness}
 
-We translate each rule in our system into a single formula.
-
 \begin{proposition}
- All formulae in \fix{what to what} is derivable in MTL.
+ If a hypersequent $\mathcal H$ is
+ derivable in $\HLBCK$, then the translation $\sem{\mathcal H}$ is
+ derivable in our system extended with left weakening.
 \end{proposition}
-\fix{prove}
 
 \subsubsection{Completeness}
 
 \begin{proposition}
- For any formula~$\phi$ in A1 to A10, $\phi^\bullet$ is inhabited in our system.
+ \label{prop:complete-structural}
+ All rules except (cut) are \fix{state}
 \end{proposition}
 \begin{proof}
- We draw proof diagrams for each of the formulae.  Here we omit
- terms. \fix{finish the proof}
-\begin{description}
- \item[\MTLs 1]
-      \AxiomC{} \LL{Ax}
-      \useq{\bu\psi\limp\bu\chi}{\bu\psi\limp\bu\chi}
-      \AxiomC{} \LL{Ax}
-      \useq{\bu\phi\limp\bu\psi}{\bu\phi\limp\bu\psi}
-      \AxiomC{} \LL{Ax}
-      \useq{\bu\phi}{\bu\phi}
-      \LL{$\limp$E}
-      \bseq{\bu\phi\limp\bu\psi,\bu\phi}{\bu\psi}
-      \LL{$\limp$E}
-      \bseq{\bu\phi\limp\bu\psi,\bu\psi\limp\bu\chi,\bu\phi}{\bu\chi}
-      \LL{$\limp$I}
-      \useq{\bu\phi\limp\bu\psi,\bu\psi\limp\bu\chi}{\bu\phi\limp\bu\chi}
-      \LL{$\limp$I}
-      \useq{\bu\phi\limp\bu\psi}{(\bu\psi\limp\bu\chi)\limp\bu\phi\limp\bu\chi}
-      \LL{$\limp$I}
-      \useq{}{(\bu\phi\limp\bu\psi)\limp(\bu\psi\limp\bu\chi)\limp\bu\phi\limp\bu\chi}
-      \DisplayProof
- \item[\MTLs 2]
-      \AxiomC{} \LL{Ax}
-      \useq{\bu\phi}{\bu\phi}
-      \LL{WL}
-      \useq{\bu\phi,\bu\psi}{\bu\phi}
-      \LL{$\limp$I}
-      \useq{\bu\phi}{\bu\psi\limp\bu\phi}
-      \LL{$\limp$I}
-      \useq{}{\bu\phi\limp\bu\psi\limp\bu\phi}
-      \DisplayProof
- \item[\MTLs 3] $(\phi\limp\psi\limp\chi)\limp(\psi\limp\phi\limp\chi)$
- \item[\MTLs 6] $((\phi\limp\psi)\limp\chi)\limp((\psi\limp\phi)\limp\chi)\limp\chi$
- \item[\MTLs 5a] $(\phi\limp\psi\limp\chi)\limp (\phi\otimes\psi)\limp\chi$
- \item[\MTLs 5b] $((\phi\otimes\psi)\limp\chi)\limp (\phi\limp\psi\limp\chi)$
- \item[\MTLs 7]  $\bar 0\limp\phi$
- \item[\MTLs 4$\vee$a] $(\phi\limp\chi)\limp(\psi\limp\chi)\limp((\phi\oplus\psi)\limp\chi)$
- \item[\MTLs 4$\vee$b] $\phi\limp(\phi\oplus\psi)$
- \item[\MTLs 4$\vee$c] $(\phi\oplus\psi)\limp(\psi\oplus\phi)$.
-\end{description}
+ We employ the same strategy as \thref{prop:complete-structural}.
+ \begin{description}
+  \item[(Other non-branching rules)]
+       For the other non-branching rules, the outermost structure of all encodings are
+       the same.  Moreover, the inner structure is
+       straightforward\fix{?}
+  \item[Other branching rules]
+       For the other branching rules, the outermost structure of all
+       encodings are the same.  Again, the inner structure is straightforward.
+ \end{description}
 \end{proof}
 
 
