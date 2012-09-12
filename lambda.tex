@@ -635,13 +635,20 @@ The formal definition follows.
  The write reduction $\wreduce$ is the smallest congruence
  containing the followings where $M$ is a local term:
  \begin{itemize}
-  \item \fix{E}
-  % \item $\conf{}{[l\mapsto\epsilon]}{\rtol i l \Gamma M}
-  % 	\wreduce
-  % 	\conf{}{[l\mapsto M]}{\rtol i l \Gamma M}
-  % 	$\enspace,
+  \item $\conf{[c\mapsto \epsilon]}{(\comodR)M} \wreduce
+	\conf{[c\mapsto M]}{\reader d}
+	$ where $M$ is a local term
+  \item $\conf{[c\mapsto N]}{(\comodR) M} \wreduce \conf{[c\mapsto
+	N]}{\reader d}$ where $M$ is a local term
  \end{itemize}
 \end{definition}
+In the first clause of this definition of write reductions, we require
+$M$ to be a local
+term because a store can only contain local terms.
+We require the same condition in the second clause as well because
+otherwise, whether a configuration admits a write reduction or not
+would depend on the contents of the store, which would make the
+implementation more complicated.
 
 \begin{definition}[Read reduction]
  \label{read}
@@ -649,11 +656,8 @@ The formal definition follows.
  containing the
  followings:
 \begin{itemize}
- \item \fix{F}
- % \item  $\conf{[l\mapsto M']}{[l\mapsto {N}]}{\ltor i l \Delta M}\rreduce
- % 	\conf{[l\mapsto M']}{[l\mapsto {N}]}{N}$
- % \item  $\conf{[l\mapsto M']}{[l\mapsto \epsilon]}{\ltor i l \Delta M}\rreduce
- % 	 \conf{[l\mapsto M']}{[l\mapsto \epsilon]}{\abort}$\enspace .
+ \item $\conf{[c\mapsto M]}{\reader c}\rreduce \conf{[c\mapsto M]}{M}$
+ \item $\conf{[c\mapsto \epsilon]}{\reader c} \rreduce \conf{[c\mapsto \epsilon]}{\abort}$
 \end{itemize}
 \end{definition}
 
@@ -1069,7 +1073,8 @@ where $s_i = \tuple{p,x}$:
  \end{cases}\\
  \vg m c & =
  \begin{cases}
- \semo{E}_{x, \vec v} & (\text{if } p = c \leftarrow E; p',\quad w(c)= i \text{
+ \semo{E}_{x, \vec v} & (\text{if } p = c \leftarrow E; p',\quad w(c)= i
+  \text{\fix{is this condition necessary?}
  and } \vg v c = \epsilon) \\
  \vg v c &(\text{otherwise})
  \end{cases}\\
@@ -1080,10 +1085,9 @@ $\vd v l$ if $g(l) = i$.
 The term
 $\semo{E}_{x, \vec v}$ is defined as the unique normal form
 %{show, show, show}
-of $E[x(\vec{\p y}) / \vec{\p y}][\vec{i(l)}/\vec l]$, where
+of $E[x(\vec{\p y}) / \vec{\p y}][\vec{i(l)}/\vec c]$ \fix{what is this vector?}, where
 every program variable~$\p y$ is replaced by $x(\p y)$ and the
-uniqueness is guaranteed by the absence of $\overleftarrow l$ or
-$\overrightarrow l$.
+uniqueness is guaranteed by the absence of $c$.
 If any of the substitutes is $\epsilon$,
 $\semo{E}_{x, \vec v}$ is $\epsilon$.
 
@@ -1311,6 +1315,8 @@ We can modify the schedule after step $k$ to a fair one,
 keeeping the failing behavior of
 the process.
 
+\fix{add example}
+
 \begin{theorem}[Completeness]
 If there exists a typed protocol that solves a typed input-output
  problem,
@@ -1499,7 +1505,8 @@ store prophecy.
 If we can find a semantic counterpart $\mathsf{Sch}$ of the store
 prophecy, possibly, we
 can obtain a denotation $\mathcal{D}^\mathsf{Sch}$ of terms
-using a denotation $\mathcal{D}$ for normal forms.
+using a denotation $\mathcal{D}$ for normal forms\fix{pursue this in the
+following chapters}.
 If that succeeds for classical logic, it will be interesting%
 \footnote{Kazushige Terui suggested the potential impact for classical logic.}%
 .
