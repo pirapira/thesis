@@ -106,6 +106,14 @@ An s-stack\index{stack!s-stack} (synchronous stack)~$\pi$ is defined by BNF:
  \enspace.
 \]
 We write the set of s-terms as $\sLambda$ and s-stacks~$\sPi$.
+For an s-terms~$s,t$ and a variable~$x$, $s[t/x]$ denotes the
+substitution of $t$ for free $x$'s in $s$.  When more than one
+substitutions are concatenated, e.g. $s[t/x][w/y]$, the substitutions
+are applied at the same time not one after another.  When we use this
+kind of simultaneous substitution, we always make sure that the same
+variable $x$ does not appear more than once after the $/$,
+e.g.~$s[t/x][w/x]$ never happens.
+
 An s-executable\index{executable!s-executable} (synchronous executable)) is a multiset on $\sLambda\times\sPi$.
 We use $\conc$ for delimiting elements in an s-executable.
 We denote the empty multiset by~$\emptyset$.
@@ -195,6 +203,11 @@ An s-term~$t$ has a type~$\phi$ when $\tr\tj{t}{\phi}$ is derivable.
 \LL  {Ax}
 \useq{\xphi}{\xphi}
 \DisplayProof
+  \hfill
+  \aseq{\G}{\tj t \phi}
+  \LL{W}
+  \useq{\tj{x}{\psi},\G}{\tj t\phi}
+  \DisplayProof
 \ruleskip
 %
 \aseq{\xphi,\G}{\tj t\psi}
@@ -307,7 +320,7 @@ as in Figure~\ref{fig:weakening}.
 \bseq{\G,\D}{\phi}
 \DisplayProof
   \caption{Com rule introduces a restricted form of weakening on the
-  left.  }
+  left even without using the weakening rule~(W) explicitly.  }
   \label{fig:weakening}
  \end{figure}
 
@@ -352,7 +365,7 @@ such $\mathcal Z$ that $\mathcal X = \mathcal Z\rightarrow \bbot$.
 We define programs and environments because if we continue using
 s-terms and s-stacks, the proof of adequacy (\thref{c:adequacy}) gets
 stuck in the case for
-($\limp$E,~\textminus), \ref{c:second}.
+($\limp$E,~\textminus),~\ref{c:second}.
 
 For $\phi\in\form(2^E)$ and $|\cdot|^-_0\colon\pvar\rightarrow 2^E$,
 we define $\nsem{\phi}\colon
@@ -420,6 +433,10 @@ and $(\sigma,e_1)\in\nsem\psi$.
  we have $e\in\bbot$.
 \end{proof}
 
+ \begin{proposition}
+  \label{prop:w}
+ \end{proposition}
+
 % 2d the adequacy lemma
 For $\G = \tj{x_1}{\phi_1},\ldots,\tj{x_n}{\phi_n}$,
 we denote by $\sem{\G}$ the set of pairs $(\vec t,e)$ where
@@ -471,6 +488,50 @@ same time.
   \item[(Ax, Ax)] When both derivations consist of only axiom rules,
        the statements follow from the definitions of $\sem{\phi}$ and
        $\sempair{\phi,\psi}$.
+   \item[(W, \textminus)]
+	The derication for $t$ ends as
+	\[
+	 \aseq{\G'}{\tj{t}{\phi}}
+	\LL{W}
+	\useq{\tj{\hat{x}}{\hat{\phi}}, \G'}{\tj{t}{\phi}}
+	\DisplayProof\enspace.
+	\]
+	\begin{enumerate}[label=\textit{(\arabic{*})}]
+	 \item Take any $(\vec{g'}, e'')\in\sem{\G'}$ and $(\hat t,\hat
+	       e)\in\sem{\hat\phi}$.
+	       The term in question $t[\hat t/\hat x][\vec{g'}/\G']$ is
+	       equal to $t[\vec{g'}/\G']$.
+	       By induction hypothesis~\ref{c:first},
+	       $(t[\vec{g'}/\G'],e'')$ is in $\sem{\phi}$.
+	       By \thref{prop:w}, $(t[\hat t/\hat x][\vec{g'}/\G'],
+	       e''\conc \hat e)$ is also in $\sem{\phi}$.
+	 \item
+	       When $x$ and $\hat x$ are different, the statement is
+	       equivalent to the induction hypothesis~\ref{c:second}.
+	      Otherwise, $x$ is equal to $\hat x$ and $\theta$ is equal
+	      to $\hat\phi$.
+	      Take any
+	      $(v,w,e')\in\sempair{\theta,\tau}$,
+	      $(\vec g,e)\in\sem{\hat\G}$,
+	      $(\vec d,f)\in\sem{\hat\D}$,
+	      $(\pi,e'')\in\nsem{\phi}$ and
+	      $(\sigma,f'')\in\nsem{\psi}$.
+	      We have to show that the following executable is in
+	      $\bbot$:
+	      \[
+	       \bar e = t[v/\hat x][\vec{g}/\hat{\G}],\pi\conc
+	      u[w/y][\vec d/\hat \D], \sigma\conc e\conc f\conc e'\conc
+	      e''\conc f''\enspace.
+	      \]
+	      By induction hypothesis~\ref{c:first},
+	      $
+	       t[\vec g/\hat \G],\pi\conc e\conc e''
+	      $
+	      is in $\bbot$.  Moreover, since $\hat x$ does not appear
+	      in $t$,  $t[v/\hat x][\vec g/\hat \G],\pi\conc e\conc e''$
+	      is in $\bbot$.  By condition~\ref{conc-closed} of the
+	      definition of poles, $\bar e$ is also in $\bbot$.
+	\end{enumerate}
    \item[($\limp$I, \textminus)]
 	The derivation for $t$ ends as
 	\[
@@ -975,7 +1036,8 @@ same time.
  \end{proof}
 Note that \ref{c:first} uses \ref{c:second} in the (Com,~\textminus)
 case
-and \ref{c:second} uses \ref{c:first} in the ($\limp$E,~\textminus).
+and \ref{c:second} uses \ref{c:first} in the cases ($\limp$E,~\textminus) and
+(W,~\textminus).
 
 \begin{proposition}
  \label{prop:exec-on-pole}
@@ -1167,17 +1229,17 @@ that satisfies:
       $[\inr{w}, \mats xt\pi yu\sigma],S \ared [u[w/y],\sigma],S $ \enspace;
  \item[(write)]
 	    $
-	    [\comod c{d}, t\cdot\pi], S[d\colon\psi\mapsto\bot]
+	    [\comod c{d}, t\cdot\pi], S[d\mapsto\bot]
 	    \ared
 	    [\reader c, \pi],
-	    S[d\colon\psi\mapsto t]
+	    S[d\mapsto t]
 	    $\enspace;
  \item[(write')]
 	    $
-	    [\comod c{d}, t\cdot\pi], S[d\colon\psi\mapsto u]
+	    [\comod c{d}, t\cdot\pi], S[d\mapsto u]
 	    \ared
 	    [\reader c, \pi],
-	    S[d\colon\psi\mapsto u]
+	    S[d\mapsto u]
 	    $\enspace;
  \item[(read)]$
 	    [\reader c ,\pi],
@@ -1273,8 +1335,8 @@ of the same type if we equate an a-term with any a-terms it reduces to.
 
 There is a well-known substructural logic called monoidal t-norm logic
 (MTL), which validates the prelinearity axiom
-$(\phi\limp\psi)\oplus(\psi\limp\phi)$.  When we extend our system with
-unrestricted left weakening, our system characterizes MTL\fix{?}.
+$(\phi\limp\psi)\oplus(\psi\limp\phi)$.  Actually, $\NMTL$ characterizes
+MTL\fix{in what sense?}.
 
 The MTL formulae can be defined as%
 \footnote{From the standard literature~\citep{handbook:fuzzy}, the connectives
@@ -1284,7 +1346,10 @@ are translated as $\&$ into $\otimes$ and $\rightarrow$ into $\limp$.}%
  \phi::= \bar{0}\mid p\mid \phi\limp\psi \mid \phi\otimes \psi \mid \phi \land \psi\enspace.
 \]
 
-We give a translation from MTL formulae to our language as:
+We give a translation from MTL formulae to MTL2 formulae by the outer
+induction on the number of $\wedge$ occurrences in $\phi$
+and the inner induction on the
+length of $\phi$.
 \begin{align}
  \bar{0}^\bullet &= \forall XX \nonumber\\
  p^\bullet &= p \nonumber\\
@@ -1292,23 +1357,41 @@ We give a translation from MTL formulae to our language as:
  (\phi\otimes\psi)^\bullet & = \forall
  X((\phi^\bullet\limp\psi^\bullet\limp X)\limp X) \nonumber\\
  (\phi\land \psi)^\bullet &=
- (\phi^\bullet\otimes(\phi^\bullet\limp\psi^\bullet))\oplus
- (\psi^\bullet \otimes(\psi^\bullet \limp\phi^\bullet)) \label{eq:abb}
+ (\phi\otimes(\phi\limp\psi))^\bullet\oplus
+ (\psi\otimes(\psi\limp\phi))^\bullet \label{eq:abb}
 \end{align}
-where the translation of $\land$ is a tailor-made one for MTL,
- which is taken from \citep[p.~48]{handbook:fuzzy}.  The translation
-can be traced back to \fix{fill after looking at ``formal systems of fuzzy
-logic and their fragments.''}
+where the translation of $\wedge$ is a tailor-made one for MTL,
+ which is taken from \citep[p.~48]{handbook:fuzzy}.  The translation of $\wedge$
+can be traced back to \citet[Lemma~6.5]{Cintula200740}.
 We state that any MTL formula~$\phi$ is a theorem in MTL iff
- $\phi^\bullet$ is a theorem in our system extended with left weakening.
+ $\phi^\bullet$ is a theorem in $\NMTL$.
+ In order to reason inductively on hypersequent derivations, we extend
+ the translation $(\cdot)^\bullet$ to sequents and hypersequents.
+ We define $(\G\tr\phi)^\bullet$ to be $\G^\bullet\supset\phi^\bullet$
+ where
+ $\G^\bullet$ is the conjunction (by $\otimes$) of translations of the
+ elements of $\G$.
+ We define
+ $\left(\G_0\tr\phi_0\hmid\cdots\hmid\G_n\tr\phi_n\right)^\bullet$ to be
+ the disjunction $\bigoplus_{0\le i\le n}\left(\G_i\tr
+ \phi_i\right)^\bullet$, where we let $\bigoplus\diamondsuit$ denote
+ $(((\cdots(\diamondsuit\oplus\diamondsuit)\cdots\oplus\diamondsuit)\oplus\diamondsuit)\oplus\diamondsuit)$
+ rather than its mirror image.
 
 As an axiomatization of MTL, we take a hypersequent formulation of
 \citet{baaz2004analytic}, whose rules we show in Figure~\ref{fig:hlbck}.
  \begin{figure}
   \centering
-  \fix{add axiom, looking at LBCK in [19], which is Logics without the
-  contraction rule by Komori}
-
+  \AxiomC{}
+  \LL{(Ax)}
+  \useq{p}{p}
+  \DisplayProof
+  \hfill
+  \AxiomC{}
+  \LL{(Ax)}
+  \useq{\bar 0}{\phi}
+  \DisplayProof
+  \ruleskip
   (Internal and External) Structural rules\\
   \aseq{\mathcal H\hmid \G}{\phi}
   \LL{(w,l)}
@@ -1338,20 +1421,21 @@ As an axiomatization of MTL, we take a hypersequent formulation of
   \ruleskip
   Logical rules (Multiplicative fragment)\ruleskip
   \aseq{\mathcal H\hmid\G,\phi,\psi}{\chi}
-  \LL{$\otimes$, l}
+  \LL{($\otimes$, l)}
   \useq{\mathcal H\hmid \G,\phi\otimes\psi}{\chi}
   \DisplayProof \hfill
   \aseq{\mathcal H\hmid\G}{\phi}
   \aseq{\mathcal H\hmid\D}{\psi}
-  \LL{$\otimes$, r}
+  \LL{($\otimes$, r)}
   \bseq{\mathcal H\hmid \G,\D}{\phi\otimes \psi}
   \DisplayProof \ruleskip
   \aseq{\mathcal H\hmid\G}{\phi}
   \aseq{\mathcal H\hmid\D,\psi}{\chi}
-  \LL{$\limp$l}
+  \LL{($\limp$,l)}
   \bseq{\mathcal H\hmid \G,\D,\phi\limp\psi}{\chi}
   \DisplayProof \hfill
   \aseq{\mathcal H\hmid\G,\phi}{\psi}
+  \LL{($\limp$, r)}
   \useq{\mathcal H\hmid\G}{\phi\limp\psi}
   \DisplayProof \ruleskip
   Logical rules (Additive fragment) \ruleskip
@@ -1370,7 +1454,7 @@ As an axiomatization of MTL, we take a hypersequent formulation of
   characterizes monoidal t-norm logic.]
   {The rules in $\HLBCK$~\citep{baaz2004analytic}, which
   characterizes monoidal t-norm logic.  Axioms are not shown in
-  \citet{baaz2004analytic} so we took them from \fix{cite ono,komori}
+  \citet{baaz2004analytic} so we took them from \citet{ono-komori-1985}.
   The (cut) rule is eliminatable by
   \citet[Theorem~3.2]{baaz2004analytic}.
   We removed the rules about $\wedge$ because the connective $\wedge$ is
@@ -1380,31 +1464,57 @@ As an axiomatization of MTL, we take a hypersequent formulation of
 
 \subsection{Soundness}
 
-\begin{proposition}
- If a hypersequent $\mathcal H$ is
- derivable in $\HLBCK$, then the translation $\sem{\mathcal H}$ is
- derivable in our system extended with left weakening.
-\end{proposition}
+\fix{define substitution instance of a mtl2 formula (which is a mtl-formula)}
+ \begin{proposition}\label{prop:sound-ind}
+  If $\G\tr\phi$ is derivable in $\NMTL$, all substitution instances
+  $\G'\tr\phi'$ are derivable in $\HLBCK$.
+ \end{proposition}
+  \begin{proof}
+   \fix{prove}
+  \end{proof}
+
+ \begin{proposition}
+  When the translation $\phi^\bullet$ is provable in $\NMTL$, the
+  original $\phi$ is provable in $\HLBCK$.
+ \end{proposition}
+  \begin{proof}
+   We define an MTL formula~$\phi^\circ$ inductively on an MTL
+   formula~$\phi$ so that $\phi^\circ$ is a substitution instance of
+   $\phi^\bullet$ and $\phi^\circ\limp\phi^\bullet$ is provable in
+   $\HLBCK$.
+   The definition of $\phi^\circ$ follows:
+   \begin{align*}
+    \bar 0^\circ&= \bar 0\\
+    p^\circ &=p \\
+    (\phi\limp\psi)^\circ&=\phi^\circ\limp\psi^\circ\\
+    (\phi\otimes\psi)^\circ &=
+    (\phi^\circ\limp\psi^\circ\limp(\phi^\circ\otimes\psi^\circ))\limp(\phi^\circ\otimes\psi^\circ)\\
+    (\phi\land\psi)^\circ &=
+    (\phi\otimes(\phi\limp\psi))^\circ \oplus
+    (\psi\otimes(\psi\limp\phi))^\circ\enspace.
+   \end{align*}
+   \fix{deal with the two claims}
+  \end{proof}
+
 
 \subsection{Completeness}
 
 \begin{proposition}
- \label{prop:complete-structural}
- All rules of $\HLBCK$ except (cut), after being translated with
- $(\cdot)^\bullet$, are derivable in $\NMTL$.
+ If a hypersequent $\mathcal H$ is
+ derivable in $\HLBCK$ without using (cut), then the translation $\mathcal H^\bullet$ is
+ derivable in our system extended with left weakening.
 \end{proposition}
 \begin{proof}
- We employ the same strategy as \thref{prop:complete-structural}.
- \begin{description}
-  \item[Other non-branching rules]
-       For the other non-branching rules, the outermost structure of all encodings are
-       the same.  Moreover, the inner structure is
-       straightforward\fix{?}
-  \item[Other branching rules]
-       For the other branching rules, the outermost structure of all
-       encodings are the same.  Again, the inner structure is straightforward.
- \end{description}
+ By induction on derivations of the cut-free fragment of $\HLBCK$.
+ All cases are straightforward although most of them are large because
+ we have to deal with the disjunction caused by hypersequents.
+ We show (com) case in Figure~\ref{fig:completeness-com}.
 \end{proof}
+ \begin{figure}
+  \centering
+  \fix{A}
+  \caption{Completeness of $\NMTL$ against (com) rule of $\HLBCK$.}
+ \end{figure}
 
 \section{Discussion and Future Work}
 
@@ -1426,10 +1536,20 @@ Our type system allows a restricted form of weakening as shown in
 Figure~\ref{fig:weakening}.  Introducing any form of weakening is not
 our intention.  We consider two possible remedies.  The first possible
 remedy is modifying the communication rule so that the contexts are
-treated in the additive way.\\
-\fix{draw}\\
+treated in the additive way:
+\[
+\aseq{\tj{x}{\phi\limp\psi},\G}{\tj t\theta}
+\aseq{\tj{y}{\psi\limp\phi},\G}{\tj u\theta}
+\LL{Com}
+\bseq{\G}{\tj{(t[\comodL/x]\conc u[\comodR/y])}{\theta}}
+\DisplayProof\enspace.
+\]
 The other possible remedy is employing the hypersequent system.  We use
-the hyper-communication rule and external contraction.  When we try to
+the hyper-communication rule and external contraction.
+\[
+ \fix{fill in}
+\]
+When we try to
 duplicate Figure~\ref{fig:weakening}, we cannot get weakening as shown
 in Figure~\fix{fig:lack-weakening}.
 Both of these remedies, however, destroy the inductive proof of
