@@ -254,20 +254,7 @@ An s-term~$t$ has a type~$\phi$ when $\tr\tj{t}{\phi}$ is derivable.
   \label{fig:pole-typing}
  \end{figure}
 
-Note that Com rule introduces a restricted form of weakening on the left.\\
-\AxiomC{}
-\useq{\phi\limp\phi}{\phi\limp\phi}
-\aseq{\G}{\phi}
-\bseq{\phi\limp\phi,\G}{\phi}
-\AxiomC{}
-\useq{\phi\limp\phi}{\phi\limp\phi}
-\aseq{\G}{\phi}
-\bseq{\phi\limp\phi,\G}{\phi}
-\bseq{\G,\G}{\phi}
-\DisplayProof
-
 With these rules, there is an s-term typed with the prelinearity axiom.
-
  \begin{example}
   \label{ex:prelin-term}
   The s-term $(\inl{\comodL}\conc\inr{\comodR})$ has
@@ -302,6 +289,25 @@ With these rules, there is an s-term typed with the prelinearity axiom.
   \label{fig:prelin-term}
  \end{sidewaysfigure}
 
+Note that Com rule introduces a restricted form of weakening on the left
+as in Figure~\ref{fig:weakening}.
+ \begin{figure}
+  \centering
+\AxiomC{}
+\useq{\phi\limp\phi}{\phi\limp\phi}
+\aseq{\G}{\phi}
+\bseq{\phi\limp\phi,\G}{\phi}
+\AxiomC{}
+\useq{\phi\limp\phi}{\phi\limp\phi}
+\aseq{\D}{\phi}
+\bseq{\phi\limp\phi,\D}{\phi}
+\bseq{\G,\D}{\phi}
+\DisplayProof
+  \caption{Com rule introduces a restricted form of weakening on the
+  left.  }
+  \label{fig:weakening}
+ \end{figure}
+
 \subsection{Specification Using Poles}
 
 % 2C truth values and models. make them disjunctive!
@@ -319,7 +325,7 @@ which satisfies
 \end{enumerate}
 \end{definition}
 In the definition of poles,
-condition~\ref{conc-closed}. is different from that from \citet{danos-krivine}'s
+condition~\ref{conc-closed}.~is different from that from \citet{danos-krivine}'s
 definition.
 There, the condition says if $e$ \textit{and} $f$ \textit{are} in
 $\bbot$, then $e\conc f$ is in $\bbot$.  Our choice here is influenced
@@ -1261,7 +1267,163 @@ of the same type if we equate an a-term with any a-terms it reduces to.
 \end{proposition}
 \fix{prove}
 
-%%%%%%%% some texts
+\section{Discussion}
+
+\subsection{Unintended Weakening}
+
+Our type system allows a restricted form of weakening as shown in
+Figure~\ref{fig:weakening}.  Introducing any form of weakening is not
+our intention.  We consider two possible remedies.  The first possible
+remedy is modifying the communication rule so that the contexts are
+treated in the additive way.\\
+\fix{draw}\\
+The other possible remedy is employing the hypersequent system.  We use
+the hyper-communication rule and external contraction.  When we try to
+duplicate Figure~\ref{fig:weakening}, we cannot get weakening as shown
+in Figure~\fix{fig:lack-weakening}.
+Both of these remedies, however, destroy the inductive proof of
+adequacy.  There, since the
+interesting variable $x$ can appear in more than one branch,
+we need stronger induction hypothesis.
+
+\subsection{Comparison with monoidal t-norm logic}
+
+There is a well-known substructural logic called monoidal t-norm logic
+(MTL), which validates the prelinearity axiom
+$(\phi\limp\psi)\oplus(\psi\limp\phi)$.  When we extend our system with
+unrestricted left weakening, our system characterizes MTL\fix{?}.
+
+The MTL formulas can be defined as%
+\footnote{From the standard literature~\citep{handbook:fuzzy}, the connectives
+are translated as \fix{fill}}%
+:
+\[
+ \phi::= \bar{0}\mid p\mid \phi\limp\psi \mid \phi\otimes \psi \mid \phi \land \psi\enspace.
+\]
+
+We give a translation from MTL formulae to our language as:
+\begin{align}
+ \bar{0}^\bullet &= \forall XX \nonumber\\
+ p^\bullet &= p \nonumber\\
+ (\phi\limp\psi)^\bullet &= \phi^\bullet \limp \psi^\bullet\nonumber\\
+ (\phi\otimes\psi)^\bullet & = \forall
+ X((\phi^\bullet\limp\psi^\bullet\limp X)\limp X) \nonumber\\
+ (\phi\land \psi)^\bullet &=
+ (\phi^\bullet\otimes(\phi^\bullet\limp\psi^\bullet))\oplus
+ (\psi^\bullet \otimes(\psi^\bullet \limp\phi^\bullet)) \label{eq:abb}
+\end{align}
+where the translation of $\land$ is a tailor-made one for MTL,
+ which is taken from \citep[p.~48]{handbook:fuzzy}.  The translation
+can be traced back to \fix{fill after looking at ``formal systems of fuzzy
+logic and their fragments.''}
+We state that any MTL formula~$\phi$ is a theorem in MTL iff
+ $\phi^\bullet$ is a theorem in our system extended with left weakening.
+
+As an axiomatization of MTL, we take a hypersequent formulation of
+\citet{baaz2004analytic}, whose rules we show in Figure~\ref{fig:hlbck}.
+ \begin{figure}
+  \centering
+  \fix{add axiom, looking at LBCK in [19], which is Logics without the
+  contraction rule by Komori}
+
+  (Internal and External) Structural rules\\
+  \aseq{\mathcal H\hmid \G}{\phi}
+  \LL{(w,l)}
+  \useq{\mathcal H\hmid \G,\psi}{\phi}
+  \DisplayProof
+  \hfill
+  \aseq{\mathcal H\hmid\G}{\bar{0}}
+  \LL{(w,r)}
+  \useq{\mathcal H\hmid \G}{\phi}
+  \DisplayProof
+  \ruleskip
+  \AxiomC{$\mathcal H$}
+  \LL{(EW)}
+  \useq{\mathcal H\hmid G}{\phi}
+  \DisplayProof
+  \hfill
+  \aseq{\mathcal H\hmid\D_0,\G_0}{\phi}
+  \aseq{\mathcal H\hmid \D_1,\G_1}{\psi}
+  \LL{(com)}
+  \bseq{\mathcal H\hmid \D_0,\D_1}{\phi\hmid\G_0,\G_1\tr \psi}
+  \DisplayProof \ruleskip
+  \aseq{\mathcal H\hmid\G}{\phi}
+  \aseq{\mathcal H\hmid \phi,\D}{\psi}
+  \LL{(cut)}
+  \bseq{\mathcal H\hmid\G,\D}{\psi}
+  \DisplayProof
+  \ruleskip
+  Logical rules (Multiplicative fragment)\ruleskip
+  \aseq{\mathcal H\hmid\G,\phi,\psi}{\chi}
+  \LL{$\otimes$, l}
+  \useq{\mathcal H\hmid \G,\phi\otimes\psi}{\chi}
+  \DisplayProof \hfill
+  \aseq{\mathcal H\hmid\G}{\phi}
+  \aseq{\mathcal H\hmid\D}{\psi}
+  \LL{$\otimes$, r}
+  \bseq{\mathcal H\hmid \G,\D}{\phi\otimes \psi}
+  \DisplayProof \ruleskip
+  \aseq{\mathcal H\hmid\G}{\phi}
+  \aseq{\mathcal H\hmid\D,\psi}{\chi}
+  \LL{$\limp$l}
+  \bseq{\mathcal H\hmid \G,\D,\phi\limp\psi}{\chi}
+  \DisplayProof \hfill
+  \aseq{\mathcal H\hmid\G,\phi}{\psi}
+  \useq{\mathcal H\hmid\G}{\phi\limp\psi}
+  \DisplayProof \ruleskip
+  Logical rules (Additive fragment) \ruleskip
+  \aseq{\mathcal H\hmid\G,\phi}{\chi}
+  \aseq{\mathcal H\hmid\G,\psi}{\chi}
+  \LL{($\vee$, l)}
+  \bseq{\mathcal H\hmid\G,\phi\lor\psi}{\chi}
+  \DisplayProof
+  \hfill
+  \aseq{\mathcal H\hmid \G}{\phi_i}
+  \LL{($\vee$, r)}
+  \useq{\mathcal H\hmid \G}{\phi_0\lor \phi_1}
+  \DisplayProof
+
+  \caption[The rules in $\HLBCK$~\citep{baaz2004analytic}, which
+  characterizes monoidal t-norm logic.]
+  {The rules in $\HLBCK$~\citep{baaz2004analytic}, which
+  characterizes monoidal t-norm logic.  Axioms are not shown in
+  \citet{baaz2004analytic} so we took them from \fix{cite ono,komori}
+  The (cut) rule is eliminatable by
+  \citet[Theorem~3.2]{baaz2004analytic}.
+  We removed the rules about $\wedge$ because the connective $\wedge$ is
+  definable as in Equation~(\ref{eq:abb})}
+  \label{fig:hlbck}
+ \end{figure}
+
+\subsubsection{Soundness}
+
+\begin{proposition}
+ If a hypersequent $\mathcal H$ is
+ derivable in $\HLBCK$, then the translation $\sem{\mathcal H}$ is
+ derivable in our system extended with left weakening.
+\end{proposition}
+
+\subsubsection{Completeness}
+
+\begin{proposition}
+ \label{prop:complete-structural}
+ All rules except (cut) are \fix{state}
+\end{proposition}
+\begin{proof}
+ We employ the same strategy as \thref{prop:complete-structural}.
+ \begin{description}
+  \item[(Other non-branching rules)]
+       For the other non-branching rules, the outermost structure of all encodings are
+       the same.  Moreover, the inner structure is
+       straightforward\fix{?}
+  \item[Other branching rules]
+       For the other branching rules, the outermost structure of all
+       encodings are the same.  Again, the inner structure is straightforward.
+ \end{description}
+\end{proof}
+
+
+\subsection{Comparison with \FLe}
 
 \section{Discussion}
 
