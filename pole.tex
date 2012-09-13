@@ -1266,26 +1266,7 @@ of the same type if we equate an a-term with any a-terms it reduces to.
 \end{proposition}
 \fix{prove}
 
-\section{Discussion}
-
-\subsection{Unintended Weakening}
-
-Our type system allows a restricted form of weakening as shown in
-Figure~\ref{fig:weakening}.  Introducing any form of weakening is not
-our intention.  We consider two possible remedies.  The first possible
-remedy is modifying the communication rule so that the contexts are
-treated in the additive way.\\
-\fix{draw}\\
-The other possible remedy is employing the hypersequent system.  We use
-the hyper-communication rule and external contraction.  When we try to
-duplicate Figure~\ref{fig:weakening}, we cannot get weakening as shown
-in Figure~\fix{fig:lack-weakening}.
-Both of these remedies, however, destroy the inductive proof of
-adequacy.  There, since the
-interesting variable $x$ can appear in more than one branch,
-we need stronger induction hypothesis.
-
-\subsection{Comparison with monoidal t-norm logic}
+\section{Comparison with monoidal t-norm logic}
 
 There is a well-known substructural logic called monoidal t-norm logic
 (MTL), which validates the prelinearity axiom
@@ -1394,7 +1375,7 @@ As an axiomatization of MTL, we take a hypersequent formulation of
   \label{fig:hlbck}
  \end{figure}
 
-\subsubsection{Soundness}
+\subsection{Soundness}
 
 \begin{proposition}
  If a hypersequent $\mathcal H$ is
@@ -1402,7 +1383,7 @@ As an axiomatization of MTL, we take a hypersequent formulation of
  derivable in our system extended with left weakening.
 \end{proposition}
 
-\subsubsection{Completeness}
+\subsection{Completeness}
 
 \begin{proposition}
  \label{prop:complete-structural}
@@ -1421,10 +1402,26 @@ As an axiomatization of MTL, we take a hypersequent formulation of
  \end{description}
 \end{proof}
 
+\section{Discussion and Future Work}
+
+\subsection{Unintended Weakening}
+
+Our type system allows a restricted form of weakening as shown in
+Figure~\ref{fig:weakening}.  Introducing any form of weakening is not
+our intention.  We consider two possible remedies.  The first possible
+remedy is modifying the communication rule so that the contexts are
+treated in the additive way.\\
+\fix{draw}\\
+The other possible remedy is employing the hypersequent system.  We use
+the hyper-communication rule and external contraction.  When we try to
+duplicate Figure~\ref{fig:weakening}, we cannot get weakening as shown
+in Figure~\fix{fig:lack-weakening}.
+Both of these remedies, however, destroy the inductive proof of
+adequacy.  There, since the
+interesting variable $x$ can appear in more than one branch,
+we need stronger induction hypothesis.
 
 \subsection{Comparison with \FLe}
-
-\section{Discussion}
 
 \subsection{Adding Exponentials}
 \fix{add if resources allow}
@@ -1432,6 +1429,7 @@ As an axiomatization of MTL, we take a hypersequent formulation of
 \subsection{Comparison with the Hypersequent Formulation}
 \fix{fill}
 
+\section{Conclusion}
 
 \section*{where to put them}
 
