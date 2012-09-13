@@ -179,7 +179,10 @@ A type is an element of $\form(\emptyset)$.
 
 A sequent\index{sequent} $\sequent{\G}{\tj t\phi}$ consists of a
 context~$\G$ and an s-term~$t$ associated with a type~$\phi$.
-The context\index{context} is a finite sequence of variables associated with types.
+The context\index{context} is a finite sequence of variables associated
+with types where the same variable does not appear more than once.
+When we write a concatenation of contexts $\G,\D$, we assume no variables
+appear in both $\G$ and $\D$.
 
 A derivation\index{derivation} is a tree composed of the derivation
 rules in Figure~\ref{fig:pole-typing}
@@ -1273,9 +1276,9 @@ There is a well-known substructural logic called monoidal t-norm logic
 $(\phi\limp\psi)\oplus(\psi\limp\phi)$.  When we extend our system with
 unrestricted left weakening, our system characterizes MTL\fix{?}.
 
-The MTL formulas can be defined as%
+The MTL formulae can be defined as%
 \footnote{From the standard literature~\citep{handbook:fuzzy}, the connectives
-are translated as \fix{fill}}%
+are translated as $\&$ into $\otimes$ and $\rightarrow$ into $\limp$.}%
 :
 \[
  \phi::= \bar{0}\mid p\mid \phi\limp\psi \mid \phi\otimes \psi \mid \phi \land \psi\enspace.
@@ -1371,7 +1374,7 @@ As an axiomatization of MTL, we take a hypersequent formulation of
   The (cut) rule is eliminatable by
   \citet[Theorem~3.2]{baaz2004analytic}.
   We removed the rules about $\wedge$ because the connective $\wedge$ is
-  definable as in Equation~(\ref{eq:abb})}
+  definable as in Equation~(\ref{eq:abb}).}
   \label{fig:hlbck}
  \end{figure}
 
@@ -1387,12 +1390,13 @@ As an axiomatization of MTL, we take a hypersequent formulation of
 
 \begin{proposition}
  \label{prop:complete-structural}
- All rules except (cut) are \fix{state}
+ All rules of $\HLBCK$ except (cut), after being translated with
+ $(\cdot)^\bullet$, are derivable in $\NMTL$.
 \end{proposition}
 \begin{proof}
  We employ the same strategy as \thref{prop:complete-structural}.
  \begin{description}
-  \item[(Other non-branching rules)]
+  \item[Other non-branching rules]
        For the other non-branching rules, the outermost structure of all encodings are
        the same.  Moreover, the inner structure is
        straightforward\fix{?}
@@ -1403,6 +1407,18 @@ As an axiomatization of MTL, we take a hypersequent formulation of
 \end{proof}
 
 \section{Discussion and Future Work}
+
+\subsection{Comparison with Danos and Krivine's work}
+
+\fix{finish}
+
+\fix{There are no communication there.}
+
+Not all disjunctive tautologies are valid in G\"odel--Dummett logic:
+$(P\limp Q)\lor(Q\limp R)$.
+
+Non-abortfullness is not a pole.
+In order to change this, we have to do something more subtle.
 
 \subsection{Unintended Weakening}
 
@@ -1421,27 +1437,8 @@ adequacy.  There, since the
 interesting variable $x$ can appear in more than one branch,
 we need stronger induction hypothesis.
 
-\subsection{Comparison with \FLe}
-
 \subsection{Adding Exponentials}
 \fix{add if resources allow}
 
-\subsection{Comparison with the Hypersequent Formulation}
-\fix{fill}
-
 \section{Conclusion}
-
-\section*{where to put them}
-
-``Undecidability of second order linear logic'' has
-\begin{align*}
- \phi\otimes \psi&\equiv \forall X((\phi\limp\psi\limp X)\limp X) \\
- {1}      &\equiv \forall X(X\limp X)\\
- \exists X\phi   &\equiv \forall Y((\forall X(\phi\limp Y))\limp Y)
-\end{align*}
-
-Not all disjunctive tautologies are valid in G\"odel--Dummett logic:
-$(P\limp Q)\lor(Q\limp R)$.
-
-Non-abortfullness is not a pole.
-In order to change this, we have to do something more subtle.
+\fix{fill}
