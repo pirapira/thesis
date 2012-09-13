@@ -1131,9 +1131,8 @@ A store\index{store} is a partial mapping from locations to
 a-terms, equivalently, a mapping from locations to a-terms and $\bot$'s.
 The empty store\index{store!empty}%
 \index{empty store|see{store}}~$S_\epsilon$ maps any channel to $\bot$.
-For a store $S$, we define a store $S[c\colon\phi\mapsto x]$ to be
-the same as $S$ except that $S[c\colon\phi\mapsto x](c\colon\phi\mapsto
-x)$ is $x$.
+For a store $S$, we define a store $S[c\mapsto x]$ to be
+the same as $S$ except that $S[c\mapsto x](c)$ is $x$ whatever $S(c)$ is.
 An a-executable\index{executable!a-executable} (asynchronous executable)
 is a finite multiset on $\aLambda \times \aPi$,
 paired with a store.
@@ -1179,17 +1178,17 @@ that satisfies:
 	    $\enspace;
  \item[(read)]$
 	    [\reader c ,\pi],
-	    S[c\colon\phi\mapsto u]
+	    S[c\mapsto u]
 	    \ared
 	    [u,\pi],
-	    S[c\colon\phi\mapsto u]
+	    S[c\mapsto u]
 	    $\enspace; and
  \item[(fail)]
 	    $
 	    [\reader c,\pi],
-	    S[c\colon\phi\mapsto \bot]
+	    S[c\mapsto \bot]
 	    \ared
-	    \emptyset,S[c\colon\phi\mapsto \bot]
+	    \emptyset,S[c\mapsto \bot]
 	    $
 	    \enspace.
 \end{description}
