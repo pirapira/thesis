@@ -37,7 +37,8 @@ We observe the computational behavior of prelinearity axiom
 $(\phi\limp\psi)\oplus(\psi\limp\phi)$ and left weakening
 on top of IMALL2, which is the fragment of second order
 intuitionistic linear logic with connectives $\{\forall, \limp,
-\oplus\}$.
+\oplus\}$.  In other words, our type system is based on a second-order
+monoidan t-norm logic \fix{cite something}.
 We interpret the disjunction~$\oplus$ in the prelinearity axiom
 nondeterministically: whether
 one process can give information to the other or
@@ -86,17 +87,19 @@ countably infinite.
 We also assume countably infinitely many channels.
 Metavariables $c$ and $d$ run over channels.
 An s-term\index{term!s-term} (synchronous term)~$t$ is defined by BNF:
-\[
- t::= x
+\begin{align*}
+ t::= \,&x
  \mid (t)t
  \mid \lambda x.t
  \mid \ast_t
  \mid \mat t x t x t
  \mid \inl t
  \mid \inr t
- \mid (t\conc t)
+ \mid \\ &
+ (t\conc t)
  \mid \comod c c
-\]
+ \mid \abort
+\end{align*}
 where $x$ is a variable and $c$ is a channel.
 An s-stack\index{stack!s-stack} (synchronous stack)~$\pi$ is defined by BNF:
 \[
@@ -111,55 +114,61 @@ substitution of $t$ for free $x$'s in $s$.  When more than one
 substitutions are concatenated, e.g. $s[t/x][w/y]$, the substitutions
 are applied at the same time not one after another.  When we use this
 kind of simultaneous substitution, we always make sure that the same
-variable $x$ does not appear more than once after the $/$,
+variable $x$ does not appear more than once after the $/$'s,
 e.g.~$s[t/x][w/x]$ never happens.
 
-An s-executable\index{executable!s-executable} (synchronous executable)) is a multiset on $\sLambda\times\sPi$.
+An s-executable\index{executable!s-executable} (synchronous executable))
+is a multiset on $\sLambda\times\sPi$.
 We use $\conc$ for delimiting elements in an s-executable.
 We denote the empty multiset by~$\emptyset$.
 
 % 2a' reduction
 A schedule\index{schedule} is a total order on channels.
-Given a fixed schedule~$\sche$, the reduction\index{reduction} relation~$\sred$
+Given a fixed schedule~$\sche$,
+we define binary relations $\sred'$ and $\sred$
 on s-executables
-is defined to be the smallest preorder
-that satisfies:
+to be the smallest preorders
+that satisfy:
 \begin{description}
  \item[(cong)] if
-      $e_0         \sred e_1$
+      $e_0         \sred' e_1$
       then
-      $[e_0 \conc e] \sred [e_1\conc e]$\enspace;
+      $[e_0 \conc e] \sred' [e_1\conc e]$\enspace;
  \item[(push)]
-	    $[(t)u,\pi]      \sred [t,u\cdot\pi]$      \enspace;
+	    $[(t)u,\pi]      \sred' [t,u\cdot\pi]$      \enspace;
  \item[(store)]
 	    $[\lambda x.t,u\cdot\pi]
-	     \sred
+	     \sred'
 	     [t[\ast_u/x],      \pi]$\enspace;
  \item[(load)]
-	    $[\ast_u,\pi]\sred [u,\pi]$\enspace;
- \item[(dist)]
-           $[(t\conc u),\pi]  \sred [t,\pi\conc u,\pi]$ \enspace;
+	    $[\ast_u,\pi]\sred' [u,\pi]$\enspace;
  \item[(ask)]
-      $[\mat t x u y v,\pi]\sred [t,\mats x u \pi y v \pi]$\enspace;
+      $[\mat t x u y v,\pi]\sred' [t,\mats x u \pi y v \pi]$\enspace;
  \item[(ansL)]
-           $[\inl{v}, \mats xt\pi yu\sigma] \sred [t[v/x],\pi] $ \enspace;
+           $[\inl{v}, \mats xt\pi yu\sigma] \sred' [t[v/x],\pi] $ \enspace;
  \item[(ansR)]
-           $[\inr{w}, \mats xt\pi yu\sigma] \sred [u[w/y],\sigma] $ \enspace;
+           $[\inr{w}, \mats xt\pi yu\sigma] \sred' [u[w/y],\sigma] $ \enspace;
  \item[(com0)]
            $[\comod c{d}, t\cdot\pi\conc \comod{d}c,
-           u\cdot\sigma] \sred
+           u\cdot\sigma] \sred'
            [u,\pi]$\enspace(if $d\sche c$ but $c\not\sche d$)\enspace;
  \item[(com1)]
 	    $[\comod c{d}, t\cdot\pi\conc \comod{d}c,
-	    u\cdot\sigma] \sred
+	    u\cdot\sigma] \sred'
 	    [t,\sigma]$\enspace(if $c\sche d$ but $d\not\sche c$)\enspace; and
  \item[(com2)]
 	    $[\comod c{d}, t\cdot\pi\conc \comod{d}c,
-	    u\cdot\sigma] \sred
+	    u\cdot\sigma] \sred'
 	    [u,\pi\conc t,\sigma]$\enspace(if $c\sche d$ and $d\sche
-       c$)\enspace.
+       c$)\enspace;
+ \item[(local)] If $e_0\sred'e_1$ then $e_0\sred e_1$\enspace;
+ \item[(dist)]
+           $[(t\conc u),\pi\conc e]  \sred [(t,\pi)\conc e\conc (u,\pi)\conc
+      e]$ \enspace.
 \end{description}
-Rules (cong), (push), (store), (load) and (dist) come from \citet{danos-krivine}.
+Rules (cong), (push), (store) and (load) come from
+\citet{danos-krivine}.  (dist) also appears there but we changed it (see
+Discussion).
 Below, we sometimes omit the outermost parentheses (i.e. [ and ]) for multisets.
 
 % I want to write these rules are non-blocking here.
@@ -191,80 +200,106 @@ The context\index{context} is a finite sequence of variables associated
 with types where the same variable does not appear more than once.
 When we write a concatenation of contexts $\G,\D$, we assume no variables
 appear in both $\G$ and $\D$.
+A hypersequent\index{hypersequent} is a finite sequence of sequents.
+In a hypersequent, we assume that no variable appears more than once in
+the contexts%
+\footnote{The condition is different from that of
+Chapter~\ref{ch:lambda}.  This is due to different forms of the
+external contraction (EC) rule.}.
 
 A derivation\index{derivation} is a tree composed of the derivation
 rules in Figure~\ref{fig:pole-typing}
 whose top rules are Ax.
 An s-term~$t$ has a type~$\phi$ when $\tr\tj{t}{\phi}$ is derivable.
 
+\newcommand{\hyp}[1]{\mathcal{H}#1\hmid}
  \begin{figure}
  \centering
+  \AxiomC{$\mathcal H$}
+  \LL{EW}
+  \useq{\hyp{}\G}{\tj\abort\phi}
+  \DisplayProof
+  \hfill
+  \AxiomC{$\mathcal H\hmid \G\tr\tj{t}\phi \hmid \D\tr\tj{u}\psi
+  \hmid \mathcal H'$}
+  \LL{EE}
+  \UnaryInfC{$\mathcal H\hmid \D\tr\tj{u}\psi\hmid \G\tr\tj{t}\phi
+  \hmid \mathcal H'$}
+  \DisplayProof
+  \ruleskip
+  \AxiomC{$\mathcal H\hmid\tr\tj{t}\phi \hmid\tr\tj{u}\phi$}
+  \LL{EC}
+  \UnaryInfC{$\mathcal H\hmid \tr\tj{(t\conc{u})}\phi $}
+  \DisplayProof
+  \ruleskip
 \AxiomC{}
 \LL  {Ax}
 \useq{\xphi}{\xphi}
 \DisplayProof
   \hfill
-  \aseq{\G}{\tj t \phi}
+  \aseq{\hyp{}\G}{\tj t \phi}
   \LL{W}
-  \useq{\tj{x}{\psi},\G}{\tj t\phi}
+  \useq{\hyp{}\tj{x}{\psi},\G}{\tj t\phi}
   \DisplayProof
 \ruleskip
 %
-\aseq{\xphi,\G}{\tj t\psi}
+\aseq{\hyp{}\xphi,\G}{\tj t\psi}
 \LL{$\limp$I}
-\useq{\G}{\tj{\lambda x.t}{\phi\limp\psi}}
+\useq{\hyp{}\G}{\tj{\lambda x.t}{\phi\limp\psi}}
 \DisplayProof
 \hfill
 %
-\aseq{\G}{\tj t{\phi\limp\psi}}
-\aseq{\D}{\tj u\phi}
+\aseq{\hyp{}\G}{\tj t{\phi\limp\psi}}
+\aseq{\hyp'\D}{\tj u\phi}
 \LL   {$\limp$E}
-\bseq{\G,\D}{\tj{(t)u}\psi}
+\bseq{\hyp{}\hyp'\G,\D}{\tj{(t)u}\psi}
 \DisplayProof
 \ruleskip
 %
-\aseq{\G}{\tj{t}{\phi}}
+\aseq{\hyp{}\G}{\tj{t}{\phi}}
 \LL  {$\oplus$I}
-\useq{\G}{\tj{\inl{t}}{\phi\oplus\psi}}
+\useq{\hyp{}\G}{\tj{\inl{t}}{\phi\oplus\psi}}
 \DisplayProof
 \hfill
 %
-\aseq{\G}{\tj{t}{\psi}}
+\aseq{\hyp{}\G}{\tj{t}{\psi}}
 \LL  {$\oplus$I}
-\useq{\G}{\tj{\inr{t}}{\phi\oplus\psi}}
+\useq{\hyp{}\G}{\tj{\inr{t}}{\phi\oplus\psi}}
 \DisplayProof
 \ruleskip
 %
-\aseq{\G}{\tj{t}{\phi\oplus\psi}}
-\aseq{\D,\xphi}{\tj{u_0}{\theta}}
-\aseq{\D,\ypsi}{\tj{u_1}{\theta}}
+\aseq{\hyp{}\G}{\tj{t}{\phi\oplus\psi}}
+\aseq{\hyp'\D,\xphi}{\tj{u_0}{\theta}}
+\aseq{\hyp'\D,\ypsi}{\tj{u_1}{\theta}}
 \LL  {$\oplus$E}
-\tseq{\G,\D}{\tj{\mat{t}{x}{u_0}{y}{u_1}}{\theta}}
+\tseq{\hyp{}\hyp'\G,\D}{\tj{\mat{t}{x}{u_0}{y}{u_1}}{\theta}}
 \DisplayProof
 \ruleskip
 %
-\aseq\G{\tj t\phi}
+\aseq{\hyp{}\G}{\tj t\phi}
 \LL   {$\forall$I}
-\useq\G{\tj t{\forall X\phi}}
+\useq{\hyp{}\G}{\tj t{\forall X\phi}}
 \DisplayProof ($\G$ does not contain $X$ freely)
 \hfill
 %
-\aseq{\G}{\tj{t}{\forall X\phi}}
+\aseq{\hyp{}\G}{\tj{t}{\forall X\phi}}
 \LL   {$\forall$E}
-\useq{\G}{\tj{t}{\phi[\psi/X]}}
+\useq{\hyp{}\G}{\tj{t}{\phi[\psi/X]}}
 \DisplayProof
 \ruleskip
 %
-\aseq{\tj{x}{\phi\limp\psi},\G}{\tj t\theta}
-\aseq{\tj{y}{\psi\limp\phi},\D}{\tj u\theta}
+\aseq{\hyp{}\tj{x}{\phi\limp\psi},\G}{\tj t\theta}
+\aseq{\hyp'\tj{y}{\psi\limp\phi},\D}{\tj u\tau}
 \LL{Com}
-\bseq{\G,\D}{\tj{(t[\comodL/x]\conc u[\comodR/y])}{\theta}}
+\bseq{\hyp{}\hyp'\G}
+  {\tj{t[\comodL/x]}{\theta}\hmid
+   \D\tr\tj{u[\comodR/y]}{\tau}}
 \DisplayProof
 \ruleskip
 %
-\aseq{\G,\tj{x}{\phi},\tj{y}{\psi},\D}{\tj{t}{\theta}}
-\LL{Ex}
-\useq{\G,\tj{y}{\psi},\tj{x}{\phi},\D}{\tj{t}{\theta}}
+\aseq{\hyp{}\G,\tj{x}{\phi},\tj{y}{\psi},\D}{\tj{t}{\theta}}
+\LL{IE}
+\useq{\hyp{}\G,\tj{y}{\psi},\tj{x}{\phi},\D}{\tj{t}{\theta}}
 \DisplayProof
   \caption{Typing derivation rules.}
   \label{fig:pole-typing}
@@ -1383,12 +1418,12 @@ As an axiomatization of MTL, we take a hypersequent formulation of
  \begin{figure}
   \centering
   \AxiomC{}
-  \LL{(Ax)}
+  \LL{(ax)}
   \useq{p}{p}
   \DisplayProof
   \hfill
   \AxiomC{}
-  \LL{(Ax)}
+  \LL{(ax)}
   \useq{\bar 0}{\phi}
   \DisplayProof
   \ruleskip
@@ -1511,14 +1546,111 @@ As an axiomatization of MTL, we take a hypersequent formulation of
  We show (com) case in Figure~\ref{fig:completeness-com}.
 \end{proof}
  \begin{figure}
-  \centering
-  \fix{A}
-  \caption{Completeness of $\NMTL$ against (com) rule of $\HLBCK$.}
+  Part A
+  \hfill
+   \begin{center}
+  \AxiomC{}
+  \LL{Ax}
+  \useq{\bu{\D}_0}{\bu{\D}_0}
+  \AxiomC{}
+  \LL{Ax}
+  \useq{\bu{\D}_1\limp\bu{\G}_0}{\bu{\D}_1\limp\bu{\G}_0}
+  \AxiomC{}
+  \LL{Ax}
+  \useq{\bu{\D}_1}{\bu{\D}_1}
+  \LL{$\limp$E}
+  \bseq{\bu{\D}_1\limp\bu{\G}_0,\bu{\D}_1}{\bu{\G}_0}
+  \doubleLine
+  \bseq{\bu\D_1\limp\bu\G_0,\bu\D_0,\bu\D_1}{\bu{(\D_0\otimes\G_0)}}
+  \DisplayProof
+   \end{center}
+  \ruleskip
+  Part B
+  \newcommand{\zerozerophi}{\bu{(\D_0\otimes\G_0)}\limp\bu{\phi}}
+  \newcommand{\oneonepsi}{\bu{(\D_1\otimes\G_1)}\limp\bu{\psi}}
+  \newcommand{\DoneGzero}{\bu\D_1\limp\bu\G_0}
+  \newcommand{\GzeroDone}{\bu\G_0\limp\bu\D_1}
+  \newcommand{\concL}{\bu{(\D_0\otimes\D_1)}\limp \bu\phi}
+  \newcommand{\concR}{\bu{(\G_0\otimes\G_1)}\limp \bu\psi}
+   \begin{center}
+  \AxiomC{}
+  \LL{Ax}
+  \useq{\zerozerophi}{\zerozerophi}
+  \AxiomC{Part A}
+  \LL{$\limp$E}
+  \bseq{\DoneGzero,\zerozerophi,\bu\D_0,\bu\D_1}{\bu\phi}
+  \doubleLine
+  \useq{\DoneGzero,\zerozerophi,\bu{(\D_0\otimes\D_1)}}{\bu\phi}
+  \LL{$\limp$I}
+  \useq{\DoneGzero,\zerozerophi}{\concL}
+  \LL{$\oplus$I}
+  \useq{\DoneGzero,\zerozerophi}{(\concL)\oplus (\concR) =: \theta}
+  \DisplayProof
+   \end{center}
+  \ruleskip
+  Part B' is symmetric to Part B concluding
+   \begin{center}
+    \aseq{
+    \GzeroDone,\oneonepsi}{\concR}
+    \LL{$\oplus$I}
+    \useq{\GzeroDone,\oneonepsi}{\theta}
+    \DisplayProof
+   \end{center}
+  Part C
+   \begin{center}
+    \AxiomC{Part B}
+    \AxiomC{Part B'}
+    \LL{Com}
+    \bseq{\zerozerophi,\oneonepsi}{\theta}
+    \LL{$\oplus$I}
+    \useq{\zerozerophi,\oneonepsi}{\mathcal{\bu{H}}\oplus
+    \theta}
+    \DisplayProof
+   \end{center}
+  \ruleskip
+  Part D
+   \begin{center}
+    \AxiomC{hyp. of (com) in $\HLBCK$}
+    \useq{}{\bu{\mathcal H}\oplus(\oneonepsi)}
+    \AxiomC{}
+    \LL{Ax}
+    \useq{\bu{\mathcal H}}{\bu{\mathcal H}}
+    \LL{$\oplus$I}
+    \useq{\bu{\mathcal H}}{\bu{\mathcal H} \oplus \theta}
+    \LL{W}
+    \useq{\bu{\mathcal H}, \zerozerophi}{\bu{\mathcal H} \oplus \theta}
+    \AxiomC{Part C}
+    \LL{$\oplus$E}
+    \tseq{\zerozerophi}{\bu{\mathcal H}\oplus\theta}
+    \DisplayProof
+   \end{center}
+  \ruleskip
+  Main Part
+   \begin{center}
+    \AxiomC{hyp. of (com) in $\HLBCK$}
+    \useq{}{\bu{\mathcal H}\oplus (\zerozerophi)}
+    \AxiomC{}
+    \LL{Ax}
+    \useq{\bu{\mathcal H}}{\bu{\mathcal H}}
+    \LL{$\oplus$I}
+    \useq{\bu{\mathcal H}}{\bu{\mathcal H} \oplus \theta}
+    \AxiomC{Part D}
+    \LL{$\oplus$E}
+    \tseq{}{\bu{\mathcal H}\oplus((\concL)\oplus (\concR))}
+    \DisplayProof
+   \end{center}
+
+  \caption{Completeness of $\NMTL$ against (com) rule of $\HLBCK$.  The
+  double line stands for several steps.  Ex and W rules are sometimes
+  omitted.}
+  \label{fig:completeness-com}
  \end{figure}
 
 \section{Discussion and Future Work}
 
 \subsection{Comparison with Danos and Krivine's work}
+
+\fix{change on (dist)}
 
 \fix{finish}
 
