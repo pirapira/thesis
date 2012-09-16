@@ -27,7 +27,7 @@
  We apply the classical realizability argument to the second-order
  formulation of monoidal t-norm logic.
  In particular, we interpret the
- prelinearity axiom as a a non-deterministic two-party communication scheme.
+ prelinearity axiom as an asynchronous two-party communication scheme.
 \end{abstract}
 
 
@@ -113,7 +113,7 @@ We assume a set~$\pvar$ of propositional variables whose cardinality is
 countably infinite.
 We also assume countably infinitely many channels with involution
 satisfying $\co c\neq c$ and $\co{\co c} = c$.
-Metavariables $c$ runs over channels.
+Metavariable~$c$ runs over channels.
 An s-term\index{term!s-term} (synchronous term)~$t$ is defined by BNF:
 \begin{align*}
  t::= \,&x
@@ -1054,7 +1054,7 @@ Similar to \ref{c:first}.
 	     we can apply the same argument as \ref{c:first}.
 	     Otherwise,
 	      without loss of generality,
-	      we can assume $(\tj x\theta)\in\G_0$ so that
+	      we can assume
 	      $\G_0 =\tj x\theta, {\hat\G_0}$ up to exchange.
 	      Take any
 	      $(v,w,e')\in\sempair{\theta,\tau}$,
@@ -1065,15 +1065,16 @@ Similar to \ref{c:first}.
 	     $(\pi',e''')\in\nsem{\phi'}$
 	     and
 	     $(\sigma,f'')\in\nsem{\psi}$.
-	     We have to show that this s-executable is in $\bbot$:
+	     After defining $t_0' = t_0[\comodL/\hat
+	     x][\vec{g_0}/\hat\G_0][v/x]$,
+	     $t'_1 = t_1[\comodR/\hat y][\vec{g_1}/\G_1]$ and $u' =
+	     u[w/y][\vec{d}/\hat\D]$,
+	     we have to show that this s-executable is in $\bbot$:
 	     \[
 	      t'_0,\pi\conc t'_1,\pi'\conc u',\sigma\conc e'\conc
 	     {e_0\conc \eHz}\conc {e_1\conc \eHo}\conc{f}\conc e''\conc
 	     e'''\conc f''\enspace.
 	     \]
-	     where $t_0' = t_0[\comodL/\hat
-	     x][\vec{g_0}/\hat\G_0][v/x]$,
-	     $t'_1 = t_1[\comodR/\hat y][\vec{g_1}/\G_1]$ and $u' = u[w/y][\vec{d}/\hat\D]$.
 	     Consider the derivation consisting of an axiom
 	     $\sequent{\tj{\hat x}{\phi_0\limp\phi_1}}
 	     {\tj{\hat x}{\phi_0\limp\phi_1}}$.
@@ -1166,11 +1167,11 @@ and \ref{c:second} uses \ref{c:first} in ($\limp$E,~\textminus) and
  an s-executable containing an element of a fixed set of s-executables.
 \end{proposition}
 
-\begin{proposition}
+\begin{proposition}[Prelinearity as Communication Scheme]
  \label{spec:prelin}
- Let $\tr\tj{g}{\forall X\forall Y((X\limp Y)\oplus (Y\limp X))}$ be
- derivable.
- Then, the executable $\left(g, \mats{z}{z}{x\cdot\pi_Y}{w}{w}{y\cdot\pi_X}\right)$
+ Let a single-component hypersequent $\tr\tj{g}{\forall X\forall
+ Y((X\limp Y)\oplus (Y\limp X))}$ be derivable.
+ Then, the s-executable $[g, \mats{z}{z}{x\cdot\pi_Y}{w}{w}{y\cdot\pi_X}]$
  reduces to a multiset containing an element of
  $\{(x,\pi_X), (y,\pi_Y)\}$.
 \end{proposition}
@@ -1192,7 +1193,7 @@ and \ref{c:second} uses \ref{c:first} in ($\limp$E,~\textminus) and
  \label{spec-ex}
  Since $g = (\inl{\comodL}\conc\inr{\comodR})$ has the type
  $\forall X\forall Y((X\limp Y)\oplus (Y\limp X))$ (Example~\ref{ex:prelin-term}),
- $g$ so that it satisfies the condition of Prop.~\ref{spec:prelin}.
+ $g$ satisfies the condition of Prop.~\ref{spec:prelin}.
  Indeed, by (dist),
  $\left(g, \mats{z}{z}{x\cdot\pi_Y}{w}{w}{y\cdot\pi_X}\right)$
  reduces to
@@ -1242,7 +1243,7 @@ asynchronous shared memory communication, which is similar to \citet{hiraiflops2
 An a-term\index{term!a-term} (asynchronous term)~$t$ is an s-term or
 $\mid \reader c$.
 The definition of a-stacks are not changed from that of s-stacks except
-that the s-terms in the definition are replaced by a-sterms.
+that the s-terms in the definition are replaced by a-terms.
 We write the set of a-terms as $\aLambda$ and a-stacks~$\aPi$.
 A store\index{store} maps a location to an a-term, $\bot$ or $\top$.
 The empty store\index{store!empty}%
@@ -1524,7 +1525,7 @@ substituting an MTL formula for each bound propositional variable in $\phi$.
    \end{align*}
    The first claim is immediate.  For the second claim, the last clause
    is shown in \citep[Lem.~6.5]{Cintula200740}.  Assume $\phi^\bullet$
-   is provable.  By the first claim and Prop.~\ref{prop:sound-ind},
+   is provable in $\NMTL$.  By the first claim and Prop.~\ref{prop:sound-ind},
    $\phi^\circ$ is provable in $\HLBCK$.  By the second claim, $\phi$ is
    provable in $\HLBCK$.
   \end{proof}
@@ -1545,16 +1546,16 @@ substituting an MTL formula for each bound propositional variable in $\phi$.
 \section{Discussion and Future Work}
 \label{sec:discuss}
 This work is technically similar to \citet{danos-krivine}.
-One large difference is the existence of (com0), (com1) and (com2)
-ruductions, where terms are passed from processes to different
+One large difference is the existence of (com$i$)
+reductions, where terms are passed from processes to different
 processes.
 In \citet{danos-krivine}, the only reduction rule involving multiple
-processes is (dist), which spwans processes on a duplicated stack.
+processes is (dist), spawning processes which never communicate.
 We share their purpose
 ``interpretation of logical rules as programming
 instructions''~\citep{danos-krivine}.
-We continue to seek computational interpretations of substructural
-logics in general.
+We continue to seek generalization over substructural
+logics.
 
 % \subsection{Unintended Weakening}
 
@@ -1587,12 +1588,14 @@ logics in general.
 \section{Conclusion}
 \label{sec:conclude}
 We developed a lambda calculus for MTL and
-analysed the prelinearity axiom using
+analyzed the prelinearity axiom using
 the classical realizability.  The terms typed with prelinearity are
 asynchronous communication schemes.
 
-\paragraph{Acknowledgement.}
-This research was partially supported by
+\paragraph{Acknowledgment.}
+The author thanks Tadeusz Litak for informing him of Danos and
+Krivine's work.
+This research was supported by
 Grant-in-Aid for JSPS Fellows, 23-6978, 2011.
 
 

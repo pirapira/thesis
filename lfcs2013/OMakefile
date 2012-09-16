@@ -22,7 +22,7 @@
 LATEX = latex
 LATEXFLAGS = -halt-on-error
 DVIPDFM = dvipdfm
-DVIPDFMFLAGS = -p a4
+# DVIPDFMFLAGS = -p a4
 
 LaTeXDocument(hirai-lfcs, hirai-lfcs)
 
