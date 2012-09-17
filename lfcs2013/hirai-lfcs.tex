@@ -1156,7 +1156,7 @@ same time.
  \end{proof}
 Note that \ref{c:first} uses \ref{c:second} in (Com,~\textminus)
 and \ref{c:second} uses \ref{c:first} in ($\limp$E,~\textminus) and
-(IW,~\textminus).
+(IW,~\textminus) in the proof of Thm.~\ref{c:adequacy}.
 
 \begin{proposition}
  \label{prop:exec-on-pole}
@@ -1165,11 +1165,14 @@ and \ref{c:second} uses \ref{c:first} in ($\limp$E,~\textminus) and
  an s-executable containing an element of $P$.
 \end{proposition}
 
-\begin{proposition}[Prelinearity as Communication Scheme]
+\begin{proposition}[Prelinearity as a Communication Scheme]
  \label{spec:prelin}
- Let a single-component hypersequent $\tr\tj{g}{\forall X\forall
- Y((X\limp Y)\oplus (Y\limp X))}$ be derivable.
- Then, the s-executable $[g, \mats{z}{z}{x\cdot\pi_Y}{w}{w}{y\cdot\pi_X}]$
+ Let $g$ have type ${\forall X\forall
+ Y((X\limp Y)\oplus (Y\limp X))}$.
+ Then, the s-executable
+ \[
+ [g, \mats{z}{z}{x\cdot\pi_Y}{w}{w}{y\cdot\pi_X}]
+ \]
  reduces to a multiset containing an element of
  $\{(x,\pi_X), (y,\pi_Y)\}$.
 \end{proposition}
@@ -1182,9 +1185,9 @@ and \ref{c:second} uses \ref{c:first} in ($\limp$E,~\textminus) and
  We have $x\in\sem{X}$ and $y\in\sem{Y}$.
  By definition of $\nsem{\cdot}$,
  $\mats{z}{z}{x\cdot\pi_Y}{w}{w}{y\cdot\pi_X}$ is in $\nsem{(X\limp
- Y)\oplus (Y\limp X)}$.
- By adequacy (Thm.~\ref{c:adequacy}), $\left(g,
- \mats{z}{z}{x\cdot\pi_Y}{w}{w}{y\cdot\pi_X}\right)$ is in $\bbot$.\qed
+ Y)\oplus (Y\limp X)}$\kern -1.5pt.
+ By adequacy (Thm.~\ref{c:adequacy}), $\left[g,
+ \mats{z}{z}{x\cdot\pi_Y}{w}{w}{y\cdot\pi_X}\right]$ is in $\bbot$.\qed
 \end{proof}
 
 \begin{example}
@@ -1193,7 +1196,7 @@ and \ref{c:second} uses \ref{c:first} in ($\limp$E,~\textminus) and
  $\forall X\forall Y((X\limp Y)\oplus (Y\limp X))$ (Fig.~\ref{fig:prelin-term}),
  $g$ satisfies the condition of Prop.~\ref{spec:prelin}.
  Indeed, by (dist),
- $\left(g, \mats{z}{z}{x\cdot\pi_Y}{w}{w}{y\cdot\pi_X}\right)$
+ $\left[g, \mats{z}{z}{x\cdot\pi_Y}{w}{w}{y\cdot\pi_X}\right]$
  reduces to
  \begin{align*}
   \bigl[& \left(\inl{\comodL},
@@ -1237,7 +1240,8 @@ and \ref{c:second} uses \ref{c:first} in ($\limp$E,~\textminus) and
 \label{sec:async}
 
 In this section we give another operational semantics involving
-asynchronous shared memory communication, which is similar to \citet{hiraiflops2012}.
+asynchronous shared memory communication, which is similar to Hirai's
+hyper-lambda calculus for G\"odel--Dummett logic~\citep{hiraiflops2012}.
 An a-term\index{term!a-term} (asynchronous term)~$t$ is an s-term or
 $\reader c$.
 The definition of a-stacks is not changed from that of s-stacks except
@@ -1543,15 +1547,23 @@ substituting an MTL formula for each bound propositional variable in $\phi$.
 \label{sec:discuss}
 This work is technically similar to \citet{danos-krivine}'s.
 One large difference is the existence of (com$i$), (read) and (write)
-reductions, where terms are passed from processes to different
+reductions, where terms are passed from processes to other
 processes.
-In \citet{danos-krivine}, the only reduction rule involving multiple
-processes is (dist), spawning processes which never communicate.
+In \citep{danos-krivine}, the only reduction rule involving multiple
+processes is (dist), which spawns processes that never communicate.
 Sharing their purpose
 ``interpretation of logical rules as programming
 instructions''~\citep{danos-krivine},
 we continue to seek generalization over substructural
 logics.
+
+The asynchronous semantics given here is similar to that of a
+hyper-lambda calculus \lgd\,by
+\citet{hiraiflops2012}.
+We conjecture that our classical realizability argument here is
+applicable to \lgd\,as well, but for that, due to contraction,
+we have to generalize the statement of adequacy to involve arbitrarily
+many derivations.
 
 There are recent
 developments~\citep{pfenning2010,wadler2012propositions} over
@@ -1559,11 +1571,11 @@ Curry--Howard correspondence between
 the linear logic and process
 calculi.
 Since their type systems do not incorporate the prelinearity axiom
-(without using modalities $!$ or $?$),
+(without modalities $!$ or $?$),
 we conjecture that we can extend their type systems and their process
 calculi
 with the prelinearity
-axiom using the same kind of communication facilities as we used in this paper.
+axiom representing the same kind of communication schemes as we have shown.
 
 % \subsection{Unintended Weakening}
 
