@@ -322,7 +322,7 @@ A type~$\phi$ is provable when there is an s-term~$t$ with type~$\phi$.
 \aseq{\hyp{}\G}{\tj t\phi}
 \LL   {$\forall$I}
 \useq{\hyp{}\G}{\tj t{\forall X\phi}}
-\DisplayProof ($\mathcal H$ or $\G$ has no $X$ freely)
+\DisplayProof (no free $X$ in $\mathcal H$ or $\G$)
 \hfill
 %
 \aseq{\hyp{}\G}{\tj{t}{\forall X\phi}}
@@ -1385,7 +1385,7 @@ The translation of $\wedge$ is a tailor-made one for MTL,
  which is taken from \citep[p.~48]{handbook:fuzzy}.  The translation of $\wedge$
 can be traced back to \citet[Lem.~6.5]{Cintula200740}.}%
 .
-As an axiomatization of MTL, we take a hypersequent formulation of
+We take a hypersequent formulation of MTL by
 \citet{baaz2004analytic}, whose rules we show in Fig.~\ref{fig:hlbck}.
  \begin{figure}[h]
   \centering
@@ -1496,7 +1496,7 @@ substituting an MTL formula for each bound propositional variable in $\phi$.
   of the hypersequent are derivable in $\HLBCK$.
  \end{proposition}
   \begin{proof}
-   By induction on derivations.\qed
+   By induction on $\NMTL$ derivations.\qed
   \end{proof}
 
  \begin{proposition}[Soundness]
@@ -1516,10 +1516,9 @@ substituting an MTL formula for each bound propositional variable in $\phi$.
     (\phi\limp\psi)^\circ&=\phi^\circ\limp\psi^\circ\\
     (\phi\otimes\psi)^\circ &=
     (\phi^\circ\limp\psi^\circ\limp(\phi^\circ\otimes\psi^\circ))\limp(\phi^\circ\otimes\psi^\circ)\\
-    (\phi\oplus\psi)^\circ &= \phi^\circ \oplus \psi^\circ
+    (\phi\oplus\psi)^\circ &= \phi^\circ \oplus \psi^\circ\enspace.
    \end{align*}
-   The first claim is immediate.  For the second claim, the last clause
-   is shown in \citep[Lem.~6.5]{Cintula200740}.  Assume $\phi^\bullet$
+   Both claims are immediate.  Assume $\phi^\bullet$
    is provable in $\NMTL$.  By the first claim and Prop.~\ref{prop:sound-ind},
    $\phi^\circ$ is provable in $\HLBCK$.  By the second claim, $\phi$ is
    provable in $\HLBCK$.\qed
@@ -1534,8 +1533,10 @@ substituting an MTL formula for each bound propositional variable in $\phi$.
 \begin{proof}
  By induction on derivations of the cut-free fragment of $\HLBCK$.
  All cases are straightforward.  For branching rules, we have to apply
- the (EC) rule because in $\HLBCK$, the components in a hypersequent is distributed
- additively while in $\NMTL$ multiplicatively.\qed
+ (EC) because in $\HLBCK$, the components in a hypersequent is distributed
+ additively while in $\NMTL$ multiplicatively.  And above and below
+ (EC), we have to use ($\limp$I) and ($\limp$E) so that the
+ restricted form of (EC) rule in $\NMTL$ is applicable.\qed
 \end{proof}
 
 \section{Discussion and Future Work}
