@@ -1007,11 +1007,11 @@ same time.
                     We have a symmetric fact for $t_1$.
                     Thus, the environment
                     \begin{align*}
-                    (
+                    (&
                      \mats{\hat x}
                       {t_0'}{\pi}{\hat y}
-                      {t_1'}{\pi},
-                     [u[w/y][\vec{d}/\hat\D],\sigma\conc e'\conc {e_1\conc \eHo}\conc
+                      {t_1'}{\pi},\\
+                     & [u[w/y][\vec{d}/\hat\D],\sigma\conc e'\conc {e_1\conc \eHo}\conc
                       f\conc e''\conc f'']
                     )
                     \end{align*}
@@ -1142,12 +1142,8 @@ same time.
 	      % $\bbot$..
        \end{enumerate}
   \item[($\forall$E, \textminus)]
-       The derivation for $t$ ends in
-       \aseq{\hyp{}\G}{\tj t{\forall X\phi}}
-       \useq{\hyp{}\G}{\tj t{\phi[\psi/X]}}
-       \DisplayProof.
        Both statements follow from the induction hypotheses
-       by $\nsem{\phi[\psi/X]}\subset \nsem{\forall
+       because $\nsem{\phi[\psi/X]}$ is a subset of $\nsem{\forall
        X\phi}$.
    \item[(Other cases)]
 	We can swap $t$ and $u$ and find a symmetric case above.\qed
