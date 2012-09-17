@@ -45,7 +45,7 @@ concurrent elements of an executable.
 In the current paper, we show that logical axioms can specify how
 concurrent processes exchange information asynchronously.
 
-We investigate the computational behavior of prelinearity axiom
+We investigate the computational behavior of the prelinearity axiom
 $(\phi\limp\psi)\oplus(\psi\limp\phi)$ and left weakening
 on top of IMALL2, which is the fragment of second order
 intuitionistic linear logic with connectives $\{\forall, \limp,
@@ -64,6 +64,9 @@ information to a faster one.
 % synchronous case and give simulation from the
 % asynchronous case to the synchronous case.
 %
+We also
+develop a simulation from the synchronous semantics to the
+asynchronous one.
 The asynchronous semantics here is closely related to
 the hyper-lambda calculus for G\"odel--Dummett logic presented by
 \citet{hiraiflops2012}.
@@ -86,9 +89,6 @@ the hyper-lambda calculus for G\"odel--Dummett logic presented by
 % In Sect.~\ref{sec:async} we deal with the
 % operational
 % semantics involving asynchronnous communication using stores and
-Also we
-develop a simulation from the synchronous semantics to the
-asynchronous one.
 In Sect.~\ref{sec:as-logic}, we compare our type system with MTL.
 In sections~\ref{sec:discuss} and \ref{sec:conclude}, we give discussions
 and our conclusion.
@@ -99,7 +99,8 @@ and our conclusion.
 \section{Synchronous Semantics}
 \label{sec:sync}
 
-We apply \citet{danos-krivine}'s classical realizability argument to a
+We apply Danos and Krivine's classical realizability
+argument~\citep{danos-krivine} to a
 lambda calculus involving
 communicating processes.  Although the formulation is similar to
 \citep{danos-krivine}, our formulation allows different processes to
@@ -1080,16 +1081,14 @@ same time.
 	     This derivation is shorter than the derivation for
 	     $\mathcal H$.
 	     We can use the induction hypothesis~\ref{c:second} on
-	     this derivation and the derivation of $u$ to obtain
-	     statement~\ref{c:second}.
-	     By this, $(\comodL, t_1',{e_1\conc \eHo})$ is in
-	     $\sempair{\phi_0\limp\phi_1,\phi}$
-	     because of Prop.~\ref{comod-type}.
+	     this derivation and the derivation of $u$.
+	     By this and Prop.~\ref{comod-type}, $(\comodL, t_1',{e_1\conc \eHo})$ is in
+	     $\sempair{\phi_0\limp\phi_1,\phi}$.
 	     So, program $p =(\comodL,[t_1',\pi'\conc{e_1\conc \eHo\conc
 	     e'''}])$ is in
 	     $\sem{\phi_0\limp\phi_1}$.
-	     By induction hypothesis~\ref{c:second} for the derivation
-	     for $t_0$, especially using the program~$p$ for
+	     By induction hypothesis~\ref{c:second} for the derivations
+	     for $t_0$ and $u$, especially using the program~$p$ for
 	     substituting~$\hat x$, we can show that
 	     $(t_0',u',(t_1',\pi'\conc {e_1\conc \eHo\conc e'''}\conc {e_0\conc
 	     \eHz}\conc
@@ -1386,7 +1385,8 @@ are translated as $\&$ into $\otimes$ and $\rightarrow$ into $\limp$.}%
 As an abbreviation, we can introduce $\phi\land\psi =  (\phi\otimes(\phi\limp\psi))\oplus
  (\psi\otimes(\psi\limp\phi))$\footnote{
 The translation of $\wedge$ is a tailor-made one for MTL,
- which is taken from \citep[p.~48]{handbook:fuzzy}.  The translation of $\wedge$
+ which is taken from \citep[p.~48]{handbook:fuzzy}.
+ The origin of the translation
 can be traced back to \citet[Lem.~6.5]{Cintula200740}.}%
 .
 We take a hypersequent formulation of MTL by
