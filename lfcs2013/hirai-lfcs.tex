@@ -34,9 +34,9 @@
 \section{Introduction}
 %%% abstract
 \citet{danos-krivine} state that
-the computational semantics of disjunctive tautologies
+disjunctive tautologies
 such as the excluded middle and the symmetric excluded middle
-are synchronization schemes.
+are the types of synchronization schemes.
 Indeed in their formalism, reduction of one term can wait
 for another, making synchronization.
 However,
@@ -64,9 +64,9 @@ information to a faster one.
 % synchronous case and give simulation from the
 % asynchronous case to the synchronous case.
 %
-% Our computational semantics here is closely related to
-% the hyper-lambda calculus for G\"odel--Dummett logic presented by
-% \citet{hiraiflops2012}.
+The asynchronous semantics here is closely related to
+the hyper-lambda calculus for G\"odel--Dummett logic presented by
+\citet{hiraiflops2012}.
 % On top of intuitionistic logic,
 % G\"odel--Dummett logic is axiomatized by Dummett axiom
 % $(\phi\imp\psi)\lor(\psi\imp\phi)$, which is similar to the prelinearity axiom.
@@ -103,7 +103,7 @@ We apply \citet{danos-krivine}'s classical realizability argument to a
 lambda calculus involving
 communicating processes.  Although the formulation is similar to
 \citep{danos-krivine}, our formulation allows different processes to
-exchange terms.
+pass around lambda terms.
 
 \subsection{Dynamics}
 We consider a programming language, which is a modification of
@@ -145,8 +145,9 @@ kind of simultaneous substitution, we always make sure that the same
 variable $x$ does not appear more than once after the $/$'s,
 e.g.~$s[t/x][t'/x]$ never happens.
 
+A process is an element of $\sLambda\times\sPi$.
 An s-executable\index{executable!s-executable} (synchronous executable)
-is a multiset on $\sLambda\times\sPi$.
+is a multiset of processes.
 We ruthlessly use $\conc$ both for delimiting elements in an
 s-executable and for addition of multisets.
 We denote the empty multiset by~$\emptyset$.
@@ -191,7 +192,7 @@ that satisfy:
 	    u\cdot\sigma] \sred'
 	    [u,\pi\conc t,\sigma]$\enspace(if $c\sche d$ and $d\sche
        c$)\enspace;
- \item[(local)] If $e_0\sred'e_1$ then $e_0\sred e_1$\enspace; and
+ \item[(local-global)] If $e_0\sred'e_1$ then $e_0\sred e_1$\enspace; and
  \item[(dist)]
            $[(t\conc u),\pi\conc e]  \sred [(t,\pi)\conc e\conc (u,\pi)\conc
       e]$ \enspace.
@@ -245,7 +246,10 @@ the contexts%
 An $\NMTL$ derivation\index{derivation} is a tree composed of the derivation
 rules in Fig.~\ref{fig:pole-typing}
 whose top rules are Ax.
-An s-term~$t$ has a type~$\phi$ when $\tr\tj{t}{\phi}$ is derivable.
+A hypersequent is derivable in $\NMTL$ when there is an $\NMTL$
+derivation ending at the hypersequent.
+An s-term~$t$ has type~$\phi$ when $\tr\tj{t}{\phi}$ is derivable.
+A type~$\phi$ is provable when there is an s-term~$t$ with type~$\phi$.
 \newcommand{\hyp}[1]{\mathcal{H}#1\hmid}
  \begin{figure}
  \centering
@@ -340,13 +344,7 @@ An s-term~$t$ has a type~$\phi$ when $\tr\tj{t}{\phi}$ is derivable.
   $\mathcal H'$ stand for hypersequents.}
   \label{fig:pole-typing}
  \end{figure}
-For example, there is an s-term typed with the prelinearity axiom.
- \begin{example}
-  \label{ex:prelin-term}
-  The s-term $(\inl{\comodL}\conc\inr{\comodR})$ has
-  a type $\forall X\forall Y((X\limp Y)\oplus(Y\limp X))$.  The typing
-  derivation is in Fig.~\ref{fig:prelin-term}.
- \end{example}
+For example, there is an s-term typed with the prelinearity axiom (Fig.~\ref{fig:prelin-term}).
 
  \begin{figure}
   \centering
@@ -375,7 +373,9 @@ For example, there is an s-term typed with the prelinearity axiom.
   \useq{}{\tj{(\inl{\comodL}\conc\inr{\comodR})}{
   \forall X\forall Y((X\limp Y)\oplus(Y\limp X))}}
   \DisplayProof
-  \caption{A derivation tree typing an s-term with the prelinearity axiom.}
+  \caption{A derivation tree typing an s-term with the prelinearity
+  axiom: the s-term $(\inl{\comodL}\conc\inr{\comodR})$ has
+  type $\forall X\forall Y((X\limp Y)\oplus(Y\limp X))$.}
   \label{fig:prelin-term}
  \end{figure}
 
@@ -415,7 +415,7 @@ which satisfies
 \end{enumerate}
 \end{definition}
 In the definition of poles,
-condition~\ref{conc-closed}.~is different from that of \citet{danos-krivine}'s.
+condition~\ref{conc-closed}.~is different from that of Danos and Krivine's~\citep{danos-krivine}.
 There, the condition says if $e$ \textit{and} $f$ \textit{are} in
 $\bbot$, then $e\conc f$ is in $\bbot$.  Our disjunctive choice here is influenced
 by hypersequents~\citep{avron91} and hyper-lambda
@@ -423,7 +423,7 @@ calculi~\citep{hiraiflops2012},
 where
 components are interpreted disjunctively.
 Computationally,
-we guarantee that at least one element of the multiset
+we only guarantee that at least one process of an s-executable
 $[t_0,\pi_0\conc \cdots \conc t_n,\pi_n]$ succeeds.
 
 An environment\index{environment} is a pair of an s-stack and an s-executable.
@@ -433,12 +433,14 @@ For a set~$\mathcal Z$ of environments, $\mathcal Z\rightarrow\bbot$ denotes
 the set of programs $(t,e)$ such that
 for any environment $(\pi,e')\in \mathcal Z$,
 the s-executable $[t,\pi\conc e \conc e']$ is in $\bbot$.
-We define programs and environments because if we continue using
-s-terms and s-stacks, the proof of adequacy (Thm.~\ref{c:adequacy}) gets
-stuck in the case
+We use programs and environments because if we continued using
+s-terms and s-stacks, the proof of adequacy (Thm.~\ref{c:adequacy})
+would fail
+in the case
 ($\limp$E,~\textminus),~\ref{c:second}.
 
-For $\phi\in\form(2^E)$ and $|\cdot|^-_0\colon\pvar\rightarrow 2^E$,
+For $\phi\in\form(2^E)$ and $|\cdot|^-_0\colon\pvar\rightarrow 2^E$\kern
+-2pt,
 we define $\nsem{\phi}\in
 2^E$ inductively:
 \begin{align*}
@@ -456,9 +458,9 @@ we define $\nsem{\phi}\in
  \bigcup_{\mathcal Z\in 2^\sPi} \nsem{\phi[\mathcal Z/X]}\enspace.
 \end{align*}
 Using this, we define $\sem \phi=\nsem{\phi}\rightarrow\bbot$.
-% We have an equality
-% $\nsem{\phi\limp\psi} = \{(t\cdot\pi, e_0\conc e_1)\mid
-% (t,e_0)\in\sem\phi\text{ and }(\pi,e_1)\in\nsem\psi\}$.
+We have an equality
+$\nsem{\phi\limp\psi} = \{(t\cdot\pi, e_0\conc e_1)\mid
+(t,e_0)\in\sem\phi\text{ and }(\pi,e_1)\in\nsem\psi\}$.
 Moreover, for types~$\phi$ and $\psi$, we define $\sempair{\phi,\psi}$
 as the set of triples $(t,u,e)$ of s-terms $t$ and $u$ and an s-executable~$e$
 such
@@ -474,7 +476,7 @@ and $(\sigma,e_1)\in\nsem\psi$.
 \end{proposition}
 \begin{proof}
  Take any $(t\cdot\sigma,e_{0}\conc e_{1})\in\nsem{\phi\limp\psi}$
- and $(u\cdot\pi,f_{0}\conc f_{1})\in\nsem{\psi\limp\phi}$ so that
+ and $(u\cdot\pi,f_{0}\conc f_{1})\in\nsem{\psi\limp\phi}$ such that
  $(t, e_{0})\in\sem{\phi}$, $(\sigma,e_{1})\in\nsem{\psi}$,
  $(u, f_{0})\in\sem{\psi}$ and $(\pi,f_{1})\in\nsem{\phi}$ hold.
  We claim that $e=[\comodL,t\cdot\sigma\conc\comodR,u\cdot\pi\conc
@@ -489,7 +491,7 @@ and $(\sigma,e_1)\in\nsem\psi$.
  $[t,\pi\conc e_{0}\conc f_{1}]$ and
  $[u,\sigma\conc e_{1}\conc f_{0}]$ are in $\bbot$.
  Since $\bbot$ is closed for $\sred^{-1}$,
- we have $e\in\bbot$.
+ we have $e\in\bbot$.\qed
 \end{proof}
 
 % 2d the adequacy lemma
@@ -497,7 +499,7 @@ For $\G = \tj{x_1}{\phi_1},\ldots,\tj{x_n}{\phi_n}$,
 we denote by $\sem{\G}$ the set of pairs $(\vec t,e)$ where
 $\vec{t} = (t_1,\dots,t_n)$, $e = \bigparallel_{1\le i\le n} e_i$
  and each pair~$(t_i, e_i)$ is in $\sem{\phi_i}$.
-For such tuple, $[\vec{t}/\G]$ denotes the simultaneous substitution
+For that $\vec t$, $[\vec{t}/\G]$ denotes the simultaneous substitution
 $[t_i/x_i]_{0\le i \le n}$.
 For a hypersequent, we
 define a set of s-executables
@@ -508,7 +510,7 @@ to be the set of executables of the form $\bigparallel_{0\le i\le
 n}\left(t_i[\vec{g_i}/\G_i],\pi_i\conc e_i\conc f_i\right)$ where
 $(\vec{g_i},e_i) \in \sem{\G_i}$ and $(\pi_i,f_i)\in \nsem{\phi_i}$.
 
-Here we state adequacy.  What we want is statement~\ref{c:first}.
+Here we state adequacy.  What we will use later is statement~\ref{c:first}.
 However, when we try to prove \ref{c:first} by induction on derivations,
 the case for Com rule fails.  Thus we deal with two derivations at the
 same time.
@@ -518,11 +520,11 @@ same time.
  Let hypersequents $\mathcal H$ and $\mathcal I$ be derivable.
  We state:
  \begin{enumerate}[label=(\arabic{*}), ref=\textit{(\arabic{*})}]
-  \item \label{c:first} the s-executable
+  \item \label{c:first} any s-executable in
 	$
-	e_H\in\semo{\mathcal H}
+	\semo{\mathcal H}
 	$
-	is in $\bbot$; and
+	is also in $\bbot$; and
   \item \label{c:second}
 	when $\mathcal H$ and $\mathcal I$ are respectively
 	equal to $\hat{\mathcal H}\hmid\tj x\theta, \hat\G\tr \tj{t}\phi$
@@ -1149,7 +1151,7 @@ same time.
        by $\nsem{\phi[\psi/X]}\subset \nsem{\forall
        X\phi}$.
    \item[(Other cases)]
-	We can swap $t$ and $u$ and find a symmetric case above.
+	We can swap $t$ and $u$ and find a symmetric case above.\qed
  \end{description}
  \end{proof}
 Note that \ref{c:first} uses \ref{c:second} in (Com,~\textminus)
@@ -1158,9 +1160,9 @@ and \ref{c:second} uses \ref{c:first} in ($\limp$E,~\textminus) and
 
 \begin{proposition}
  \label{prop:exec-on-pole}
- The following set is a pole: the set of s-executables that reduces to
- an s-executable containing an element of a fixed subset of
- $\sLambda\times \sPi$.
+ Given a set~$P$ of processes,
+ the following set is a pole: the set of s-executables that reduces to
+ an s-executable containing an element of $P$.
 \end{proposition}
 
 \begin{proposition}[Prelinearity as Communication Scheme]
@@ -1182,13 +1184,13 @@ and \ref{c:second} uses \ref{c:first} in ($\limp$E,~\textminus) and
  $\mats{z}{z}{x\cdot\pi_Y}{w}{w}{y\cdot\pi_X}$ is in $\nsem{(X\limp
  Y)\oplus (Y\limp X)}$.
  By adequacy (Thm.~\ref{c:adequacy}), $\left(g,
- \mats{z}{z}{x\cdot\pi_Y}{w}{w}{y\cdot\pi_X}\right)$ is in $\bbot$.
+ \mats{z}{z}{x\cdot\pi_Y}{w}{w}{y\cdot\pi_X}\right)$ is in $\bbot$.\qed
 \end{proof}
 
 \begin{example}
  \label{spec-ex}
  Since $g = (\inl{\comodL}\conc\inr{\comodR})$ has the type
- $\forall X\forall Y((X\limp Y)\oplus (Y\limp X))$ (Example~\ref{ex:prelin-term}),
+ $\forall X\forall Y((X\limp Y)\oplus (Y\limp X))$ (Fig.~\ref{fig:prelin-term}),
  $g$ satisfies the condition of Prop.~\ref{spec:prelin}.
  Indeed, by (dist),
  $\left(g, \mats{z}{z}{x\cdot\pi_Y}{w}{w}{y\cdot\pi_X}\right)$
@@ -1238,7 +1240,7 @@ In this section we give another operational semantics involving
 asynchronous shared memory communication, which is similar to \citet{hiraiflops2012}.
 An a-term\index{term!a-term} (asynchronous term)~$t$ is an s-term or
 $\reader c$.
-The definition of a-stacks are not changed from that of s-stacks except
+The definition of a-stacks is not changed from that of s-stacks except
 that the s-terms in the definition are replaced by a-terms.
 We write the set of a-terms as $\aLambda$ and a-stacks~$\aPi$.
 A store\index{store} maps a location to an a-term, $\bot$ or $\top$.
@@ -1302,7 +1304,7 @@ that satisfy:
 	    \emptyset,S[c\mapsto \top]
 	    $
 	    \enspace; and
- \item[(local)] If $e_0, S_0\ared'e_1, S_1$ then $e_0, S_0\ared e_1,
+ \item[(local-global)] If $e_0, S_0\ared'e_1, S_1$ then $e_0, S_0\ared e_1,
       S_1$\enspace; and
  \item[(dist)]
 	    $[(t\conc u),\pi\conc e],S   \ared' [t,\pi\conc u,\pi\conc
@@ -1316,7 +1318,7 @@ example~\citep[B.1]{girard1989proofs}.
 Suppose $\tr\tj t\phi$ and $\tr\tj u\phi$ are both derivable.
 Then,
 $\tr\tj{(\comod c{\co c})t\conc(\comod {\co c} c)u}\phi$ is derivable.
-However $[((\comod c{\co c})t\conc (\comod{\co c} c)u),
+From there $[((\comod c{\co c})t\conc (\comod{\co c} c)u),
 \pi],S_\epsilon$
 can reduce both to $[t,\pi], S_\epsilon$
 and to $[u,\pi], S_\epsilon$ (Fig.~\ref{fig:lafont}).
@@ -1343,7 +1345,7 @@ and to $[u,\pi], S_\epsilon$ (Fig.~\ref{fig:lafont}).
   \end{align*}
  \end{subfigure}
  \caption[A non-confluent example similar to Lafont's example.]
- {A non-confluent example similar to Lafont's example.  Both sides start
+ {A non-confluent example similar to Lafont's example~\citep[B.1]{girard1989proofs}.  Both sides start
  from the same configuration but reduce to different configurations.
  Moreover, since terms $t$ and $u$ can be taken arbitrarily, if we
  equate the terms related by $\ared$, we have to conclude that arbitrary
@@ -1356,8 +1358,8 @@ and to $[u,\pi], S_\epsilon$ (Fig.~\ref{fig:lafont}).
  If $e\sred e'$ then $e, S_\epsilon \ared e', S_\epsilon$.
 \end{proposition}
 \begin{proof}
- Most reductions rules are common.  Rules (com0) and (com1) are
- simulated in Fig.~\ref{fig:lafont}.  (com2) can be simulated similarly.
+ Most reduction rules are common.  Rules (com0) and (com1) are
+ simulated in Fig.~\ref{fig:lafont}.  Rule (com2) can be simulated similarly.\qed
 \end{proof}
 This transfers the semantics of prelinearity (Prop.~\ref{spec:prelin}) to the asynchronous case.
 
@@ -1444,13 +1446,13 @@ As an axiomatization of MTL, we take a hypersequent formulation of
   \DisplayProof \ruleskip
   \aseq{\mathcal H\hmid\G,\phi}{\chi}
   \aseq{\mathcal H\hmid\G,\psi}{\chi}
-  \LL{($\vee$, l)}
-  \bseq{\mathcal H\hmid\G,\phi\lor\psi}{\chi}
+  \LL{($\oplus$, l)}
+  \bseq{\mathcal H\hmid\G,\phi\oplus\psi}{\chi}
   \DisplayProof
   \hfill
   \aseq{\mathcal H\hmid \G}{\phi_i}
-  \LL{($\vee$, r)}
-  \useq{\mathcal H\hmid \G}{\phi_0\lor \phi_1}
+  \LL{($\oplus$, r)}
+  \useq{\mathcal H\hmid \G}{\phi_0\oplus \phi_1}
   \DisplayProof
 
   \caption[The propositional rules in $\HLBCK$~\citep{baaz2004analytic}, which
@@ -1458,15 +1460,14 @@ As an axiomatization of MTL, we take a hypersequent formulation of
   {The propositional rules in $\HLBCK$~\citep{baaz2004analytic}, which
   characterizes monoidal t-norm logic.  Axioms are not shown in
   \citet{baaz2004analytic} so we took them from \citet{ono-komori-1985}.
+  Exchange rules  are implicit.
   The (cut) rule is eliminatable by
   \citet[Thm.~3.2]{baaz2004analytic}.}
   \label{fig:hlbck}
  \end{figure}
 
-We give a translation from MTL formulae to MTL2 formulae by the
-outer
-induction on the number of $\wedge$ occurrences in $\phi$
-and the inner induction on $\phi$:
+We translate MTL formulae to MTL2 formulae by
+induction on $\phi$:
 \begin{align*}
  \bar{0}^\bullet &= \forall XX \nonumber\\
  X^\bullet &= X \nonumber\\
@@ -1482,12 +1483,11 @@ We state that any MTL formula~$\phi$ is a theorem in $\HLBCK$ iff
  the translation $(\cdot)^\bullet$ to sequents and hypersequents.
  We define $(\G\tr\phi)^\bullet$ to be $\G^\bullet\supset\phi^\bullet$
  where
- $\G^\bullet$ is the conjunction (by $\otimes$) of translations of the
+ $\G^\bullet$ is the $\otimes$-conjunction of translations of the
  elements of $\G$.
  We define
  $\left(\G_0\tr\phi_0\hmid\cdots\hmid\G_n\tr\phi_n\right)^\bullet$ to be
  $(\G_0\tr\phi_0)^\bullet\hmid\cdots \hmid (\G_n\tr\phi_n)^\bullet$.
-
 A substitution instance of an MTL2 formula~$\phi$ is an MTL formula obtained by
 substituting an MTL formula for each bound propositional variable in $\phi$.
  \begin{proposition}
@@ -1496,7 +1496,7 @@ substituting an MTL formula for each bound propositional variable in $\phi$.
   of the hypersequent are derivable in $\HLBCK$.
  \end{proposition}
   \begin{proof}
-   By induction on derivations.
+   By induction on derivations.\qed
   \end{proof}
 
  \begin{proposition}[Soundness]
@@ -1522,7 +1522,7 @@ substituting an MTL formula for each bound propositional variable in $\phi$.
    is shown in \citep[Lem.~6.5]{Cintula200740}.  Assume $\phi^\bullet$
    is provable in $\NMTL$.  By the first claim and Prop.~\ref{prop:sound-ind},
    $\phi^\circ$ is provable in $\HLBCK$.  By the second claim, $\phi$ is
-   provable in $\HLBCK$.
+   provable in $\HLBCK$.\qed
   \end{proof}
 
 \begin{proposition}[Completeness]
@@ -1535,7 +1535,7 @@ substituting an MTL formula for each bound propositional variable in $\phi$.
  By induction on derivations of the cut-free fragment of $\HLBCK$.
  All cases are straightforward.  For branching rules, we have to apply
  the (EC) rule because in $\HLBCK$, the components in a hypersequent is distributed
- additively while in $\NMTL$ multiplicatively.
+ additively while in $\NMTL$ multiplicatively.\qed
 \end{proof}
 
 \section{Discussion and Future Work}
@@ -1546,11 +1546,23 @@ reductions, where terms are passed from processes to different
 processes.
 In \citet{danos-krivine}, the only reduction rule involving multiple
 processes is (dist), spawning processes which never communicate.
-We share their purpose
+Sharing their purpose
 ``interpretation of logical rules as programming
-instructions''~\citep{danos-krivine}.
-We continue to seek generalization over substructural
+instructions''~\citep{danos-krivine},
+we continue to seek generalization over substructural
 logics.
+
+There are recent
+developments~\citep{pfenning2010,wadler2012propositions} over
+Curry--Howard correspondence between
+the linear logic and process
+calculi.
+Since their type systems do not incorporate the prelinearity axiom
+(without using modalities $!$ or $?$),
+we conjecture that we can extend their type systems and their process
+calculi
+with the prelinearity
+axiom using the same kind of communication facilities as we used in this paper.
 
 % \subsection{Unintended Weakening}
 
