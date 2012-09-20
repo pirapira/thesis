@@ -21,57 +21,65 @@
 
 \subsection{Summary}
 %%% abstract
-\citet{danos-krivine} investigate
-the computational semantics of disjunctive tautologies
-such as the excluded middle and the symmetric excluded middle.
-They state that those tautologies are synchronization schemes.
+\citet{danos-krivine} state that
+disjunctive tautologies
+such as the excluded middle and the symmetric excluded middle
+are the types of synchronization schemes.
 Indeed in their formalism, reduction of one term can wait
 for another, making synchronization.
 However,
 one can find no communication among different
-concurrent elements in an executable.
+concurrent elements of an executable.
 In the current paper, we show that logical axioms can specify how
 concurrent processes exchange information asynchronously.
 
-We observe the computational behavior of prelinearity axiom
+We investigate the computational behavior of the prelinearity axiom
 $(\phi\limp\psi)\oplus(\psi\limp\phi)$ and left weakening
 on top of IMALL2, which is the fragment of second order
 intuitionistic linear logic with connectives $\{\forall, \limp,
-\oplus\}$.  In other words, our type system is based on a second-order
-monoidan t-norm logic \fix{cite something}.
+\oplus\}$.  In other words, our type system is based on the second-order
+monoidal t-norm logic (MTL)~\citep{Esteva2001271}.
 We interpret the disjunction~$\oplus$ in the prelinearity axiom
 nondeterministically: whether
 one process can give information to the other or
 vice versa.
-In Section~\ref{sec:sync}, where processes wait for others,
+In Sect.~\ref{sec:sync}, where processes make synchronization,
 we externally specify such nondeterministic choice.
-In Section~\ref{sec:async}, where processes do not wait for others,
+In Sect.~\ref{sec:async}, where processes do not make synchronization,
 the nondeterminism appears automatically as a slower process cannot pass
 information to a faster one.
-We adapt \citet{danos-krivine}'s realizability argument to our
-synchronous case and give simulation from the
-asynchronous case to the synchronous case.
-
-Our computational semantics here is closely related to
-the hyper-lambda calculus for G\"odel--Dummett logic presented in
-Chapter~\ref{ch:lambda}.
-G\"odel--Dummett logic is axiomatized by Dummett axiom $(\phi\imp\psi)\lor(\psi\imp\phi)$
-on top of intuitionistic logic.  \fix{encode and make a better claim}
-
-Our aim in this chapter is reasoning about asynchronous communication on
-shared memory using parametricity argument.
-However, since processes can write into and read from shared memory,
-a straightforward approach would lead us to solving mixed-variant domain
-equations or using step-index technique.
-Although dealing with general references and parametricity
-is manageable~\citep{birkedal2009relational},
-we choose a simpler, indirect approach.
-First we deal with an operational semantics where communication is made
-synchronously and after that we deal with the original operational
-semantics involving asynchronnous communication using stores.
-Finally, we develop a simulation from the synchronous semantics to the
-asynchronous one, ensuring a reduction sequence in the synchronous
-semantics has a counterpart in the asynchronous semantics.
+% We adapt \citet{danos-krivine}'s realizability argument to our
+% synchronous case and give simulation from the
+% asynchronous case to the synchronous case.
+%
+We also
+develop a simulation from the synchronous semantics to the
+asynchronous one.
+The asynchronous semantics here is closely related to
+the hyper-lambda calculus for G\"odel--Dummett logic presented by
+\citet{hiraiflops2012}.
+% On top of intuitionistic logic,
+% G\"odel--Dummett logic is axiomatized by Dummett axiom
+% $(\phi\imp\psi)\lor(\psi\imp\phi)$, which is similar to the prelinearity axiom.
+%
+% Our aim in this paper is reasoning about asynchronous communication on
+% shared memory using parametricity argument.
+% However, since processes can write into and read from shared memory,
+% a straightforward approach would lead us to solving mixed-variant domain
+% equations or using the step-index technique~\citep{ahmed2006}.
+% Although dealing with general references and parametricity
+% is manageable~\citep{birkedal2009relational},
+% we choose a simpler, indirect approach.
+% In Sect.~\ref{sec:sync} we apply the classical realizability argument to
+% an operational semantics where
+% communication is made
+% synchronously.
+% In Sect.~\ref{sec:async} we deal with the
+% operational
+% semantics involving asynchronnous communication using stores and
+In Sect.~\ref{sec:as-logic}, we compare our type system with MTL.
+In sections~\ref{sec:discuss} and \ref{sec:conclude}, we give discussions
+and our conclusion.
 % \fix{is schedule needed? maybe not.}
 % with schedule, the operational semantics becomes deterministic
 
@@ -79,13 +87,21 @@ semantics has a counterpart in the asynchronous semantics.
 \section{Synchronous Semantics}
 \label{sec:sync}
 
+We apply Danos and Krivine's classical realizability
+argument~\citep{danos-krivine} to a
+lambda calculus involving
+communicating processes.  Although the formulation is similar to
+\citep{danos-krivine}, our formulation allows different processes to
+pass around lambda terms.
+
 \subsection{Dynamics}
 We consider a programming language, which is a modification of
-Danos and Krivine's.
+Danos and Krivine~\citep{danos-krivine}'s.
 We assume a set~$\pvar$ of propositional variables whose cardinality is
 countably infinite.
-We also assume countably infinitely many channels.
-Metavariables $c$ and $d$ run over channels.
+We also assume countably infinitely many channels with involution
+satisfying $\co c\neq c$ and $\co{\co c} = c$.
+Metavariable~$c$ runs over channels.
 An s-term\index{term!s-term} (synchronous term)~$t$ is defined by BNF:
 \begin{align*}
  t::= \,&x
@@ -100,7 +116,8 @@ An s-term\index{term!s-term} (synchronous term)~$t$ is defined by BNF:
  \mid \comod c c
  \mid \abort
 \end{align*}
-where $x$ is a variable and $c$ is a channel.
+where $x$ is a variable and $c$ is a channel.  The variable occurrences
+except in the first clause are binding.
 An s-stack\index{stack!s-stack} (synchronous stack)~$\pi$ is defined by BNF:
 \[
  \pi ::= \epsilon
@@ -109,17 +126,19 @@ An s-stack\index{stack!s-stack} (synchronous stack)~$\pi$ is defined by BNF:
  \enspace.
 \]
 We write the set of s-terms as $\sLambda$ and s-stacks~$\sPi$.
-For an s-terms~$s,t$ and a variable~$x$, $s[t/x]$ denotes the
+For s-terms~$s,t$ and a variable~$x$, $s[t/x]$ denotes the result of
 substitution of $t$ for free $x$'s in $s$.  When more than one
-substitutions are concatenated, e.g. $s[t/x][w/y]$, the substitutions
+substitutions are concatenated, e.g. $s[t/x][t'/y]$, the substitutions
 are applied at the same time not one after another.  When we use this
 kind of simultaneous substitution, we always make sure that the same
 variable $x$ does not appear more than once after the $/$'s,
-e.g.~$s[t/x][w/x]$ never happens.
+e.g.~$s[t/x][t'/x]$ never happens.
 
-An s-executable\index{executable!s-executable} (synchronous executable))
-is a multiset on $\sLambda\times\sPi$.
-We use $\conc$ for delimiting elements in an s-executable.
+A process is an element of $\sLambda\times\sPi$.
+An s-executable\index{executable!s-executable} (synchronous executable)
+is a multiset of processes.
+We ruthlessly use $\conc$ both for delimiting elements in an
+s-executable and for addition of multisets.
 We denote the empty multiset by~$\emptyset$.
 
 % 2a' reduction
@@ -133,7 +152,8 @@ that satisfy:
  \item[(cong)] if
       $e_0         \sred' e_1$
       then
-      $[e_0 \conc e] \sred' [e_1\conc e]$\enspace;
+      $e_0 \conc e \sred' e_1\conc e$\enspace;
+ \item[(abort)] $[\abort,\pi]\sred' \emptyset$ \enspace;
  \item[(push)]
 	    $[(t)u,\pi]      \sred' [t,u\cdot\pi]$      \enspace;
  \item[(store)]
@@ -149,27 +169,29 @@ that satisfy:
  \item[(ansR)]
            $[\inr{w}, \mats xt\pi yu\sigma] \sred' [u[w/y],\sigma] $ \enspace;
  \item[(com0)]
-           $[\comod c{d}, t\cdot\pi\conc \comod{d}c,
+           $[\comod c{\co c}, t\cdot\pi\conc \comod{\co c}c,
            u\cdot\sigma] \sred'
            [u,\pi]$\enspace(if $d\sche c$ but $c\not\sche d$)\enspace;
  \item[(com1)]
-	    $[\comod c{d}, t\cdot\pi\conc \comod{d}c,
+	    $[\comod c{\co c}, t\cdot\pi\conc \comod{\co c}c,
 	    u\cdot\sigma] \sred'
-	    [t,\sigma]$\enspace(if $c\sche d$ but $d\not\sche c$)\enspace; and
+	    [t,\sigma]$\enspace(if $c\sche d$ but $d\not\sche c$)\enspace;
  \item[(com2)]
-	    $[\comod c{d}, t\cdot\pi\conc \comod{d}c,
+	    $[\comod c{\co c}, t\cdot\pi\conc \comod{\co c}c,
 	    u\cdot\sigma] \sred'
 	    [u,\pi\conc t,\sigma]$\enspace(if $c\sche d$ and $d\sche
        c$)\enspace;
- \item[(local)] If $e_0\sred'e_1$ then $e_0\sred e_1$\enspace;
+ \item[(local-global)] If $e_0\sred'e_1$ then $e_0\sred e_1$\enspace; and
  \item[(dist)]
            $[(t\conc u),\pi\conc e]  \sred [(t,\pi)\conc e\conc (u,\pi)\conc
       e]$ \enspace.
 \end{description}
-Rules (cong), (push), (store) and (load) come from
-\citet{danos-krivine}.  (dist) also appears there but we changed it (see
-Discussion).
+We say $e$ reduces to $e'$ when $e\sred e'$ holds.
 Below, we sometimes omit the outermost parentheses (i.e. [ and ]) for multisets.
+Rules (cong), (push), (store) and (load) come from
+\citet{danos-krivine}.  (dist) also appears there but we changed it so
+that the proof for adequacy (Thm.~\ref{c:adequacy}) goes through in the
+case (EC, \textminus).
 
 % I want to write these rules are non-blocking here.
 % but, actually, Danos and Krivines rules are also non-blocking.
@@ -180,16 +202,17 @@ Below, we sometimes omit the outermost parentheses (i.e. [ and ]) for multisets.
 
 \subsection{Statics}
 For a set~$S$,
-$\form(S)$ is the set of formulas~$\phi$:
+$\form(S)$ is the set of $S$-formulas~$\phi$:
 \[
 \phi::= s \mid X \mid \phi\limp\phi\mid \phi\oplus\phi\mid
 \forall X \phi
 \]
-where $s\in S$ and $X\in \pvar$.
+where $s\in S$, $X\in \pvar$. The $X$ in the
+last clause is binding.
 The connective $\forall$ connects stronger than $\oplus$, which is
 stronger than $\limp$.
-Recurring $\limp$,
-$\phi_0\limp\phi_1\limp\cdots\limp\phi_n$ is defined inductively on~$n$
+Repeated $\limp$'s,
+$\phi_0\limp\phi_1\limp\cdots\limp\phi_n$, is defined inductively on~$n$
 as
 $\phi_0\limp(\phi_1\limp\cdots\limp\phi_n)$.
 A type is an element of $\form(\emptyset)$.
@@ -201,17 +224,21 @@ with types where the same variable does not appear more than once.
 When we write a concatenation of contexts $\G,\D$, we assume no variables
 appear in both $\G$ and $\D$.
 A hypersequent\index{hypersequent} is a finite sequence of sequents.
-In a hypersequent, we assume that no variable appears more than once in
+In a hypersequent, we also assume that no variable appears more than once in
 the contexts%
-\footnote{The condition is different from that of
-Chapter~\ref{ch:lambda}.  This is due to different forms of the
-external contraction (EC) rule.}.
+% due to space limitations
+% \footnote{The condition is different from that of
+% \citet{hiraiflops2012}.  This is due to different forms of the
+% external contraction (EC) rule.}%
+.
 
-A derivation\index{derivation} is a tree composed of the derivation
-rules in Figure~\ref{fig:pole-typing}
+An $\NMTL$ derivation\index{derivation} is a tree composed of the derivation
+rules in Fig.~\ref{fig:pole-typing}
 whose top rules are Ax.
-An s-term~$t$ has a type~$\phi$ when $\tr\tj{t}{\phi}$ is derivable.
-
+A hypersequent is derivable in $\NMTL$ when there is an $\NMTL$
+derivation ending at the hypersequent.
+An s-term~$t$ has type~$\phi$ when $\tr\tj{t}{\phi}$ is derivable.
+A type~$\phi$ is provable when there is an s-term~$t$ with type~$\phi$.
 \newcommand{\hyp}[1]{\mathcal{H}#1\hmid}
  \begin{figure}
  \centering
@@ -235,6 +262,11 @@ An s-term~$t$ has a type~$\phi$ when $\tr\tj{t}{\phi}$ is derivable.
 \AxiomC{}
 \LL  {Ax}
 \useq{\xphi}{\xphi}
+\DisplayProof
+  \hfill
+\aseq{\hyp{}\G,\tj{x}{\phi},\tj{y}{\psi},\D}{\tj{t}{\theta}}
+\LL{IE}
+\useq{\hyp{}\G,\tj{y}{\psi},\tj{x}{\phi},\D}{\tj{t}{\theta}}
 \DisplayProof
   \hfill
   \aseq{\hyp{}\G}{\tj t \phi}
@@ -279,7 +311,7 @@ An s-term~$t$ has a type~$\phi$ when $\tr\tj{t}{\phi}$ is derivable.
 \aseq{\hyp{}\G}{\tj t\phi}
 \LL   {$\forall$I}
 \useq{\hyp{}\G}{\tj t{\forall X\phi}}
-\DisplayProof ($\G$ does not contain $X$ freely)
+\DisplayProof (no free $X$ in $\mathcal H$ or $\G$)
 \hfill
 %
 \aseq{\hyp{}\G}{\tj{t}{\forall X\phi}}
@@ -297,37 +329,29 @@ An s-term~$t$ has a type~$\phi$ when $\tr\tj{t}{\phi}$ is derivable.
 \DisplayProof
 \ruleskip
 %
-\aseq{\hyp{}\G,\tj{x}{\phi},\tj{y}{\psi},\D}{\tj{t}{\theta}}
-\LL{IE}
-\useq{\hyp{}\G,\tj{y}{\psi},\tj{x}{\phi},\D}{\tj{t}{\theta}}
-\DisplayProof
-  \caption{Typing derivation rules.}
+  \caption{Typing derivation rules of $\NMTL$.  $\mathcal H$ and
+  $\mathcal H'$ stand for hypersequents.}
   \label{fig:pole-typing}
  \end{figure}
+For example, there is an s-term typed with the prelinearity axiom (Fig.~\ref{fig:prelin-term}).
 
-With these rules, there is an s-term typed with the prelinearity axiom.
- \begin{example}
-  \label{ex:prelin-term}
-  The s-term $(\inl{\comodL}\conc\inr{\comodR})$ has
-  a type $\forall X\forall Y((X\limp Y)\oplus(Y\limp X))$.  The typing
-  derivation is in Figure~\ref{fig:prelin-term}.
- \end{example}
-
- \begin{sidewaysfigure}
- \begin{center}
+ \begin{figure}
+  \centering
   \AxiomC{}
   \LL{Ax}
   \useq{\tj{x}{X\limp Y}}{\tj{x}{X\limp Y}}
-  \LL{$\oplus$I}
-  \useq{\tj{x}{X\limp Y}}{\tj{\inl{x}}{(X\limp Y)\oplus (Y\limp X)}}
   \AxiomC{}
   \LL{Ax}
   \useq{\tj{y}{Y\limp X}}{\tj{y}{Y\limp X}}
-  \LL{$\oplus$I}
-  \useq{\tj{y}{Y\limp X}}{\tj{\inr{y}}{(X\limp Y)\oplus(Y\limp X)}}
   \LL{Com}
-  \bseq{}{\tj{\inl{\comodL}}{(X\limp Y)\oplus(Y\limp
-  X)}\hmid\tr\tj{\inr{y}}{(X\limp Y)\oplus(Y\limp X)}}
+  \bseq{}{\tj{{\comodL}}{X\limp Y}
+  \hmid\tr\tj{{\comodR}}{Y\limp X}}
+  \LL{$\oplus$I}
+  \useq{}{\tj{\inl{\comodL}}{(X\limp Y)\oplus(Y\limp X)}
+  \hmid\tr\tj{\comodR}{Y\limp X}}
+  \LL{$\oplus$I}
+  \useq{}{\tj{\inl{\comodL}}{(X\limp Y)\oplus(Y\limp X)}
+  \hmid\tr\tj{\inr{\comodR}}{(X\limp Y)\oplus(Y\limp X)}}
   \LL{EC}
   \useq{}{\tj{(\inl{\comodL}\conc\inr{\comodR})}{(X\limp Y)\oplus(Y\limp
   X)}}
@@ -338,29 +362,31 @@ With these rules, there is an s-term typed with the prelinearity axiom.
   \useq{}{\tj{(\inl{\comodL}\conc\inr{\comodR})}{
   \forall X\forall Y((X\limp Y)\oplus(Y\limp X))}}
   \DisplayProof
- \end{center}
-  \caption{A derivation tree typing an s-term with the prelinearity axiom.}
+  \caption{A derivation tree typing an s-term with the prelinearity
+  axiom: the s-term $(\inl{\comodL}\conc\inr{\comodR})$ has
+  type $\forall X\forall Y((X\limp Y)\oplus(Y\limp X))$.}
   \label{fig:prelin-term}
- \end{sidewaysfigure}
-
-Note that Com rule introduces a restricted form of weakening on the left
-as in Figure~\ref{fig:weakening}.
- \begin{figure}
-  \centering
-\AxiomC{}
-\useq{\phi\limp\phi}{\phi\limp\phi}
-\aseq{\G}{\phi}
-\bseq{\phi\limp\phi,\G}{\phi}
-\AxiomC{}
-\useq{\phi\limp\phi}{\phi\limp\phi}
-\aseq{\D}{\phi}
-\bseq{\phi\limp\phi,\D}{\phi}
-\bseq{\G,\D}{\phi}
-\DisplayProof
-  \caption{Com rule introduces a restricted form of weakening on the
-  left even without using the weakening rule~(IW) explicitly.  }
-  \label{fig:weakening}
  \end{figure}
+
+%%%%%%% due to space limitation
+% Note that Com rule introduces a restricted form of weakening on the left
+% as in Fig.~\ref{fig:weakening}.
+%  \begin{figure}
+%   \centering
+% \AxiomC{}
+% \useq{\phi\limp\phi}{\phi\limp\phi}
+% \aseq{\G}{\phi}
+% \bseq{\phi\limp\phi,\G}{\phi}
+% \AxiomC{}
+% \useq{\phi\limp\phi}{\phi\limp\phi}
+% \aseq{\D}{\phi}
+% \bseq{\phi\limp\phi,\D}{\phi}
+% \bseq{\G,\D}{\phi}
+% \DisplayProof
+%   \caption{Com rule introduces a restricted form of weakening on the
+%   left even without using the weakening rule~(IW) explicitly.  }
+%   \label{fig:weakening}
+%  \end{figure}
 
 \subsection{Specification Using Poles}
 
@@ -374,21 +400,20 @@ which satisfies
 \begin{enumerate}
  \item \label{red-closed} $e$ is in $\bbot$ if $e\sred e'$ and
        $e'\in\bbot$; and
- \item \label{conc-closed} if $e$ or $f$ is in $\bbot$
-       then $e\conc f\in\bbot$.
+ \item \label{conc-closed} $e\conc f$ is in $\bbot$ if $e$ or $f$ is in $\bbot$.
 \end{enumerate}
 \end{definition}
 In the definition of poles,
-condition~\ref{conc-closed}.~is different from that from \citet{danos-krivine}'s
-definition.
+condition~\ref{conc-closed}.~is different from that of Danos and Krivine's~\citep{danos-krivine}.
 There, the condition says if $e$ \textit{and} $f$ \textit{are} in
-$\bbot$, then $e\conc f$ is in $\bbot$.  Our choice here is influenced
+$\bbot$, then $e\conc f$ is in $\bbot$.  Our disjunctive choice here is influenced
 by hypersequents~\citep{avron91} and hyper-lambda
 calculi~\citep{hiraiflops2012},
 where
 components are interpreted disjunctively.
-We want at least one element of the multiset
-$[t_0,\pi_0\conc \cdots \conc t_n,\pi_n]$ to succeed.
+Computationally,
+we only guarantee that at least one process of an s-executable
+$[t_0,\pi_0\conc \cdots \conc t_n,\pi_n]$ succeeds.
 
 An environment\index{environment} is a pair of an s-stack and an s-executable.
 The set of environments is written as~$E$.
@@ -396,28 +421,27 @@ A program\index{program} is a pair of an s-term and an s-executable.
 For a set~$\mathcal Z$ of environments, $\mathcal Z\rightarrow\bbot$ denotes
 the set of programs $(t,e)$ such that
 for any environment $(\pi,e')\in \mathcal Z$,
-the s-executable $t,\pi\conc e \conc e'$ is in $\bbot$.
-A set $\mathcal X$ of programs is called a truth value
-iff there exists
-such $\mathcal Z$ that $\mathcal X = \mathcal Z\rightarrow \bbot$.
-We define programs and environments because if we continue using
-s-terms and s-stacks, the proof of adequacy (\thref{c:adequacy}) gets
-stuck in the case for
+the s-executable $[t,\pi\conc e \conc e']$ is in $\bbot$.
+We use programs and environments because if we continued using
+s-terms and s-stacks, the proof of adequacy (Thm.~\ref{c:adequacy})
+would fail
+in the case
 ($\limp$E,~\textminus),~\ref{c:second}.
 
-For $\phi\in\form(2^E)$ and $|\cdot|^-_0\colon\pvar\rightarrow 2^E$,
-we define $\nsem{\phi}\colon
-2^E$ inductively on~$\phi$:
+For $\phi\in\form(2^E)$ and $|\cdot|^-_0\colon\pvar\rightarrow 2^E$\kern
+-2pt,
+we define $\nsem{\phi}\in
+2^E$ inductively:
 \begin{align*}
  \nsem{\mathcal Z} =& \mathcal Z \text{ for } \mathcal Z\in 2^E\\
  \nsem{X}=& |X|_0^- \\
  \nsem{\phi\limp\psi}=&
  \{(t\cdot\pi, e_0\conc e_1)\mid
  (t,e_0)\in\nsem\phi\rightarrow\bbot \text{ and }(\pi,e_1)\in\nsem\psi\}\\
- \nsem{\phi\oplus\psi}=& \{(\mats x{t}{\pi}y{u}{\sigma}, f)\mid\\ &
- t[v/x],\pi\conc f\conc f'\in\bbot \text{ for all } (v,f')\in\nsem{\phi}\rightarrow\bbot\text{
+\nsem{\phi\oplus\psi}=& \{(\mats x{t}{\pi}y{u}{\sigma}, f)\mid\\ &
+\,\,\,  t[v/x],\pi\conc f\conc f'\in\bbot \text{ for all } (v,f')\in\nsem{\phi}\rightarrow\bbot\text{
  and }\\ &
- u[w/y],\sigma\conc f\conc f'\in\bbot \text{ for all } (w,f')\in\nsem{\psi}\rightarrow\bbot\}
+\,\,\, u[w/y],\sigma\conc f\conc f'\in\bbot \text{ for all } (w,f')\in\nsem{\psi}\rightarrow\bbot\}
  \\
  \nsem{\forall X\phi}=&
  \bigcup_{\mathcal Z\in 2^\sPi} \nsem{\phi[\mathcal Z/X]}\enspace.
@@ -430,7 +454,7 @@ Moreover, for types~$\phi$ and $\psi$, we define $\sempair{\phi,\psi}$
 as the set of triples $(t,u,e)$ of s-terms $t$ and $u$ and an s-executable~$e$
 such
 that
-$t,\pi\conc u,\sigma\conc e\conc e_0\conc e_1
+$[t,\pi\conc u,\sigma\conc e\conc e_0\conc e_1]
 \in\bbot$ for any $(\pi,e_0)\in\nsem\phi$
 and $(\sigma,e_1)\in\nsem\psi$.
 
@@ -441,45 +465,41 @@ and $(\sigma,e_1)\in\nsem\psi$.
 \end{proposition}
 \begin{proof}
  Take any $(t\cdot\sigma,e_{0}\conc e_{1})\in\nsem{\phi\limp\psi}$
- and $(u\cdot\pi,f_{0}\conc f_{1})\in\nsem{\psi\limp\phi}$ so that
+ and $(u\cdot\pi,f_{0}\conc f_{1})\in\nsem{\psi\limp\phi}$ such that
  $(t, e_{0})\in\sem{\phi}$, $(\sigma,e_{1})\in\nsem{\psi}$,
  $(u, f_{0})\in\sem{\psi}$ and $(\pi,f_{1})\in\nsem{\phi}$ hold.
- We claim that $e=\comodL,t\cdot\sigma\conc\comodR,u\cdot\pi\conc
- e_{0}\conc e_{1}\conc f_{0}\conc f_{1}$ is in
+ We claim that $e=[\comodL,t\cdot\sigma\conc\comodR,u\cdot\pi\conc
+ e_{0}\conc e_{1}\conc f_{0}\conc f_{1}]$ is in
  $\bbot$.
  Depending on the schedule, $e$ might reduce to
- $ t,\pi\conc e_{0}\conc e_{1}\conc f_{0}\conc f_{1}$ and otherwise to
- $ u,\sigma\conc e_{0}\conc e_{1}\conc f_{0}\conc f_{1}$ or
- $ t,\pi\conc u,\sigma\conc e_{0}\conc e_{1}\conc f_{0}\conc f_{1}$,
- all of which are in $\bbot$ because
- $t,\pi\conc e_{0}\conc f_{1}$ and
- $u,\sigma\conc e_{1}\conc f_{0}$ are in $\bbot$.
+ $ [t,\pi\conc e_{0}\conc e_{1}\conc f_{0}\conc f_{1}]$,
+ $ [u,\sigma\conc e_{0}\conc e_{1}\conc f_{0}\conc f_{1}]$ or
+ $ [t,\pi\conc u,\sigma\conc e_{0}\conc e_{1}\conc f_{0}\conc f_{1}]$,
+ all of which are in $\bbot$ by condition~\ref{conc-closed}.~of
+ Def.~\ref{def:pole} because
+ $[t,\pi\conc e_{0}\conc f_{1}]$ and
+ $[u,\sigma\conc e_{1}\conc f_{0}]$ are in $\bbot$.
  Since $\bbot$ is closed for $\sred^{-1}$,
- we have $e\in\bbot$.
+ we have $e\in\bbot$.\qed
 \end{proof}
-
- \begin{proposition}
-  \label{prop:w}
-  \fix{fill looking at KFC note}
- \end{proposition}
 
 % 2d the adequacy lemma
 For $\G = \tj{x_1}{\phi_1},\ldots,\tj{x_n}{\phi_n}$,
 we denote by $\sem{\G}$ the set of pairs $(\vec t,e)$ where
 $\vec{t} = (t_1,\dots,t_n)$, $e = \bigparallel_{1\le i\le n} e_i$
  and each pair~$(t_i, e_i)$ is in $\sem{\phi_i}$.
-For such tuple, $[\vec{t}/\G]$ denotes the simultaneous substitution
-$[t_i/x_i]_{i}$.
+For that $\vec t$, $[\vec{t}/\G]$ denotes the simultaneous substitution
+$[t_i/x_i]_{0\le i \le n}$.
 For a hypersequent, we
 define a set of s-executables
-\[
+$
 \semo{\G_0\tr\tj{t_0}{\phi_0}\hmid\cdots\hmid\G_n\tr\tj{t_n}{\phi_n}}
-\]
+$
 to be the set of executables of the form $\bigparallel_{0\le i\le
 n}\left(t_i[\vec{g_i}/\G_i],\pi_i\conc e_i\conc f_i\right)$ where
 $(\vec{g_i},e_i) \in \sem{\G_i}$ and $(\pi_i,f_i)\in \nsem{\phi_i}$.
 
-Here we state adequacy.  What we want is statement~\ref{c:first}.
+Here we state adequacy.  What we will use later is statement~\ref{c:first}.
 However, when we try to prove \ref{c:first} by induction on derivations,
 the case for Com rule fails.  Thus we deal with two derivations at the
 same time.
@@ -487,13 +507,13 @@ same time.
 \begin{theorem}[Adequacy]
  \label{c:adequacy}
  Let hypersequents $\mathcal H$ and $\mathcal I$ be derivable.
- We state that:
+ We state:
  \begin{enumerate}[label=(\arabic{*}), ref=\textit{(\arabic{*})}]
-  \item \label{c:first} the s-executable
+  \item \label{c:first} any s-executable in
 	$
-	e_H\in\semo{H}
+	\semo{\mathcal H}
 	$
-	is in $\bbot$; and that
+	is also in $\bbot$; and
   \item \label{c:second}
 	when $\mathcal H$ and $\mathcal I$ are respectively
 	equal to $\hat{\mathcal H}\hmid\tj x\theta, \hat\G\tr \tj{t}\phi$
@@ -507,7 +527,7 @@ same time.
 	e_{\hat{\mathcal I}}
 	\right)
 	\]
-	for any
+	given
 	$\eH \in \semo{\hatma H}$,
 	$\eI \in \semo{\hatma I}$,
 	$(v,w,e')\in\sempair{\theta,\tau}$,
@@ -524,7 +544,7 @@ same time.
        the statements follow from the definitions of $\sem{\phi}$ and
        $\sempair{\phi,\psi}$.
    \item[(IW, \textminus)]
-	The derication for $t$ ends as
+	The derivation for $t$ ends as
 	\[
 	 \aseq{\hyp'\G'}{\tj{t}{\phi}}
 	\LL{W}
@@ -533,15 +553,17 @@ same time.
 	\]
 	\begin{enumerate}[label=\textit{(\arabic{*})}]
 	 \item Take any
-	       $\takehyper{\mathcal H}$,
-	       $(\vec{g'}, e'')\in\sem{\G'}$ and $(\hat t,\hat
+	       $\takehyper{\mathcal{H'}}$,
+	       $(\vec{g'}, e)\in\sem{\G'}$ and $(\hat t,\hat
 	       e)\in\sem{\hat\phi}$.
-	       The term in question $t[\hat t/\hat x][\vec{g'}/\G']$ is
+	       Since $\hat x$ does not appear freely in $t$,
+	       the term in question $t[\hat t/\hat x][\vec{g'}/\G']$ is
 	       equal to $t[\vec{g'}/\G']$.
 	       By induction hypothesis~\ref{c:first},
-	       $(t[\vec{g'}/\G'],e''\conc e_{\mathcal H})$ is in $\sem{\phi}$.
-	       By \thref{prop:w}, $(t[\hat t/\hat x][\vec{g'}/\G'],
-	       e''\conc \hat e\conc e_{\mathcal H})$ is also in $\sem{\phi}$.
+	       $(t[\vec{g'}/\G'],e\conc e_{\mathcal H'})$ is in $\sem{\phi}$.
+	       By condition~\ref{conc-closed}.~of Def.~\ref{def:pole},
+	       the program in question $(t[\hat t/\hat x][\vec{g'}/\G'],
+	       e\conc \hat e\conc e_{\mathcal H'})$ is also in $\sem{\phi}$.
 	 \item
 	       When $x$ and $\hat x$ are different, we can do the same
 	      as for \ref{c:first}.
@@ -564,13 +586,14 @@ same time.
 	      \]
 	      By induction hypothesis~\ref{c:first},
 	      $
-	       t[\vec g/\hat \G],\pi\conc e\conc e''\conc e_{\hatma H}
+	       [t[\vec g/\hat \G],\pi\conc e\conc e''\conc e_{\hatma H}]
 	      $
 	      is in $\bbot$.  Moreover, since $\hat x$ does not appear
-	      in $t$,  $t[v/\hat x][\vec g/\hat \G],\pi\conc e\conc
-	      e''\conc e_{\hatma H}$
-	      is in $\bbot$.  By condition~\ref{conc-closed} of the
-	      definition of poles, $\bar e$ is also in $\bbot$.
+	      in $t$,  $[t[v/\hat x][\vec g/\hat \G],\pi\conc e\conc
+	      e''\conc e_{\hatma H}]$
+	      is in $\bbot$.  By condition~\ref{conc-closed}.~of
+	      Def.~\ref{def:pole},
+	      $\bar e$ is also in $\bbot$.
 	\end{enumerate}
    \item[(EW, \textminus)]
 	\begin{enumerate}[label=\textit{(\arabic{*})}]
@@ -580,7 +603,32 @@ same time.
 	       in (W, \textminus), \ref{c:second}.
 	\end{enumerate}
    \item[(EC, \textminus)]
-	\fix{fill a bit complicated}
+	The derivation for $t$ ends as
+	\[
+	 \aseq{\hyp'}{\tj{t_0}{\phi}\hmid \tr\tj{t_1}{\phi}}
+	\useq{\hyp'}{\tj{(t_0\conc t_1)}{\phi}}
+	\DisplayProof\enspace.
+	\]
+	\begin{enumerate}[label=\textit{(\arabic{*})}]
+	 \item Take any $e_{\mathcal H'}\in \semo{\mathcal H'}$ and
+	       $(\pi,f)\in\nsem{\phi}$.
+	       We have to show that this executable is in $\bbot$:
+	       \[
+	       [e_{\mathcal H'}\conc (t_0\conc t_1), \pi\conc f]\enspace.
+	       \]
+	       By (dist), this executable reduces to
+	       \[
+	       [e_{\mathcal H'}\conc e_{\mathcal H'}\conc
+	       t_0,\pi \conc t_1, \pi\conc f\conc f]\enspace,
+	       \]
+	       which is in $\bbot$ because, by induction hypothesis, the
+	       following executable is in $\bbot$:
+	       \[
+	       [e_{\mathcal H'}\conc
+	       (t_0\conc t_1), \pi\conc f\conc f]\enspace.
+	       \]
+	 \item Similar to \ref{c:first}.
+	\end{enumerate}
    \item[($\limp$I, \textminus)]
 	The derivation for $t$ ends as
 	\[
@@ -603,12 +651,13 @@ same time.
 	       t_0\cdot\pi\conc e\conc e_0\conc e_1\conc e_{\mathcal
 	       H'}\enspace.
 	       \]
-	       The s-executable reduces to
+	       By (store) and (cong), the s-executable reduces to
 	       \[
 		t_1[\ast_{t_0}/\hat x][\vec{g}/\G],\pi\conc{e}\conc
 	       e_0\conc{e_1}\conc e_{\mathcal H'}\enspace.
 	       \]
-	       We have $(\ast_{t_0}, e_0)\in\sem{\phi_0}$ so, by
+	       By (load),
+	       we have $(\ast_{t_0}, e_0)\in\sem{\phi_0}$ so, by
 	       induction hypothesis~\ref{c:first},
 	       the reduct is in $\bbot$.
 	       Since $\bbot$ is closed for $\rev\sred$, the original
@@ -662,13 +711,13 @@ same time.
 		((t_0)t_1)[\vec{g_0}/\G_0][\vec{g_1}/\G_1],\pi\conc
 	       {e_0}\conc {e_1}\conc e''\conc \eHz\conc \eHo.
 	       \]
-	       By (push), this s-executable reduces to
+	       By (push) and (cong), this s-executable reduces to
 	       \[
 		t_0[\vec{g_0}/\G_0], t_1[\vec{g_1}/\G_1]\cdot \pi
 	       \conc {e_0}\conc {e_1}\conc e''\conc \eHz\conc \eHo.
 	       \]
 	       By induction hypothesis~\ref{c:first} on both branches,
-	       we have $(t_0[\vec{g_0/\G_0}],
+	       we have $(t_0[\vec{g_0}/\G_0],
 	       {e_0\conc \eHz})\in\sem{\phi'\limp\phi}$
 	       and
 	       $(t_1[\vec{g_1}/\G_1],{e_1\conc \eHo})\in\sem{\phi'}$.
@@ -683,11 +732,11 @@ same time.
 	       In the last two cases, the proof is similar to that of
 	       \ref{c:first}.
 	       \begin{description}
-		\item[(case $\G_0 = \tj{x}{\sigma},\hat\G_0$)]
+		\item[(case $\G_0 = \tj{x}{\theta},\hat\G_0$)]
 		     Take any
 		     $\eHz\in\semo{\mathcal H_0}$,
 		     $\eHo\in\semo{\mathcal H_1}$,
-		     $(v,w,e')\in\sempair{\sigma,\tau}$,
+		     $(v,w,e')\in\sempair{\theta,\tau}$,
 		     $(\vec{g_0},{e_0})\in\sem{\hat\G_0}$,
 		     $(\vec{g_1},{e_1})\in\sem{\G_1}$,
 		     $(\vec{d},{f})\in\sem{\hat\D}$,
@@ -714,19 +763,19 @@ same time.
 		     By induction hypothesis~\ref{c:first},
 		     $(t_1[\vec{g_1}/\G_1],{e_1\conc \eHo})$ is in $\sem{\phi'}$.
 		     In addition to this, $(\pi,e'')$ is in $\nsem{\phi}$,
-		     making $(t_1[\vec{g_1}/\G_1], {e_1\conc \eHo}\conc e'')$ in
-		     $\sem{\phi'\limp\phi}$.
+		     making $(t_1[\vec{g_1}/\G_1]\cdot\pi, {e_1\conc \eHo}\conc e'')$ in
+		     $\nsem{\phi'\limp\phi}$.
 		     By induction hypothesis~\ref{c:second},
 		     $(t_0[v/x][\vec{g_0}/\hat\G_0], u', \hat e)$ is in
 		     $\sempair{\phi'\limp\phi,\psi}$.
 		     These make the reduct a member of $\bbot$.
 		     Since $\bbot$ is closed for $\rev\sred$, the original
 		     s-executable is also in $\bbot$.
-		\item[(case $\G_1 = \tj{x}{\sigma},\hat\G_1$)]
+		\item[(case $\G_1 = \tj{x}{\theta},\hat\G_1$)]
 		     Take any
 		     $\eHz\in\semo{\mathcal H_0}$,
 		     $\eHo\in\semo{\mathcal H_1}$,
-		     $(v,w,e')\in\sempair{\sigma,\tau}$,
+		     $(v,w,e')\in\sempair{\theta,\tau}$,
 		     $(\vec{g_0},{e_0})\in\sem{\G_0}$,
 		     $(\vec{g_1},{e_1})\in\sem{\hat\G_1}$,
 		     $(\vec{d},{f})\in\sem{\hat\D}$,
@@ -757,7 +806,7 @@ same time.
 		     So, since $(\sigma,f'')$ is in $\nsem{\psi}$,
 		     $(t_1[v/x][\vec{g_1}/\hat\G_1],\hat f)$ is in
 		     $\sem{\phi'}$.
-		     Moreover we had $(\pi,e'')\in\nsem{\phi}$.
+		     Moreover we have $(\pi,e'')\in\nsem{\phi}$.
 		     Combined,
 		     $(t_1[v/x][\vec{g_1}/\hat\G_1]\cdot\pi,\hat f\conc e'')$
 		     is in $\nsem{\phi'\limp\phi}$\kern -1pt.
@@ -769,26 +818,26 @@ same time.
 	       \end{description}
 	\end{enumerate}
    \item[($\oplus$I, \textminus)]
-       Without loss of generality, we can assume that the
+       Without loss of generality, we assume that the
        derivation for $t$ ends as
        \[
-       \aseq{\hyp{}\G}{\tj{t'}{\phi_0}}
-       \useq{\hyp{}\G}{\tj{\inl{t'}}{\phi_0\oplus\phi_1}}
+       \aseq{\hyp{'}\G}{\tj{t'}{\phi_0}}
+       \useq{\hyp{'}\G}{\tj{\inl{t'}}{\phi_0\oplus\phi_1}}
        \DisplayProof\enspace.
        \]
        \begin{enumerate}[label=\textit{(\arabic{*})}]
         \item Take any
-	      $\takehyper{\mathcal H}$
+	      $\takehyper{\mathcal{H}'}$,
 	      $(\vec g, e)\in\sem{\G}$ and
               $(\mats {\hat x}v{\pi_0}{\hat y}w{\pi_1}, e'')$
               in $\nsem{\phi_0\oplus\phi_1}$.
               By induction hypothesis~\ref{c:first},
-              $(t'[\vec g/\G], e\conc e_{\mathcal H})$ is in
+              $(t'[\vec g/\G], e\conc e_{\mathcal H'})$ is in
 	      $\sem{\phi_0}$.
               By definition of $\nsem{\phi_0\oplus\phi_1}$,
               the s-executable
-              $v[t'[\vec g/\G]/\hat x],\pi_0\conc{e\conc e_{\mathcal
-	      H}}\conc e''$
+              $[v[t'[\vec g/\G]/\hat x],\pi_0\conc{e\conc e_{\mathcal
+	      H'}}\conc e'']$
               is in
               $\bbot$.
               Since $\bbot$ is closed for $\rev\sred$,
@@ -799,50 +848,51 @@ same time.
               is also in $\bbot$.
               This shows the statement because we chose an arbitrary
               element of $\nsem{\phi_0\oplus\phi_1}$.
-        \item If $x$ is in $\mathcal H$, the same argument as
-	      \ref{c:first} suffices. Otherwise,
-	     take any
-	      $\takehyper{\mathcal H}$
-	      $(v,w,e')\in\sempair{\theta,\tau}$,
-              $(\vec g, e)\in\sem{\hat\G}$,
-              $(\vec d, f)\in\sem{\hat\D}$,
-              $(\mats{\hat x}{\hat v}{\pi_0}{\hat y}w{\pi_1}, e'')\in
-              \nsem{\phi_0\oplus\phi_1}$ and
-              $(\sigma,f'')\in\nsem{\psi}$.
-              We have to show that the following s-executable is in
-              $\bbot$:
-              \[
-               (\inl t)[v/x][\vec g/\hat\G], \mats{\hat x}{\hat v}{\pi_0}{\hat
-              y}w{\pi_1}\conc
-              u',\sigma\conc
-              \hat e\conc e''\conc f''
-              \]
-              where
-              $u' = u[w/y][\vec d/\hat\D]$ and $\hat e=e'\conc  e\conc
-	      \conc e_{\mathcal H} \conc
-              f$.
-              By (ansL), the s-executable reduces to
-              $\hat v[t'[v/x][\vec g/\hat\G]/\hat x],\pi_0 \conc
-              u',\sigma\conc
-              \hat e\conc e''\conc f''
-              $.
-              By induction hypothesis~\ref{c:second},
-              $(t'[v/x][\vec g/\hat \G], u', \hat e)$ is in
-              $\sempair{\phi_0,\psi}$.
-              So, $(t'[v/x][\vec g/\hat\G], [u',\sigma\conc \hat e\conc
-              f''])$ is in $\sem{\phi_0}$.
-              By definition of $\nsem{\phi_0\oplus\phi_1}$,
-              the reduct is in $\bbot$.
-              Since $\bbot$ is closed for $\rev\sred$,
-              the original s-executable is also in $\bbot$.
+        \item % If $x$ is in $\mathcal H$, the same argument as
+	     %  \ref{c:first} suffices. Otherwise,
+	     % take any
+	     %  $\takehyper{\mathcal H}$
+	     %  $(v,w,e')\in\sempair{\theta,\tau}$,
+             %  $(\vec g, e)\in\sem{\hat\G}$,
+             %  $(\vec d, f)\in\sem{\hat\D}$,
+             %  $(\mats{\hat x}{\hat v}{\pi_0}{\hat y}w{\pi_1}, e'')\in
+             %  \nsem{\phi_0\oplus\phi_1}$ and
+             %  $(\sigma,f'')\in\nsem{\psi}$.
+             %  We have to show that the following s-executable is in
+             %  $\bbot$:
+             %  \[
+             %   (\inl t)[v/x][\vec g/\hat\G], \mats{\hat x}{\hat v}{\pi_0}{\hat
+             %  y}w{\pi_1}\conc
+             %  u',\sigma\conc
+             %  \hat e\conc e''\conc f''
+             %  \]
+             %  where
+             %  $u' = u[w/y][\vec d/\hat\D]$ and $\hat e=e'\conc  e\conc
+	     %  \conc e_{\mathcal H} \conc
+             %  f$.
+             %  By (ansL), the s-executable reduces to
+             %  $\hat v[t'[v/x][\vec g/\hat\G]/\hat x],\pi_0 \conc
+             %  u',\sigma\conc
+             %  \hat e\conc e''\conc f''
+             %  $.
+             %  By induction hypothesis~\ref{c:second},
+             %  $(t'[v/x][\vec g/\hat \G], u', \hat e)$ is in
+             %  $\sempair{\phi_0,\psi}$.
+             %  So, $(t'[v/x][\vec g/\hat\G], [u',\sigma\conc \hat e\conc
+             %  f''])$ is in $\sem{\phi_0}$.
+             %  By definition of $\nsem{\phi_0\oplus\phi_1}$,
+             %  the reduct is in $\bbot$.
+             %  Since $\bbot$ is closed for $\rev\sred$,
+             %  the original s-executable is also in $\bbot$.
+	      Similar to \ref{c:first}.
        \end{enumerate}
    \item[($\oplus$E, \textminus)]
        The derivation for $t$ ends in
        \[
-       \aseq{\hyp{_0}\G_0}{\tj{t}{\phi_0\oplus\phi_1}}
+       \aseq{\hyp{_0}\G_0}{\tj{t'}{\phi_0\oplus\phi_1}}
        \aseq{\hyp{_1}\G_1,\tj{\hat{x}}{\phi_0}}{\tj{t_0}{\phi}}
        \aseq{\hyp{_1}\G_1,\tj{\hat{y}}{\phi_1}}{\tj{t_1}{\phi}}
-       \tseq{\hyp{_0}\hyp{_1}\G_0,\G_1}{\tj{\mat{t}{\hat x}{t_0}{\hat
+       \tseq{\hyp{_0}\hyp{_1}\G_0,\G_1}{\tj{\mat{t'}{\hat x}{t_0}{\hat
 	y}{t_1}}{\phi}}
        \DisplayProof\enspace.
        \]
@@ -856,28 +906,29 @@ same time.
               $(\pi,e')\in\nsem{\phi}$.
               We have to show that the s-executable
               \[
-              (\mat t{\hat{x}}{t_0}{\hat{y}}{t_1})[\vec{ g_0}/\G_0][\vec{g_1}/\G_1],
+              (\mat {t'}{\hat{x}}{t_0}{\hat{y}}{t_1})[\vec{ g_0}/\G_0][\vec{g_1}/\G_1],
               \pi\conc {e_0\conc \eHz}\conc e'\conc {e_1\conc \eHo}
               \]
               is in $\bbot$.
               By (ask), the s-executable reduces to
               \[
-               t[\vec{g_0}/\G_0],
+               t'[\vec{g_0}/\G_0],
               \mats{\hat{x}}{t_0[\vec{g_1}/\G_1]}{\pi}
-              {\hat{y}}{t_1[\vec{g_1}/\G_1]}{\pi}\conc{e_0\conc \eHz}\conc
+              {\hat{y}}{t_1[\vec{g_1}/\G_1]}{\pi}\conc{e_0\conc \eHz
+              \conc e'}\conc
               {e_1\conc \eHo}\enspace.
               \]
               We claim that
               $(\mats{\hat{x}}{t_0[\vec{g_0/\G_0}]}{\pi}{\hat{y}}{t_1}{\pi},{e_1\conc
               \eHo}\conc
               e')$ is in $\nsem{\phi\oplus\psi}$ and that
-              $(t[\vec{g_0}/\G_0],{e_0\conc \eHz})$ is in $\sem{\phi\oplus\psi}$.  The first
+              $(t'[\vec{g_0}/\G_0],{e_0\conc \eHz})$ is in $\sem{\phi\oplus\psi}$.  The first
               claim is shown by induction hypothesis~\ref{c:first}
               stating that $(t_0[v/\hat{x}][\vec{g_1}/\G_1], {e_1\conc \eHo}\conc
               e'')$ is in $\sem{\phi}$ for any $(v,e'')\in\sem{\phi_0}$
               and similarly to~$t_1$.
               The second claim follows from induction
-              hypothesis~\ref{c:first} on $t$.
+              hypothesis~\ref{c:first} on $t'$.
               By the two claims and by the definition of
               $\sem{\phi\oplus\psi}$,
               we have shown that the reduct is in $\bbot$ and
@@ -892,19 +943,19 @@ same time.
 		    $\eHz\in\semo{\mathcal H_0}$,
 		    $\eHo\in\semo{\mathcal H_1}$,
                     $(v,w,e')\in\sempair{\theta,\tau}$,
-                    $(\vec{g_0},{e_0\conc\eHz})\in\sem{\hat\G_0}$,
-                    $(\vec{g_1},{e_1\conc\eHo})\in\sem{\G_1}$,
+                    $(\vec{g_0},{e_0})\in\sem{\hat\G_0}$,
+                    $(\vec{g_1},{e_1})\in\sem{\G_1}$,
                     $(\vec d, f)\in\sem{\hat\D}$,
-                    $(\pi,e')\in\nsem{\phi}$ and
-                    $(\sigma,f')\in\nsem\psi$.
+                    $(\pi,e'')\in\nsem{\phi}$ and
+                    $(\sigma,f'')\in\nsem\psi$.
                     We have to show that the following s-executable is in
                     $\bbot$:
                     \begin{eqnarray*}
                     (\mat{t'}{\hat x}{t_0}{\hat
                     y}{t_1})[v/x][\vec{g_0}/\hat\G_0][\vec{g_1}/\G_1],\pi\conc\\
                     u[w/y][\vec d/\hat\D],\sigma\conc e'\conc
-                    {e_0\conc \eHz}\conc {e_1\conc \eHo}\conc  f\conc e'\conc
-                    f'.
+                    {e_0\conc \eHz}\conc {e_1\conc \eHo}\conc  f\conc e''\conc
+                    f''.
                     \end{eqnarray*}
                     By (ask) and (cong), this s-executable reduces to
                     \begin{eqnarray*}
@@ -912,8 +963,8 @@ same time.
                      \mats{\hat x}{t_0[\vec{g_1}/\G_1]}{\pi}{\hat y}{t_1[\vec{g_1}/\G_1]}{\pi}
                      \conc\\
                     u[w/y][\vec d/\hat\D],\sigma\conc e'\conc
-                    {e_0\conc \eHz}\conc {e_1\conc \eHo}\conc  f\conc e'\conc
-                    f'\enspace.
+                    {e_0\conc \eHz}\conc {e_1\conc \eHo}\conc  f\conc e''\conc
+                    f''\enspace.
                     \end{eqnarray*}
                     By induction hypothesis~\ref{c:second},
                     we have
@@ -921,7 +972,7 @@ same time.
                     (t'[v/x][\vec{g_0}/\hat\G_0], u[w/y][\vec d/\hat\D],
                     e'\conc {e_0\conc \eHz}\conc f) \in\sempair{\phi_0\oplus\phi_1,\psi}\enspace.
                     \]
-                    Also, we defined $(\sigma,f')$ to be an element of
+                    Also, we defined $(\sigma,f'')$ to be an element of
                     $\nsem\psi$.
                     By definition of $\sempair{\phi_0\oplus\phi_1,\psi}$,
                     the reduct is in $\bbot$.  Since $\bbot$ is closed for
@@ -935,51 +986,53 @@ same time.
                     $(\vec{g_0},{e_0})\in\sem{\G_0}$,
                     $(\vec{g_1},{e_1})\in\sem{\hat\G_1}$,
                     $(\vec{d},{f})\in\sem{\hat\D}$,
-                    $(\pi,e')\in\nsem{\phi}$ and
-                    $(\sigma,f')\in\nsem{\psi}$.
+                    $(\pi,e'')\in\nsem{\phi}$ and
+                    $(\sigma,f'')\in\nsem{\psi}$.
                     We have to show that the following s-executable is in
                     $\bbot$:
                     \begin{eqnarray*}
                      (\mat{t'}{\hat x}{t_0}{\hat
                       y}{t_1})[\vec{g_0}/\G_0][v/x][\vec{g_1}/\G_1],\pi\conc \\
                      u[w/y][\vec d/\hat\D],\sigma\conc e'\conc
-                      {e_0\conc \eHz}\conc {e_1\conc \eHo}\conc f\conc e'\conc f'\enspace.
+                      {e_0\conc \eHz}\conc {e_1\conc \eHo}\conc f\conc e''\conc f''\enspace.
                     \end{eqnarray*}
                     By (ask) and (cong), this s-executable reduces to
                     \begin{align*}
                      e_{\mathrm r} =&
                       t'[\vec{g_0}/\G_0],
                       \mats{\hat x}
-                      {(t_0[x/v][\vec{g_1}/\G_1])}{\pi}{\hat y}
-                      {t_1[x/v][\vec{g_1}/\G_1]}{\pi}\conc \\
+                      {t_0'}{\pi}{\hat y}
+                      {t_1'}{\pi}\conc \\
                      &u[w/y][\vec d/\hat\D],\sigma\conc e'\conc
-                      {e_0\conc \eHz}\conc {e_1\conc \eHo}\conc  f\conc e'\conc f'\enspace.
+                      {e_0\conc \eHz}\conc {e_1\conc \eHo}\conc  f\conc e''\conc f''
                     \end{align*}
-                    By induction hypothesis~\ref{c:second}, for any
-                    $(v_0',e_0')\in\sem{\phi_0}$,
+		    where $t_0' = t_0[v/x][\vec{g_1}/\G_1]$ and $t_1' =
+		    t_1'[v/x][\vec{g_1}/\G_1]$.
+                    By induction hypothesis~\ref{c:second},
                     the triple
-                    $(t_0[x/v][\vec{g_1}/\G_1][v_0'/\hat x],
+                    $(t_0'[v_0'/\hat x],
                     u[w/y][\vec d/\hat \D], e'\conc {e_1\conc \eHo}\conc
-                    e_0'\conc  f)$ is in $\sempair{\phi,\psi}$ so
+                    e_0'\conc  f)$ is in $\sempair{\phi,\psi}$ for any
+                    $(v_0',e_0')\in\sem{\phi_0}$ so
                     that
-                    $(t_0[x/v][\vec{g_1}/\hat\G_1][v_0'/\hat x],
+                    $(t_0'[v_0'/\hat x],
                     [u[w/y][\vec d/\hat D],\sigma\conc e'\conc
                     {e_1\conc \eHo}\conc e_0'\conc {f}\conc f''])$ is in
                     $\sem\phi$.
                     We have a symmetric fact for $t_1$.
-                    Thus,
+                    Thus, the environment
                     \begin{align*}
-                    (
-                     & \mats{\hat x}
-                      {(t_0[x/v][\vec{g_1}/\G_1])}{\pi}{\hat y}
-                      {t_1[x/v][\vec{g_1}/\G_1]}{\pi}, \\ &
-                     [u[w/y][\vec{d}/\hat\D]\conc e'\conc {e_1\conc \eHo}\conc
-                      f\conc f'']
+                    (&
+                     \mats{\hat x}
+                      {t_0'}{\pi}{\hat y}
+                      {t_1'}{\pi},\\
+                     & [u[w/y][\vec{d}/\hat\D],\sigma\conc e'\conc {e_1\conc \eHo}\conc
+                      f\conc e''\conc f'']
                     )
                     \end{align*}
-                    is in $\nsem{\phi_0\oplus\phi_1}$.
+                    is in $\nsem{\phi_0\oplus\phi_1}$\kern -2pt.
                     By induction hypothesis~\ref{c:first},
-                    $(t[\vec{g_0}/\G_0],{e_0\conc \eHz})$ is in
+                    $(t'[\vec{g_0}/\G_0],{e_0\conc \eHz})$ is in
                     $\sem{\phi_0\oplus\phi_1}$.
                     By definition of $\sem{\phi_0\oplus\phi_1}$,
                     the reduct $e_{\mathrm r}$ is in $\bbot$.
@@ -1003,7 +1056,7 @@ same time.
 	      $\eHo\in\semo{\mathcal H_1}$,
 	      $(\vec{g_0},{e_0})\in\sem{\G_0}$ and
 	      $(\vec{g_1},{e_1})\in\sem{\G_1}$.
-	      By \thref{comod-type}, we have
+	      By Prop.~\ref{comod-type}, we have
 	      $(\comodL,\comodR,\emptyset)\in\sempair{\phi_0\limp\phi_1,\phi_1\limp\phi_0}$.
 	      By induction hypothesis~\ref{c:second}, the s-terms
 	      $t'_0=t_0[\comodL/\hat{x}][\vec{g_0}/\G_0]$ and
@@ -1012,12 +1065,11 @@ same time.
 	      $(t_0',t_1',{e_0\conc \eHz}\conc
 	      {e_1\conc \eHo})\in\sempair{\phi,\phi'}$.
 	\item
-	     \fix{read through to check occurrences}
 	     If $\tj{x}{\theta}$ is in $\mathcal H_0$ or $\mathcal H_1$,
 	     we can apply the same argument as \ref{c:first}.
 	     Otherwise,
 	      without loss of generality,
-	      we can assume $(\tj x\theta)\in\G_0$ so that
+	      we can assume
 	      $\G_0 =\tj x\theta, {\hat\G_0}$ up to exchange.
 	      Take any
 	      $(v,w,e')\in\sempair{\theta,\tau}$,
@@ -1028,35 +1080,32 @@ same time.
 	     $(\pi',e''')\in\nsem{\phi'}$
 	     and
 	     $(\sigma,f'')\in\nsem{\psi}$.
-	     We have to show that this s-executable is in $\bbot$:
+	     After defining $t_0' = t_0[\comodL/\hat
+	     x][\vec{g_0}/\hat\G_0][v/x]$,
+	     $t'_1 = t_1[\comodR/\hat y][\vec{g_1}/\G_1]$ and $u' =
+	     u[w/y][\vec{d}/\hat\D]$,
+	     we have to show that this s-executable is in $\bbot$:
 	     \[
 	      t'_0,\pi\conc t'_1,\pi'\conc u',\sigma\conc e'\conc
 	     {e_0\conc \eHz}\conc {e_1\conc \eHo}\conc{f}\conc e''\conc
 	     e'''\conc f''\enspace.
 	     \]
-	     where $t_0' = t_0[\comodL/\hat
-	     x][\vec{g_0}/\hat\G_0][v/x]$,
-	     $t'_1 = t_1[\comodR/\hat y][\vec{g_1}/\G_1]$ and $u' = u[w/y][\vec{d}/\hat\D]$.
 	     Consider the derivation consisting of an axiom
 	     $\sequent{\tj{\hat x}{\phi_0\limp\phi_1}}
 	     {\tj{\hat x}{\phi_0\limp\phi_1}}$.
-	     This derivation is shorter than the derivation for $u$
-	     unless the derivation for $u$ also consists of a single axiom.
+	     This derivation is shorter than the derivation for
+	     $\mathcal H$.
 	     We can use the induction hypothesis~\ref{c:second} on
-	     this derivation and the derivation of $u$, or, if the
-	     derivation for $u$ also an axiom, we can do the same
-	     argument as in (Ax, Ax) case to prove
-	     statement~\ref{c:second}.
-	     By this, $(\comodL, t_1',{e_1\conc \eHo})$ is in
-	     $\sempair{\phi_0\limp\phi_1,\phi}$
-	     because of \thref{comod-type}.
-	     So, program $p =(\comodL,(t_1',\pi'\conc{e_1\conc \eHo\conc
-	     e''}))$ is in
+	     this derivation and the derivation of $u$.
+	     By this and Prop.~\ref{comod-type}, $(\comodL, t_1',{e_1\conc \eHo})$ is in
+	     $\sempair{\phi_0\limp\phi_1,\phi}$.
+	     So, program $p =(\comodL,[t_1',\pi'\conc{e_1\conc \eHo\conc
+	     e'''}])$ is in
 	     $\sem{\phi_0\limp\phi_1}$.
-	     By induction hypothesis~\ref{c:second} for the derivation
-	     for $t_0$, especially using the program~$p$ for
+	     By induction hypothesis~\ref{c:second} for the derivations
+	     for $t_0$ and $u$, especially using the program~$p$ for
 	     substituting~$\hat x$, we can show that
-	     $(t_0',u',(t_1',\pi'\conc {e_1\conc \eHo\conc e''}\conc {e_0\conc
+	     $(t_0',u',(t_1',\pi'\conc {e_1\conc \eHo\conc e'''}\conc {e_0\conc
 	     \eHz}\conc
 	     e'\conc {f}))$ is in $\sempair{\phi,\psi}$.
 	     Thus, the reduct is in $\bbot$.
@@ -1065,108 +1114,99 @@ same time.
 	\end{enumerate}
   \item[($\forall$I, \textminus)]
        The derivation for $t$ ends in
-       \aseq{\hyp{}\G}{\tj t\phi}
-       \useq{\hyp{}\G}{\tj t{\forall X\phi}}
+       \aseq{\hyp{'}\G}{\tj t\phi}
+       \useq{\hyp{'}\G}{\tj t{\forall X\phi}}
        \DisplayProof.
        \begin{enumerate}[label=\textit{(\arabic{*})}]
 	\item Take any
-	      $\takehyper{\mathcal H}$ and
+	      $\takehyper{\mathcal{H}'}$ and
 	      $(\vec g,{e})\in\sem{\G}$.
 	      Since $\G$ does not contain $X$ freely,
 	      $\sem\G$ does not change whatever
 	      $\nsem{X}_0$ is.
-	      On the other hand, since the induction
+	      By induction
 	      hypothesis~\ref{c:first}
-	      holds for arbitrary $\nsem{X}_0$,
-	      the program $(t[\vec g/\G], e\conc e_{\mathcal H})$ is in
-	      $\bigcap_{\mathcal Z\in 2^\sPi}\sem{\phi[\mathcal Z/X]}$.
-	      Since $(\bigcap_{\mathcal Z\in 2^\sPi}\sem{\phi[\mathcal
-	      Z/X]})\cdot (\bigcup_{\mathcal Z\in
-	      2^\sPi}\nsem{\phi[\mathcal Z/X]})$ is a subset of $\bbot$,
-	      the program is in $\sem{\forall X\phi} = \left(\bigcup_{\mathcal
+	      for arbitrary $\nsem{X}_0$,
+	      the program $(t[\vec g/\G], e\conc e_{\mathcal H'})$ is in
+	      $\bigcap_{\mathcal Z\in 2^\sPi}\sem{\phi[\mathcal Z/X]}$,
+	      which is a subset of $\left(\bigcup_{\mathcal
 	      Z\in 2^\sPi}\nsem{\phi[\mathcal Z/X]}\right) \rightarrow
 	      \bbot$.
-	\item Take any
-	      $\takehyper{\mathcal H}$,
-	      $(v,w,e')\in\sempair{\theta,\tau}$,
-	      $(\vec g, e)   \in\sem{\hat\G}$,
-	      $(\pi,e'')\in\nsem{\forall X\phi}$ and
-	      $(\sigma,f'')\in\nsem{\psi}$.
-	      We can replace $X$ in the derivation of $t$ with
-	      another propositional variable~$X'$ that does not
+	\item We can replace $X$ in the derivation of $t$ with
+	      a propositional variable~$X'$ that does not
 	      occur in the derivation of $u$.
-	      We are going to use the induction hypothesis on the
-	      renamed derivation with the s-terms and s-stacks taken above.
-	      Since $\theta$ and $\hat\G$ do not contain
-	      $X$ freely, we have
-	      $(v,w,e')\in\sem{\theta[X'/X],\tau}$,
-	      $(\vec{g},{e\conc e_{\mathcal H}})\in\sem{\hat\G[X'/X]}$ and $(\pi,e'')\in
-	      \nsem{\forall X'\phi[X'/X]}$.
-	      By induction hypothesis~\ref{c:second}
-	      on the renamed derivation,
-	      the s-terms
-	      $t' = t[v/x][\vec g/\G]$ and
-	      $u' = u[w/y][\vec d/\D]$ satisfy
-	      $(t',u', e\conc  f\conc e_{\mathcal H})\in\sem{\phi[X'/X],\psi'}$ for any $\nsem{X'}_0$.
-	      That is, for $\mathcal Z\in 2^E$ that makes
-	      $(\pi,e'')\in\nsem{\phi[X'/X][\mathcal Z/X']}$ and
-	      $(\sigma,f'')\in\nsem{\psi[\mathcal Z/X']}$,
-	      $t'\pi\conc u',\sigma\conc e''\conc f''$ is in $\bbot$,
-	      making $t',\pi\conc u',\sigma$ an element of
-	      $\bbot$..
+	      The rest is similar to \ref{c:first}.
+	      % We are going to use the induction hypothesis on the
+	      % renamed derivation with the s-terms and s-stacks taken above.
+	      % Since $\theta$ and $\hat\G$ do not contain
+	      % $X$ freely, we have
+	      % $(v,w,e')\in\sem{\theta[X'/X],\tau}$,
+	      % $(\vec{g},{e\conc e_{\mathcal H}})\in\sem{\hat\G[X'/X]}$ and $(\pi,e'')\in
+	      % \nsem{\forall X'\phi[X'/X]}$.
+	      % By induction hypothesis~\ref{c:second}
+	      % on the renamed derivation,
+	      % the s-terms
+	      % $t' = t[v/x][\vec g/\G]$ and
+	      % $u' = u[w/y][\vec d/\D]$ satisfy
+	      % $(t',u', e\conc  f\conc e_{\mathcal H})\in\sem{\phi[X'/X],\psi'}$ for any $\nsem{X'}_0$.
+	      % That is, for $\mathcal Z\in 2^E$ that makes
+	      % $(\pi,e'')\in\nsem{\phi[X'/X][\mathcal Z/X']}$ and
+	      % $(\sigma,f'')\in\nsem{\psi[\mathcal Z/X']}$,
+	      % $t'\pi\conc u',\sigma\conc e''\conc f''$ is in $\bbot$,
+	      % making $t',\pi\conc u',\sigma$ an element of
+	      % $\bbot$..
        \end{enumerate}
   \item[($\forall$E, \textminus)]
-       The derivation for $t$ ends in
-       \aseq{\hyp{}\G}{\tj t{\forall X\phi}}
-       \useq{\hyp{}\G}{\tj t{\phi[\psi/X]}}
-       \DisplayProof.
-       Both statements follow immediately from the induction hypotheses
+       Both statements follow from the induction hypotheses
        because $\nsem{\phi[\psi/X]}$ is a subset of $\nsem{\forall
        X\phi}$.
    \item[(Other cases)]
-	We can swap $t$ and $u$ to find a symmetric case above.
+	We can swap $t$ and $u$ and find a symmetric case above.\qed
  \end{description}
  \end{proof}
-Note that \ref{c:first} uses \ref{c:second} in the (Com,~\textminus)
-case
-and \ref{c:second} uses \ref{c:first} in the cases ($\limp$E,~\textminus) and
-(W,~\textminus).
+Note that \ref{c:first} uses \ref{c:second} in (Com,~\textminus)
+and \ref{c:second} uses \ref{c:first} in ($\limp$E,~\textminus) and
+(IW,~\textminus) in the proof of Thm.~\ref{c:adequacy}.
 
 \begin{proposition}
  \label{prop:exec-on-pole}
- The following set is a pole: the set of s-executables that reduces to
- an s-executable containing an element of a fixed set of s-executables.
+ Given a set~$P$ of processes,
+ the following set is a pole: the set of s-executables that reduces to
+ an s-executable containing an element of $P$.
 \end{proposition}
 
-\begin{proposition}
+\begin{proposition}[Prelinearity as a Communication Scheme]
  \label{spec:prelin}
- Let $\tr\tj{g}{\forall X\forall Y((X\limp Y)\oplus (Y\limp X))}$ be
- derivable.
- Then, $\left(g, \mats{z}{z}{x\cdot\pi_Y}{w}{w}{y\cdot\pi_X}\right)$
+ Let $g$ have type ${\forall X\forall
+ Y((X\limp Y)\oplus (Y\limp X))}$.
+ Then, the s-executable
+ \[
+ [g, \mats{z}{z}{x\cdot\pi_Y}{w}{w}{y\cdot\pi_X}]
+ \]
  reduces to a multiset containing an element of
  $\{(x,\pi_X), (y,\pi_Y)\}$.
 \end{proposition}
 \begin{proof}
  We denote by $\bbot$ the set of s-executables that reduce to a multiset
  containing an element of $\{(x,\pi_X), (y,\pi_Y)\}$.
- By \thref{prop:exec-on-pole}, this is a pole.
+ By Prop.~\ref{prop:exec-on-pole}, $\bbot$ is a pole.
  Take $\nsem{X}_0 = \{(\pi_X,\emptyset)\}$ and
       $\nsem{Y}_0 = \{(\pi_Y,\emptyset)\}$.
  We have $x\in\sem{X}$ and $y\in\sem{Y}$.
  By definition of $\nsem{\cdot}$,
  $\mats{z}{z}{x\cdot\pi_Y}{w}{w}{y\cdot\pi_X}$ is in $\nsem{(X\limp
- Y)\oplus (Y\limp X)}$.
- By adequacy (\thref{c:adequacy}), $\left(g,
- \mats{z}{z}{x\cdot\pi_Y}{w}{w}{y\cdot\pi_X}\right)$ is in $\bbot$.
+ Y)\oplus (Y\limp X)}$\kern -1.5pt.
+ By adequacy (Thm.~\ref{c:adequacy}), $\left[g,
+ \mats{z}{z}{x\cdot\pi_Y}{w}{w}{y\cdot\pi_X}\right]$ is in $\bbot$.\qed
 \end{proof}
 
 \begin{example}
  \label{spec-ex}
  Since $g = (\inl{\comodL}\conc\inr{\comodR})$ has the type
- $\forall X\forall Y((X\limp Y)\oplus (Y\limp X))$ (\thref{ex:prelin-term}),
- this s-term satisfies the condition of \thref{spec:prelin}.
- By (dist),
- $\left(g, \mats{z}{z}{x\cdot\pi_Y}{w}{w}{y\cdot\pi_X}\right)$
+ $\forall X\forall Y((X\limp Y)\oplus (Y\limp X))$ (Fig.~\ref{fig:prelin-term}),
+ $g$ satisfies the condition of Prop.~\ref{spec:prelin}.
+ Indeed, by (dist),
+ $\left[g, \mats{z}{z}{x\cdot\pi_Y}{w}{w}{y\cdot\pi_X}\right]$
  reduces to
  \begin{align*}
   \bigl[& \left(\inl{\comodL},
@@ -1177,8 +1217,6 @@ and \ref{c:second} uses \ref{c:first} in the cases ($\limp$E,~\textminus) and
  $[\comodL, x\cdot\pi_Y\conc \comodR,y\cdot\pi_X]$.
  Depending on the schedule,  the s-term above reduces to either
  $[x,\pi_X]$ or $[y,\pi_Y]$ or $[x,\pi_X\conc y,\pi_Y]$.
- Indeed, $g$ reduces to a multiset containing an element of
- $\{(x,\pi_X), (y,\pi_Y)\}$ as stated by \thref{spec:prelin}.
 \end{example}
 
 % After looking at \thref{spec-ex},
@@ -1189,57 +1227,37 @@ and \ref{c:second} uses \ref{c:first} in the cases ($\limp$E,~\textminus) and
 % produced.
 % \fix{complete this paragraph or abandon it; but it is an important one}
 
-Another important property of an s-executable is
-non-abortfullness
-which states that the s-executable has no reduction sequence leading to
-$\emptyset,S$.
-The name comes from hyper-lambda calculus formulation in~\citep{hiraiflops2012},
-where a s-term sometimes turns into $\mathsf{abort}$ and there the property
-stated that a hyper-term has no reduction sequence leading to a hyper-term
-full of $\mathsf{abort}'s$.
-This property is necessary for s-terms to denote
-constructive content of proofs.
+% Another important property of an s-executable is
+% non-abortfullness
+% which states that the s-executable has no reduction sequence leading to
+% $\emptyset,S$.
+% The name comes from hyper-lambda calculus formulation by \citet{hiraiflops2012},
+% where a s-term sometimes turns into $\mathsf{abort}$ and there the property
+% stated that a hyper-term has no reduction sequence leading to a hyper-term
+% full of $\mathsf{abort}'s$.
+% This property is necessary for s-terms to denote
+% constructive content of proofs.
 
-\begin{proposition}[Non-abortfullness]
- Let $t$ be a s-term and $\pi$ an s-stack, then,
- $[t,\pi]$ does not reduce to $\emptyset$.
-\end{proposition}
-\begin{proof}
- By definition of $\sred$.
-\end{proof}
+% \begin{proposition}[Non-abortfullness]
+%  Let $t$ be a s-term and $\pi$ an s-stack, then,
+%  $[t,\pi]$ does not reduce to $\emptyset$.
+% \end{proposition}
+% \begin{proof}
+%  By definition of $\sred$.
+% \end{proof}
 
 \section{Asynchronous Semantics}
 \label{sec:async}
 
-An a-term\index{term!a-term} (asynchronous term)~$t$ is defined by BNF:
-\[
- t::= x
- \mid (t)t
- \mid \lambda x.t
- \mid \ast_t
- \mid \mat t x t x t
- \mid \inl t
- \mid \inr t
- \mid (t\conc t)
- \mid \comod c c
- \mid \reader  c
-\]
-where $x$ is a variable and $c$ is a channel.
-Compared with the synchronous case, now we have one additional kind of term
+In this section we give another operational semantics involving
+asynchronous shared memory communication, which is similar to Hirai's
+hyper-lambda calculus for G\"odel--Dummett logic~\citep{hiraiflops2012}.
+An a-term\index{term!a-term} (asynchronous term)~$t$ is an s-term or
 $\reader c$.
-An a-stack\index{stack!a-stack} (asynchronous stack)~$\pi$ is defined by BNF:
-\[
- \pi ::= \epsilon
- \mid t\cdot \pi
- \mid \mats x t \pi x t \pi
- \enspace.
-\]
-The definition of a-stacks are not changed from the synchrnous case except
-that the a-terms in the definition can be $\reader c$.
-Overall, all s-terms and s-stacks are also a-terms and a-stacks.
+The definition of a-stacks is not changed from that of s-stacks except
+that the s-terms in the definition are replaced by a-terms.
 We write the set of a-terms as $\aLambda$ and a-stacks~$\aPi$.
-A store\index{store} is a partial mapping from locations to
-a-terms, equivalently, a mapping from locations to a-terms and $\bot$'s.
+A store\index{store} maps a location to an a-term, $\bot$ or $\top$.
 The empty store\index{store!empty}%
 \index{empty store|see{store}}~$S_\epsilon$ maps any channel to $\bot$.
 For a store $S$, we define a store $S[c\mapsto x]$ to be
@@ -1249,76 +1267,75 @@ is a finite multiset on $\aLambda \times \aPi$,
 paired with a store.
 
 % 2a' reduction
-We have reduction relation~$\ared$ on a-executables,
-which is defined to be the smallest binary preorder
-that satisfies:
+We define binary relations~$\ared'$ and $\ared$ on a-executables to be the smallest binary preorders
+that satisfy:
 \begin{description}
  \item[(cong)] if
-	    $[t,\pi],         S \ared [ t',\pi'],        S'$
+	    $[t,\pi],         S \ared' [ t',\pi'],        S'$
 	    then
-	    $[t,\pi \conc e], S \ared [ t',\pi'\conc e], S'$\enspace;
+	    $[t,\pi \conc e], S \ared' [ t',\pi'\conc e], S'$\enspace;
+ \item[(abort)] $[\abort,\pi] \ared' \emptyset$\enspace;
  \item[(push)]
-	    $[(t)u,\pi],S       \ared [t,u\cdot\pi],S$;
- \item[(dist)]
-	    $[t\conc u,\pi],S   \ared [t,\pi\conc u,\pi],S$\enspace;
+	    $[(t)u,\pi],S       \ared' [t,u\cdot\pi],S$;
  \item[(store)]
 	    $[\lambda x.t,u\cdot\pi],S
-	     \ared
+	     \ared'
 	     [t[\ast_u/x],      \pi],S$\enspace;
  \item[(load)]
-	    $[\ast_u,\pi],S\ared[u,\pi],S$\enspace;
+	    $[\ast_u,\pi],S\ared'[u,\pi],S$\enspace;
  \item[(ask)]
-      $[\mat t x u y v,\pi], S\ared [t,\mats x u \pi y v \pi], S$\enspace;
+      $[\mat t x u y v,\pi], S\ared' [t,\mats x u \pi y v \pi], S$\enspace;
  \item[(ansL)]
-      $[\inl{v}, \mats xt\pi yu\sigma],S \ared [t[v/x],\pi],S $ \enspace;
+      $[\inl{v}, \mats xt\pi yu\sigma],S \ared' [t[v/x],\pi],S $ \enspace;
  \item[(ansR)]
-      $[\inr{w}, \mats xt\pi yu\sigma],S \ared [u[w/y],\sigma],S $ \enspace;
+      $[\inr{w}, \mats xt\pi yu\sigma],S \ared' [u[w/y],\sigma],S $ \enspace;
  \item[(write)]
 	    $
-	    [\comod c{d}, t\cdot\pi], S[d\mapsto\bot]
-	    \ared
+	    [\comod c{\co c}, t\cdot\pi], S[\co c\mapsto\bot]
+	    \ared'
 	    [\reader c, \pi],
-	    S[d\mapsto t]
+	    S[\co c\mapsto t]
 	    $\enspace;
  \item[(write')]
 	    $
-	    [\comod c{d}, t\cdot\pi], S[d\mapsto u]
-	    \ared
+	    [\comod c{\co c}, t\cdot\pi], S[\co c\mapsto \top]
+	    \ared'
 	    [\reader c, \pi],
-	    S[d\mapsto u]
+	    S[\co c\mapsto \bot]
 	    $\enspace;
  \item[(read)]$
 	    [\reader c ,\pi],
 	    S[c\mapsto u]
-	    \ared
+	    \ared'
 	    [u,\pi],
 	    S[c\mapsto u]
-	    $\enspace; and
+	    $\enspace;
  \item[(fail)]
 	    $
 	    [\reader c,\pi],
 	    S[c\mapsto \bot]
-	    \ared
-	    \emptyset,S[c\mapsto \bot]
+	    \ared'
+	    \emptyset,S[c\mapsto \top]
 	    $
-	    \enspace.
+	    \enspace; and
+ \item[(local-global)] If $e_0, S_0\ared'e_1, S_1$ then $e_0, S_0\ared e_1,
+      S_1$\enspace; and
+ \item[(dist)]
+	    $[(t\conc u),\pi\conc e],S   \ared' [t,\pi\conc u,\pi\conc
+      e\conc e],S$\enspace.
 \end{description}
-Differently from the synchronous case in Section~\ref{sec:sync},
+Differently from the synchronous case in Sect.~\ref{sec:sync},
 we do not use an external schedule relation on channels.
 Instead, nondeterminism appears spontaneously.
-We can implement something similar to Lafont's example~\citep[B.1]{girard1989proofs},
-showing that confluence does not hold.
-Suppose $\G\tr\tj t\phi$ and $\G\tr\tj u\phi$ are both derivable.
-Then, by induction on the derivation,
-both $\G,\tj x{\phi\limp\phi}\tr\tj{(x)t}\phi$
-and $\G,\tj y{\phi\limp\phi}\tr\tj{(y)u}\phi$ are derivable
-for $x$ and $y$ not appearing in $\G$, $u$, or $t$.
-By the communication rule,
-$\G\tr\tj{(\comod c{d})t\conc(\comod {d} c)u}\phi$ is derivable.
-However $[((\comod c{d})t\conc (\comod{d} c)u),
+Indeed, we can implement something similar to Lafont's
+example~\citep[B.1]{girard1989proofs}.
+Suppose $\tr\tj t\phi$ and $\tr\tj u\phi$ are both derivable.
+Then,
+$\tr\tj{(\comod c{\co c})t\conc(\comod {\co c} c)u}\phi$ is derivable.
+From there $[((\comod c{\co c})t\conc (\comod{\co c} c)u),
 \pi],S_\epsilon$
-can reduce both to $[t,\pi], S_\epsilon[c\mapsto u, d\mapsto t]$
-and to $[u,\pi], S_\epsilon[c\mapsto u,d\mapsto t]$ (Figure~\ref{fig:lafont}).
+can reduce both to $[t,\pi], S_\epsilon$
+and to $[u,\pi], S_\epsilon$ (Fig.~\ref{fig:lafont}).
 \begin{figure}
  \begin{subfigure}[b]{0.45\textwidth}
   \begin{align*}
@@ -1326,146 +1343,104 @@ and to $[u,\pi], S_\epsilon[c\mapsto u,d\mapsto t]$ (Figure~\ref{fig:lafont}).
    \ared & [(\comodL)t,\pi\conc (\comodR)u,\pi], S_\epsilon \\
    \ared & [\reader c, \pi\conc (\comodR)u,\pi], S_\epsilon[d\mapsto
    t] \\
-   \ared & [(\comodR)u,\pi], S_\epsilon[d\mapsto t] \\
-   \ared & [\reader d, \pi], S_\epsilon[c\mapsto u, d\mapsto t] \\
-   \ared & [t,\pi], S_\epsilon[c\mapsto u,d\mapsto t]\enspace.
+   \ared & [(\comodR)u,\pi], S_\epsilon[c\mapsto \top, \co c\mapsto t] \\
+   \ared & [\reader {\co c}, \pi], S_\epsilon[c\mapsto \bot, \co c\mapsto t] \\
+   \ared & [t,\pi], S_\epsilon[c\mapsto \bot,\co c\mapsto \bot]\enspace.
   \end{align*}
  \end{subfigure}
  \begin{subfigure}[b]{0.45\textwidth}
   \begin{align*}
    & [((\comodL)t\conc (\comodR) u),\pi], S_\epsilon \\
    \ared & [(\comodL)t,\pi\conc (\comodR)u,\pi], S_\epsilon \\
-   \ared & [(\comodL)t,\pi\conc \reader d,\pi], S_\epsilon[c\mapsto u] \\
-   \ared & [(\comodL)t,\pi], S_\epsilon[c\mapsto u] \\
-   \ared & [\reader c,\pi], S_\epsilon[c\mapsto u,d\mapsto t] \\
-   \ared & [u,\pi], S_\epsilon[c\mapsto u,d\mapsto t]\enspace.
+   \ared & [(\comodL)t,\pi\conc \reader {\co c},\pi], S_\epsilon[c\mapsto u] \\
+   \ared & [(\comodL)t,\pi], S_\epsilon[c\mapsto u, \co c\mapsto \top] \\
+   \ared & [\reader c,\pi], S_\epsilon[c\mapsto u,\co c\mapsto \bot] \\
+   \ared & [u,\pi], S_\epsilon[c\mapsto \bot,\co c\mapsto \bot]\enspace.
   \end{align*}
  \end{subfigure}
  \caption[A non-confluent example similar to Lafont's example.]
- {A non-confluent example similar to Lafont's example.  Both sides start
- from the same configuration but reduces to different configurations.
+ {A non-confluent example similar to Lafont's example~\citep[B.1]{girard1989proofs}.  Both sides start
+ from the same configuration but reduce to different configurations.
  Moreover, since terms $t$ and $u$ can be taken arbitrarily, if we
  equate the terms related by $\ared$, we have to conclude that arbitrary
- two terms are equal.}
+ two terms of the same type are equal.}
  \label{fig:lafont}
 \end{figure}
-Since $t$ and $u$ were taken arbitrarily, we cannot distinguish a-terms
-of the same type if we equate an a-term with any a-terms it reduces to.
-
-\begin{definition}
- An s-executable~$e$ is well-formed iff
- \begin{enumerate}
-  \item \label{well1} at most one occurrence of $\comodL$ or $\reader c$ appears in
-	$e$; and
-  \item \label{well2} at most one occurrence of each bound variable appears in $e$.
- \end{enumerate}
-\end{definition}
 
 \begin{proposition}
- If an s-term~$t$ is typed, the s-executable $[t,\epsilon]$ is well-formed.
+ Let $e$ be an s-executable.
+ If $e\sred e'$ then $e, S_\epsilon \ared e', S_\epsilon$.
 \end{proposition}
 \begin{proof}
- Condition~\ref{well1}.~holds because of the form of Com rule.
- Condition~\ref{well2}.~holds
- because there are no contraction rules.
+ Most reduction rules are common.  Rules (com0) and (com1) are
+ simulated in Fig.~\ref{fig:lafont}.  Rule (com2) can be simulated similarly.\qed
 \end{proof}
+This transfers the semantics of prelinearity (Prop.~\ref{spec:prelin}) to the asynchronous case.
 
-\begin{proposition}
- Let $e$ be a well-formed s-executable.
- If $e\sred e'$ in the synchronous case on a schedule then $e, S_\epsilon \ared e', S'$
- in the asynchronous case for some store~$S'$.
-\end{proposition}
-\fix{prove}
 
-\section{Comparison with monoidal t-norm logic}
+\section{Comparison with Monoidal t-Norm Logic}
+\label{sec:as-logic}
 
 There is a well-known substructural logic called monoidal t-norm logic
 (MTL), which validates the prelinearity axiom
 $(\phi\limp\psi)\oplus(\psi\limp\phi)$.  Actually, $\NMTL$ characterizes
-MTL\fix{in what sense?}.
+MTL (Props.~\ref{prop:sound} and \ref{prop:comp}).
 
 The MTL formulae can be defined as%
-\footnote{From the standard literature~\citep{handbook:fuzzy}, the connectives
+\footnote{From the literature~\citep{handbook:fuzzy}, the connectives
 are translated as $\&$ into $\otimes$ and $\rightarrow$ into $\limp$.}%
 :
 \[
- \phi::= \bar{0}\mid p\mid \phi\limp\psi \mid \phi\otimes \psi \mid \phi \land \psi\enspace.
+ \phi::= \bar{0}\mid X\mid \phi\limp\psi \mid \phi\otimes \psi \mid \phi \oplus \psi\enspace.
 \]
-
-We give a translation from MTL formulae to MTL2 formulae by the outer
-induction on the number of $\wedge$ occurrences in $\phi$
-and the inner induction on the
-length of $\phi$.
-\begin{align}
- \bar{0}^\bullet &= \forall XX \nonumber\\
- p^\bullet &= p \nonumber\\
- (\phi\limp\psi)^\bullet &= \phi^\bullet \limp \psi^\bullet\nonumber\\
- (\phi\otimes\psi)^\bullet & = \forall
- X((\phi^\bullet\limp\psi^\bullet\limp X)\limp X) \nonumber\\
- (\phi\land \psi)^\bullet &=
- (\phi\otimes(\phi\limp\psi))^\bullet\oplus
- (\psi\otimes(\psi\limp\phi))^\bullet \label{eq:abb}
-\end{align}
-where the translation of $\wedge$ is a tailor-made one for MTL,
- which is taken from \citep[p.~48]{handbook:fuzzy}.  The translation of $\wedge$
-can be traced back to \citet[Lemma~6.5]{Cintula200740}.
-We state that any MTL formula~$\phi$ is a theorem in MTL iff
- $\phi^\bullet$ is a theorem in $\NMTL$.
- In order to reason inductively on hypersequent derivations, we extend
- the translation $(\cdot)^\bullet$ to sequents and hypersequents.
- We define $(\G\tr\phi)^\bullet$ to be $\G^\bullet\supset\phi^\bullet$
- where
- $\G^\bullet$ is the conjunction (by $\otimes$) of translations of the
- elements of $\G$.
- We define
- $\left(\G_0\tr\phi_0\hmid\cdots\hmid\G_n\tr\phi_n\right)^\bullet$ to be
- the disjunction $\bigoplus_{0\le i\le n}\left(\G_i\tr
- \phi_i\right)^\bullet$, where we let $\bigoplus\diamondsuit$ denote
- $(((\cdots(\diamondsuit\oplus\diamondsuit)\cdots\oplus\diamondsuit)\oplus\diamondsuit)\oplus\diamondsuit)$
- rather than its mirror image.
-
-As an axiomatization of MTL, we take a hypersequent formulation of
-\citet{baaz2004analytic}, whose rules we show in Figure~\ref{fig:hlbck}.
- \begin{figure}
+As an abbreviation, we can introduce $\phi\land\psi =  (\phi\otimes(\phi\limp\psi))\oplus
+ (\psi\otimes(\psi\limp\phi))$\footnote{
+The translation of $\wedge$ is a tailor-made one for MTL,
+ which is taken from \citep[p.~48]{handbook:fuzzy}.
+ The origin of the translation
+can be traced back to \citet[Lem.~6.5]{Cintula200740}.}%
+.
+We take a hypersequent formulation of MTL by
+\citet{baaz2004analytic}, whose rules we show in Fig.~\ref{fig:hlbck}.
+ \begin{figure}[h]
   \centering
   \AxiomC{}
   \LL{(ax)}
-  \useq{p}{p}
+  \useq{X}{X}
   \DisplayProof
   \hfill
   \AxiomC{}
   \LL{(ax)}
   \useq{\bar 0}{\phi}
   \DisplayProof
-  \ruleskip
-  (Internal and External) Structural rules\\
-  \aseq{\mathcal H\hmid \G}{\phi}
-  \LL{(w,l)}
-  \useq{\mathcal H\hmid \G,\psi}{\phi}
-  \DisplayProof
-  \hfill
-  \aseq{\mathcal H\hmid\G}{\bar{0}}
-  \LL{(w,r)}
-  \useq{\mathcal H\hmid \G}{\phi}
-  \DisplayProof
-  \ruleskip
-  \AxiomC{$\mathcal H$}
-  \LL{(EW)}
-  \useq{\mathcal H\hmid G}{\phi}
-  \DisplayProof
   \hfill
   \aseq{\mathcal H\hmid\D_0,\G_0}{\phi}
   \aseq{\mathcal H\hmid \D_1,\G_1}{\psi}
   \LL{(com)}
   \bseq{\mathcal H\hmid \D_0,\D_1}{\phi\hmid\G_0,\G_1\tr \psi}
-  \DisplayProof \ruleskip
+  \DisplayProof
+  \ruleskip
   \aseq{\mathcal H\hmid\G}{\phi}
   \aseq{\mathcal H\hmid \phi,\D}{\psi}
   \LL{(cut)}
   \bseq{\mathcal H\hmid\G,\D}{\psi}
   \DisplayProof
+  \hfill
+  \aseq{\mathcal H\hmid \G}{\phi}
+  \LL{(w,l)}
+  \useq{\mathcal H\hmid \G,\psi}{\phi}
+  \DisplayProof
   \ruleskip
-  Logical rules (Multiplicative fragment)\ruleskip
+  \aseq{\mathcal H\hmid\G}{\bar{0}}
+  \LL{(w,r)}
+  \useq{\mathcal H\hmid \G}{\phi}
+  \DisplayProof
+  \hfill
+  \AxiomC{$\mathcal H$}
+  \LL{(EW)}
+  \useq{\mathcal H\hmid G}{\phi}
+  \DisplayProof
+  \ruleskip
   \aseq{\mathcal H\hmid\G,\phi,\psi}{\chi}
   \LL{($\otimes$, l)}
   \useq{\mathcal H\hmid \G,\phi\otimes\psi}{\chi}
@@ -1484,131 +1459,166 @@ As an axiomatization of MTL, we take a hypersequent formulation of
   \LL{($\limp$, r)}
   \useq{\mathcal H\hmid\G}{\phi\limp\psi}
   \DisplayProof \ruleskip
-  Logical rules (Additive fragment) \ruleskip
   \aseq{\mathcal H\hmid\G,\phi}{\chi}
   \aseq{\mathcal H\hmid\G,\psi}{\chi}
-  \LL{($\vee$, l)}
-  \bseq{\mathcal H\hmid\G,\phi\lor\psi}{\chi}
+  \LL{($\oplus$, l)}
+  \bseq{\mathcal H\hmid\G,\phi\oplus\psi}{\chi}
   \DisplayProof
   \hfill
   \aseq{\mathcal H\hmid \G}{\phi_i}
-  \LL{($\vee$, r)}
-  \useq{\mathcal H\hmid \G}{\phi_0\lor \phi_1}
+  \LL{($\oplus$, r)}
+  \useq{\mathcal H\hmid \G}{\phi_0\oplus \phi_1}
   \DisplayProof
 
-  \caption[The rules in $\HLBCK$~\citep{baaz2004analytic}, which
+  \caption[The propositional rules in $\HLBCK$~\citep{baaz2004analytic}, which
   characterizes monoidal t-norm logic.]
-  {The rules in $\HLBCK$~\citep{baaz2004analytic}, which
+  {The propositional rules in $\HLBCK$~\citep{baaz2004analytic}, which
   characterizes monoidal t-norm logic.  Axioms are not shown in
   \citet{baaz2004analytic} so we took them from \citet{ono-komori-1985}.
+  Exchange rules  are implicit.
   The (cut) rule is eliminatable by
-  \citet[Theorem~3.2]{baaz2004analytic}.
-  We removed the rules about $\wedge$ because the connective $\wedge$ is
-  definable as in Equation~(\ref{eq:abb}).}
+  \citet[Thm.~3.2]{baaz2004analytic}.}
   \label{fig:hlbck}
  \end{figure}
 
-\subsection{Soundness}
-
-\fix{define substitution instance of a mtl2 formula (which is a mtl-formula)}
- \begin{proposition}\label{prop:sound-ind}
-  If $\G\tr\phi$ is derivable in $\NMTL$, all substitution instances
-  $\G'\tr\phi'$ are derivable in $\HLBCK$.
+We translate MTL formulae to MTL2 formulae by
+induction on $\phi$:
+\begin{align*}
+ \bar{0}^\bullet &= \forall XX \nonumber\\
+ X^\bullet &= X \nonumber\\
+ (\phi\limp\psi)^\bullet &= \phi^\bullet \limp \psi^\bullet\nonumber\\
+ (\phi\otimes\psi)^\bullet & = \forall
+ X((\phi^\bullet\limp\psi^\bullet\limp X)\limp X) \text{ where }X\text{ do
+ not appear in }\phi\otimes\psi\nonumber\\
+ (\phi\oplus\psi)^\bullet &= \phi^\bullet \oplus \psi^\bullet
+\end{align*}
+We state that any MTL formula~$\phi$ is a theorem in $\HLBCK$ iff
+ $\phi^\bullet$ is a theorem in $\NMTL$.
+ In order to reason inductively on hypersequent derivations, we extend
+ the translation $(\cdot)^\bullet$ to sequents and hypersequents.
+ We define $(\G\tr\phi)^\bullet$ to be $\G^\bullet\supset\phi^\bullet$
+ where
+ $\G^\bullet$ is the $\otimes$-conjunction of translations of the
+ elements of $\G$.
+ We define
+ $\left(\G_0\tr\phi_0\hmid\cdots\hmid\G_n\tr\phi_n\right)^\bullet$ to be
+ $(\G_0\tr\phi_0)^\bullet\hmid\cdots \hmid (\G_n\tr\phi_n)^\bullet$.
+A substitution instance of an MTL2 formula~$\phi$ is an MTL formula obtained by
+substituting an MTL formula for each bound propositional variable in $\phi$.
+ \begin{proposition}
+  \label{prop:sound-ind}
+  If a hypersequent is derivable in $\NMTL$, all substitution instances
+  of the hypersequent are derivable in $\HLBCK$.
  \end{proposition}
   \begin{proof}
-   \fix{prove}
+   By induction on $\NMTL$ derivations.\qed
   \end{proof}
 
- \begin{proposition}
+ \begin{proposition}[Soundness]
+  \label{prop:sound}
   When the translation $\phi^\bullet$ is provable in $\NMTL$, the
   original $\phi$ is provable in $\HLBCK$.
  \end{proposition}
   \begin{proof}
    We define an MTL formula~$\phi^\circ$ inductively on an MTL
    formula~$\phi$ so that $\phi^\circ$ is a substitution instance of
-   $\phi^\bullet$ and $\phi^\circ\limp\phi^\bullet$ is provable in
+   $\phi^\bullet$ and $\phi^\circ\limp\phi$ is provable in
    $\HLBCK$.
    The definition of $\phi^\circ$ follows:
    \begin{align*}
     \bar 0^\circ&= \bar 0\\
-    p^\circ &=p \\
+    X^\circ &=X \\
     (\phi\limp\psi)^\circ&=\phi^\circ\limp\psi^\circ\\
     (\phi\otimes\psi)^\circ &=
     (\phi^\circ\limp\psi^\circ\limp(\phi^\circ\otimes\psi^\circ))\limp(\phi^\circ\otimes\psi^\circ)\\
-    (\phi\land\psi)^\circ &=
-    (\phi\otimes(\phi\limp\psi))^\circ \oplus
-    (\psi\otimes(\psi\limp\phi))^\circ\enspace.
+    (\phi\oplus\psi)^\circ &= \phi^\circ \oplus \psi^\circ\enspace.
    \end{align*}
-   \fix{deal with the two claims}
+   Both claims are immediate.  Assume $\phi^\bullet$
+   is provable in $\NMTL$.  By the first claim and Prop.~\ref{prop:sound-ind},
+   $\phi^\circ$ is provable in $\HLBCK$.  By the second claim, $\phi$ is
+   provable in $\HLBCK$.\qed
   \end{proof}
 
-
-\subsection{Completeness}
-
-\begin{proposition}
+\begin{proposition}[Completeness]
+ \label{prop:comp}
  If a hypersequent $\mathcal H$ is
  derivable in $\HLBCK$ without using (cut), then the translation $\mathcal H^\bullet$ is
- derivable in our system extended with left weakening.
+ derivable in $\NMTL$.
 \end{proposition}
 \begin{proof}
  By induction on derivations of the cut-free fragment of $\HLBCK$.
- All cases are straightforward although most of them are large because
- we have to deal with the disjunction caused by hypersequents.
- We show (com) case in Figure~\ref{fig:completeness-com}.
+ All cases are straightforward.  For branching rules, we have to apply
+ (EC) because in $\HLBCK$, the components in a hypersequent is distributed
+ additively while in $\NMTL$ multiplicatively.  And above and below
+ (EC), we have to use ($\limp$I) and ($\limp$E) so that the
+ restricted form of (EC) rule in $\NMTL$ is applicable.\qed
 \end{proof}
- \begin{figure}
-  \fix{try to fill}
-  \caption{Completeness of $\NMTL$ against (com) rule of $\HLBCK$.  The
-  double line stands for several steps.  Ex and W rules are sometimes
-  omitted.}
-  \label{fig:completeness-com}
- \end{figure}
 
 \section{Discussion and Future Work}
+\label{sec:discuss}
+This work is technically similar to \citet{danos-krivine}'s.
+One large difference is the existence of (com$i$), (read) and (write)
+reductions, where terms are passed from processes to other
+processes.
+In \citep{danos-krivine}, the only reduction rule involving multiple
+processes is (dist), which spawns processes that never communicate.
+Sharing their purpose
+``interpretation of logical rules as programming
+instructions''~\citep{danos-krivine},
+we continue to seek generalization over substructural
+logics.
 
-\subsection{Comparison with Danos and Krivine's work}
+The asynchronous semantics given here is similar to that of a
+hyper-lambda calculus \lgd\,by
+\citet{hiraiflops2012}.
+We conjecture that our classical realizability argument here is
+applicable to \lgd\,as well, but for that, due to contraction,
+we have to generalize the statement of adequacy to involve arbitrarily
+many derivations.
 
-\fix{change on (dist)}
+There are recent
+developments~\citep{pfenning2010,wadler2012propositions} over
+Curry--Howard correspondence between
+the linear logic and process
+calculi.
+Since their type systems do not incorporate the prelinearity axiom
+(without modalities $!$ or $?$),
+we conjecture that we can extend their type systems and their process
+calculi
+with the prelinearity
+axiom representing the same kind of communication schemes as we have shown.
 
-\fix{finish}
+% \subsection{Unintended Weakening}
 
-\fix{There are no communication there.}
+% Our type system allows a restricted form of weakening as shown in
+% Fig.~\ref{fig:weakening}.  Introducing any form of weakening is not
+% our intention.  We consider two possible remedies.  The first possible
+% remedy is modifying the communication rule so that the contexts are
+% treated in the additive way:
+% \[
+% \aseq{\tj{x}{\phi\limp\psi},\G}{\tj t\theta}
+% \aseq{\tj{y}{\psi\limp\phi},\G}{\tj u\theta}
+% \LL{Com}
+% \bseq{\G}{\tj{(t[\comodL/x]\conc u[\comodR/y])}{\theta}}
+% \DisplayProof\enspace.
+% \]
+% The other possible remedy is employing the hypersequent system.  We use
+% the hyper-communication rule and external contraction.
+% \[
+%  \fix{fill in}
+% \]
+% When we try to
+% duplicate Fig.~\ref{fig:weakening}, we cannot get weakening as shown
+% in Fig.~\fix{fig:lack-weakening}.
+% Both of these remedies, however, destroy the inductive proof of
+% adequacy.  There, since the
+% interesting variable $x$ can appear in more than one branch,
+% we need stronger induction hypothesis.
 
-Not all disjunctive tautologies are valid in G\"odel--Dummett logic:
-$(P\limp Q)\lor(Q\limp R)$.
-
-Non-abortfullness is not a pole.
-In order to change this, we have to do something more subtle.
-
-\subsection{Unintended Weakening}
-
-Our type system allows a restricted form of weakening as shown in
-Figure~\ref{fig:weakening}.  Introducing any form of weakening is not
-our intention.  We consider two possible remedies.  The first possible
-remedy is modifying the communication rule so that the contexts are
-treated in the additive way:
-\[
-\aseq{\tj{x}{\phi\limp\psi},\G}{\tj t\theta}
-\aseq{\tj{y}{\psi\limp\phi},\G}{\tj u\theta}
-\LL{Com}
-\bseq{\G}{\tj{(t[\comodL/x]\conc u[\comodR/y])}{\theta}}
-\DisplayProof\enspace.
-\]
-The other possible remedy is employing the hypersequent system.  We use
-the hyper-communication rule and external contraction.
-\[
- \fix{fill in}
-\]
-When we try to
-duplicate Figure~\ref{fig:weakening}, we cannot get weakening as shown
-in Figure~\fix{fig:lack-weakening}.
-Both of these remedies, however, destroy the inductive proof of
-adequacy.  There, since the
-interesting variable $x$ can appear in more than one branch,
-we need stronger induction hypothesis.
-
-\subsection{Adding Exponentials}
-\fix{add if resources allow}
 
 \section{Conclusion}
-\fix{fill}
+\label{sec:conclude}
+We developed a lambda calculus for MTL2 and
+analyzed the prelinearity axiom using
+the classical realizability.  The terms typed with prelinearity are
+asynchronous communication schemes.
