@@ -1,3 +1,4 @@
+
   \subsection{Preliminaries and Notations}
 
   We assume inductive definitions using BNF and coinductive definition.
@@ -18,3 +19,421 @@
 \fix{BNF}
 
 We use ``iff'' as an abbreviation for ``if and only if.''
+
+
+\section{History}
+
+Hereby, we briefly review the history of the mathematical logic to the
+extent relevant to the content of this thesis.
+We confine ourselves to the developments ofpropositional logic and
+ignore anything related to predicate logic or formalizing mathematics on
+logics.
+
+\subsection{Birth of Formal Logic}
+
+Implication is an important concept.
+Different treatments of implication has taken place in the realm of
+mathematical logic.
+One treatment of implications called the material implication.
+The material implication can be traced back at least to
+Frege's \textit{Begriffsschrift}~\citep{frege}.  There, in the section called
+``conditionality,''
+he begins by establishing four cases~\citep[p.~13]{frege}:
+\begin{enumerate}
+ \item $A$ is affirmed and $B$ is affirmed\,;
+ \item $A$ is affirmed and $B$ is denied\,;
+ \item $A$ is denied and $B$ is affirmed\,;
+ \item $A$ is denied and $B$ is denied.
+\end{enumerate}
+Then he defines a notation involving $A$ and $B$
+\[
+\BGassert\BGconditional{B}{A}
+\]
+which ``stands for the
+judgment that \textit{the third of these possibilities does not take
+place, but one of the three other does\footnote{The emphasis is by
+the English translation~\citep[p.~14]{frege}}.''}
+In the contemporary common mathematical terminology, this is equivalent
+to stating $B$ implies $A$.
+It was Russell who called this implication the material implication,
+according to~\citet{sep-conditionals}.
+After his notation, we still use $\vdash$ for judgements in our formal systems.
+
+It is worth noting that Frege used the notation for implication to define conjunction and
+disjunction in the formal system, not the other way around.  Even in
+today's treatments of
+like algebraic semantics or categorical semantics, implication is
+fundamental (orders in algebraic semantics, morphisms in categorical
+semantics) and other logical connectives
+can be defined using implication.
+
+\subsection{Intuitionistic Propositional Logic}
+
+\subsubsection{Heyting}
+In 1930, Heyting~\cite{heyting1930} developed a deduction system for the
+intuitionistic propositional logic.  The presentation is similar to
+the contemporary one except some notational differences.  The
+logical connectives are the same $\{\wedge,\vee,\supset,\neg\}$ as today, the
+first three binary and the last unary%
+\footnote{Though, in this thesis, we prefer using nullary $\bot$ instead of unary
+$\neg.$}%
+.  Logical formulae are constructed
+using these connectives and the variables.
+Although he already sometimes used parentheses, he still used more points
+around outer connectives (e.g. $b\supset \kern -3pt\cdot \kern 2pt  a
+\supset b$ indicates the left $\supset$ is outer and the right one is
+inner), but we use parentheses here.
+These formulae are axioms~\cite{heyting1930}, i.e. assumed to be ``correct formulae'':
+\begin{description}
+ \item[2.1.] $a\supset (a\land a)$
+ \item[2.11.] $(a\land b)\supset (b\land a)$
+ \item[2.12.] $(a\supset b)\supset (a\land c)\supset (b\land c)$
+ \item[2.13.] $((a\supset b)\land (b\supset c))\supset (a\supset c)$
+ \item[2.14.] $b\supset (a\supset b)$
+ \item[2.15.] $(a\land (a\supset b))\supset b$
+ \item[3.1.] $a\supset (a\lor b)$
+ \item[3.11.] $(a\lor b)\supset (b\lor a)$
+ \item[3.12.] $((a\supset c)\land(b\supset c))\supset ((a\lor b)\supset
+      c)$
+ \item[4.1.] $\neg a\supset (a\supset b)$
+ \item[4.11.] $((a\supset b)\land (a\supset \neg b)) \supset \neg a$
+\end{description}
+Moreover, there are methods~\cite{heyting1930} to recognize more formulae to be correct
+formulae:
+\begin{description}
+ \item[1.2.] If $a$ and $b$ are correct formulas, then $a\land b$ is a correct
+       formula.
+ \item[1.3.] If $a$ and $b$ are correct formulas, then $b$ is a correct formula.
+\end{description}
+
+Following the intuitionists' belief
+that ``it is in principle impossible to set up a system of formulas that
+would be equivalent to intuitionistic mathematics, for the
+possiblitities of thought cannot be reduced to a finite number of rules
+set up in advance,''~\citep{heyting1930} he did not pursue completeness
+results for the
+deduction system%
+\footnote{Except in a remark mentioning Glivenko's theorem.}%
+.
+However, he used a form of semantics in order to show that
+each axiom is independent from the other axioms and that
+the excluded middle is unprovable.
+For example, in order to refute the excluded middle, he used the
+following tables:\\
+ \begin{center}
+  \begin{tabular}{c|ccc}
+   $\supset $& 0  & 1  & 2 \\ \hline
+   0 & 0 & 0 & 0 \\
+   1 & 1 & 0 & 1 \\
+   2 & 2 & 0 & 0
+  \end{tabular}
+  \hfill
+  \begin{tabular}{c|ccc}
+   $\wedge $& 0 & 1& 2\\ \hline
+   0 & 0 & 1 & 2\\
+   1 & 1 & 1 & 1\\
+   2 & 2 & 1 & 2\\
+  \end{tabular}
+  \hfill
+  \begin{tabular}{c|ccc}
+   $\vee$& 0 & 1 & 2\\ \hline
+   0 & 0 & 0 & 0 \\
+   1 & 0 & 1 & 2 \\
+   2 & 0 & 2 & 2\\
+  \end{tabular}
+  \hfill
+  \begin{tabular}{c|ccc}
+   $\neg $& 0 & 1 & 2\\ \hline
+   & 1 & 0 & 1\\
+  \end{tabular}
+ \end{center}
+When we assign one of $\{0,1,2\}$ to each propositional variable, we
+can extend the assignment to all formulae using these tables.
+Under any assignment to propositional variables, all of Heyting's axioms
+are assigned 0.  Moreover, these tables have two formidable properties:
+\begin{enumerate}
+ \item $0\land 0 = 0$
+ \item $0\supset a$ has the value 0 only when $a = 0$.
+\end{enumerate}
+From these, all formulae provable in Heyting's deduction system
+receive the value~0 under any assignments to propositional variables.
+However, if we assign 2 to $a$, $\neg \neg a\supset a$
+is assigned 2.  Note that the natural order between natural numbers
+plays no rule here: it is not relevant that 2 is larger than 1 or 0 is
+less than 1 (in other places he uses ``all positive and negative
+whole numbers and 0'').  Although Heyting used natural numbers here, he
+already obtained the notion of what is called Heyting algebra today.
+That is why we can refute Dummett's
+axiom $(p\supset q)\lor (q\supset p)$ in the same method.
+
+\subsubsection{G\"odel}
+In 1932, G\"odel published a short note~\cite{godelprop} on intuitionistic propositional
+logic, where he proved two theorems: that the intuitionistic propositional logic
+cannot be seen as a many-valued logic and that
+there are infinitely many propositional logics between the
+intuitionistic propositional logic and the ``ordinary'' (in today's
+terminology, classical) propositional logic.  The second result is the
+first contribution to the realm of intermediate logics (as
+Troelstra~\cite[p.~223]{goedelcollected} put it).
+For distinguishing those intermediate logics and the intuitionistic
+propositional logic, he uses a formula~$F_n$ for each positive natural
+number~$n$:
+\[
+ F_n = \bigvee_{1\le i < k\le n}\left((a_i\supset a_k) \land (a_k\supset a_i)\right)\enspace.
+\]
+On an $n$-element chain, $F_{n+1}$ is valid while $F_n$ might not be
+satisfied.  As a result, no $F_n$ is valid in the intuitionistic
+propositional logic.
+Although Troelstra~\cite[p.~223]{goedelcollected} writes ``the reasons
+for studying intermediate logics are mainly technical,'' we find that
+one typical intermediate logic, G\"odel--Dummett logic, has a
+computational interpretation which has already been known: waitfreedom.
+The connection between G\"odel--Dummett logic and waitfreedom will be
+treated in Chapter~\ref{ch:lambda}.
+
+Among the formulae~$F_n$,
+especially, the formula~$F_2$, which is $(a_1\supset a_2)\land (a_2\supset
+a_1)$, brings contradiction into classical or intuitionistic logic.  If we
+had $(p\land q)\supset p$ and $F_2$ as theorems in a logic closed under
+substitution and modus ponens,
+$a_1\supset a_2$ is also a theorem and all formulae would be theorems or
+there would be no theorems.
+In Chapter~\ref{ch:exchange} we investigate a logic with an axiom similar to $F_2$:
+$(\phi\limp\psi)\otimes(\psi\limp\phi)$, where $\otimes$ is the
+multiplicative conjunction and $\limp$ is the linear implication.  Such
+attempt has been made possible by the development of linear and
+substructural logics explained below in \ref{linear}.
+In short, in some of those settings, $(p\otimes q)\limp p$ is
+not a theorem because we are not
+allowed to throw away $q$.
+
+\subsection{The Brouwer--Heyting--Kolmogorov Interpretation of Logical Connectives}
+
+Thanks to Heyting~\cite{heyting1930}, we have a formal
+characterization of the intuitionistic implication.
+In 1932, Kolmogorov~\cite{kolmogorov1932} introduced a ``calculus of problems''
+that coincides with the intuitionistic propositional logic.
+In the calculus of problems, the logical connectives $\vee, \wedge,
+\supset$ connects problems to form another problem.
+ \begin{quote}
+  If $a$ and $b$ are two problems, then $a\land b$ designates the
+  problem ``to solve both problems $a$ and $b$,'' while $a\lor b$
+  designates the problem ``to solve at least one of the problems $a$ and
+  $b$.''  Furthermore, $a\supset b$ is the problem ``to solve $b$
+  provided that the solution for $a$ is given'' or, equivalently, ``to
+  reduce the solution of $b$ to the solution of
+  $a$.''  \ldots $\neg a$ designates the problem ``to obtain a
+  contradiction provided that the solution of $a$ is
+  given.''~\cite[p.~329]{kolmogorov1932}
+ \end{quote}
+ He continues to validate Heyting~\cite{heyting1930}'s axioms, and the
+ deduction rules with respect to the problem calculus interpretation.
+
+ Furthermore, he finds a rational for not including the law of excluded
+ middle $a\lor \neg a$ by saying ``one must possess a general method
+ either to prove or to reduce to a contradiction any proposition.  If
+ our reader does not consider himself to be omniscient, he will probably
+ determine that the formula cannot be found on the list of problems
+ solved by him.''~\cite{kolmogorov1932}
+ This argument is enough to reject Dummett's axiom $(a\supset b)\lor
+ (b\supset a)$ because one must possess a general method, given any two
+ problems, to
+ determine whether
+ one problem can be reduced to the other or the other way around.
+ For the computational meaning of the law of excluded middle, we have to
+ wait until 1990's.
+ And the computational interpretation of Dummett's axiom is
+ presented in Chapter~\ref{ch:lambda} in this thesis.
+
+The
+Brouwer--Heyting--Kolmogorov interpretation reads: ``a proof of the
+implication $\varphi\supset\psi$ is a construction which permits us to
+ transform any proof of $\varphi$ into a proof of $\psi$''~\fix{cite}.
+The BHK
+interpretation does not specify what is a proof or what kind of
+transformation witnesses implication.
+Notwithstanding, there is a
+traditional realization of proofs as lambda terms where the
+introduction rule of implication is realized as the lambda abstraction
+and the elimination rule of implication is realized as the application
+of lambda terms.
+This encoding has a formidable property:
+the reductions in the lambda calculus corresponds to the reductions of
+proofs that
+removes detours.
+For example, suppose a natural deduction proof introduces an implication and then
+immidiately eliminate the
+implication.  This proof can be encoded as a lambda term whose outermost
+structure is a $\beta$-redex: $(\lambda x. M)N$.
+ The result of the $\beta$-reduction $M[N/x]$ encodes a proof tree using
+ the same assumptions as the original and concluding the same formula as
+ the original, yet without the aforementioned detour.
+ a proof of implication allows transformation of proofs
+by means of
+substitution.  The encoding of proofs as lambda terms is traditionally
+called the Curry--Howard isomorphism.
+% The situation is similar to axiomatized geometry where lines and points
+% could be tables and chairs \fix{(cite)}.
+The former explanation of implications is justified in classical propositional logic.
+The latter view is most naturally materialized in the situation of
+intuitionistic propositional logic.  The last century saw their
+generalization called intermediate logics~\citep{umezawa} (or superintuitionistic
+logics), of which a typical example is called G\"odel--Dummett logic.
+In this thesis we investigate the Curry--Howard isomorphism for
+G\"odel--Dummett logic.  The G\"odel--Dummett logic validates formulas
+of the form $(\phi\imp\psi)\lor(\psi\imp\phi)$, which is known as
+Dummett's axiom.  We add a construct to the simply typed lambda calculus
+that witnesses Dummett's axiom.
+After the intermediate logics, the generalization went further to
+substructural
+logics~\fix{cite ono et al}, which contains all the intermedaite logics as
+well as the
+(intuitionistic) multiplicative
+additive fragment of linear logic.
+In the later chapter, we make a typing system that lacks contraction and
+weakening, which falls outside of intermediate logics but within
+substructural logics albeit it has quantification over propositional variables.
+
+
+\subsection{Natural Deduction and Sequent Calculus}
+
+\subsubsection{Gentzen}
+
+\fix{Cite Genztzen}
+
+\subsubsection{Prawitz}
+
+\subsubsection{Later Developments}
+
+\subsection{Curry--Howard Isomorphism}
+
+The Curry--Howard isomorphism is originally a correspondence between
+intuitionistic propositional logic proofs and typed lambda terms, but
+the term has obtained a more general meaning containing
+correspondence between proofs and programs in general.
+\citet{curryhoward} is a comprehensive reference on the topic,
+containing lots of historical and bibliographical remarks.
+
+\subsubsection{Curry}
+The Curry--Howard isomorphism is originally the correspondence of
+the typed lambda terms and the proofs of the implicational fragment of
+the intuitionistic propositional logic.
+According to \citep{curryhoward}, the first explicit statement of the
+correspondence appears
+in the retiring presidential address to the Association for Symbolic
+Logic titled ``the combinatory foundations of mathematical
+logic''~\cite{curry1942}.
+The footnote~28 of \citep{curry1942} reads:
+ \begin{quote}
+  Note the similarity of the postulates for $F$ and those for $P$.  If
+  in any of the former postulates we change $F$ to $P$ and drop the
+  combinator we have the corresponding postulate for $P$.
+ \end{quote}
+ For example, there is Postulate~(PC):
+\[
+ \vdash (\beta\supset (\alpha\supset \gamma))\supset (\alpha \supset
+ (\beta\supset \gamma))\enspace.
+\]
+And a corresponding Postulate~(FC):
+\[
+ \vdash F(F\beta(F\alpha\gamma))(F\alpha(F\beta\gamma))C
+\]
+ where $C\equiv \lambda^3 xyz\cdot xzy$ and $F\alpha\beta$ shows the
+ functional character of a
+ function from $\alpha$ to $\beta$.  The postulate~(FC) is said to
+ state the functional character of $C$.
+ In this thesis, we use sequent style natural deduction system so that these
+ postulates can be derived as
+ \[
+ \AxiomC{}
+ \useq{\tj{x}{\beta\supset (\alpha\supset \gamma)}}{\tj{x}{\beta\supset
+ (\alpha\supset \gamma)}}
+ \AxiomC{}
+ \useq{\tj{z}{\beta}}{\tj{z}{\beta}}
+ \bseq{\tj{x}{\beta\supset (\alpha\supset \gamma)},
+ \tj{z}{\beta}}{\tj{xz}{\alpha\supset\gamma}}
+ \AxiomC{}
+ \useq{\tj{y}{\alpha}}{\tj{y}{\alpha}}
+ \bseq{\tj{x}{\beta\supset (\alpha\supset \gamma)},
+ \tj{z}{\beta},\tj{y}{\alpha}}{\tj{xzy}{\gamma}}
+ \useq{\tj{x}{\beta\supset (\alpha\supset
+ \gamma)},\tj{y}{\alpha}}{\tj{\lambda z. xzy}{\beta\supset\gamma}}
+ \useq{\tj{x}{\beta\supset (\alpha\supset
+ \gamma)}}{\tj{\lambda y.\lambda z. xzy}{\alpha\supset(\beta\supset\gamma)}}
+ \useq{}{\tj{\lambda x.\lambda y.\lambda z. xzy}{{(\beta\supset (\alpha\supset
+ \gamma))}\supset (\alpha\supset(\beta\supset\gamma))}}
+ \DisplayProof \enspace .
+ \]
+ Indeed, the last sequent associates the term $\lambda x.\lambda
+ y.\lambda z. xzy$, which is $C$, to the logical formula
+ $(\beta\supset (\alpha\supset
+ \gamma))\supset (\alpha\supset(\beta\supset\gamma))$.
+
+The
+precise statements for the correspondence appear in
+\citet[9E]{curry1974combinatory}, a section titled ``analogies with
+propositional algebra.''
+\fix{cite the statements}
+
+There, Curry notes the correspondence is not isomorphism\fix{or, in
+sorenzen's book ???}  We take a finer approach.
+
+
+algol 60
+landin: a correspondence between algol 60 and church's lambda notation
+
+Pfenning
+
+Davies--Pfenning S4 A Modal Analysis of Staged Computation
+
+Curien
+
+Murphey 7
+
+Game
+
+
+\subsection{G\"odel--Dummett Logic}
+
+\subsubsection{Dummett}
+Dummett~\cite{dummett59} considers a semantics on $\{0,1,2,\ldots,\omega\}$ where
+$\wedge$ is interpreted as max, $\vee$ as min, $\bot$ as $\omega$
+and conjunction~$\wedge$
+ and implication as a
+function~$\hat\supset$ where%
+\footnote{To be precise, Dummett did not use absurdity~$\bot$ but negation~$\neg$
+although they are interdefinable in existence of implication~$\supset$.}
+\begin{align*}
+ x \hat\supset y= \begin{cases}
+		    0 &\text{ if } x\ge y \\
+		    y &\text{ if } x < y
+		  \end{cases}\enspace.
+\end{align*}
+He axiomatized the logic by adding $(p\supset q)\lor(q\supset p)$ on top
+of the axioms for the intuitionistic propositional logic.
+Thomas~\citep{thomas1962} axiomatized
+ the logic on $n$-element chains using Dummett's axiom and the
+ formula~$F_{n+1}$,
+ which is rewritten using only implications but no disjunction or conjunction.
+
+\subsubsection{Sonobe}
+
+\subsubsection{Avron}
+Hypersequent
+
+
+\subsubsection{Later Developments}
+
+\subsection{Waitfreedom}
+
+\subsubsection{Lamport}
+
+\subsubsection{Gafni}
+
+\subsubsection{Herlihy and Shavit}
+
+\subsubsection{Saks and Zaharoglow}
+
+\subsection{Linear Ligic and Monoidal t-Norm Logic}
+\label{linear}
+

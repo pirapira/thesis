@@ -1,0 +1,165 @@
+\chapter{The Logic of Information Exchange}
+\label{ch:exchange}
+
+\subsection{Summary}
+
+The previous chapters treated the computational interpretations of
+disjunctive formulas like $(\phi\imp\psi)\lor(\psi\imp\phi)$ or
+$(\phi\limp\psi)\oplus(\psi\limp\phi)$.  In this chapter, we try
+replacing these disjunctions into conjunctions.
+In the former case, the change renders the logic inconsistent.
+With the axiom $(\phi\imp\psi)\land(\psi\imp\phi)$,
+we can prove any formula.  However in the lattar case, the change does
+not make the system meaningless.  We treat
+the axioms of the form $(\phi\limp\psi)\otimes(\psi\limp\phi)$
+on top of IMLL2, the second order formulation of intuitionistic
+multiplicative linear
+logic.  In essence, the axiom allows two processes to wait for one
+another and then exchange some pieces of information.
+
+\subsection{Dynamics}
+
+We define terms\index{term}~$t$ by BNF:
+\[
+ t ::= x\mid \lambda x.t\mid (t)t\mid c \mid (t\conc t)\enspace.
+\]
+We use $\Lambda$ for the set of terms.
+A stack\index{stack}~$\pi$ is defined by BNF:
+\[
+ \pi ::= \epsilon\mid t\cdot\pi \mid \tuple{\pi,\pi}
+\]
+We use $\Pi$ for the set of stacks.
+An executable is a multiset on $\Lambda\times \Pi$.
+
+The reduction relation $\red$ is the smallest preorder on executables
+that satisfies:
+\begin{description}
+ \item[(cong)] if
+      $e_0         \red e_1$
+      then
+      $e_0 \conc e \red e_1\conc e$\enspace;
+ \item[(abort)] $[\abort,\pi]\red \emptyset$ \enspace;
+ \item[(push)]
+	    $[(t)u,\pi]      \red [t,u\cdot\pi]$      \enspace;
+ \item[(store)]
+	    $[\lambda x.t,u\cdot\pi]
+	     \red
+	     [t[\ast_u/x],      \pi]$\enspace;
+ \item[(load)]
+	    $[\ast_u,\pi]\red [u,\pi]$\enspace;
+ \item[(ex)]
+           $[c, t\cdot\pi\conc \co c,
+           u\cdot\sigma] \red
+           [u,\pi\conc t,\sigma]$\enspace;
+ \item[(dist)]
+           $[(t\conc u),\tuple{\pi,\sigma}]  \red [(t,\pi)\conc (u,\sigma)]$ \enspace.
+\end{description}
+
+
+\subsection{Statics}
+
+We define an IMLL2 formula~$\phi$ by BNF:
+\[
+ \phi :: = X \mid \phi\limp\phi\mid \phi\otimes\phi\mid \forall X\phi\enspace.
+\]
+As an abbreviation, we can introduce $\bot$:
+\begin{align*}
+ \bot &\equiv \forall X X
+\end{align*}
+
+The type system here employs conjunctive hypersequents.  Usually,
+different components in a hypersequent are interpreted disjunctively.
+However, components in a conjunctive hypersequent are interpreted
+conjunctively by $\otimes$.
+
+ \begin{figure}
+\centering
+\AxiomC{}
+\LL  {Ax}
+\useq{\xphi}{\xphi}
+\DisplayProof
+%
+\hfill
+\AxiomC{$\mathcal H$}
+\AxiomC{$\mathcal H$}
+\LL{mix}
+\BinaryInfC{$\mathcal H\hmid \mathcal{H'}$}
+\DisplayProof
+%
+\ruleskip
+\aseq{\hyp{}\xphi,\G}{\tj t\psi}
+\LL{$\limp$I}
+\useq{\hyp{}\G}{\tj{\lambda x.t}{\phi\limp\psi}}
+\DisplayProof
+\hfill
+%
+\aseq{\hyp{}\G}{\tj t{\phi\limp\psi} \hmid \D \tr \tj u\phi}
+\LL   {$\limp$E}
+\useq{\hyp{}\hyp'\G,\D}{\tj{(t)u}\psi}
+\DisplayProof
+\ruleskip
+\aseq{\hyp{}\G}{\tj t\phi}
+\LL   {$\forall$I}
+\useq{\hyp{}\G}{\tj t{\forall X\phi}}
+\DisplayProof (no free $X$ in $\mathcal H$ or $\G$)
+\hfill
+%
+\aseq{\hyp{}\G}{\tj{t}{\forall X\phi}}
+\LL   {$\forall$E}
+\useq{\hyp{}\G}{\tj{t}{\phi[\psi/X]}}
+\DisplayProof
+\ruleskip
+%
+\aseq{\hyp{}\G}{\tj{t}{\phi}\hmid \D\tr\tj{u}{\psi}}
+\LL  {com}
+\useq{\hyp{}\G}{\tj{(c)t}{\psi}\hmid \D\tr\tj{(\co c)u}{\phi}}
+\DisplayProof ($c$ is fresh)
+\ruleskip
+%
+\aseq{\hyp{}\G}{\tj{t}{\phi}\hmid \D\tr\tj{u}{\psi}}
+  \LL{$\otimes$I}
+\useq{\hyp{}\G,\D}{\tj{(t\conc u)}{\phi\otimes \psi}}
+\DisplayProof
+  %
+  \ruleskip
+  \aseq{\hyp{}\G}{\tj{t}{\phi\otimes\psi}\hmid
+  \tj{x}{\phi},\tj{y}{\psi},\D\tr \tj{u}{\theta}}
+  \LL{$\otimes$E}
+  \useq{\hyp{}\hyp'\G,\D}{\tj{\letpar t x y u}{\theta}}
+  \DisplayProof
+  \caption{The typing rule of $\NMLL$.}
+ \end{figure}
+
+\subsection{Specification Using Poles}
+
+We define programs and environments in the same way as
+Subsection~\ref{pole:spec}.
+
+\fix{define a pole}
+
+\fix{define $\sempair{\phi^+,\psi^-}$}
+
+ \begin{theorem}[Adequacy]
+  \fix{state}
+ \end{theorem}
+ \fix{prove}
+
+  \begin{proposition}[Specification of the axiom]
+   Let $g$ have type ${\forall X\forall
+   Y((X\limp Y)\times (Y\limp X))}$.
+   Then, the s-executable
+   \[
+   [g, \mats{z}{z}{x\cdot\pi_Y}{w}{w}{y\cdot\pi_X}]
+   \]
+   reduces to a multiset on
+   $\{(x,\pi_X), (y,\pi_Y)\}$.
+  \end{proposition}
+
+\subsection{Consistency}
+
+\begin{proposition}
+  No term has the type $\forall X X$.
+\end{proposition}
+\begin{corollary}
+ The system $\NMLL$ is consistent.
+\end{corollary}

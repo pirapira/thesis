@@ -1,81 +1,12 @@
 \chapter{Introduction}
 
-\subsection{Our Contributions in the Historical Perspective}
-
-Implication is an important concept.
-Different treatments of implication has taken place in the realm of
-mathematical logic.
-One treatment of implications called the material implication~\fix{cite russel}
-reduces an implication to negations and conjunctions by letting
-$\phi\supset \psi$ be equivalent to $\neg (\phi \land \neg \psi)$.
-However, there is another treatment of implication: the
-Brouwer--Heyting--Kolmogorov interpretation reads: ``a proof of the
-implication $\varphi\supset\psi$ is a construction which permits us to
- transform any proof of $\varphi$ into a proof of $\psi$''~\fix{cite}.
-The BHK
-interpretation does not specify what is a proof or what kind of
-transformation witnesses implication.
-Notwithstanding, there is a
-traditional realization of proofs as lambda terms where the
-introduction rule of implication is realized as the lambda abstraction
-and the elimination rule of implication is realized as the application
-of lambda terms.
-This encoding has a formidable property:
-the reductions in the lambda calculus corresponds to the reductions of
-proofs that
-removes detours.
-For example, suppose a natural deduction proof introduces an implication and then
-immidiately eliminate the
-implication.  This proof can be encoded as a lambda term whose outermost
-structure is a $\beta$-redex: $(\lambda x. M)N$.
- The result of the $\beta$-reduction $M[N/x]$ encodes a proof tree using
- the same assumptions as the original and concluding the same formula as
- the original, yet without the aforementioned detour.
- a proof of implication allows transformation of proofs
-by means of
-substitution.  The encoding of proofs as lambda terms is traditionally
-called the Curry--Howard isomorphism.
-% The situation is similar to axiomatized geometry where lines and points
-% could be tables and chairs \fix{(cite)}.
-The former explanation of implications is justified in classical propositional logic.
-The latter view is most naturally materialized in the situation of
-intuitionistic propositional logic.  The last century saw their
-generalization called intermediate logics~\citep{umezawa} (or superintuitionistic
-logics), of which a typical example is called G\"odel--Dummett logic.
-In this thesis we investigate the Curry--Howard isomorphism for
-G\"odel--Dummett logic.  The G\"odel--Dummett logic validates formulas
-of the form $(\phi\imp\psi)\lor(\psi\imp\phi)$, which is known as
-Dummett's axiom.  We add a construct to the simply typed lambda calculus
-that witnesses Dummett's axiom.
-After the intermediate logics, the generalization went further to
-substructural
-logics~\fix{cite ono et al}, which contains all the intermedaite logics as
-well as the
-(intuitionistic) multiplicative
-additive fragment of linear logic.
-In the later chapter, we make a typing system that lacks contraction and
-weakening, which falls outside of intermediate logics but within
-substructural logics albeit it has quantification over propositional variables.
-
-The material implication can be traced back at least to
-Frege's \textit{Begriffsschrift}.  There, in the section called
-``conditionality,''
-he begins by establishing four cases~\citep[p.~13]{van1967frege}:
-\begin{enumerate}
- \item $A$ is affirmed and $B$ is affirmed\,;
- \item $A$ is affirmed and $B$ is denied\,;
- \item $A$ is denied and $B$ is affirmed\,;
- \item $A$ is denied and $B$ is denied.
-\end{enumerate}
-Then he defines a notation involving $A$ and $B$, which ``stands for the
-judgment that \textit{the third of these possibilities does not take
-place, but one of the three other does\footnote{The emphasis is by
-the English translation~\citep[p.~14]{van1967frege}}.''}
-It was Russell who called this implication the material implication,
-according to~\citet{sep-conditionals}.
+\subsection{Our Contributions}
 
 The Curry--Howard isomorphism~\citep{curryhoward} was first made
-precise~\citep[p.97]{curryhoward} by \citet[\textbf{9}E and \textbf{9}F]{curry1974combinatory}
+precise~\citep[p.97]{curryhoward} by \citet[\textbf{9}E and
+\textbf{9}F]{curry1974combinatory}.
+The intuitionistic propositional logic and the typed lambda calculus
+had been independently invented but Curry discovered them to be the same thing.
 The double discovery is considered (e.g.~by \citet{wadler2012propositions})
 to affirm the importance of the typed lambda calculi.
 In this thesis we witness a replay of the double discovery with
@@ -97,7 +28,10 @@ G\"odel--Dummett logic with waitfreedom
        a hypoersequent calculus
  \item developing a parametricity argument for
        concurrent processes performing waitfree communication.
- \item identifying the computational ability of monoidal t-norm logic.
+ \item identifying the communication performed by the prelinearity axiom
+       of monoidal t-norm logic.
+ \item identifying the communication performed by a seemingly unknown axiom
+       $(p\limp q)\otimes(q\limp p)$ on top of multiplicative linear logic.
  \item finding a method for implementing hypersequent-based lambda calculi in a
        functional programming language Haskell on the Glasgow Haskell
        Compiler
@@ -155,11 +89,13 @@ Our technical development here is very similar to that of
 not communicate in the case of \citet{danos-krivine} but they perform
 waitfree communication in our case.
 
-Our fourth contribution is a confirmation of our second contribution.
+\fix{add nth and nth}
+
+Our \fix{nth} contribution is a confirmation of our second contribution.
 We implemented the lambda calculus on top of
 Glasgow Haskell Compiler.
 
-Our fifth contribution is about proof searching, which is another
+Our \fix{nth} contribution is about proof searching, which is another
 kind of computation arising from propositional logic.
 The lambda calculi is about removing detours from proofs while the proof
 searching is about finding a proof or a counterexample for a given
@@ -233,23 +169,6 @@ requiring that the truth values are linearly ordered.  \fix{ is this
 usage of ``truth values'' correct? }
 In terms of computation, what is it?
 
-\section{Curry--Howard Correspondence for Different Logics}
-
-Gentzen
-
-Prawitz
-
-Pfenning
-
-Davies--Pfenning S4 A Modal Analysis of Staged Computation
-
-Curien
-
-Murphey 7
-
-Hypersequent
-
-Game
 
 \section{Location Aware Languages}
 
