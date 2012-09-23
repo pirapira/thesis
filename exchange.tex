@@ -60,11 +60,17 @@ that satisfies:
 
 We define an IMLL2 formula~$\phi$ by BNF:
 \[
- \phi :: = X \mid \phi\limp\phi\mid \phi\otimes\phi\mid \forall X\phi\enspace.
+ \phi :: =
+ X \mid
+ \phi\limp\phi\mid
+% \phi\otimes\phi\mid
+ \forall X\phi\enspace.
 \]
-As an abbreviation, we can introduce $\bot$:
+As abbreviations, we can introduce $\otimes$ and $\bot$:
 \begin{align*}
- \bot &\equiv \forall X X
+ \phi\otimes\psi &\equiv \forall X ((\phi\limp\psi\limp X)\limp X)
+ \text{ do not contain }\\
+ \bot &\equiv \forall X X\enspace.
 \end{align*}
 
 The type system here employs conjunctive hypersequents.  Usually,
@@ -93,9 +99,10 @@ conjunctively by $\otimes$.
 \DisplayProof
 \hfill
 %
-\aseq{\hyp{}\G}{\tj t{\phi\limp\psi} \hmid \D \tr \tj u\phi}
+\aseq{\hyp{}\G}{\tj t{\phi\limp\psi}}
+\aseq{\hyp'\D}{\tj u\phi}
 \LL   {$\limp$E}
-\useq{\hyp{}\hyp'\G,\D}{\tj{(t)u}\psi}
+\bseq{\hyp{}\hyp'\G,\D}{\tj{(t)u}\psi}
 \DisplayProof
 \ruleskip
 \aseq{\hyp{}\G}{\tj t\phi}
@@ -116,17 +123,17 @@ conjunctively by $\otimes$.
 \DisplayProof ($c$ is fresh)
 \ruleskip
 %
-\aseq{\hyp{}\G}{\tj{t}{\phi}\hmid \D\tr\tj{u}{\psi}}
-  \LL{$\otimes$I}
-\useq{\hyp{}\G,\D}{\tj{(t\conc u)}{\phi\otimes \psi}}
-\DisplayProof
-  %
-  \ruleskip
-  \aseq{\hyp{}\G}{\tj{t}{\phi\otimes\psi}\hmid
-  \tj{x}{\phi},\tj{y}{\psi},\D\tr \tj{u}{\theta}}
-  \LL{$\otimes$E}
-  \useq{\hyp{}\hyp'\G,\D}{\tj{\letpar t x y u}{\theta}}
-  \DisplayProof
+% \aseq{\hyp{}\G}{\tj{t}{\phi}\hmid \D\tr\tj{u}{\psi}}
+%   \LL{$\otimes$I}
+% \useq{\hyp{}\G,\D}{\tj{(t\conc u)}{\phi\otimes \psi}}
+% \DisplayProof
+%   %
+%   \ruleskip
+%   \aseq{\hyp{}\G}{\tj{t}{\phi\otimes\psi}\hmid
+%   \tj{x}{\phi},\tj{y}{\psi},\D\tr \tj{u}{\theta}}
+%   \LL{$\otimes$E}
+%   \useq{\hyp{}\hyp'\G,\D}{\tj{\letpar t x y u}{\theta}}
+%   \DisplayProof
   \caption{The typing rule of $\NMLL$.}
  \end{figure}
 
