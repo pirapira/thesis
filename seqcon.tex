@@ -1264,3 +1264,22 @@ Proof to be found in the author's Master's thesis.
  waitfree task specification,
  to represent
  an assertion that a waitfree protocol meets a specification.
+
+\section{For the Next Chapters}
+
+In this chapter, we saw that sequential consistency axioms
+describe a kind of communication among processes.
+However, the description is only asssertional.  In other words, we are
+still in the realm of modal correspondence theory \fix{cite something}.
+We have not exploited the fact that we are using constructive logic,
+where proofs (i.e. lambda terms) can give concrete mechanism of
+computation.  In the next chapters, we consider how to add communicaiton
+facilities to lambda calculi so that certain axioms are satisfied.
+In Chapter~\ref{ch:lambda}, we deal with G\"odel--Dummett logic, which is
+characterized by Dummett's axiom $(\phi\imp\psi)\lor (\psi\imp\phi)$ on
+top of the intuitionistic propositional logic.
+In Chapter~\ref{ch:prelin}, we consider the prelinearity axiom, which is
+the linear version of Dummett's axiom.
+In Chapter~\ref{ch:exchange}, we consider yet another axiom that can be
+obtained by replacing the disjunction with conjunction in the
+prelinarity axiom.
