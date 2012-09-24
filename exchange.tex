@@ -23,10 +23,12 @@ We define terms\index{term}~$t$ by BNF:
 \[
  t ::= x\mid \lambda x.t\mid (t)t\mid c \mid (t\conc t)\enspace.
 \]
+By $t^+$ we denote a term of the form $x$, $\lambda x.t$, $c$ or $(t\conc
+t)$.
 We use $\Lambda$ for the set of terms.
 A stack\index{stack}~$\pi$ is defined by BNF:
 \[
- \pi ::= \epsilon\mid t\cdot\pi \mid \tuple{\pi,\pi}
+ \pi ::= \epsilon\mid c\cdot\pi \mid \tuple{\pi,\pi} \mid c
 \]
 We use $\Pi$ for the set of stacks.
 An executable is a multiset on $\Lambda\times \Pi$.
@@ -37,14 +39,16 @@ that satisfies:
  \item[(cong)] if
       $e_0         \red e_1$
       then
-      $e_0 \conc e \red e_1\conc e$\enspace;
+      $e_0 \conc e \red e_1\conc e$ where $e$ and $e_0$ do not contain
+      any common channels \enspace;
  \item[(abort)] $[\abort,\pi]\red \emptyset$ \enspace;
- \item[(push)]
-	    $[(t)u,\pi]      \red [t,u\cdot\pi]$      \enspace;
+ \item[(dispatch)]
+	    $[(t)u, \pi]   \red [t,c\cdot\pi\conc u, \co c]$   where $c$
+      does not appear in $t$ or $u$ or $\pi$\enspace;
  \item[(store)]
-	    $[\lambda x.t,u\cdot\pi]
+	    $[\lambda x.t,c\cdot\pi \conc t^+, \co c]
 	     \red
-	     [t[\ast_u/x],      \pi]$\enspace;
+	     [t[\ast_{t^+}/x],      \pi]$\enspace;
  \item[(load)]
 	    $[\ast_u,\pi]\red [u,\pi]$\enspace;
  \item[(ex)]
