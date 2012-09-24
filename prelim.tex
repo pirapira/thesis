@@ -36,7 +36,8 @@ Different treatments of implication has taken place in the realm of
 mathematical logic.
 One treatment of implications called the material implication.
 The material implication can be traced back at least to
-Frege's \textit{Begriffsschrift}~\citep{frege}.  There, in the section called
+Frege's \textit{Begriffsschrift}~\citep{frege} in 1879.  There, in the
+section called
 ``conditionality,''
 he begins by establishing four cases~\citep[p.~13]{frege}:
 \begin{enumerate}
@@ -52,7 +53,7 @@ Then he defines a notation involving $A$ and $B$
 which ``stands for the
 judgment that \textit{the third of these possibilities does not take
 place, but one of the three other does\footnote{The emphasis is by
-the English translation~\citep[p.~14]{frege}}.''}
+the English translation~\citep[p.~14]{frege}.}.''}
 In the contemporary common mathematical terminology, this is equivalent
 to stating $B$ implies $A$.
 It was Russell who called this implication the material implication,
@@ -68,6 +69,19 @@ semantics) and other logical connectives
 can be defined using implication.
 
 \subsection{Intuitionistic Propositional Logic}
+
+The intuitionistic propositional logic is a logic, that is, a set of
+logical formulae.
+Although the name ``intuitionistic'' comes from Brouwer's intuitionism,
+the original claims of intuitionism are unrelated to this thesis.
+Brouwer was skeptical about the value of formalization of
+mathematics and considered the studies of formal axiomatized logic as
+``mathematics of the second and third order''
+~\fix{cite brouwer's
+intuitionist programme}.
+Nontheless, Brouwer approved publication of his student Arend Heyting's
+work on defining a set of logical formulae as the intuitionistic
+propositional logic.
 
 \subsubsection{Heyting}
 In 1930, Heyting~\cite{heyting1930} developed a deduction system for the
@@ -365,7 +379,7 @@ And a corresponding Postulate~(FC):
  \DisplayProof \enspace .
  \]
  Indeed, the last sequent associates the term $\lambda x.\lambda
- y.\lambda z. xzy$, which is $C$, to the logical formula
+ y.\lambda z. xzy$, which is the combinator $C$, to the logical formula
  $(\beta\supset (\alpha\supset
  \gamma))\supset (\alpha\supset(\beta\supset\gamma))$.
 
@@ -402,7 +416,8 @@ and conjunction~$\wedge$
  and implication as a
 function~$\hat\supset$ where%
 \footnote{To be precise, Dummett did not use absurdity~$\bot$ but negation~$\neg$
-although they are interdefinable in existence of implication~$\supset$.}
+although they are interdefinable in existence of implication~$\supset$
+and conjunction~$\wedge$.}
 \begin{align*}
  x \hat\supset y= \begin{cases}
 		    0 &\text{ if } x\ge y \\
@@ -434,6 +449,139 @@ Hypersequent
 
 \subsubsection{Saks and Zaharoglow}
 
-\subsection{Linear Ligic and Monoidal t-Norm Logic}
+\subsection{Superintuitionistic Logics}
+
+A logic is a set of logical formulae which is closed by
+substitution and modus ponens.
+ A superintuitionistic logic is a logic
+that contains the intuitionistic propositional logic.  A logic is consistent when it does not
+contain all logical formulae.
+
+Troelstra~\cite[p.~223]{goedelcollected} writes ``the reasons
+for studying intermediate logics are mainly technical.''
+
+In a survey paper, Hosoi and Ono~\cite{hosoi-ono} says:
+ \begin{quote}
+  The study of intermediate logics seems to have two aspects: One is to
+  study particularities of a certain logic, and the other is to take the
+  intermediate logics as a whole and to study the relations between the
+  logics or some structures recognized in that system.  We think that an
+  intermediate logic is simply an algebraic system bearing some
+  structural resemblance to the \textit{logic} in the usual sense and
+  that it is not a \textit{logic} on which some kind of mathematics can
+  or must be constructed.  So, the second approach seems to be
+  reasonable for us, and we have been mostly working with the intension
+  of grasping the albebraic structure of the whole system of the
+  intermediate logic\footnote{Emphases by the authors of the original
+  paper.}.
+ \end{quote}
+Their approach has been successful.
+One spectacular result by Maksimova~\citep{maksimova77}
+states that there are only seven consistent
+superintuitionistic logics with the Craig interpolation
+property.
+The Craig interpolation property holds for a logic $L$ iff $\alpha
+\imp\beta\in L$ implies existence of a formula $\chi$ such that
+$\alpha\imp\chi, \chi\imp\beta\in L$ and $\chi$ only contains propositional
+variables that appears in both $\alpha$ and $\beta$.
+The seven logics include the intuitionistic propositional logic, the logic of
+the weak excluded middle,
+G\"odel--Dummett logic
+and classical logic.
+Although the Craig interpolation property is useful for program
+verification~\citep{unno2009} \fix{cite others},
+the above result itself is only of
+theoretical interest.
+
+We take the first approach described by Hosoi and Ono.
+This thesis is about particular logics: G\"odel--Dummett logic and
+monoidal t-norm logic.  We claim that these logics are usual logics
+on which we can develop programming language.  The Curry--Howard
+isomorphism is our justification of studying these particular logics.
+G\"odel--Dummett logic is one typical intermediate logic.
+Monoidal t-norm logic, on the other hand, is not an intermediate logic
+because it lacks a structural rule called contraction.  Such logics are
+called substructural logics.
+
+\subsection{Substructural Logics}
 \label{linear}
+
+We can understand the difference of the intuitionistic propositional
+logic from classical
+logic as the lack of contraction rule on the right hand side
+\fix{really??}.
+
+In sequent calculus or the sequent style natural deduction, when we
+apply most rules, we need to make pattern-matching on the logical
+formulae.
+For example, in order to apply this $\land$L rule of sequent calculus
+for classical logic,
+ \begin{center}
+ \aseq{\G,\phi,\psi}{\D}
+ \LL{$\wedge$L}
+ \useq{\G,\phi\land\psi}{\D}
+  \DisplayProof
+ \end{center}
+we have to find a formula on the left hand
+side sequent whose top connective is $\wedge$.
+
+A structural rule\index{structural rule}
+is a deduction rule that does not require
+pattern-matching on formulae except two of them are equal or not.
+
+Today, the logics without some structural rules are called substructural
+logics\index{logic!substructural}.  There have been intensive studies on
+substructural logics mainly from the algebraic
+approach~\cite{residuated}.
+
+\subsubsection{Logics without Exchange Rule}
+
+Lambek calculus (\fix{cite lam58}) was originally developed for
+analyzing natural language syntax.  When we modify Lambek calculus in
+favor of syntactic mathematical logicians, we obtain FL.
+All logics we treat in this thesis have exchange rules.
+
+\subsubsection{BCI and BCK Logics}
+
+When we add exchange rule to FL, we obtain BCI logic (originally called
+BCC logic in \citep{ono-komori-1985}).
+Further, when we add weakening to BCI logic, we obtain BCK
+logic~\citep{ono-komori-1985}.
+BCK logic\index{logic!BCK} has three axioms named after well-known
+combinators.  Indeed, the logic can be characterized as the smallest set
+closed by modus ponens and substitution that contains
+\begin{description}
+ \item[(B)] $(\phi\imp\psi)\imp((\chi\imp\phi)\imp(\chi\imp\psi))$
+ \item[(C)] $(\phi\imp(\psi\imp\chi))\imp(\psi\imp(\phi\imp\chi))$ and
+ \item[(K)] $\phi\imp(\psi\imp\phi)$\enspace.
+\end{description}
+From these, by modus ponens and substitution, (I) $\phi\imp\phi$
+follows, but
+(W) $(\psi\imp(\psi\imp\phi))\imp(\psi\imp\phi)$ does not follow.
+Thus, the left hand side contraction is not admissible in the sequent
+calculus for the BCK logic.
+
+\subsubsection{Linear and Affine Logics}
+
+Girard
+
+Abramsky
+
+
+
+\subsection{Parametricity}
+
+\subsubsection{Tait's Method}
+
+Reynold
+
+Logical Relation
+
+Steps Index
+
+\subsubsection{Classical Realizability}
+
+Krivine
+
+Curien
 
