@@ -614,49 +614,6 @@
    \]
   \end{definition}
 
-  For some pages, we argue about a
-  set of \iec-formula $\Omega$. Later, when we show
-  strong completeness, we take $\Omega$ to be the whole set of well formed \iec-formulae.  Also,
-  when we show finite model property, we take $\Omega$ to be the set of the subformulae of a
-  certain \iec-formula.  This model construction is inspired by
-  Sato's paper~\cite{sato13study}
-  and Troelstra and van Dalen's textbook~\cite{troelstra1988constructivism}.
-  However, the notion of $f$-subformula-closed sets is new and original.
-
-  \begin{definition}
-   \label{saturated-set}
-   For a set of formulae $\Omega$,
-   a set of \iec-formulae $\Gamma\subseteq\Omega$ is $\Omega$-saturated%
-   \index{saturated!$\Omega$-saturated} if and only if
-   \begin{enumerate}
-    \item $\Gamma$ is $\Omega$-deductively closed, i.e., $\Gamma\vdash\varphi\in
-	  \Omega\Rightarrow
-	  \varphi\in\Gamma$,
-    \item $\Gamma\vdash\varphi\vee\psi \Rightarrow \Gamma\vdash\varphi$ or $\Gamma\vdash\psi$
-	  if $\varphi,\psi\in\Omega$,
-    \item $\Gamma\not\vdash\bot$.
-   \end{enumerate}
-  \end{definition}
-
-  \begin{definition}
-   A hereditary $f$-subformula-closed set $\Gamma$ is coinductively defined as:
-   $\Gamma$ is a hereditary $f$-subformula-closed set if and only
-   if $f_a(\Gamma)$ is hereditary $f$-closed, $\Gamma$ is closed for taking subformulae and
-   $f_a(\Gamma)\subseteq \Gamma$.
-  \end{definition}
-
-  \begin{definition}
-   We define $s_a(\varphi)$ inductively on $\varphi$:
-   \[
-   s_a(\varphi) = \begin{cases}
-		   s_a(K_a\psi) & \text{(if $\varphi = K_aK_a\psi$)},\\
-		   \varphi & \text{(otherwise)}.
-		  \end{cases}
-   \]
-  \end{definition}
-  \noindent The function $s_a$ replaces every $K_aK_a$ with $K_a$ repeatedly so that there are no
-  $K_aK_a$ occurrences left.
-
   \newcommand{\natpls}{{\mathbb N}^{+}}
 
 \begin{proposition}[Strong completeness]
