@@ -8,14 +8,15 @@ disjunctive formulas like $(\phi\imp\psi)\lor(\psi\imp\phi)$ or
 $(\phi\limp\psi)\oplus(\psi\limp\phi)$.  In this chapter, we try
 replacing these disjunctions into conjunctions.
 In the former case, the change renders the logic inconsistent.
-With the axiom $(\phi\imp\psi)\land(\psi\imp\phi)$,
+If we add the axiom $(\phi\imp\psi)\land(\psi\imp\phi)$ to the
+intuitionistic propositional logic,
 we can prove any formula.  However in the lattar case, the change does
 not make the system meaningless.  We treat
 the axioms of the form $(\phi\limp\psi)\otimes(\psi\limp\phi)$
 on top of IMLL2, the second order formulation of intuitionistic
 multiplicative linear
 logic.  In essence, the axiom allows two processes to wait for one
-another and then exchange some pieces of information.
+another and then exchange information.
 
 \subsection{Dynamics}
 
@@ -23,37 +24,36 @@ We define terms\index{term}~$t$ by BNF:
 \[
  t ::= x\mid \lambda x.t\mid (t)t\enspace.
 \]
-By $t^+$ we denote a term of the form $x$, $\lambda x.t$, $c$ or $(t\conc
-t)$.
 We use $\Lambda$ for the set of terms.
-A stack\index{stack}~$\pi$ and an process\index{process}~$p$
+A stack\index{stack}~$\pi$ and a process\index{process}~$p$
 are defined by BNF:
 \begin{align*}
  \pi &::= \epsilon\mid p\cdot\pi\\
  p   &::= t,\pi
 \end{align*}
-For two stacks $\sigma$ and $\pi$, $\sigma\cdot\pi$ is defined
+For two stacks $\sigma$ and $\pi$, the concatenation $\sigma\cdot\pi$ is
+defined
 inductively on $\sigma$: i.e. $\epsilon\cdot\pi = \pi$ and $(e
 \cdot \sigma') \cdot \pi = e\cdot (\sigma'\cdot \pi)$.  By the latter
 equation, $\cdot$ can be considered associative.
 We use $\Pi$ for the set of stacks.
-An executable is a multiset of processes.
 
-The reduction relation $\red$ is the smallest preorder on processes
-that satisfies:
+The reduction relations are the smallest preorders on processes
+ and on stacks (both denoted by $\red$) that satisfies:
 \begin{description}
- \item[(cong)] $p\red p'$ implies $t, \sigma \cdot p \cdot \pi\red
-      t,\sigma\cdot p'\cdot \pi$ \enspace;
+ \item[(cong)] $p\red p'$ implies $\sigma \cdot p \cdot \pi\red
+      \sigma\cdot p'\cdot \pi$ \enspace;
+ \item[(cong')] $\pi\red\pi'$ implies $t,\pi\red t,\pi'$\enspace;
  \item[(push)]
 	    $(t)u, \pi   \red t,(u,\epsilon)\cdot\pi$\enspace;
- \item[(store)]
+ \item[(pull)]
 	    $\lambda x.t,(u,\epsilon)\cdot\pi
 	     \red
 	     t[u/x], \pi$\enspace;
  \item[(ex)]
-           $v, \pi\cdot (c, (t,\pi_0)\cdot \pi_1)\cdot\pi' \cdot (\co
+           $\pi\cdot (c, (t,\pi_0)\cdot \pi_1)\cdot\pi' \cdot (\co
       c,(u,\sigma_0)\cdot \sigma_1) \cdot \pi''\red
-      v, \pi\cdot (u, \sigma_0\cdot \pi_1)\cdot\pi' \cdot (
+      \pi\cdot (u, \sigma_0\cdot \pi_1)\cdot\pi' \cdot (
       t,\pi_0\cdot \sigma_1) \cdot \pi''
       $
       \enspace.
@@ -73,11 +73,11 @@ We define an IMLL2 formula~$\phi$ by BNF:
 As abbreviations, we can introduce $\otimes$ and $\bot$:
 \begin{align*}
  \phi\otimes\psi &\equiv \forall X ((\phi\limp\psi\limp X)\limp X)
- \text{ do not contain }\\
+ \text{ where }\phi\otimes\psi\text{ does not contain } X \text{ freely.}\\
  \bot &\equiv \forall X X\enspace.
 \end{align*}
 
-The type system here employs conjunctive hypersequents.  Usually,
+The type system employs conjunctive hypersequents.  Usually,
 different components in a hypersequent are interpreted disjunctively.
 However, components in a conjunctive hypersequent are interpreted
 conjunctively by $\otimes$.
@@ -101,11 +101,12 @@ conjunctively by $\otimes$.
 \LL{$\limp$I}
 \useq{\hyp{}\G}{\tj{\lambda x.t}{\phi\limp\psi}}
 \DisplayProof
-\hfill
+\ruleskip
 %
-\aseq{\hyp{}\G}{\tj t{\phi\limp\psi\hmid\D\tr\tj u\phi}}
+\aseq{\hyp{}\G}{\tj t{\phi_0\limp\cdots\limp \phi_n \limp\psi}}
+\aseq{\D_0}{\tj{u_0}{\phi_0} \hmid \cdots \hmid \D_n\tr\tj{u_n}{\phi_n}}
 \LL   {$\limp$E}
-\useq{\hyp{}\G,\D}{\tj{(t)u}\psi}
+\bseq{\hyp{}\G,\D_0,\ldots,\D_n}{\tj{(((t)u_0)\cdots) u_n}\psi}
 \DisplayProof
 \ruleskip
 \aseq{\hyp{}\G}{\tj t\phi}
@@ -137,7 +138,7 @@ conjunctively by $\otimes$.
 %   \LL{$\otimes$E}
 %   \useq{\hyp{}\hyp'\G,\D}{\tj{\letpar t x y u}{\theta}}
 %   \DisplayProof
-  \caption{The typing rule of $\NMLL$.}
+  \caption{The typing rules of $\NMLL$.  Exchange rules are omitted.}
  \end{figure}
 
 \subsection{Specification Using Poles}
@@ -147,12 +148,13 @@ conjunctively by $\otimes$.
 
 \begin{definition}
  \label{ex:def:pole}
-A pole\index{pole}~$\bbot$ is a set of executables
+A pole\index{pole}~$\bbot$ is a set of stacks
 which satisfies
 \begin{enumerate}
- \item \label{ex:red-closed} $e$ is in $\bbot$ if $e\red e'$ and
-       $e'\in\bbot$; and
- \item \label{ex:conc-closed} $e\conc f$ is in $\bbot$ if $e$ and $f$ are in $\bbot$.
+ \item \label{ex:red-closed} $\pi$ is in $\bbot$ if $\pi\red \sigma$ and
+       $\sigma\in\bbot$; and
+ \item \label{ex:conc-closed} $\pi\cdot \sigma$ is in $\bbot$ if $\pi$
+       and $\sigma$ are in $\bbot$.
 \end{enumerate}
 \end{definition}
 
@@ -170,12 +172,14 @@ $t$ such that
 for any
 %environment $(\pi,e')\in \mathcal Z$,
 stack $\pi\in\mathcal Z$,
-the executable $t,\pi$ is in $\bbot$.
+the single-process stack $(t,\pi)\cdot\epsilon$ is in $\bbot$.
 % We use programs and environments because if we continued using
 % s-terms and s-stacks, the proof of adequacy (Thm.~\ref{c:adequacy})
 % would fail
 % in the case
 % ($\limp$E,~\textminus),~\ref{c:second}.
+
+\fix{define Form}
 
 For $\phi\in\form(2^E)$ and $|\cdot|^-_0\colon\pvar\rightarrow 2^E$\kern
 -2pt,
@@ -198,24 +202,30 @@ $\nsem{\phi\limp\psi} = \{t\cdot\pi\mid
 t\in\sem\phi\text{ and }\pi\in\nsem\psi\}$.
 
 For $\G = \tj{x_1}{\phi_1},\ldots,\tj{x_n}{\phi_n}$,
-we denote by $\sem{\G}$ the set of sequences $\vec t$ where
-$\vec{t} = (t_1,\dots,t_n)$
- and each term $t_i$ is in $\sem{\phi_i}$.
-For that $\vec t$, $[\vec{t}/\G]$ denotes the simultaneous substitution
+we denote by $\sem{\G}$ the set of sequences $(t_1,\dots,t_n)$
+ where each term $t_i$ is in $\sem{\phi_i}$.
+For that sequence~$\vec t$, $[\vec{t}/\G]$ denotes the simultaneous substitution
 $[t_i/x_i]_{0\le i \le n}$.
 For a hypersequent, we
 define a set of s-executables
 $
 \semo{\G_0\tr\tj{t_0}{\phi_0}\hmid\cdots\hmid\G_n\tr\tj{t_n}{\phi_n}}
 $
-to be the set of executables of the form $\bigparallel_{0\le i\le
-n}\left(t_i[\vec{g_i}/\G_i],\pi_i\right)$ where
+to be the set of executables of the form
+$
+\left(t_0[\vec{g_0}/\G_0],\pi_0\right)\cdot\cdots\cdot
+\left(t_n[\vec{g_n}/\G_n],\pi_n\right)
+$
+ where
 $\vec{g_i} \in \sem{\G_i}$ and $\pi_i\in \nsem{\phi_i}$.
 
  \begin{theorem}[Adequacy]
-  \fix{state}
+  If a hypersequent~$\mathcal H$ is derivable, the stacks in $\semo{\mathcal
+  H}$ are in $\bbot$.
  \end{theorem}
- \fix{prove}
+  \begin{proof}
+   \fix{prove}
+  \end{proof}
 
   \begin{proposition}[Specification of the axiom]
    Let $g$ have type ${\forall X\forall
