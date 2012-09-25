@@ -26,24 +26,24 @@ We define terms\index{term}~$t$ by BNF:
 By $t^+$ we denote a term of the form $x$, $\lambda x.t$, $c$ or $(t\conc
 t)$.
 We use $\Lambda$ for the set of terms.
-A stack\index{stack}~$\pi$ and an executable\index{executable}~$e$
+A stack\index{stack}~$\pi$ and an process\index{process}~$p$
 are defined by BNF:
 \begin{align*}
- \pi &::= \epsilon\mid e\cdot\pi\\
- e   &::= t,\pi
+ \pi &::= \epsilon\mid p\cdot\pi\\
+ p   &::= t,\pi
 \end{align*}
 For two stacks $\sigma$ and $\pi$, $\sigma\cdot\pi$ is defined
 inductively on $\sigma$: i.e. $\epsilon\cdot\pi = \pi$ and $(e
 \cdot \sigma') \cdot \pi = e\cdot (\sigma'\cdot \pi)$.  By the latter
 equation, $\cdot$ can be considered associative.
 We use $\Pi$ for the set of stacks.
-An executable is a multiset on $\Lambda\times \Pi$.
+An executable is a multiset of processes.
 
-The reduction relation $\red$ is the smallest preorder on executables
+The reduction relation $\red$ is the smallest preorder on processes
 that satisfies:
 \begin{description}
- \item[(cong)] $e\red e'$ implies $t, \sigma \cdot e \cdot \pi\red
-      t,\sigma\cdot e'\cdot \pi$ \enspace;
+ \item[(cong)] $p\red p'$ implies $t, \sigma \cdot p \cdot \pi\red
+      t,\sigma\cdot p'\cdot \pi$ \enspace;
  \item[(push)]
 	    $(t)u, \pi   \red t,(u,\epsilon)\cdot\pi$\enspace;
  \item[(store)]
