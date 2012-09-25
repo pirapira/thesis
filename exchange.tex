@@ -179,6 +179,8 @@ the single-process stack $(t,\pi)\cdot\epsilon$ is in $\bbot$.
 % in the case
 % ($\limp$E,~\textminus),~\ref{c:second}.
 
+\fix{define tuple nsem}
+
 \fix{define Form}
 
 For $\phi\in\form(2^E)$ and $|\cdot|^-_0\colon\pvar\rightarrow 2^E$\kern
@@ -189,17 +191,57 @@ we define $\nsem{\phi}\in
  \nsem{\mathcal Z} =& \mathcal Z \text{ for } \mathcal Z\in 2^E\\
  \nsem{X}=& |X|_0^- \\
  %%%
- \nsem{\phi\limp\psi}=&
- \{e\cdot\pi\mid  t\in\nsem\phi\rightarrow\bbot
- \text{ and  }\pi\in\nsem\psi\}\\
+ \nsem{\phi_0\limp\cdots\limp\phi_n\limp\psi}=&
+ \{e_0\cdot e_1\cdot\cdots\cdot e_n\cdot\pi\mid \\ &\,\,\,  e_0\cdot
+ e_1\cdot\cdots\cdot e_n
+ \in(\nsem{\phi_0}, \nsem{\phi_1}, \ldots, \nsem{\phi_n})\rightarrow\bbot
+ \text{ and  }
+ \\&\,\,\,\pi\in\nsem\psi\}\text{ where }\psi\text{ is not of the form }\psi_0\limp\psi_1\\
  %%%
  \nsem{\forall X\phi}=&
  \bigcup_{\mathcal Z\in 2^\sPi} \nsem{\phi[\mathcal Z/X]}\enspace.
 \end{align*}
 Using this, we define $\sem \phi=\nsem{\phi}\rightarrow\bbot$.
-We have an equality
-$\nsem{\phi\limp\psi} = \{t\cdot\pi\mid
-t\in\sem\phi\text{ and }\pi\in\nsem\psi\}$.
+\fix{define tuple positive sem}
+ \begin{proposition}
+  \label{nsem-tuple}
+  When $\pi$ is in
+  $\left(\mathcal{Z}_0,\ldots,\mathcal{Z}_m\right)\rightarrow \bbot$
+  and $\sigma$ is in
+  $\left(\mathcal{Z}_{m+1},\ldots,\mathcal{Z}_n\right)\rightarrow \bbot$,
+  then,
+  the concatenation $\pi\cdot\sigma$ is in
+  $\left(\mathcal{Z}_0,\ldots,\mathcal{Z}_m,
+  \mathcal{Z}_{m+1},\ldots,\mathcal{Z}_n\right)$.
+ \end{proposition}
+  \begin{proof}
+   By condition~\ref{ex:conc-closed} of Definition~\ref{ex:def:pole}.
+  \end{proof}
+
+ \begin{proposition}
+  \label{nsem-imp}
+  If $\sigma$ is in
+  $(\nsem{\phi_0},\nsem{\phi_1},\ldots,\nsem{\phi_m})\rightarrow\bbot$
+  and $\pi\in\nsem{\psi}$.
+  $\nsem{\phi_0\limp\phi_1\limp\cdots\limp\phi_m\limp\psi}$.
+ \end{proposition}
+  \begin{proof}
+   Let $\psi$ be $\phi_{m+1}\limp\cdots\phi_n\limp\psi'$ where $\psi'$
+   is not of the form $\psi'_0\limp\psi'_1$.
+   Take such $e_0,\ldots,e_m$ and $\pi$.
+   Since $\pi$ is in $\nsem{\psi}$,
+   it is of the form
+   \[
+    e_{m+1}\cdot e_{m+2}\cdot \cdots \cdot e_n\cdot \pi'
+   \]
+   where $e_{m+1}\cdot e_{m+2}\cdot \cdots e_n$ is in
+   $(\nsem{\phi_{m+1}}, \ldots, \nsem{\phi_n})\rightarrow\bbot$
+   and $\pi'$ is in $\nsem{\psi'}$.
+   By Proposition~\ref{nsem-tuple},
+   $ e_0\cdot\cdots\cdot e_m\cdot e_{m+1}\cdot e_{m+2}\cdot \cdots \cdot e_n $ is in
+   $\left(\nsem{\phi_0},\ldots,\nsem{\phi_m},\nsem{\phi_{m+1}}, \ldots,
+   \nsem{\phi_n}\right)\rightarrow \bbot$.  The statement follows.
+  \end{proof}
 
 For $\G = \tj{x_1}{\phi_1},\ldots,\tj{x_n}{\phi_n}$,
 we denote by $\sem{\G}$ the set of sequences $(t_1,\dots,t_n)$
@@ -224,7 +266,27 @@ $\vec{g_i} \in \sem{\G_i}$ and $\pi_i\in \nsem{\phi_i}$.
   H}$ are in $\bbot$.
  \end{theorem}
   \begin{proof}
-   \fix{prove}
+   By induction on the derivation of $\mathcal{H}$.
+   \begin{description}
+    \item[($\limp$E)]
+	 Take any $\pi\in\nsem{\psi}$, $\vec g\in\sem{\G}$,
+	 $\vec{d_i}\in\sem{\D_i}$ for each $0\le i\le n$ and
+	 $h\in\semo{\mathcal H}$.
+	 We have to show that this stack is in $\bbot$:
+	 \[
+	 \sigma = h\cdot \left(t[\vec g/\G],
+	 (u'_0,\epsilon)\cdot\cdots\cdot (u'_n,\epsilon)\cdot \pi\right)\enspace.
+	 \]
+	 By induction hypothesis on the derivation of $u_i$'s,
+	 $ (u'_0,\epsilon)\cdot\cdots\cdot (u'_n,\epsilon) $ is in
+	 $\sem{\phi_0,\ldots,\phi_n}$.
+	 So, by Proposition~\ref{nsem-imp},
+	 $(u'_0,\epsilon)\cdot\cdots\cdot (u'_n,\epsilon)\cdot \pi$ is
+	 in $\nsem{\phi_0\limp\cdots\limp\phi_n\limp\psi}$.
+	 By induction hypothesis on the derivation of $t$,
+	 the reduct is in $\bbot$.
+	 Since $\bbot$ is closed for $\rev\red$, $\sigma$ is also in $\bbot$.
+   \end{description}
   \end{proof}
 
   \begin{proposition}[Specification of the axiom]
