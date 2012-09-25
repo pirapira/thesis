@@ -21,42 +21,42 @@ another and then exchange some pieces of information.
 
 We define terms\index{term}~$t$ by BNF:
 \[
- t ::= x\mid \lambda x.t\mid (t)t\mid c \mid (t\conc t)\enspace.
+ t ::= x\mid \lambda x.t\mid (t)t\enspace.
 \]
 By $t^+$ we denote a term of the form $x$, $\lambda x.t$, $c$ or $(t\conc
 t)$.
 We use $\Lambda$ for the set of terms.
-A stack\index{stack}~$\pi$ is defined by BNF:
-\[
- \pi ::= \epsilon\mid c\cdot\pi \mid \tuple{\pi,\pi} \mid c
-\]
+A stack\index{stack}~$\pi$ and an executable\index{executable}~$e$
+are defined by BNF:
+\begin{align*}
+ \pi &::= \epsilon\mid e\cdot\pi\\
+ e   &::= t,\pi
+\end{align*}
+For two stacks $\sigma$ and $\pi$, $\sigma\cdot\pi$ is defined
+inductively on $\sigma$: i.e. $\epsilon\cdot\pi = \pi$ and $(e
+\cdot \sigma') \cdot \pi = e\cdot (\sigma'\cdot \pi)$.  By the latter
+equation, $\cdot$ can be considered associative.
 We use $\Pi$ for the set of stacks.
 An executable is a multiset on $\Lambda\times \Pi$.
 
 The reduction relation $\red$ is the smallest preorder on executables
 that satisfies:
 \begin{description}
- \item[(cong)] if
-      $e_0         \red e_1$
-      then
-      $e_0 \conc e \red e_1\conc e$ where $e$ and $e_0$ do not contain
-      any common channels \enspace;
- \item[(abort)] $[\abort,\pi]\red \emptyset$ \enspace;
- \item[(dispatch)]
-	    $[(t)u, \pi]   \red [t,c\cdot\pi\conc u, \co c]$   where $c$
-      does not appear in $t$ or $u$ or $\pi$\enspace;
+ \item[(cong)] $e\red e'$ implies $t, \sigma \cdot e \cdot \pi\red
+      t,\sigma\cdot e'\cdot \pi$ \enspace;
+ \item[(push)]
+	    $(t)u, \pi   \red t,(u,\epsilon)\cdot\pi$\enspace;
  \item[(store)]
-	    $[\lambda x.t,c\cdot\pi \conc t^+, \co c]
+	    $\lambda x.t,(u,\epsilon)\cdot\pi
 	     \red
-	     [t[\ast_{t^+}/x],      \pi]$\enspace;
- \item[(load)]
-	    $[\ast_u,\pi]\red [u,\pi]$\enspace;
+	     t[u/x], \pi$\enspace;
  \item[(ex)]
-           $[c, t\cdot\pi\conc \co c,
-           u\cdot\sigma] \red
-           [u,\pi\conc t,\sigma]$\enspace;
- \item[(dist)]
-           $[(t\conc u),\tuple{\pi,\sigma}]  \red [(t,\pi)\conc (u,\sigma)]$ \enspace.
+           $v, \pi\cdot (c, (t,\pi_0)\cdot \pi_1)\cdot\pi' \cdot (\co
+      c,(u,\sigma_0)\cdot \sigma_1) \cdot \pi''\red
+      v, \pi\cdot (u, \sigma_0\cdot \pi_1)\cdot\pi' \cdot (
+      t,\pi_0\cdot \sigma_1) \cdot \pi''
+      $
+      \enspace.
 \end{description}
 
 
@@ -103,10 +103,9 @@ conjunctively by $\otimes$.
 \DisplayProof
 \hfill
 %
-\aseq{\hyp{}\G}{\tj t{\phi\limp\psi}}
-\aseq{\hyp'\D}{\tj u\phi}
+\aseq{\hyp{}\G}{\tj t{\phi\limp\psi\hmid\D\tr\tj u\phi}}
 \LL   {$\limp$E}
-\bseq{\hyp{}\hyp'\G,\D}{\tj{(t)u}\psi}
+\useq{\hyp{}\G,\D}{\tj{(t)u}\psi}
 \DisplayProof
 \ruleskip
 \aseq{\hyp{}\G}{\tj t\phi}
@@ -143,8 +142,8 @@ conjunctively by $\otimes$.
 
 \subsection{Specification Using Poles}
 
-We define programs and environments in the same way as
-Subsection~\ref{pole:spec}.
+% We define programs and environments in the same way as
+% Subsection~\ref{pole:spec}.
 
 \begin{definition}
  \label{ex:def:pole}
@@ -157,7 +156,61 @@ which satisfies
 \end{enumerate}
 \end{definition}
 
-\fix{define $\sempair{\phi^+,\psi^-}$}
+% leave until we see impE reqruires environments
+% An environment\index{environment} is a pair of an s-stack and an s-executable.
+% The set of environments is written as~$E$.
+% A program\index{program} is a pair of an s-term and an s-executable.
+For a set~$\mathcal Z$ of
+%environments
+stacks, $\mathcal Z\rightarrow\bbot$ denotes
+the set of
+terms
+%$programs $(t,e)$
+$t$ such that
+for any
+%environment $(\pi,e')\in \mathcal Z$,
+stack $\pi\in\mathcal Z$,
+the executable $t,\pi$ is in $\bbot$.
+% We use programs and environments because if we continued using
+% s-terms and s-stacks, the proof of adequacy (Thm.~\ref{c:adequacy})
+% would fail
+% in the case
+% ($\limp$E,~\textminus),~\ref{c:second}.
+
+For $\phi\in\form(2^E)$ and $|\cdot|^-_0\colon\pvar\rightarrow 2^E$\kern
+-2pt,
+we define $\nsem{\phi}\in
+2^E$ inductively:
+\begin{align*}
+ \nsem{\mathcal Z} =& \mathcal Z \text{ for } \mathcal Z\in 2^E\\
+ \nsem{X}=& |X|_0^- \\
+ %%%
+ \nsem{\phi\limp\psi}=&
+ \{e\cdot\pi\mid  t\in\nsem\phi\rightarrow\bbot
+ \text{ and  }\pi\in\nsem\psi\}\\
+ %%%
+ \nsem{\forall X\phi}=&
+ \bigcup_{\mathcal Z\in 2^\sPi} \nsem{\phi[\mathcal Z/X]}\enspace.
+\end{align*}
+Using this, we define $\sem \phi=\nsem{\phi}\rightarrow\bbot$.
+We have an equality
+$\nsem{\phi\limp\psi} = \{t\cdot\pi\mid
+t\in\sem\phi\text{ and }\pi\in\nsem\psi\}$.
+
+For $\G = \tj{x_1}{\phi_1},\ldots,\tj{x_n}{\phi_n}$,
+we denote by $\sem{\G}$ the set of sequences $\vec t$ where
+$\vec{t} = (t_1,\dots,t_n)$
+ and each term $t_i$ is in $\sem{\phi_i}$.
+For that $\vec t$, $[\vec{t}/\G]$ denotes the simultaneous substitution
+$[t_i/x_i]_{0\le i \le n}$.
+For a hypersequent, we
+define a set of s-executables
+$
+\semo{\G_0\tr\tj{t_0}{\phi_0}\hmid\cdots\hmid\G_n\tr\tj{t_n}{\phi_n}}
+$
+to be the set of executables of the form $\bigparallel_{0\le i\le
+n}\left(t_i[\vec{g_i}/\G_i],\pi_i\right)$ where
+$\vec{g_i} \in \sem{\G_i}$ and $\pi_i\in \nsem{\phi_i}$.
 
  \begin{theorem}[Adequacy]
   \fix{state}
