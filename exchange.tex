@@ -67,7 +67,6 @@ We define an IMLL2 formula~$\phi$ by BNF:
  \phi :: =
  X \mid
  \phi\limp\phi\mid
-% \phi\otimes\phi\mid
  \forall X\phi\enspace.
 \]
 As abbreviations, we can introduce $\otimes$ and $\bot$:
@@ -143,9 +142,6 @@ conjunctively by $\otimes$.
 
 \subsection{Specification Using Poles}
 
-% We define programs and environments in the same way as
-% Subsection~\ref{pole:spec}.
-
 \begin{definition}
  \label{ex:def:pole}
 A pole\index{pole}~$\bbot$ is a set of stacks
@@ -158,26 +154,14 @@ which satisfies
 \end{enumerate}
 \end{definition}
 
-% leave until we see impE reqruires environments
-% An environment\index{environment} is a pair of an s-stack and an s-executable.
-% The set of environments is written as~$E$.
-% A program\index{program} is a pair of an s-term and an s-executable.
 For a set~$\mathcal Z$ of
-%environments
 stacks, $\mathcal Z\rightarrow\bbot$ denotes
 the set of
 terms
-%$programs $(t,e)$
 $t$ such that
 for any
-%environment $(\pi,e')\in \mathcal Z$,
 stack $\pi\in\mathcal Z$,
 the single-process stack $(t,\pi)\cdot\epsilon$ is in $\bbot$.
-% We use programs and environments because if we continued using
-% s-terms and s-stacks, the proof of adequacy (Thm.~\ref{c:adequacy})
-% would fail
-% in the case
-% ($\limp$E,~\textminus),~\ref{c:second}.
 
 \fix{define tuple nsem}
 
