@@ -6,6 +6,18 @@
   $p^*$ denotes repetition of $p$ more than or equal to zero times.
   We use BNF (Backus Naur Form) for giving inductive definitions for sets
   of sequents of symbols.
+  For example, when we say we define formulae~$\phi$ by BNF:
+  \[
+   \phi::= \bot \mid p\mid (\phi\imp\phi)
+  \]
+  where $p$ is a propositional variable, we actually define a set $\Phi$
+  of formulae which is the smallest set such that
+  \begin{itemize}
+   \item $\bot$ is in $\Phi$
+   \item each propositional variable is in $\Phi$ and
+   \item if $\phi$ and $\psi$ are in $\Phi$, then $(\phi\imp\psi)$ is in $\Phi$.
+  \end{itemize}
+  and then we declare that we call elements of $\Phi$ formulae.
   We use ``iff'' as an abbreviation for ``if and only if.''
 
   \fix{hmm}
@@ -390,9 +402,8 @@ propositional algebra.''
 There, Curry notes the correspondence is not isomorphism\fix{or, in
 sorenzen's book ???}  We take a finer approach.
 
-
-algol 60
-landin: a correspondence between algol 60 and church's lambda notation
+\citet{landin1965} noticed some similarities between ALGOL~60 syntax and
+the untyped lambda calculus.
 
 Pfenning
 
@@ -561,10 +572,27 @@ calculus for the BCK logic.
 
 \subsubsection{Linear and Affine Logics}
 
-Girard
+Girard invented the linear logic~\citep{girard1987}.  It is a logic
+without weakening or contraction.  There are two conjunctions
+(multiplicative and additive) and two
+disjunctions (again multiplicative and additive).
+Depending on the formulation, there can be two
+implications \fix{cite Troelstra}.
+The multiplicative and additive operators differ in
+the treatment of contexts in the branching rules.
+\fix{elaborate}
 
-Abramsky
+In the intuitionistic linear logic, the right side of a sequent can only
+contain at most one formula.
 
+Abramsky~\citep{abramsky1993computational} gave computational
+interpretations for the intuitionistic linear logic and the classical linear logic.
+
+
+\subsubsection{Monoidal t-norm logic}
+
+\citet{Esteva2001271} considered monoidal t-norm logic (MTL) for
+\fix{what reason}
 
 
 \subsection{Parametricity}
