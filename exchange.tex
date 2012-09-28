@@ -4,14 +4,15 @@
 \subsection{Summary}
 
 The previous chapters treated the computational interpretations of
-disjunctive formulas like $(\phi\imp\psi)\lor(\psi\imp\phi)$ or
+disjunctive formulae like $(\phi\imp\psi)\lor(\psi\imp\phi)$ or
 $(\phi\limp\psi)\oplus(\psi\limp\phi)$.  In this chapter, we try
-replacing these disjunctions into conjunctions.
+replacing these disjunctions with conjunctions.
 In the former case, the change renders the logic inconsistent.
 If we add the axiom $(\phi\imp\psi)\land(\psi\imp\phi)$ to the
 intuitionistic propositional logic,
 we can prove any formula.  However in the lattar case, the change does
-not make the system meaningless.  We treat
+not make the system meaningless.
+In this chapter, we treat
 the axioms of the form $(\phi\limp\psi)\otimes(\psi\limp\phi)$
 on top of IMLL2, the second order formulation of intuitionistic
 multiplicative linear
@@ -20,16 +21,26 @@ another and then exchange information.
 
 \subsection{Dynamics}
 
+We also assume countably infinitely many channels with involution
+satisfying $\co c\neq c$ and $\co{\co c} = c$.
 We define terms\index{term}~$t$ by BNF:
 \[
- t ::= x\mid \lambda x.t\mid (t)t\enspace.
+ t ::= x\mid \lambda x.t\mid (t)t\mid c
 \]
+where $c$ is a channel.
+As an abbreviation, $\lambda x_0x_1\cdots x_n.t$
+denotes $\lambda x_0. \lambda x_1. \ldots . \lambda x_n.t$.
 We use $\Lambda$ for the set of terms.
 A stack\index{stack}~$\pi$ and a process\index{process}~$p$
 are defined by BNF:
 \begin{align*}
  \pi &::= \epsilon\mid p\cdot\pi\\
- p   &::= t,\pi
+ p   &::= (t,\pi)\enspace.
+\end{align*}
+For a process $p$, we define a term~$\bar p$ inductively on
+the construction of $p$:
+\begin{align*}
+ \overline{(t,p_0\cdot\cdots \cdot p_n)}&= (((t)\overline{p_0})\cdots)\overline{p_n}\enspace.
 \end{align*}
 For two stacks $\sigma$ and $\pi$, the concatenation $\sigma\cdot\pi$ is
 defined
@@ -37,6 +48,8 @@ inductively on $\sigma$: i.e. $\epsilon\cdot\pi = \pi$ and $(e
 \cdot \sigma') \cdot \pi = e\cdot (\sigma'\cdot \pi)$.  By the latter
 equation, $\cdot$ can be considered associative.
 We use $\Pi$ for the set of stacks.
+Also, the concatenation of a process $(t,\pi)$ and a stack~$\sigma$ is
+defined as $(t,\pi)\circ\sigma = (t,\pi\cdot \sigma)$.
 
 The reduction relations are the smallest preorders on processes
  and on stacks (both denoted by $\red$) that satisfies:
@@ -47,9 +60,9 @@ The reduction relations are the smallest preorders on processes
  \item[(push)]
 	    $(t)u, \pi   \red t,(u,\epsilon)\cdot\pi$\enspace;
  \item[(pull)]
-	    $\lambda x.t,(u,\epsilon)\cdot\pi
+	    $\lambda x.t,p\cdot\pi
 	     \red
-	     t[u/x], \pi$\enspace;
+	     t[\bar p/x], \pi$\enspace;
  \item[(ex)]
            $\pi\cdot (c, (t,\pi_0)\cdot \pi_1)\cdot\pi' \cdot (\co
       c,(u,\sigma_0)\cdot \sigma_1) \cdot \pi''\red
@@ -62,21 +75,25 @@ The reduction relations are the smallest preorders on processes
 
 \subsection{Statics}
 
-We define an IMLL2 formula~$\phi$ by BNF:
+For a set~$S$,
+$\form(S)$ is the set of $S$-formulas~$\phi$:
 \[
- \phi :: =
- X \mid
- \phi\limp\phi\mid
- \forall X\phi\enspace.
+\phi::= s \mid X \mid \phi\limp\phi\mid
+\forall X \phi
 \]
+where $s\in S$, $X\in \pvar$. The $X$ in the
+last clause is binding.
+An IMLL2 formula is an element of $\form(\emptyset)$.
+
 As abbreviations, we can introduce $\otimes$ and $\bot$:
 \begin{align*}
  \phi\otimes\psi &\equiv \forall X ((\phi\limp\psi\limp X)\limp X)
- \text{ where }\phi\otimes\psi\text{ does not contain } X \text{ freely.}\\
+ \text{ where }\phi\otimes\psi\text{ does not contain } X \text{ freely;}\\
  \bot &\equiv \forall X X\enspace.
 \end{align*}
 
-The type system employs conjunctive hypersequents.  Usually,
+The type system employs conjunctive hypersequents.  In the previous
+chapters,
 different components in a hypersequent are interpreted disjunctively.
 However, components in a conjunctive hypersequent are interpreted
 conjunctively by $\otimes$.
@@ -95,12 +112,15 @@ conjunctively by $\otimes$.
 \BinaryInfC{$\mathcal H\hmid \mathcal{H'}$}
 \DisplayProof
 %
+\newcommand{\tjx}[1]{\tj{x_{#1}}{\phi_{#1}}}
 \ruleskip
-\aseq{\hyp{}\xphi,\G}{\tj t\psi}
-\LL{$\limp$I}
-\useq{\hyp{}\G}{\tj{\lambda x.t}{\phi\limp\psi}}
-\DisplayProof
-\ruleskip
+  \aseq{\hyp{}\tjx{_0},\ldots,\tjx{_n},\G}{\tj{t}{\psi}}
+  \LL{$\limp$I}
+  \useq{\hyp{}\G}{\tj{\lambda x_0x_1\cdots
+  x_n.t}{\phi_0\limp\phi_1\limp\cdots\phi_n\limp\psi}}
+  \DisplayProof\\
+  where $\psi$ does not have $\limp$ as its top connective.
+  \ruleskip
 %
 \aseq{\hyp{}\G}{\tj t{\phi_0\limp\cdots\limp \phi_n \limp\psi}}
 \aseq{\D_0}{\tj{u_0}{\phi_0} \hmid \cdots \hmid \D_n\tr\tj{u_n}{\phi_n}}
@@ -148,24 +168,27 @@ A pole\index{pole}~$\bbot$ is a set of stacks
 which satisfies
 \begin{enumerate}
  \item \label{ex:red-closed} $\pi$ is in $\bbot$ if $\pi\red \sigma$ and
-       $\sigma\in\bbot$; and
+       $\sigma\in\bbot$;
  \item \label{ex:conc-closed} $\pi\cdot \sigma$ is in $\bbot$ if $\pi$
-       and $\sigma$ are in $\bbot$.
+       and $\sigma$ are in $\bbot$; and
+ \item \label{ex-closed}
+       $\pi\cdot p\cdot p'\cdot \sigma$ is in $\bbot$ if
+       $\pi\cdot p'\cdot p\cdot \sigma$ is in $\bbot$.
 \end{enumerate}
 \end{definition}
 
 For a set~$\mathcal Z$ of
 stacks, $\mathcal Z\rightarrow\bbot$ denotes
-the set of
-terms
-$t$ such that
-for any
+the set of terms $t$ such that for any
 stack $\pi\in\mathcal Z$,
 the single-process stack $(t,\pi)\cdot\epsilon$ is in $\bbot$.
 
-\fix{define tuple nsem}
+For sets of stacks $\mathcal Z_0,\ldots,\mathcal Z_n$,
+we define $(\mathcal Z_0,\ldots,\mathcal Z_n)\rightarrow\bbot$ to be the
+set of sequences of the form $(p_0,\ldots,p_n)$ such that
+for any $\pi_i\in\mathcal Z_i$, the stack $((p_0\circ \pi_0)\cdot\cdots\cdot
+(p_n\circ \pi_n))$ is in $\bbot$.
 
-\fix{define Form}
 
 For $\phi\in\form(2^E)$ and $|\cdot|^-_0\colon\pvar\rightarrow 2^E$\kern
 -2pt,
@@ -176,8 +199,8 @@ we define $\nsem{\phi}\in
  \nsem{X}=& |X|_0^- \\
  %%%
  \nsem{\phi_0\limp\cdots\limp\phi_n\limp\psi}=&
- \{e_0\cdot e_1\cdot\cdots\cdot e_n\cdot\pi\mid \\ &\,\,\,  e_0\cdot
- e_1\cdot\cdots\cdot e_n
+ \{p_0\cdot p_1\cdot\cdots\cdot p_n\cdot\pi\mid \\ &\,\,\,
+ p_0\cdot p_1\cdot\cdots\cdot p_n
  \in(\nsem{\phi_0}, \nsem{\phi_1}, \ldots, \nsem{\phi_n})\rightarrow\bbot
  \text{ and  }
  \\&\,\,\,\pi\in\nsem\psi\}\text{ where }\psi\text{ is not of the form }\psi_0\limp\psi_1\\
@@ -186,7 +209,8 @@ we define $\nsem{\phi}\in
  \bigcup_{\mathcal Z\in 2^\sPi} \nsem{\phi[\mathcal Z/X]}\enspace.
 \end{align*}
 Using this, we define $\sem \phi=\nsem{\phi}\rightarrow\bbot$.
-\fix{define tuple positive sem}
+We define $\sem{\phi_0,\ldots,\phi_n}$ to be
+$(\nsem{\phi_0},\ldots,\nsem{\phi_n})\rightarrow\bbot$.
  \begin{proposition}
   \label{nsem-tuple}
   When $\pi$ is in
@@ -196,7 +220,7 @@ Using this, we define $\sem \phi=\nsem{\phi}\rightarrow\bbot$.
   then,
   the concatenation $\pi\cdot\sigma$ is in
   $\left(\mathcal{Z}_0,\ldots,\mathcal{Z}_m,
-  \mathcal{Z}_{m+1},\ldots,\mathcal{Z}_n\right)$.
+  \mathcal{Z}_{m+1},\ldots,\mathcal{Z}_n\right)\rightarrow\bbot$.
  \end{proposition}
   \begin{proof}
    By condition~\ref{ex:conc-closed} of Definition~\ref{ex:def:pole}.
@@ -205,33 +229,35 @@ Using this, we define $\sem \phi=\nsem{\phi}\rightarrow\bbot$.
  \begin{proposition}
   \label{nsem-imp}
   If $\sigma$ is in
-  $(\nsem{\phi_0},\nsem{\phi_1},\ldots,\nsem{\phi_m})\rightarrow\bbot$
-  and $\pi\in\nsem{\psi}$.
+  $\nsem{\phi_0\limp\phi_1\limp\cdots\limp\phi_m\limp\psi}$, then
+  $\sigma\cdot\pi$ is in
   $\nsem{\phi_0\limp\phi_1\limp\cdots\limp\phi_m\limp\psi}$.
  \end{proposition}
   \begin{proof}
+   By asssumption, $\sigma = e_0\cdot\cdots\cdot e_m\cdot \pi$
+   where $e_0\cdot\cdots\cdot e_m$ is in
+   $\sem{\phi_0,\phi_1,\ldots,\phi_m}$ and $\pi$ is in $\nsem{\psi}$.
    Let $\psi$ be $\phi_{m+1}\limp\cdots\phi_n\limp\psi'$ where $\psi'$
    is not of the form $\psi'_0\limp\psi'_1$.
-   Take such $e_0,\ldots,e_m$ and $\pi$.
    Since $\pi$ is in $\nsem{\psi}$,
-   it is of the form
+   $\pi$ is of the form
    \[
     e_{m+1}\cdot e_{m+2}\cdot \cdots \cdot e_n\cdot \pi'
    \]
    where $e_{m+1}\cdot e_{m+2}\cdot \cdots e_n$ is in
-   $(\nsem{\phi_{m+1}}, \ldots, \nsem{\phi_n})\rightarrow\bbot$
+   $\sem{{\phi_{m+1}}, \ldots, {\phi_n}}$
    and $\pi'$ is in $\nsem{\psi'}$.
    By Proposition~\ref{nsem-tuple},
    $ e_0\cdot\cdots\cdot e_m\cdot e_{m+1}\cdot e_{m+2}\cdot \cdots \cdot e_n $ is in
-   $\left(\nsem{\phi_0},\ldots,\nsem{\phi_m},\nsem{\phi_{m+1}}, \ldots,
-   \nsem{\phi_n}\right)\rightarrow \bbot$.  The statement follows.
+   $\sem{{\phi_0},\ldots,{\phi_m},{\phi_{m+1}}, \ldots,
+   {\phi_n}}$.  The statement follows.
   \end{proof}
 
 For $\G = \tj{x_1}{\phi_1},\ldots,\tj{x_n}{\phi_n}$,
-we denote by $\sem{\G}$ the set of sequences $(t_1,\dots,t_n)$
- where each term $t_i$ is in $\sem{\phi_i}$.
-For that sequence~$\vec t$, $[\vec{t}/\G]$ denotes the simultaneous substitution
-$[t_i/x_i]_{0\le i \le n}$.
+we denote by $\sem{\G}$ the set of sequences $(p_1,\dots,p_n)$
+ in $\sem{\phi_1,\ldots,\phi_n}$.
+For that sequence~$\vec p$, $[\vec{p}/\G]$ denotes the simultaneous substitution
+$[\bar{p_i}/x_i]_{0\le i \le n}$.
 For a hypersequent, we
 define a set of s-executables
 $
@@ -252,13 +278,39 @@ $\vec{g_i} \in \sem{\G_i}$ and $\pi_i\in \nsem{\phi_i}$.
   \begin{proof}
    By induction on the derivation of $\mathcal{H}$.
    \begin{description}
+    \item[($\limp$I)]
+	 Take any $e_0\cdot e_1\cdot \cdots \cdot e_n \cdot \pi \in
+	 \nsem{\phi_0\limp\phi_1\limp\cdots \limp\phi_n\limp\psi}$,
+	 $\vec g\in\sem{\G}$ and $h\in\semo{\mathcal H}$ so that
+	 $e_0\cdot\cdots\cdot e_n$ is in $\sem{\phi_0,\ldots,\phi_n}$
+	 and $\pi$ is in $\nsem{\psi}$.
+	 We have to show that this stack is in $\bbot$:
+	 \[
+	  \sigma = h\cdot \left(\lambda x_0x_1\cdots x_n.t[\vec g/\G],
+	 e_0\cdot \cdots e_n\cdot \pi\right)\enspace.
+	 \]
+	 By (pull), $\sigma$ reduces to
+	 \[
+	  \sigma' = h\cdot \left(t[\vec g/\G][\bar{e_i}/x_i], \pi\right)\enspace.
+	 \]
+	 We want to use the induction hypothesis to say $\sigma'$ is in
+	 $\bbot$.
+	 That means $\sigma$ is also in $\bbot$ because $\bbot$ is
+	 closed for $\rev\red$.
+	 In order to use the induction hypothesis, we need
+	 $(\vec g,e_0,\ldots,e_n)\in\sem{\G,\phi_0,\ldots,\phi_n}$,
+	 which follows from Proposition~\ref{nsem-tuple}.
     \item[($\limp$E)]
 	 Take any $\pi\in\nsem{\psi}$, $\vec g\in\sem{\G}$,
 	 $\vec{d_i}\in\sem{\D_i}$ for each $0\le i\le n$ and
 	 $h\in\semo{\mathcal H}$.
 	 We have to show that this stack is in $\bbot$:
 	 \[
-	 \sigma = h\cdot \left(t[\vec g/\G],
+	  \sigma = h\cdot (((t[\vec g/\G]u'_0)\cdots) u'_n, \pi)\enspace.
+	 \]
+	 By (push), $\sigma$ reduces to
+	 \[
+	 \sigma' = h\cdot \left(t[\vec g/\G],
 	 (u'_0,\epsilon)\cdot\cdots\cdot (u'_n,\epsilon)\cdot \pi\right)\enspace.
 	 \]
 	 By induction hypothesis on the derivation of $u_i$'s,
@@ -268,19 +320,54 @@ $\vec{g_i} \in \sem{\G_i}$ and $\pi_i\in \nsem{\phi_i}$.
 	 $(u'_0,\epsilon)\cdot\cdots\cdot (u'_n,\epsilon)\cdot \pi$ is
 	 in $\nsem{\phi_0\limp\cdots\limp\phi_n\limp\psi}$.
 	 By induction hypothesis on the derivation of $t$,
-	 the reduct is in $\bbot$.
-	 Since $\bbot$ is closed for $\rev\red$, $\sigma$ is also in $\bbot$.
+	 $\sigma'$ is in $\bbot$.
+	 Since $\bbot$ is closed for $\rev\red$, $\sigma$ is also in
+	 $\bbot$.
+    \item[(com)]
+	 Take any $\pi_\phi\in\nsem{\phi}$, $\pi_\psi\in\nsem\psi$,
+	 $\vec g\in\sem{\G}$, $\vec d\in\sem\D$ and $h\in\semo{\mathcal
+	 H}$.
+	 We have to show that this stack is in $\bbot$:
+	 \[
+	  \sigma = h\cdot
+	 ((c)t[\vec g/\G],\pi_\psi)\cdot ((\co c)u[\vec d/\D], \pi_\phi)\enspace.
+	 \]
+	 By (push), (cong) and (ex), $\sigma$ reduces to
+	 \[
+	  \sigma' = h\cdot u[\vec d/\D], \pi_\psi\cdot t[\vec g/\D],\pi_\phi\enspace.
+	 \]
+	 By induction hypothesis,
+	 \[
+	  \sigma'' = h\cdot (t[\vec g/\G],\pi_\phi)\cdot (u[\vec
+	 d/\D],\pi_\psi)
+	 \]
+	 is in $\bbot$.
+	 By condition~\ref{ex-closed} of definition of poles, $\sigma'$ is
+	 also in $\bbot$.
+	 Since $\bbot$ is closed for $\rev\red$, $\sigma$ is in $\bbot$,
+	 too.
+    \item[$\forall$I]
+    \item[$\forall$E]
    \end{description}
   \end{proof}
+  A stack on a set~$S$ of processes is a finite sequence of elements of
+  $S$.
+   \begin{proposition}
+    For a set~$S$ of processes,
+    it is a pole: the set of stacks that reduces to a stack on $S$.
+   \end{proposition}
+    \begin{proof}
+     \fix{prove}
+    \end{proof}
 
   \begin{proposition}[Specification of the axiom]
    Let $g$ have type ${\forall X\forall
-   Y((X\limp Y)\times (Y\limp X))}$.
-   Then, the s-executable
+   Y((X\limp Y)\otimes (Y\limp X))}$.
+   Then, the process
    \[
-   [g, \mats{z}{z}{x\cdot\pi_Y}{w}{w}{y\cdot\pi_X}]
+   \fix{fill}
    \]
-   reduces to a multiset on
+   reduces to a stack on
    $\{(x,\pi_X), (y,\pi_Y)\}$.
   \end{proposition}
 
