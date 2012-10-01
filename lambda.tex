@@ -593,7 +593,9 @@ For a store~$\sigma$, the updated store $\sigma[c\mapsto x]$ maps $c$ to
 $x$ and $d$ to $\sigma(d)$ if $d$ is different from~$c$.
 A configuration\index{configuration} is a pair $\conf{}\hypert$ of a
 store~$\lstore$ and a hyperterm~$\hypert$.
-A typed configuration\index{typed configuration} is a \fix{add.. stores are empty}.
+A typed configuration\index{typed configuration} is a
+configuration $(\epsilon, \mathcal O)$ where $\epsilon$ is the empty
+store and $\mathcal O$ is derivable.
 
 To complete the definition of \lgd,
  we define the \textit{reductions} $\reduce_\spadesuit$ of
