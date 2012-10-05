@@ -25,7 +25,7 @@ We list our contributions from the most important:
  \item identifying the computational ability of the
 G\"odel--Dummett logic with waitfreedom (Chapter~\ref{ch:lambda}),
  \item developing a lambda calculus using
-       a hypoersequent calculus (Chapter~\ref{ch:lambda}),
+       a hypersequent calculus (Chapter~\ref{ch:lambda}),
  \item identifying the communication performed by the prelinearity axiom
        of monoidal t-norm logic (Chapter~\ref{ch:pole}),
  \item developing a parametricity argument for
@@ -50,6 +50,63 @@ to do with concurrency (as the title of~\citep{avron91} contains the phrase
 the computational interpretation of G\"odel--Dummett logic has
 the degree of synchronization called waitfreedom.  This discovery
 constitutes our first contribution.
+This is also important because it is the first such computational
+interpretation for intermediate logics (Fig.~\ref{fig:lattice}).
+ \begin{figure}
+  \centering
+  \includegraphics{lattice.eps}
+  \caption[The substructural logics with lambda calculi.]
+  {The substructural logics for which lambda calculi are found.
+  The underlying Hasse diagram of well-known substructural logics is
+  taken from
+  \cite[p.~120]{residuated} with slight modifications.
+  The names in boxes refer to people who developed lambda-calculi for
+  these logics.
+  \textsf{GD} stands for G\"odel--Dummett logic, for which
+  a lambda calculus will be given in
+  Chapter~\ref{ch:lambda}.
+  \textsf{MTL} stands for monoidal t-norm logic~\citep{Esteva2001271},
+  for which a lambda calculus will be given
+  in Chapter~\ref{ch:pole}.
+  \textsf{FLe} is for the full Lambek calculus with exchange
+  rule~\citep[p.86]{residuated}, which is also known as the
+  intuitionistic
+  multiplicative additive fragment of linear logic (IMALL).
+  \textsf{MALL} stands for its classical version, the multiplicative
+  additive fragment of linear logic.  For these fragments of linear
+  logic,
+  \citet{abramsky1993computational} gave lambda calculi.
+  \textsf{R} stands for relevance logic~\citep{urquhart1972},
+  for which \citet{gabbay1992} gave a lambda calculus.
+  \textsf{Int} stands for the intuitionistic propositional logic.
+  The original Curry--Howard isomorphism was found for this logic by
+  Curry~\citep{curry1942}.
+  \textsf{Cl} stands for the classical propositional logic.
+  There is intensive research going on for the computational
+  interpretation of classical logic.  Namely,
+  Parigot's $\lambda\mu$-calculus~\citep{lambdamu},
+  Filinski's symmetric lambda calculus~\citep{filinski1989},
+  Griffin's control perator~$\mathcal C$~\citep{griffin1990},
+  Ong and Stewart's $\lambda\mu_{\mathrm
+  v}$~\citep{ong-stewart},
+%   \citet{bb1994}, this is predicate logic
+  Selinger's categorical semantics and duality
+  result~\citep{selinger2001} for which \citet{kakutani2002} introduced
+  fixed-point
+  operators,
+  Curien and Herbelin's $\bar\lambda\mu\tilde\mu$
+  calculus~\citep{curien2000},
+  Wadler's dual calculus~\citep{wadler-dual, wadler-reloaded} and so on.
+  For the history of lambda calculi for classical logic,
+  Daisuke Kimura's thesis~\cite{kimura} is a source of detailed
+  information.
+  \textsf{Inconsistent} stands for the logic of all logical formulae.
+  Notably, one programming language \texttt{Haskell}, which is based on
+  the typed lambda calculi, has
+  an inconsistent type system.
+  }
+  \label{fig:lattice}
+ \end{figure}
 
 The lambda calculus relies on \citet{avron91}'s hypersequents.
 The hypersequent calculus is a
