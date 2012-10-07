@@ -511,21 +511,6 @@ verification~\citep{unno2009} \fix{cite others},
 the above result itself is only of
 theoretical interest.
 
-We have to note that there has been some attempts to apply some
-intermediate logics for mathematical reasoning, especially the truth
-theory.
-\fix{cite someone, from Yatabe-san}
-The idea is resolving the liar's paradox ``this sentence is false'' by
-assigining the truth value 0.5 to the sentence.  When a sentence has
-the truth value~$x$, a sentence that claims falsehood of the first
-sentence should have the truth value $1-x$.  When the first and second
-sentences are identical, it should have the truth value~$0.5$.
-
-Another computational interests on intermediate logics can be found
-in proof searching.  For the typical intermediate logic G\"odel--Dummett
-logic, there has been many proof searching implementations.
-\fix{cite some of them}
-
 We take the first approach described by Hosoi and Ono: namely,
 studying particular logics instead of intermediate logics in general.
 This thesis is about particular logics: G\"odel--Dummett logic and
@@ -535,7 +520,42 @@ isomorphism is our justification of studying these particular logics.
 G\"odel--Dummett logic is one typical intermediate logic.
 Monoidal t-norm logic, on the other hand, is not an intermediate logic
 because it lacks a structural rule called contraction.  Such logics are
-called substructural logics.
+called substructural logics, whose history will be followed in \ref{linear}.
+
+We have to note that there has been some attempts to apply some
+intermediate logics for mathematical reasoning, especially the truth
+theory.
+\citet{Hajek:TheJournalOfSymbolicLogic:2000} tried to use \L{}ukasiewicz
+logic in order to resolve the liar's paradox.
+The idea is assigning the truth value 0.5 to the sentence
+``this sentence is false''.  When a sentence has
+the truth value~$x$, a sentence that claims falsehood of the first
+sentence should have the truth value $1-x$.  When the first and second
+sentences are identical, it should have the truth value~$0.5$.
+\citet{Hajek:TheJournalOfSymbolicLogic:2000} worked in Peano arithmetic
+and found a consistent formulation (in the sense there exists a model to
+each finite subtheory).
+However, in the case of axiomatic set theory with comprehension,
+\citet{hajek2005} showed that induction over natural numbers is contradictory.
+
+Computationally interesting research on intermediate logics can be found
+in proof searching.  For the typical intermediate logic G\"odel--Dummett
+logic, there has been many proof searching implementations.
+Currently, the fastest solver the author is aware of
+is Fiorino's EPDL~\citep{Fiorino20103633}.
+Fiorino benchmarked his and other implementations
+ on a problem set for intuitionistic logic
+called ILTP library~\citep{iltp}.
+Related to proof searching,
+Ferm\"uller~\cite{parallel} gave a game semantics for G\"odel--Dummett
+logic, which is based on Lorenzen game~\cite{curryhoward} and essentially
+proof searching bottom-to-up.
+\fix{what communication is made?}
+
+However, there has been no lambda calculi or programming languages based
+on intermediate logics, apart from some cut-elimination results by
+\citet{sonobe} and \citet{avron91}.
+
 
 \subsection{Substructural Logics}
 \label{linear}
