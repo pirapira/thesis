@@ -102,7 +102,7 @@
 
 \newcommand{\compare}[2]{{#1} == {#2}}
 
-\newcommand{\term} [0]{\mathcal{T}}
+\newcommand{\term} [0]{t}
 \newcommand{\lterm}[0]{\mathcal{T}^-}
 \newcommand{\val}  [0]{\mathcal{V}}
 \newcommand{\lval} [0]{\mathcal{V}^-}
@@ -117,7 +117,7 @@
 \newcommand{\lstore}{{\sigma}}
 \newcommand{\conf}[2]{(\lstore{#1},{#2})}
 \newcommand{\confwithcontext}[3]{\conf{#1}{#2}{\hypert\hmid C[{{#3}}]\hmid\hypert'}}
-\newcommand{\concreteconf}[3]{({#1},{#2},{#3})}
+\newcommand{\concreteconf}[2]{({#1},{#2})}
 
 %% reductions and the like
 \newcommand{\breduce}{\reduce_{\mathrm B}}

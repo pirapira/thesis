@@ -1,3 +1,7 @@
+\renewcommand{\comodL}{\comod cd}
+\renewcommand{\comodR}{\comod dc}
+
+
 \chapter{A Hyper $\lambda$-Calculus for G\"odel--Dummett Logic}
 \label{ch:lambda}
 
@@ -67,7 +71,7 @@ We first present a proof system for G\"odel--Dummet logic.
 Then we turn the proof system into typing rules for $\lambda$-terms
 of~\lgd, give a set of reductions and prove strong-normalization and
 non-abortfullness.
-We present the proof system using the hypersequent
+We show the proof system using the hypersequent
 style~\citep{avron91}.
 In the usual sequent calculi, each reasoning step concludes a sequent
 $\G\vdash\phi$ where $\G$ is a sequence of formulae.
@@ -130,43 +134,66 @@ we omit all the modalities, these rules characterize
 G\"odel--Dummett logic.
 Indeed,
 $[0](\varphi\supset\psi)\vee[1](\psi\supset\varphi)$ is provable (Figure~\ref{fig:dummett-modal}).
-\begin{figure}
+\begin{sidewaysfigure}
+ \footnotesize
  \centering
 \AxiomC{}
 \LL{[0]Ax}
-\UnaryInfC{$[0]P,[1]Q\vdash [0]P$}
-
+\UnaryInfC{$[0]P\vdash [0]P$}
 \AxiomC{}
 \LL{[1]Ax}
-\UnaryInfC{$[0]P,[1]Q\vdash[1]Q$}
-
-\LL{com'}
+\UnaryInfC{$[1]Q\vdash[1]Q$}
+\LL{com}
 \BinaryInfC{$[0]P\vdash[0]Q\hmid [1]Q\vdash[1]P$}
 \LL{$[0]\supset$I}
 \UnaryInfC{$\vdash[0](P\supset Q)\hmid [1]Q\vdash[1]P$}
 \LL{$[1]\supset$I}
 \UnaryInfC{$\vdash[0](P\supset Q)\hmid \vdash[1](Q\supset P)$}
-\LL{$\vee$I}
-\UnaryInfC{$\vdash[0](P\supset Q) \lor [1](Q\supset P)\hmid \vdash[1](Q\supset P)$}
-\LL{$\vee$I}
-\UnaryInfC{$\vdash[0](P\supset Q) \lor [1](Q\supset P)\hmid
-\vdash [0](P\supset Q) \lor [1](Q\supset P)$}
 \LL{EC}
 \UnaryInfC{$
-\vdash [0](P\supset Q)\lor [1](Q\supset P) $}
-\DisplayProof
+\vdash
+ ([0](P\supset Q)\lor [1](Q\supset P)) \lor
+ ([0](P\supset Q)\land [1](Q\supset P))
+ $}
+
+\AxiomC{$\vdots$}
+ \UnaryInfC{$[0](P\supset Q)\lor [1](Q\supset P) \vdash [0](P\supset Q)\lor
+ [1](Q\supset P)$}
+
+ \AxiomC{$\vdots$}
+ \UnaryInfC{
+$ [0](P\supset Q)\land [1](Q\supset P) \tr [0](P\supset Q)\land
+ [1](Q\supset P)  $
+}
+ \LL{$\wedge\elim_0$}
+ \UnaryInfC{
+$ [0](P\supset Q)\land [1](Q\supset P) \tr [0](P\supset Q)$
+ }
+ \LL{$\vee\intro_0$}
+ \UnaryInfC{
+$ [0](P\supset Q)\land [1](Q\supset P) \tr [0](P\supset Q) \lor
+ [1](Q\supset P)$
+ }
+ \LL{$\vee\elim$}
+ \TrinaryInfC{
+ $
+ \tr [0](P\supset Q) \lor
+ [1](Q\supset P)
+ $
+ }
+ \DisplayProof
 
  \caption{Something like Dummett's axiom is provable.}
  \label{fig:dummett-modal}
-\end{figure}
+\end{sidewaysfigure}
 
-\section{About the modality}
+% \section{About the modality}
 
-\fix{compare with the intuitionistic epistemic logic}
+% \fix{compare with the intuitionistic epistemic logic}
 
-\fix{consider the Kripke model.}
+% \fix{consider the Kripke model.}
 
-\fix{translation back and forth.}
+% \fix{translation back and forth.}
 
 \begin{figure}
  \small
@@ -175,9 +202,9 @@ $[0](\varphi\supset\psi)\vee[1](\psi\supset\varphi)$ is provable (Figure~\ref{fi
    \vskip 2mm
 %%communication
    \BinaryRule
-   {$\hyper\hmid\Gamma,\Delta\vdash[i]\varphi$}
-   {$\hyper\hmid\Gamma,\Delta\vdash[j]\psi$}
-   {com'}
+   {$\hyper\hmid\G\vdash[i]\varphi$}
+   {$\hyper\hmid\D\vdash[j]\psi$}
+   {com}
    {$\hyper\hmid\Gamma\vdash[i]\psi\hmid\Delta\vdash[j]\varphi$}
   \hfill
 %% external structural
@@ -187,9 +214,9 @@ $[0](\varphi\supset\psi)\vee[1](\psi\supset\varphi)$ is provable (Figure~\ref{fi
  {$\hyper^+\hmid\Gamma\vdash \m\varphi$}
  \vskip 2mm
  \UnaryRule
- {$\hyper\hmid\Gamma\vdash \m\varphi\hmid\Gamma\vdash \m\varphi$}
+ {$\hyper\hmid\Gamma\vdash \m\varphi\hmid\Gamma\vdash \m\psi$}
  {EC}
- {$\hyper\hmid\Gamma\vdash \m\varphi$}
+ {$\hyper\hmid\Gamma\vdash (\m\varphi \lor \m\psi) \lor (\m\phi\land\m\psi)$}
  \hfill
  \UnaryRule
  {$\hyper\hmid\Gamma\vdash \m\varphi\hmid\Delta\vdash \m\psi\hmid \hyper'$}
@@ -312,8 +339,11 @@ $[0](\varphi\supset\psi)\vee[1](\psi\supset\varphi)$ is provable (Figure~\ref{fi
  hypersequent.
  $\hyper^+$ stands for a nonempty hypersequent.
  $\Gamma$ and $\Delta$ stand for possibly empty contexts.
- The most important com' rule is based on a rule by
- Avron~\cite{avron96}.
+ In the names of rules, I at the end stands for introduction and E for
+ elimination or exchange.  The I's in front stand for internal and E
+ for external.  For structural rules, E stands for exchange, W for
+ weakening and C for contraction.  The external contraction (EC) is
+ different from standard ones but yields the same set of derivable sequents.
  }
 \label{fig:logic}
 \end{figure}
@@ -322,7 +352,7 @@ $[0](\varphi\supset\psi)\vee[1](\psi\supset\varphi)$ is provable (Figure~\ref{fi
 \label{term}
 
 We assume distinct, countably infinite sets of variables\index{variable},
-locations\index{location}
+channels\index{channel}
 and
 processes\index{process}.
 Channels are denoted by~$c,d,\ldots$; process~$i,j, \ldots$ and variables~$x,
@@ -384,13 +414,12 @@ annotated as in Figure~\ref{fig:typed-term}.
  \centering
 \AxiomC{}
 \LL{[0]Ax}
-\UnaryInfC{$\tj{x}{[0]P},\tj{y}{[1]Q}\tr \tj{x}{[0]P}$}
+\UnaryInfC{$\tj{x}{[0]P}\tr \tj{x}{[0]P}$}
 
 \AxiomC{}
 \LL{[1]Ax}
-\UnaryInfC{$\tj{x}{[0]P},\tj{y}{[1]Q}\tr\tj{y}{[1]Q}$}
-
-\LL{com'}
+\UnaryInfC{$\tj{y}{[1]Q}\tr\tj{y}{[1]Q}$}
+\LL{com}
 \BinaryInfC{$\tj{x}{[0]P}\tr\tj{(\comodL)x}{[0]Q}\hmid
  \tj{y}{[1]Q}\tr\tj{(\comodR)y}{[1]P}$}
 \LL{$[0]\supset$I}
@@ -399,21 +428,11 @@ annotated as in Figure~\ref{fig:typed-term}.
 \LL{$[1]\supset$I}
 \UnaryInfC{$\tr\tj{\lambda x. (\comodL)x}{[0](P\supset Q)}\hmid \tr
  \tj{\lambda y.(\comodR)y}{[1](Q\supset P)}$}
-\LL{$\vee$I}
-\UnaryInfC{$\tr\tj{\inl{\lambda x. (\comodL)x}}{[0](P\supset Q) \lor
- [1](Q\supset P)}
- \hmid
- \tr\tj{\lambda y.(\comodR)y}{[1](Q\supset P)}$}
-\LL{$\vee$I}
-\UnaryInfC{$\tr\tj{\inl{\lambda x. (\comodL)x}}{[0](P\supset Q) \lor
- [1](Q\supset P)}\hmid
-\tr \tj{\inr{\lambda y.(\comodR)y}}{[0](P\supset Q) \lor [1](Q\supset
- P)}$}
 \LL{EC}
 \UnaryInfC{$
-\tr \tj{\left[\inl{\lambda x. (\comodL)x} ,\quad \inr{\lambda
+\tr \tj{\left[{\lambda x. (\comodL)x} ,\quad {\lambda
  y.(\comodR)y} \right]}
- {[0](P\supset Q)\lor [1](Q\supset P)} $}
+ {([0](P\supset Q)\lor [1](Q\supset P))  \lor ([0](P\supset Q)\land [1](Q\supset P))} $}
 \DisplayProof
  \caption{An example of a typed term in \lgd.}
  \label{fig:typed-term}
@@ -427,8 +446,8 @@ annotated as in Figure~\ref{fig:typed-term}.
 \vskip 2mm
 %% communication
 \BinaryRule
-   {$\hypert_0\hmid\Gamma,\Delta\tr\tj{M}{[i]\varphi}$}
-   {$\hypert_1\hmid\Gamma,\Delta\tr\tj{N}{[j]\psi}$}
+   {$\hypert_0\hmid\G\tr\tj{M}{[i]\varphi}$}
+   {$\hypert_1\hmid\D\tr\tj{N}{[j]\psi}$}
    {}
    {$\cotuple{\hypert_0,\hypert_1}\hmid\Gamma\tr\tj{(\comodL)M}{[i]\psi}\hmid
    \Delta\tr\tj{(\comodR)N}{[j]\varphi}$}
@@ -438,12 +457,13 @@ annotated as in Figure~\ref{fig:typed-term}.
  \UnaryRule
  {$\hypert^+$}
  {}
- {$\hypert^+\hmid\Gamma\tr \tj \abort {\m\varphi}$}
+ {$\hypert^+\hmid\Gamma\tr \tj \abort {\m\phi}$}
 \vskip 2mm
  \UnaryRule
- {$\hypert\hmid\Gamma\tr\tj M {\m\varphi}\hmid\Gamma\tr \tj N {\m\varphi}$}
+ {$\hypert\hmid\Gamma\tr\tj M {\m\phi}\hmid\Gamma\tr \tj N {\m\psi}$}
  {}
- {$\hypert\hmid\Gamma\tr \tj {\cotuple{M,N}}{\m\varphi}$}
+ {$\hypert\hmid\Gamma\tr \tj
+ {\cotuple{M,N}}{(\m\phi \lor \m\psi)\lor(\m\phi\land\m\psi)}$}
 \hfill
  \UnaryRule
  {$\hypert\hmid\Gamma\tr M\colon\m\varphi\hmid\Delta\tr N\colon \m\psi\hmid \hypert'$}
@@ -573,7 +593,8 @@ annotated as in Figure~\ref{fig:typed-term}.
  Within each rule, $\hypert_0$, $\hypert_1$ and $\hypert_2$ have the
  same length and the same type so that $\cotuple{\hypert_0,\hypert_1}$
  can be defined as
- the elementwise application of $\cotuple{\term,\term}$.
+ the elementwise application of $\cotuple{\term,\term}$. \fix{ needs
+ more explanation}
  }
  \label{termassign}
 \end{figure}
@@ -581,6 +602,7 @@ annotated as in Figure~\ref{fig:typed-term}.
 \subsection{Reduction}
 
 A term~$M$ is \textit{of} type~$\m\varphi$ iff there is a derivation of
+\fix{is gamma empty or not?}
 $\Gamma\tr
 \tj{M}{\m\varphi}$.
 A local term\index{local term|see{term}}\index{term!local} is a term
@@ -605,7 +627,12 @@ To complete the definition of \lgd,
  require all instances
  of $\rightsquigarrow_\spadesuit$ to avoid free variable captures.
  Below, $\square$ and $\blacksquare$ match $\g$ or nothing.
- \fix{example for square and blacksquare}
+For example
+$\spil{\spair{M,N}} \reduce M$
+stands for two rules
+$\lpil{\lpair{M,N}} \reduce M$ and
+$\gpil{\gpair{M,N}} \reduce M$.  Note that the two $\square$'s are
+ replaced consistently.
 
 \begin{definition}[Basic reduction]
  The basic reduction $\breduce$ is the smallest congruence containing
@@ -625,14 +652,13 @@ To complete the definition of \lgd,
 \end{definition}
 
 There are two sorts of reductions that interact with the store.
-In summary, $\rtol i l \Gamma N$ tries to write to the right store and read from
-the left store of the configuration.
-If a term tries to read from an empty location of a store,
-the term changes into $\abort$.  If a term writes to a full location of
+In summary, $\comodL$ tries to write to $d$ and read from
+$c$ of the store in the configuration.
+ If a term writes to a full channel of
 a store, it does not abort but the store is not updated.  In fact, the
 store contents are never updated after being written.
 This property will be used in the proof of \thref{first:sn}.
-The formal definition follows.
+The formal definition of the reductions follows.
 \begin{definition}[Write reduction]
  The write reduction $\wreduce$ is the smallest congruence
  containing the followings where $M$ is a local term:
@@ -652,6 +678,12 @@ otherwise, whether a configuration admits a write reduction or not
 would depend on the contents of the store, which would make the
 implementation more complicated.
 
+After the communicating term $(\comodL)$ writes to the memory,
+the term changes into a reader $\reader c$.  When the reader tries to
+read when $c$ is full, the reader is replaced with the content of the
+channel~$c$.
+If a term tries to read from an empty location of a store,
+the term changes into $\abort$.
 \begin{definition}[Read reduction]
  \label{read}
  The read reduction $\rreduce$ is the smallest congruence
@@ -663,35 +695,57 @@ implementation more complicated.
 \end{itemize}
 \end{definition}
 
+The special term $\abort$ means failure, so, a term containing $\abort$
+also reduces to abort except $\cotuple{M,N}$.  The concurrent
+construction $\cotuple{M,N}$ runs $M$ and $N$ concurrently and throws
+away those subterms that reduces to $\abort$.
+To be specific, the term $\cotuple{M,N}$ reduces to $\inl{\inl{M}}$,
+$\inl{\inr{N}}$ or $\inr{\gpair{M,N}}$ with $\mathsf{inl}$ and
+$\mathsf{inr}$ labels showing which components failed.
 \begin{definition}[Abort propagation reduction]
  The abort propagation reduction $\areduce$ is the smallest
  congruence containing the
  followings:
 \begin{itemize}
  \item  $\conf{}{\cotuple{\abort, M}}\areduce
- \conf{}{M}$, and
+ \conf{}{\inl{\inr{M}}}$, and
    $\conf{}{\cotuple{M,\abort}}\areduce
- \conf{}{M}$
+ \conf{}{\inl{\inl{M}}}$
+ \item $\conf{}{\cotuple{M,N}}\areduce \conf{}{\inr{\gpair{M,N}}}$ where
+       $M$ and $N$ do not contain $\abort$, $\comodL$ or $\reader c$
+       for any channels $c,d$;
  \item  $\conf{}{C[\abort]}\areduce
- \conf{}{\abort}$
+ \conf{}{\abort}$  where $C[\bullet]$ is defined by BNF:
+\begin{align*}
+  C[\bullet] ::= &\bullet \mid
+C[\bullet] N \mid
+{M C[\bullet]}\mid
+(\comod c c)C[\bullet]\mid
+\sinl{C[\bullet]}\mid
+\sinr{C[\bullet]}\mid
+\spair {C[\bullet], N}\mid \\&
+\spair {M, C[\bullet]}\mid
+\pi^\square_i{C[\bullet]}\mid
+\smat M x N y {C[\bullet]}\mid\\ &
+\smat  {C[\bullet]} x N y O\mid \\&
+\smat  M x {C[\bullet]} y O
+\end{align*}
 \end{itemize}
- where $C[\bullet]$ is
-$\bullet N$,
-${M \bullet}$,
-$(\comod c c)\bullet$,
-$\sinl \bullet$,
-$\sinr \bullet$,
-$\spair {\bullet, N}$,
-$\spair {M, \bullet}$,
-$\pi^\square_i \bullet$.
-$\smat M x N y \bullet$,
-$\smat  \bullet x N y O$, or  \\
-$\smat  M x \bullet y O$
+For example, $(\sigma, \cotuple{\abort,\abort})$ reduces to $(\sigma, \abort)$ in two
+ different ways:
+\begin{align*}
+  (\sigma, \cotuple{\abort,\abort}) \areduce (\sigma,
+  \inl{\inl{\abort}})
+  \areduce (\sigma, \abort)\phantom{\enspace.} \\
+  (\sigma, \cotuple{\abort,\abort}) \areduce (\sigma,
+  \inl{\inr{\abort}})
+  \areduce (\sigma, \abort){\enspace.}
+\end{align*}
+
 \end{definition}
-In order to obtain subformula property
+In order to obtain the subformula property
  via proof normalization
-we add yet another kind of reduction rules.
-\fix{state and prove subformula property somewhere}
+we add yet another kind of reduction rules called permutative reductions.
 \begin{definition}[Permutative reduction]
  The permutative reduction~$\preduce$ is the smallest congruence
  containing the followings:
@@ -737,8 +791,30 @@ $\mathcal{D}$ with $\mathcal{C}\reduce \mathcal{D}$.
 A term~$M$ is normal\index{normal} when the configuration $\conf{}{M}$ is
 normal (the choice of $\lstore$ is irrelevant).
 
-\fix{add reduction example from the term example and explain the
-communicating behaviour}
+For closed terms $M$ and $N$,
+the term $\cotuple{(\comodL)M,(\comodR)N}$ nondeterministically reduces
+to $\inl{\inr{M}}$, $\inl{\inl{N}}$ and $\inr{\gpair{N,M}}$.
+To $\inl{\inr{M}}$, the term reduces as:
+\begin{align*}
+  (\emptyset, &\cotuple{(\comodL)M,(\comodR)N}) \\
+ \wreduce (\{d\mapsto M\}, &\cotuple{\reader c,(\comodR)N}) \\
+ \rreduce (\{d\mapsto M\}, &\cotuple{\abort,   (\comodR)N}) \\
+ \areduce (\{d\mapsto M\}, &\inl{\inr{(\comodR)N}}) \\
+ \wreduce (\{d\mapsto M, c\mapsto N\}, &\inl{\inr{\reader d}}) \\
+ \rreduce (\{d\mapsto M, c\mapsto N\}, &\inl{\inr{M}})
+\end{align*}
+and symmetrically to $\inl{\inl{N}}$.
+In the reduction to $\inr{\gpair{N,M}}$, the writes are followed by the reads:
+\begin{align*}
+ (\emptyset, &\cotuple{(\comodL)M,(\comodR)N})\\
+ \wreduce (\{d\mapsto M\}, &\cotuple{\reader c, (\comodR)N}) \\
+ \wreduce (\{d\mapsto M, c\mapsto N\}, &\cotuple{\reader c,\reader
+ d}) \\
+ \rreduce (\{d\mapsto M, c\mapsto N\}, &\cotuple{N, \reader d})\\
+ \rreduce (\{d\mapsto M, c\mapsto N\}, &\cotuple{N, M}) \\
+ \areduce (\{d\mapsto M, c\mapsto N\}, &\inr{\gpair{N,M}})\enspace.
+\end{align*}
+
 
 \subsection{Properties}
 
@@ -748,7 +824,8 @@ every typed hyperterm has a finite, maximal number of reductions it can
 take.
 Another is {non-abortfullness}: although some reductions yield
 $\abort$ terms, a typed hyperterm never reduces to a hyperterm that only
-contains $\abort$'s.  We show the second property first for its simpler proof.
+contains $\abort$'s.  We show the second property first because its
+proof is simpler.
 
 \begin{theorem}[Non-abortfullness]
  \label{nab}
@@ -756,11 +833,11 @@ contains $\abort$'s.  We show the second property first for its simpler proof.
  that is not $\abort$.
 \end{theorem}
 \begin{proof}
- When a reduction sequence is fixed, for any location~$l$, depending on
+ When a reduction sequence is fixed, for any channels~$c$ and $d$, depending on
  whether $c$ or $d$ is filled first,
  either:
- (i)  no ${(\comodL)M} \reduce {\abort}$ occurs for any~$i$, or
- (ii) no ${(\comodR)M} \reduce {\abort}$ occurs for any~$i$.
+ (i)  no ${\reader c} \reduce {\abort}$ occurs, or
+ (ii) no ${\reader d} \reduce {\abort}$ occurs.
 
 If the former is the case, we can rewrite
 a communication rule occurrence
@@ -774,31 +851,77 @@ a communication rule occurrence
    {(\comodL)M}{[i]\tau}\hmid
    \Delta\tr \tj{(\comodR)N}{[j]\psi}$}
 \end{center}
-into successive external weakening occurrences
+into a weakening occurrence (using Proposition~\ref{process-change} stated below)
 \begin{center}
  \AxiomC
  {$\hypert_0\hmid  \Gamma^j, \Delta^j\tr \tj M{[j]\psi}$}
-\doubleLine
  \UnaryInfC
  {$\hypert_0\hmid \tr \tj \abort
  {[i]\tau}\hmid
    \Gamma^j,\Delta^j\tr \tj{M}{[j]\psi}$}
  \DisplayProof
 \end{center}
- where $\Gamma^j$ and $\Delta^j$ can be obtained from the originals
- by changing every modality to $[j]$. \fix{state and prove that this
- preserves deductions}
+ where $\G^j$ denotes the context obtained by replacing every modality
+ in $\G$ with $[j]$.
  In the lattar case, we can do the symmetric.
 
-After these rewritings for all appearing locations,
-we obtain a derivation not containing
-$\overrightarrow{l}$ or $\overleftarrow{l}$.
+After these rewritings for all appearing channels,
+we obtain a derivation not containing any channels.
 Moreover, the end hypersequent of the resulting derivation has a component
 not containing $\abort$.
 The reductions of the original hyperterm can be simulated by the
 resulting hyperterm.  And, even after reductions, the resulting
 hyperterm has a component not containing $\abort$.
 \end{proof}
+
+ \begin{proposition}
+  \label{process-change}
+  When $\mathcal O \hmid \G_0,\D_0\tr\tj{P}{[k]\psi_0}$ is derivable,
+  $\mathcal O\hmid \G_0^m, \D_0^m\tr\tj{P}{[m]\psi_0}$ is also
+  derivable%
+  \footnote{Note that the modalities in $\mathcal O$ are not changed
+  while the modalities in $\G_0$ and $\D_0$ are turned into $[k]$.}.
+ \end{proposition}
+  \begin{proof}
+   By induction on the height of derivation.
+   All rules except com and EC rules are trivial because they do not interact
+   with the modalities.  For EC rule, we have to apply the induction
+   hypothesis twice to change modalities in two components.  For com rule,
+   let us assume the derivation ends in com rule as:
+   \[
+   \BinaryRule
+   {$\hypert_0\hmid\G\tr\tj{M}{[i]\varphi}$}
+   {$\hypert_1\hmid\D\tr\tj{N}{[j]\psi}$}
+   {}
+   {$\cotuple{\hypert_0,\hypert_1}\hmid\Gamma\tr\tj{(\comodL)M}{[i]\psi}\hmid
+   \Delta\tr\tj{(\comodR)N}{[j]\varphi}$}\enspace.
+   \]
+   We have to consider three cases:  first, when
+   $\G_0,\D_0\tr\tj{P}{[k]\psi_0}$ is in $[\mathcal O_0, \mathcal O_1]$;
+   second, when $\G_0,\D_0\tr\tj{P}{[k]\psi_0}$ is identical to
+   $ \Gamma\tr\tj{(\comodL)M}{[i]\psi} $; and third,
+   when $\G_0,\D_0\tr\tj{P}{[k]\psi_0}$ is identical to
+   $\Delta\tr\tj{(\comodR)N}{[j]\varphi}$.
+   The second and third cases are symmetric.  In the first case, $P$ is
+   actually a concurrent construct $[P_0,P_1]$. We can apply the
+   induction hypothesis to $P_0$ and $P_1$ and combine them again.
+   In the second case, we can use the induction hypothesis on the left branch%
+   \footnote{One crucial thing is the choice of the form of the com rule.
+   If we use the com' rule by Avron~\cite{avron91}, the proof does not
+   proceed because the contexts $\G$ and $\D$ are duplicated as
+   \[
+   \BinaryRule
+   {$\hypert_0\hmid\G,\D\tr\tj{M}{[i]\varphi}$}
+   {$\hypert_1\hmid\G,\D\tr\tj{N}{[j]\psi}$}
+   {}
+   {$\cotuple{\hypert_0,\hypert_1}\hmid\G\tr\tj{(\comodL)M}{[i]\psi}\hmid
+   \D\tr\tj{(\comodR)N}{[j]\varphi}$}\enspace.
+   \]
+   There, if we want to change the modalities in the rightmost component
+   naively, we also have to change the modalities in the second
+   rightmost component.
+   }.
+  \end{proof}
 
 \begin{theorem}[Strong normalization]
  \label{first:sn}
@@ -860,13 +983,13 @@ More specifically, we translate each reduction as follows, keeping the
 invariant inductively on the number of steps
 (the base case is satisfied by $\mathcal M'_0 = \mathcal M_0$ immediately):
 \begin{itemize}
- \item a read reduction $\conf{_k}{\hypc{}{\rtol i l\Delta M}}
+ \item a read reduction $\conf{_k}{\hypc{}{\reader c}}
        \rreduce
        \conf{_{k+1}}{\hypc{}{O}}$ is translated into
-       $\conf{_\infty}{\hypc'{\rtol i l\Delta M}} \rreduce
+       $\conf{_\infty}{\hypc'{\reader c}} \rreduce
        \conf{_{k+1}}{\hypc'{O'}}$.
-       If $\lstore_i(l)$ is a term,
-       $\lstore_\infty(l)$ and $O'$ are also identical to the term.
+       If $\lstore_i(c)$ is a term,
+       $\lstore_\infty(c)$ and $O'$ are also identical to the term.
        Otherwise, $O'$ must be $\abort$.
        Thus, the invariant
        holds for $k+1$.
@@ -892,9 +1015,9 @@ an $\abort$ propagation always
 strictly shortens the term under operation.
 
  After that, we can replace
- every ${\ltor i l\Gamma M}$ with
- $\lstore_\infty(l)$.
- Since $\ltor i l\Gamma M$ either reduces to $\lstore_\infty(l)$ or $\abort$,
+ every ${\reader c}$ with
+ $\lstore_\infty(c)$.
+ Since $\reader c$ either reduces to $\lstore_\infty(c)$ or $\abort$,
  replacing it with $\lstore_\infty(l)$ will only ``shorten'' the reduction
  sequence for at most one read step.
  Replacing every such occurrences
@@ -903,7 +1026,7 @@ strictly shortens the term under operation.
  Moreover,
  the result of the translation is also well-typed.
  A typing derivation of the resulting hyperterm can be obtained by
- replacing com' rules with EW rules and changing the process number in
+ replacing com rules with EW rules and changing the process number in
  types of some variables (c.f. the proof of \thref{nab}).
 
 We are aiming at reducing the problem to the strong normalization result
@@ -911,20 +1034,26 @@ by de Groote~\cite{Philippe2002js}.
 Since we have eliminated $(\comodL)M$ or $(\comodR)N$ occurrences,
 the remaining difference is small: some $\abort$ propagation reductions
  and some permutative reductions involving $\cotuple{\term,\term'}$.
- \fix{justify}
 We just have to make sure that there are no infinite reduction sequences
 that consist of these two kinds of reductions only.
 We can deal with the permutative reductions following de
  Groote~\cite{Philippe2002js}'s strategy for introducing~$\bot$.
-For $\abort$ propagation, we can apply the previous argument \fix{what?}.
+ There are no infinite sequence of $\abort$ reductions keeping the
+ number of $[t,t]$ constructions; and an abort reduction cannot increase
+ the number of $[t,t]$ constructions in a configuration.  Combined,
+ there are no infinite sequence of abort reductions.
 \end{proof}
+
+\fix{subformula property around here}
 
 \section{Typed Waitfreedom}
 \label{waitfreedom}
 
-Waitfreedom~\cite{Herlihy88,Saks:1993vq} is a class of protocols
+Waitfree protocols~\cite{Herlihy88,Saks:1993vq} are a class of protocols
 that can solve
 some of the input-output problems~\cite{Moran:1987ep,Biran:1988hh}.
+If a waitfree protocol solves an input-output problem, then the protocol
+belongs to the waitfreedom.
 We define the typed version of waitfreedom.
 
 \subsection{Typed Input-Output Problem}
@@ -952,6 +1081,8 @@ $(\iota_i)_{i\in \processes}$, each process's output type $(o_i)_{i\in
 task $R\subseteq \prod_{i\in \processes}\left(\lterm(\iota_i)\right)\times
  \prod_{i\in \processes}\left(\lval(o_i)\right)$.
 
+ \fix{example}
+
 \subsection{Typed Protocol}
 
 We assume a finite set~$\processes$
@@ -974,6 +1105,8 @@ where an expression\index{expression} is
  x.E\mid \tuple{E,E}\mid \linl{E}\mid \linr{E}\mid \\
  &\lpil{E}\mid\lpir{E}\mid  \lmat E x {E} y {E}\mid \epsilon\enspace.
 \end{align*}
+The expression~$\epsilon$ is used as the initial content of the shared
+memory \fix{really?}.
 
 \newcommand{\Wg}{W_{\mathrm g}}
 \newcommand{\Wd}{W_{\mathrm d}}
@@ -982,13 +1115,13 @@ a program variable (resp. channel) first appears in a $\p x\leftarrow E$
 (resp. $c\leftarrow E$)
 sentence, and
 after that, only appears in expressions.
-In other words, we assume a program to be in the single assignment form.
-For a contexted type $t = (\Gamma\tr\m\varphi)$,
-we write $\tj{M}{t}$ for
+In other words, a well-formed program is in the single assignment form.
+For a contexted type $(\Gamma\tr\m\varphi)$,
+we write $\tj{M}{(\Gamma\tr\m\varphi)}$ for
 $\Gamma\tr\tj{M}{\m\varphi}$.
 For input types $(\iota_i)_{i\in\processes}$
 and output types $(o_i)_{i\in\processes}$,
-a \index{typed protocol} has:
+a typed protocol\index{typed protocol} has:
 \begin{itemize}
  \item two program variables
       $\p i_i$ and $\p o_i$ for each process~$i$;
@@ -1013,6 +1146,7 @@ a \index{typed protocol} has:
        with
        assumptions of the form $\tr\tj{\p y}{t(\p y)}$ and $\tr\tj{c}{W(c)}$.
 \end{itemize}
+\fix{example, for the above example problem}
 
 \subsection{Typed Waitfree Computation}
 
@@ -1111,6 +1245,8 @@ $\vg v l  = \vd v l = \epsilon$,
 and $C_{k+1} = C_{k}\update
 \sigma_{i+1}$.
 
+\fix{example}
+
 Process~$i$'s output\index{output}~$\hat{o_k}$ at step~$k$ is
 $M$ if the $i$-th process snapshot of $C_k$ is
 $(p, x)$ and the $x[\p{o}_i] = M$, which can be $\epsilon$.
@@ -1143,6 +1279,11 @@ schedule~$\sigma$,
  the problem on every schedule~$\sigma$.
  In that case, the typed input-output problem is
  waitfreely solvable\index{waitfreely solvable}.
+
+ \fix{show example solvable}
+
+ \fix{show example not solvable, why? see saks or see below}
+
 
 \section{Characterization of Waitfreedom and \lgd}
 \label{comparison}
@@ -1235,8 +1376,32 @@ same program variable does not have multiple substitutions
 And $(p)_j$ denotes $(q_i)_{i\in\processes}$ where $q_j = p$ and $q_i =
 \epsilon$ for all $i\neq j$.
 Below, we always choose fresh program variables.
-The definition is inductive over the type derivation.
-{\footnotesize
+The definition is inductive over the type derivation:
+\begin{description}
+ \item[com] 
+ \item[EW] 
+ \item[EC] 
+ \item[EE] 
+ \item[IE] 
+ \item[IW] 
+ \item[IC] 
+ \item[$\wedge\intro$] 
+ \item[$\wedge\elim_0$] 
+ \item[$\wedge\elim_1$] 
+ \item[$\vee\intro_0$] 
+ \item[$\vee\intro_1$] 
+ \item[$\vee\elim$] 
+ \item[$[i]\bot\elim$$] 
+ \item[$[i]\supset\intro$] 
+ \item[$[i]\supset\elim$] 
+ \item[$[i]\wedge\intro$] 
+ \item[$[i]\wedge\elim_0$] 
+ \item[$[i]\wedge\elim_1$] 
+ \item[$[i]\vee\intro_0$] 
+ \item[$[i]\vee\intro_1$] 
+ \item[$[i]\vee\elim$] 
+\end{description}
+\fix{which goes where?}
 \begin{align*}
  \semo{\cotuple{\hypert_0,\hypert_1}\hmid \ltor j l \Delta M\hmid \rtol i l\Gamma N}
  =& \semo{\hypert_0\hmid M};
@@ -1288,7 +1453,7 @@ The definition is inductive over the type derivation.
  \linr{\semoi{\hypert\hmid\hat M}'}\enspace, \\
  \semoi{\hypert\hmid \linr{M}}=& \semoi{\hat \hypert\hmid M}\hmid
  \{\tuple{i, \p z}\}\enspace.
-\end{align*} }
+\end{align*}
 When $(\tj{x_i}{[i]\iota_i})_{i\in\processes}
 \tr\tj{M}(\wwedge_{i\in \processes}[i]o_i)$ is
 derivable,
@@ -1300,10 +1465,10 @@ $\semo{M}; ({\p o}_i\leftarrow \pi_i(\semoi{\hat M}'))_{i\in\processes}$,
 where $\pi_i$ is obtained by composing $i$~times $\pi_{\mathrm r}$ to
 $\pi_{\mathrm l}$.
 We set $g,d,t_i$ accordingly so that the program is typed.
+\fix{add example}
+
 We can simulate a reduction sequence of
 the hyperterm using a fair execution of the protocol.
-
-
 And, since the protocol solves a problem for any fair schedule, it
 solves the problem waitfreely.
 If we deny the claim, there must be an execution where a nonfaulty
@@ -1383,41 +1548,42 @@ like $\{c_0, c_1, c_2\}$.
 
 Now, we are ready to construct a hyperterm solving the two-party
 participating set problem.
-We can  obtain a derivation of:
+We can obtain a derivation of \fix{something else}:
 \begin{center}
  \small
 $
  \tj{x}{[0]\Id},
  \tj{y}{[1]\Id}
  \tr
- \tj{\cotuple{\gpair{\{\ltor 0 l \epsilon x, x\}, \{y\}},
- \gpair{\{x\}, \{\rtol 1 l\epsilon y, y\}}
+ \tj{\cotuple{\gpair{\{(\comodL)x, x\}, \{y\}},
+ \gpair{\{x\}, \{(\comodR) y, y\}}
  }}
  {[0](\Id\supset 2)\wedge ([1](\Id\supset 2))}\enspace.$
 \end{center}
 
-One possible reduction sequence is as follows:
+One possible reduction sequence is as follows: \fix{according to the new
+rule?}
 \begin{align*}
- & \conf{[]}
- {\cotuple{\gpair{\{\ltor 0 l \epsilon {c_0}, {c_0}\}, \{{c_1}\}},
- \gpair {\{{c_0}\}, \{\rtol 1 l\epsilon {c_1}, {c_1}\}}}} \\
+ & \concreteconf{[]}
+ {\cotuple{\gpair{\{(\comodL) {c_0}, {c_0}\}, \{{c_1}\}},
+ \gpair {\{{c_0}\}, \{(\comodR) {c_1}, {c_1}\}}}} \\
  \reduction &
- \conf{[l\mapsto {c_0}]}
+ \concreteconf{[d\mapsto {c_0}]}
  {
  \cotuple{
  \gpair{\{\abort, {c_0}\}, \{{c_1}\}},
- \gpair{\{{c_0}\}, \{\rtol 1 l\epsilon {c_1}, {c_1}\}}
+ \gpair{\{{c_0}\}, \{(\comodR){c_1}, {c_1}\}}
  }
  }
  \\
  \reduction &
- \concreteconf{[l\mapsto {c_0}]}{[l\mapsto {c_1}]}{\gpair{\{{c_0}\}, \{c_0, c_1\}}}\enspace.
+ \concreteconf{[d\mapsto {c_0}, c\mapsto {c_1}]}{\gpair{\{{c_0}\}, \{c_0, c_1\}}}\enspace.
 \end{align*}
 Moreover, the same initial configuration can reduce to
 \[
- \concreteconf{[l\mapsto c_0]}{[l\mapsto c_1]}{\gpair{\{c_1,c_0\},
- \{c_1\}}}\text{ or }
- \concreteconf{[l\mapsto c_0]}{[l\mapsto c_1]}{\gpair{\{c_1,c_0\},
+ \concreteconf{[d\mapsto c_0,c\mapsto c_1]}{\gpair{\{c_1,c_0\},
+ \{c_1\}}}\text{ and }
+ \concreteconf{[d\mapsto c_0,c\mapsto c_1]}{\gpair{\{c_1,c_0\},
  \{c_0, c_1\}}}\enspace.
 \]
 There are no other normal forms.
@@ -1531,3 +1697,6 @@ the typed version of waitfree computation.
 Our result
 hints broader correspondence between
 proof theory and distributed computation.
+
+\renewcommand{\comodL}{\comod{c}{\co c}}
+\renewcommand{\comodR}{\comod{\co c}{c}}
