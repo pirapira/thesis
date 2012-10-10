@@ -213,9 +213,9 @@ $ [0](P\supset Q)\land [1](Q\supset P) \tr [0](P\supset Q) \lor
  {$\hyper^+\hmid\Gamma\vdash \m\varphi$}
  \vskip 2mm
  \UnaryRule
- {$\hyper\hmid\Gamma\vdash \m\varphi\hmid\Gamma\vdash \m\psi$}
+ {$\hyper\hmid\Gamma\vdash \m\phi\hmid\Gamma\vdash \m\phi$}
  {EC}
- {$\hyper\hmid\Gamma\vdash (\m\varphi \lor \m\psi) \lor (\m\phi\land\m\psi)$}
+ {$\hyper\hmid\Gamma\vdash \m\phi$}
  \hfill
  \UnaryRule
  {$\hyper\hmid\Gamma\vdash \m\varphi\hmid\Delta\vdash \m\psi\hmid \hyper'$}
@@ -441,7 +441,7 @@ annotated as in Figure~\ref{fig:typed-term}.
 \UnaryInfC{$
 \tr \tj{\left[{\lambda x. (\comodL)x} ,\quad {\lambda
  y.(\comodR)y} \right]}
- {([0](P\supset Q)\lor [1](Q\supset P))  \lor ([0](P\supset Q)\land [1](Q\supset P))} $}
+ {[0](P\supset Q)\lor [1](Q\supset P)} $}
 \DisplayProof
  \caption{An example of a typed term in \lgd.}
  \label{fig:typed-term}
@@ -469,10 +469,10 @@ annotated as in Figure~\ref{fig:typed-term}.
  {$\hypert^+\hmid\Gamma\tr \tj \abort {\m\phi}$}
 \vskip 2mm
  \UnaryRule
- {$\hypert\hmid\Gamma\tr\tj M {\m\phi}\hmid\Gamma\tr \tj N {\m\psi}$}
+ {$\hypert\hmid\Gamma\tr\tj M {\m\phi}\hmid\Gamma\tr \tj N {\m\phi}$}
  {}
  {$\hypert\hmid\Gamma\tr \tj
- {\cotuple{M,N}}{(\m\phi \lor \m\psi)\lor(\m\phi\land\m\psi)}$}
+ {\cotuple{M,N}}{\m\phi}$}
 \hfill
  \UnaryRule
  {$\hypert\hmid\Gamma\tr M\colon\m\varphi\hmid\Delta\tr N\colon \m\psi\hmid \hypert'$}
@@ -718,10 +718,10 @@ $\mathsf{inr}$ labels showing which components failed.
  followings:
 \begin{itemize}
  \item  $\conf{}{\cotuple{\abort, M}}\areduce
- \conf{}{\ginl{\ginr{M}}}$, and
+ \conf{}{{M}}$, and
    $\conf{}{\cotuple{M,\abort}}\areduce
- \conf{}{\ginl{\ginl{M}}}$
- \item $\conf{}{\cotuple{M,N}}\areduce \conf{}{\ginr{\gpair{M,N}}}$ where
+ \conf{}{{M}}$
+ \item $\conf{}{\cotuple{M,N}}\areduce \conf{}{M}$ where
        $M$ and $N$ do not contain $\abort$, $\comodL$ or $\reader c$
        for any channels $c,d$;
  \item  $\conf{}{C[\abort]}\areduce
@@ -733,8 +733,8 @@ C[\bullet] N \mid
 (\comod c c)C[\bullet]\mid
 \sinl{C[\bullet]}\mid
 \sinr{C[\bullet]}\mid
-\spair {C[\bullet], N}\mid \\&
-\spair {M, C[\bullet]}\mid
+\lpair {C[\bullet], N}\mid \\&
+\lpair {M, C[\bullet]}\mid
 \pi^\square_i{C[\bullet]}\mid
 \smat M x N y {C[\bullet]}\mid\\ &
 \smat  {C[\bullet]} x N y O\mid \\&
