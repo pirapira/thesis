@@ -395,9 +395,9 @@ inputs for processes and collecting outputs of the processes.
 
 Using these terms, we annotate the hypersequent system in Fig.~\ref{fig:logic}.
 We extend a sequent
-to $\Gamma\tr \tj M{\m \varphi}$, where $\Gamma$ is
-a sequence like $\tj{x}{\m\psi}, \tj{y}{\m\theta}$ and $M$ is a term.
-In a sequent $\Gamma\tr\tj{M}{\m\varphi}$, we require the variables in
+to $\Gamma\tr \tj M{\m \varphi}$\kern -3pt, where $\Gamma$ is
+a sequence like $\tj{x}{\m\psi}\kern -3pt, \tj{y}{\m\theta}$ and $M$ is a term.
+In a sequent $\Gamma\tr\tj{M}{\m\varphi}$\kern -3pt, we require the variables in
 $\Gamma$ to be distinct from each other.
 A contexed type\index{contexted type}
  $\Gamma\tr\m\varphi$ is a sequent without a term but with variables in
@@ -421,12 +421,22 @@ annotated as in Figure~\ref{fig:typed-term}.
 \LL{$01$-com}
 \BinaryInfC{$\tj{x}{[0]P}\tr\tj{(\comodL)x}{[0]Q}\hmid
  \tj{y}{[1]Q}\tr\tj{(\comodR)y}{[1]P}$}
-\LL{$[0]\supset$I}
+\LL{$[0]\supset\intro$}
 \UnaryInfC{$\tr\tj{\lambda x. (\comodL)x}{[0](P\supset Q)}
  \hmid \tj{y}{[1]Q}\tr\tj{(\comodR)y}{[1]P}$}
-\LL{$[1]\supset$I}
+\LL{$[1]\supset\intro$}
 \UnaryInfC{$\tr\tj{\lambda x. (\comodL)x}{[0](P\supset Q)}\hmid \tr
  \tj{\lambda y.(\comodR)y}{[1](Q\supset P)}$}
+\LL{$\vee$I}
+\UnaryInfC{$\tr\tj{\inl{\lambda x. (\comodL)x}}{[0](P\supset Q) \lor
+ [1](Q\supset P)}
+ \hmid
+ \tr\tj{\lambda y.(\comodR)y}{[1](Q\supset P)}$}
+\LL{$\vee$I}
+\UnaryInfC{$\tr\tj{\inl{\lambda x. (\comodL)x}}{[0](P\supset Q) \lor
+ [1](Q\supset P)}\hmid
+\tr \tj{\inr{\lambda y.(\comodR)y}}{[0](P\supset Q) \lor [1](Q\supset
+ P)}$}
 \LL{EC}
 \UnaryInfC{$
 \tr \tj{\left[{\lambda x. (\comodL)x} ,\quad {\lambda
@@ -602,9 +612,8 @@ annotated as in Figure~\ref{fig:typed-term}.
 
 \subsection{Reduction}
 
-A term~$M$ is \textit{of} type~$\m\varphi$ iff there is a derivation of
-\fix{is gamma empty or not?}
-$\Gamma\tr
+A closed term~$M$ is \textit{of} type~$\m\varphi$ iff there is a derivation of
+$\tr
 \tj{M}{\m\varphi}$.
 A local term\index{local term|see{term}}\index{term!local} is a term
 without $\comod c c$,
@@ -1733,6 +1742,9 @@ following chapters}.
 If that succeeds for classical logic, it will be interesting%
 \footnote{Kazushige Terui suggested the potential impact for classical logic.}%
 .
+
+\fix{external contraction is not general.}
+\fix{no problem with regard to provability}
 
 \section{Conclusion}
 \label{conc}
