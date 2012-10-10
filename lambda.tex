@@ -143,7 +143,7 @@ $[0](\varphi\supset\psi)\vee[1](\psi\supset\varphi)$ is provable (Figure~\ref{fi
 \AxiomC{}
 \LL{[1]Ax}
 \UnaryInfC{$[1]Q\vdash[1]Q$}
-\LL{com}
+\LL{01-com}
 \BinaryInfC{$[0]P\vdash[0]Q\hmid [1]Q\vdash[1]P$}
 \LL{$[0]\supset$I}
 \UnaryInfC{$\vdash[0](P\supset Q)\hmid [1]Q\vdash[1]P$}
@@ -204,7 +204,7 @@ $ [0](P\supset Q)\land [1](Q\supset P) \tr [0](P\supset Q) \lor
    \BinaryRule
    {$\hyper\hmid\G\vdash[i]\varphi$}
    {$\hyper\hmid\D\vdash[j]\psi$}
-   {com}
+   {$ij$-com}
    {$\hyper\hmid\Gamma\vdash[i]\psi\hmid\Delta\vdash[j]\varphi$}
   \hfill
 %% external structural
@@ -419,7 +419,7 @@ annotated as in Figure~\ref{fig:typed-term}.
 \AxiomC{}
 \LL{[1]Ax}
 \UnaryInfC{$\tj{y}{[1]Q}\tr\tj{y}{[1]Q}$}
-\LL{com}
+\LL{$01$-com}
 \BinaryInfC{$\tj{x}{[0]P}\tr\tj{(\comodL)x}{[0]Q}\hmid
  \tj{y}{[1]Q}\tr\tj{(\comodR)y}{[1]P}$}
 \LL{$[0]\supset$I}
@@ -587,6 +587,8 @@ annotated as in Figure~\ref{fig:typed-term}.
 \vskip 2mm
  \caption[Term assignment of \lgd.]
  {Term assignment.
+ When we remove variables and terms, we obtain the derivation rules for
+ the underlying logic (Figure~\ref{fig:logic}).
  $\hypert$ stands for
  a possibly empty hypersequent (with possible subscripts).
  $\hypert^+$ stands for a non-empty hypersequent.
@@ -699,19 +701,19 @@ The special term $\abort$ means failure, so, a term containing $\abort$
 also reduces to abort except $\cotuple{M,N}$.  The concurrent
 construction $\cotuple{M,N}$ runs $M$ and $N$ concurrently and throws
 away those subterms that reduces to $\abort$.
-To be specific, the term $\cotuple{M,N}$ reduces to $\inl{\inl{M}}$,
-$\inl{\inr{N}}$ or $\inr{\gpair{M,N}}$ with $\mathsf{inl}$ and
+To be specific, the term $\cotuple{M,N}$ reduces to $\ginl{\ginl{M}}$,
+$\ginl{\ginr{N}}$ or $\ginr{\gpair{M,N}}$ with $\mathsf{inl}$ and
 $\mathsf{inr}$ labels showing which components failed.
-\begin{definition}[Abort propagation reduction]
+\begin{definition}[Abort reduction]
  The abort propagation reduction $\areduce$ is the smallest
  congruence containing the
  followings:
 \begin{itemize}
  \item  $\conf{}{\cotuple{\abort, M}}\areduce
- \conf{}{\inl{\inr{M}}}$, and
+ \conf{}{\ginl{\ginr{M}}}$, and
    $\conf{}{\cotuple{M,\abort}}\areduce
- \conf{}{\inl{\inl{M}}}$
- \item $\conf{}{\cotuple{M,N}}\areduce \conf{}{\inr{\gpair{M,N}}}$ where
+ \conf{}{\ginl{\ginl{M}}}$
+ \item $\conf{}{\cotuple{M,N}}\areduce \conf{}{\ginr{\gpair{M,N}}}$ where
        $M$ and $N$ do not contain $\abort$, $\comodL$ or $\reader c$
        for any channels $c,d$;
  \item  $\conf{}{C[\abort]}\areduce
@@ -735,10 +737,10 @@ For example, $(\sigma, \cotuple{\abort,\abort})$ reduces to $(\sigma, \abort)$ i
  different ways:
 \begin{align*}
   (\sigma, \cotuple{\abort,\abort}) \areduce (\sigma,
-  \inl{\inl{\abort}})
+  \ginl{\ginl{\abort}})
   \areduce (\sigma, \abort)\phantom{\enspace.} \\
   (\sigma, \cotuple{\abort,\abort}) \areduce (\sigma,
-  \inl{\inr{\abort}})
+  \ginl{\ginr{\abort}})
   \areduce (\sigma, \abort){\enspace.}
 \end{align*}
 
@@ -793,18 +795,18 @@ normal (the choice of $\lstore$ is irrelevant).
 
 For closed terms $M$ and $N$,
 the term $\cotuple{(\comodL)M,(\comodR)N}$ nondeterministically reduces
-to $\inl{\inr{M}}$, $\inl{\inl{N}}$ and $\inr{\gpair{N,M}}$.
-To $\inl{\inr{M}}$, the term reduces as:
+to $\ginl{\ginr{M}}$, $\ginl{\ginl{N}}$ and $\ginr{\gpair{N,M}}$.
+To $\ginl{\ginr{M}}$, the term reduces as:
 \begin{align*}
   (\emptyset, &\cotuple{(\comodL)M,(\comodR)N}) \\
  \wreduce (\{d\mapsto M\}, &\cotuple{\reader c,(\comodR)N}) \\
  \rreduce (\{d\mapsto M\}, &\cotuple{\abort,   (\comodR)N}) \\
- \areduce (\{d\mapsto M\}, &\inl{\inr{(\comodR)N}}) \\
- \wreduce (\{d\mapsto M, c\mapsto N\}, &\inl{\inr{\reader d}}) \\
- \rreduce (\{d\mapsto M, c\mapsto N\}, &\inl{\inr{M}})
+ \areduce (\{d\mapsto M\}, &\ginl{\ginr{(\comodR)N}}) \\
+ \wreduce (\{d\mapsto M, c\mapsto N\}, &\ginl{\ginr{\reader d}}) \\
+ \rreduce (\{d\mapsto M, c\mapsto N\}, &\ginl{\ginr{M}})
 \end{align*}
-and symmetrically to $\inl{\inl{N}}$.
-In the reduction to $\inr{\gpair{N,M}}$, the writes are followed by the reads:
+and symmetrically to $\ginl{\ginl{N}}$.
+In the reduction to $\ginr{\gpair{N,M}}$, the writes are followed by the reads:
 \begin{align*}
  (\emptyset, &\cotuple{(\comodL)M,(\comodR)N})\\
  \wreduce (\{d\mapsto M\}, &\cotuple{\reader c, (\comodR)N}) \\
@@ -812,7 +814,7 @@ In the reduction to $\inr{\gpair{N,M}}$, the writes are followed by the reads:
  d}) \\
  \rreduce (\{d\mapsto M, c\mapsto N\}, &\cotuple{N, \reader d})\\
  \rreduce (\{d\mapsto M, c\mapsto N\}, &\cotuple{N, M}) \\
- \areduce (\{d\mapsto M, c\mapsto N\}, &\inr{\gpair{N,M}})\enspace.
+ \areduce (\{d\mapsto M, c\mapsto N\}, &\ginr{\gpair{N,M}})\enspace.
 \end{align*}
 
 
@@ -1377,53 +1379,67 @@ And $(p)_j$ denotes $(q_i)_{i\in\processes}$ where $q_j = p$ and $q_i =
 \epsilon$ for all $i\neq j$.
 Below, we always choose fresh program variables.
 The definition is inductive over the type derivation:
+\fix{put process numbers after the local operations}
 \begin{description}
- \item[com] 
- \item[EW] 
- \item[EC] 
+ \item[$ij$-com]
+      \begin{align*}
+ \semo{\cotuple{\hypert_0,\hypert_1}\hmid (\comodL) M\hmid (\comodR) N}
+ =& \semo{\hypert_0\hmid M};
+ \semo{\hypert_1\hmid N};\\
+ &(d\leftarrow \semoi{\hypert_0\hmid\hat M}'; \p
+ y\leftarrow c;)_j; \\
+ &(c\leftarrow \semoi{\hypert_1\hmid\hat N}'; \p
+ x\leftarrow d;)_i\enspace,\\
+ \semoi{\cotuple{\hypert_0,\hypert_1}\hmid\ltor j l \Delta M\hmid \rtol i l\Gamma N} =&
+ \semoi{\hat \hypert_0\hmid M} \cup \semoi{\hat \hypert_1\hmid N} \hmid\\& \tuple{\{j,\p
+ y\}}\hmid \{\tuple{i,\p x}\}\enspace,
+      \end{align*}
+ \item[EW] \begin{align*}
+ \semo{\hypert\hmid \abort}=\semo{\hypert}\enspace,\quad
+ \semoi{\hypert\hmid\abort}=&\semoi{\hypert}\hmid \emptyset\enspace,\quad
+	   \end{align*}
+ \item[EC]
+\begin{align*}
+ \semo{\hypert\hmid \cotuple{M,N}}&= \semo{\hypert\hmid M \hmid N}\\
+ \semoi{\hypert\hmid \cotuple{M,N}}&= \semoi{\hat\hypert\hmid M\hmid N}
+ \hmid
+ \left(\semoi{\hypert\hmid\hat M\hmid N} \cup \semoi{\hypert\hmid M\hmid
+ \hat N}\right)\enspace.
+\end{align*}
  \item[EE] 
  \item[IE] 
  \item[IW] 
  \item[IC] 
- \item[$\wedge\intro$] 
- \item[$\wedge\elim_0$] 
- \item[$\wedge\elim_1$] 
- \item[$\vee\intro_0$] 
- \item[$\vee\intro_1$] 
- \item[$\vee\elim$] 
- \item[$[i]\bot\elim$$] 
- \item[$[i]\supset\intro$] 
- \item[$[i]\supset\elim$] 
- \item[$[i]\wedge\intro$] 
- \item[$[i]\wedge\elim_0$] 
- \item[$[i]\wedge\elim_1$] 
- \item[$[i]\vee\intro_0$] 
- \item[$[i]\vee\intro_1$] 
- \item[$[i]\vee\elim$] 
-\end{description}
-\fix{which goes where?}
+ \item[$\brac i$Ax] 
 \begin{align*}
- \semo{\cotuple{\hypert_0,\hypert_1}\hmid \ltor j l \Delta M\hmid \rtol i l\Gamma N}
- =& \semo{\hypert_0\hmid M};
- \semo{\hypert_1\hmid N};\\
- &(l\leftarrow \semoi{\hypert_0\hmid\hat M}'; \p
- y\leftarrow l;)_j; \\
- &(l\leftarrow \semoi{\hypert_1\hmid\hat N}'; \p
- x\leftarrow l;)_i\enspace,\\
- \semoi{\cotuple{\hypert_0,\hypert_1}\hmid\ltor j l \Delta M\hmid \rtol i l\Gamma N} =&
- \semoi{\hat \hypert_0\hmid M} \cup \semoi{\hat \hypert_1\hmid N} \hmid\\& \tuple{\{j,\p
- y\}}\hmid \{\tuple{i,\p x}\}\enspace,\\
- \semo{\hypert\hmid \abort}=\semo{\hypert}\enspace,\quad
- \semoi{\hypert\hmid\abort}=&\semoi{\hypert}\hmid \emptyset\enspace,\quad
- \semo{x}= \epsilon \enspace,\\
+ \semo{x}=& \epsilon \enspace\\
  \semoi{x}=& \{\tuple{i,\p x_x}\} \text{ where $[i]\varphi$ is the type
- of $x$}\enspace,\\
+ of $x$}\enspace,
+\end{align*}
+ \item[$\wedge\intro$] 
+\begin{align*}
  \semo{\hypert\hmid \gpair{M,N}}=&
  \semo{\hypert\hmid M}; \semo{\hypert\hmid N}\enspace,\\
  \semoi{\hypert\hmid \gpair{M,N}} =&
- \semoi{\hypert\hmid M}\cup \semoi{\hypert\hmid N}\enspace,\\
+ \semoi{\hypert\hmid M}\cup \semoi{\hypert\hmid N}\enspace,
+\end{align*}
+ \item[$\wedge\elim_a$] 
+\begin{align*}
  \semo{\hypert\hmid \pi_a^\g(M)}=&\semo{\hypert\hmid M}\enspace,\\
- \semoi{\hypert\hmid\pi_a^\g(M)}=&\semoi{\hypert\hmid M}\enspace,\\
+ \semoi{\hypert\hmid\pi_a^\g(M)}=&\semoi{\hypert\hmid M}\enspace,
+\end{align*}
+ \item[$\vee\intro_0$]
+      \begin{align*}
+       \semo{\hypert\hmid \ginl{M}}&=\semo{\hypert\hmid M}\enspace,\\
+       \semoi{\hypert\hmid\ginl(M)}&=\semoi{\hypert\hmid M}\enspace,
+      \end{align*}
+ \item[$\vee\intro_1$] 
+      \begin{align*}
+       \semo{\hypert\hmid \ginr{M}}&=\semo{\hypert\hmid M}\enspace,\\
+       \semoi{\hypert\hmid\ginr(M)}&=\semoi{\hypert\hmid M}\enspace,
+      \end{align*}
+ \item[$\vee\elim$] 
+\begin{align*}
   \semo{\cotuple{\cotuple{\hypert_0,\hypert_1},\hypert_2}\hmid
    \gmat  M x {N_0} y {N_1}}
  =&\semo{\hypert_0\hmid M}; \\
@@ -1431,29 +1447,62 @@ The definition is inductive over the type derivation:
   \p{x}_y \leftarrow \lmat {\semoi{\hypert_0\hmid \hat M}'} {x} {\epsilon} {y} {y}; &\semo{\hypert_2 \hmid N_1}\enspace,\\
   \semoi{\cotuple{\cotuple{\hypert_0,\hypert_1},\hypert_2}\hmid \gmat  M x {N_0} y {N_1}}
  =&\semoi{\hypert_1 \hmid N_0}\cup \semoi{\hypert_2 \hmid N_1}\enspace,\\
+\end{align*}
+ \item[${\brac{i}}\bot\elim$] 
+ \item[$\brac i\supset\intro$] 
+\begin{align*}
  \semo{\hypert\hmid \lambda x.M}=& \semo{\hypert\hmid M}; \p z\leftarrow
  \lambda x. \semoi{\hypert\hmid\hat M}' \enspace,\\
+ \semoi{\hypert\hmid \lambda x.M} =& \semoi{\hat\hypert\hmid M} \hmid
+ \{\tuple{i,\p z}\}\enspace,
+\end{align*}
+ \item[$\brac i\supset\elim$] 
+\begin{align*}
  \semo{\cotuple{\hypert_0,\hypert_1}\hmid MN}=& \semo{\hypert_0\hmid M}; \semo{\hypert_1\hmid N}; \\&
  \p z\leftarrow \semoi{\hypert_0\hmid \hat M}'\semoi{\hypert_1\hmid \hat N}'\enspace,\\
  \semoi{\cotuple{\hypert_0,\hypert_1}\hmid MN} =& (\semoi{\hat \hypert_0 \hmid M}\cup
- \semoi{\hat\hypert_1\hmid N})\hmid \{\tuple{i,\p z}\}\enspace, \\
+ \semoi{\hat\hypert_1\hmid N})\hmid \{\tuple{i,\p z}\}\enspace,
+\end{align*}
+ \item[$\brac i\wedge\intro$]
+      \begin{align*}
+       \semo{\cotuple{\hypert_0,\hypert_1}\hmid \tuple{M,N}}&=
+       \semo{\hypert_0\hmid M}; \semo{\hypert_1\hmid N}; \p z
+       \leftarrow \tuple{\semoi{\hypert_0\hmid \hat
+       M}',\semo{\hypert_1\hmid\hat N}'}\enspace,\\
+       \semoi{\cotuple{\hypert_0,\hypert_1}\hmid \tuple{M,N}} =& (\semoi{\hat \hypert_0 \hmid M}\cup
+       \semoi{\hat\hypert_1\hmid N})\hmid \{\tuple{i,\p z}\}\enspace,
+      \end{align*}
+ \item[$\brac i\wedge\elim_0$] 
+\begin{align*}
  \semo{\hypert\hmid \lpil M} =& \semo{\hypert\hmid M}; \p z \leftarrow
  \lpil {\semoi{\hypert\hmid\hat M}'}\enspace, \\
  \semoi{\hypert\hmid \lpil M}=& \semoi{\hat \hypert\hmid M}\hmid
- \{\tuple{i, \p z}\}\enspace, \\
+ \{\tuple{i, \p z}\}\enspace,
+\end{align*}
+ \item[$\brac i\wedge\elim_1$] 
+\begin{align*}
  \semo{\hypert\hmid \lpir M} =& \semo{\hypert\hmid M}; \p z \leftarrow
  \lpir{ \semoi{\hypert\hmid\hat M}' }\enspace, \\
  \semoi{\hypert\hmid \lpir M}=& \semoi{\hat \hypert\hmid M}\hmid
- \{\tuple{i, \p z}\}\enspace, \\
+ \{\tuple{i, \p z}\}\enspace,
+\end{align*}
+ \item[$\brac i\vee\intro_0$] 
+\begin{align*}
  \semo{\hypert\hmid \linl{M}} =& \semo{\hypert\hmid M}; \p z \leftarrow
  \linl{ \semoi{\hypert\hmid\hat M}'}\enspace, \\
  \semoi{\hypert\hmid \linl M}=& \semoi{\hat \hypert\hmid M}\hmid
- \{\tuple{i, \p z}\}\enspace, \\
+ \{\tuple{i, \p z}\}\enspace,
+\end{align*}
+ \item[$\brac i\vee\intro_1$] 
+\begin{align*}
  \semo{\hypert\hmid \linr M} =& \semo{\hypert\hmid M}; \p z \leftarrow
  \linr{\semoi{\hypert\hmid\hat M}'}\enspace, \\
  \semoi{\hypert\hmid \linr{M}}=& \semoi{\hat \hypert\hmid M}\hmid
- \{\tuple{i, \p z}\}\enspace.
+ \{\tuple{i, \p z}\}\enspace,
 \end{align*}
+ \item[$\brac{i}\vee\elim$] 
+\end{description}
+\fix{before finishing the above list, make an example first}
 When $(\tj{x_i}{[i]\iota_i})_{i\in\processes}
 \tr\tj{M}(\wwedge_{i\in \processes}[i]o_i)$ is
 derivable,
