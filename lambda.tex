@@ -7,7 +7,8 @@
 \subsection{Summary}
 
 We propose a typed lambda calculus based on Avron's hypersequent
-calculus~\citep{avron91} for G\"odel--Dummett logic.  This calculus turns out to model
+calculus~\citep{avron91} for G\"odel--Dummett logic.  This calculus
+turns out to model
 waitfree computation~\citep{Herlihy88,Saks:1993vq}.
 Besides strong normalization and non-abortfullness,
 we give soundness and completeness of
@@ -106,21 +107,23 @@ although $\bot$ is not necessary for us to encode waitfree computation.}%
  \varphi,\psi ::= \bot \mid I \mid (\varphi\supset\psi) \mid (\varphi\wedge\psi) \mid
  (\varphi\vee\psi)\enspace.
 \]
+We omit parentheses following the usual convention.
 A global formula is a non-empty partial mapping from processes to local
 formulae.
+We use $\m\phi$ and $\m\psi$ for global formulae.
 For a natural number~$i$ (representing a process),
-As a notation, $[i]\phi$ is a global formula that maps $i$ to $\phi$ but
+as a notation, $[i]\phi$ is a global formula that maps $i$ to $\phi$ but
 does not map any other processes to local formulae.
+We call such global formulae as singleton global formulae.
 The unary operators $[0], [1],\ldots$ are called modalities%
 \index{modality}.
-We omit parentheses following the usual convention.
 Informally, the local formulae describe datatypes used by each process.
 The global formulae describe inputs or outputs of all
 processes together.
 
 A contex\index{context} (denoted by $\Gamma$ and $\Delta$ possibly
 subscripted) is a potentially empty
-finite sequence of global formulae.
+finite sequence of singleton global formulae.
 A sequent\index{sequent}~$\Gamma\vdash\m\varphi$ is a pair of a context and a
 global formula.
 A hypersequent\index{hypersequent} is a finite sequence of sequents.
@@ -129,7 +132,7 @@ The underlying logic has the derivation rules in Fig.~\ref{fig:logic}.  If
 we omit all the modalities, these rules characterize
 G\"odel--Dummett logic.
 Indeed,
-$[0](\varphi\supset\psi)\vee[1](\psi\supset\varphi)$ is provable (Figure~\ref{fig:dummett-modal}).
+$[0]((\varphi\supset\psi)\vee(\psi\supset\varphi))$ is provable (Figure~\ref{fig:dummett-modal}).
 \begin{sidewaysfigure}
  \footnotesize
  \centering
@@ -195,49 +198,39 @@ $[0](\varphi\supset\psi)\vee[1](\psi\supset\varphi)$ is provable (Figure~\ref{fi
 \textbf{Inner Global Rules}
 \vskip 2mm
 %% structural
-   \UnaryRule{$\hyper\hmid\Gamma,\m\varphi,\m\psi,\Delta\vdash\m\theta$}
+   \UnaryRule
+   {$\hyper\hmid\Gamma,[i]\phi,[j]\psi,\Delta\tr\m\theta$}
    {IE}
-   {$\hyper\hmid\Gamma,\m\psi,\m\varphi,\Delta\vdash \m\theta$}
+   {$\hyper\hmid\Gamma,[j]\psi,[i]\phi,\Delta\tr\m\theta$}
    \hfill
    \UnaryRule{$\hyper\hmid\Gamma\vdash\m\varphi$}
    {IW}
-   {$\hyper\hmid\m\psi,\Gamma\vdash\m\varphi$}
+   {$\hyper\hmid[i]\psi,\Gamma\vdash\m\varphi$}
    \hfill
-   \UnaryRule{$\hyper\hmid\m\psi,\m\psi,\Gamma\vdash\m\varphi$}
+   \UnaryRule
+   {$\hyper\hmid[i]\psi,[i]\psi,\G\vdash\m\varphi$}
    {IC}
-   {$\hyper\hmid\m\psi,\Gamma\vdash\m\varphi$}
-   \vskip 2mm
-%% local conj intro
-  \BinaryRule
-   {$\hyper\hmid\Gamma\vdash \m\varphi$}
-   {$\hyper\hmid\Gamma\vdash \m\psi$}
-   {$\wedge\intro$}
-   {$\hyper\hmid\Gamma\vdash \m\varphi\wedge\m\psi$}
-   \vskip 2mm
-%% local conj elim
-  \UnaryRule
-   {$\hyper\hmid\Gamma\vdash \m\varphi\wedge\m\psi$}
-   {$\wedge\elim_0$}
-   {$\hyper\hmid\Gamma\vdash \m\varphi$}
-   \hfill
-  \UnaryRule
-   {$\hyper\hmid\Gamma\vdash\m\varphi\wedge\m\psi$}
-   {$\wedge\elim_1$}
-   {$\hyper\hmid\Gamma\vdash\m\psi$}
-\vskip 2mm
-%% local disj intro
-  \UnaryRule
-   {$\hyper\hmid\Gamma\vdash\m\varphi$}
-   {$\vee\intro_0$}
-   {$\hyper\hmid\Gamma\vdash\m\varphi\vee\m\psi$}
-   \hfill
-  \UnaryRule
-   {$\hyper\hmid\Gamma\vdash\m\psi$}
-   {$\vee\intro_1$}
-   {$\hyper\hmid\Gamma\vdash\m\varphi\vee\m\psi$}
-\vskip 2mm
+   {$\hyper\hmid[i]\psi,        \G\vdash\m\varphi$}
+   \ruleskip
+%% global conj intro
+ \BinaryRule
+ {$\hyper\hmid\G\tr(\phi_i)_{i\in I}$}
+ {$\hyper\hmid\G\tr(\psi_j)_{j\in J}$}
+ {$\wedge\intro$}
+ {$\hyper\hmid\G\tr(\phi_k\land\psi_k)_{k\in I\cap J}\sqcup
+ (\phi_i)_{i\in I\setminus J}\sqcup (\psi_j)_{j\in J\setminus I}$}
+
+ \fix{explain sqcup}
+ \ruleskip
+%% global conj elim
+ \UnaryRule
+ {$\hyper\hmid \G\tr(\phi_i)_{i\in I}$}
+ {$\wedge\elim$}
+ {$\hyper\hmid \G\tr(\phi_i)_{i\in J}$}
+ where $J$ is a subset of $I$.
+\ruleskip
 \textbf{Inner Local Rules}
-\vskip 2mm
+\ruleskip
 %% axiom
   \UnaryRule{}{$[i]$Ax}
    {$[i]\varphi,\Gamma\vdash [i]\varphi$}
@@ -294,6 +287,7 @@ $[0](\varphi\supset\psi)\vee[1](\psi\supset\varphi)$ is provable (Figure~\ref{fi
 \vskip 2mm
 \caption[The underlying logic \fix{of what}.]
  {The underlying logic.
+ Metavariables $\m\phi$ and $\m\psi$ stand for global formulae.
  Metavariables~$i$ and $j$ stand for a process.
  $\hyper$ stands for a
  hypersequent.
@@ -328,16 +322,11 @@ terms, but in this calculus, terms may interact with the store (like
 a program written in Haskell or OCaml does with an i-var).
 This behavior will be shown later in the definition of reductions.
 
-We define terms\index{term}~$\term$ by the BNF
-where $\Gamma$ is a sequence of variables:
-\fix{remove gpil, gpir}
+We define local terms\index{term!local}~$\term$ by the BNF:
 \begin{align*}
 \term ::=&\,
  x\mid (\comod c c) \term \mid \reader c
- \mid \rtol i l \Gamma \term \mid
- \gpair {\term,\term}\mid
- \ginl\term \mid
- \ginr\term \mid \\ & 
+ \mid
  \cotuple{\term,\term} \mid \abort \mid
   \lpil \term \mid \lpir \term \mid
  \lpair {\term,\term}\mid \\&
@@ -349,9 +338,9 @@ where $x$ is a variable and $c$ is a channel.
 All variable occurrences (including those in $\Gamma$)
 except the first clause are
 binding.
-The constructs with a~$\g$ represent the global rules and the
-constructs without a~$\g$ represent the local rules.
-Informally, the constructs without $\mathtt{g}$ represent parts of
+
+\fix{C}
+Informally, the local terms represent parts of
 programs executed by the processes.
 Especially, $(\comod c c)t$ and $\reader c$ denote processes' communication.
 The constructs with
@@ -360,10 +349,11 @@ inputs for processes and collecting outputs of the processes.
 
 Using these terms, we annotate the hypersequent system in Fig.~\ref{fig:logic}.
 We extend a sequent
-to $\Gamma\tr \tj M{\m \varphi}$\kern -3pt, where $\Gamma$ is
-a sequence like $\tj{x}{\m\psi}\kern -3pt, \tj{y}{\m\theta}$ and $M$ is a term.
-In a sequent $\Gamma\tr\tj{M}{\m\varphi}$\kern -3pt, we require the variables in
-$\Gamma$ to be distinct from each other.
+to $\G\tr \tj {\m M}{\m \varphi}$\kern -3pt, where $\G$ is
+a sequence like $\tj{x}{[i]\psi}\kern -3pt, \tj{y}{[j]\theta}$ and $\m M$
+is a global term.
+In a sequent $\Gamma\tr\tj{M}{\m\varphi}$\kern -3pt, we require the
+variables in $\G$ to be distinct from each other.
 A contexed type\index{contexted type}
  $\Gamma\tr\m\varphi$ is a sequent without a term but with variables in
  $\Gamma$.
@@ -381,32 +371,22 @@ annotated as in Figure~\ref{fig:typed-term}.
 \UnaryInfC{$\tj{x}{[0]P}\tr \tj{x}{[0]P}$}
 
 \AxiomC{}
-\LL{[1]Ax}
-\UnaryInfC{$\tj{y}{[1]Q}\tr\tj{y}{[1]Q}$}
-\LL{$01$-com}
+\LL{[0]Ax}
+\UnaryInfC{$\tj{y}{[0]Q}\tr\tj{y}{[0]Q}$}
+\LL{$00$-com}
 \BinaryInfC{$\tj{x}{[0]P}\tr\tj{(\comodL)x}{[0]Q}\hmid
- \tj{y}{[1]Q}\tr\tj{(\comodR)y}{[1]P}$}
+ \tj{y}{[0]Q}\tr\tj{(\comodR)y}{[0]P}$}
 \LL{$[0]\supset\intro$}
 \UnaryInfC{$\tr\tj{\lambda x. (\comodL)x}{[0](P\supset Q)}
- \hmid \tj{y}{[1]Q}\tr\tj{(\comodR)y}{[1]P}$}
-\LL{$[1]\supset\intro$}
+ \hmid \tj{y}{[0]Q}\tr\tj{(\comodR)y}{[0]P}$}
+\LL{$[0]\supset\intro$}
 \UnaryInfC{$\tr\tj{\lambda x. (\comodL)x}{[0](P\supset Q)}\hmid \tr
- \tj{\lambda y.(\comodR)y}{[1](Q\supset P)}$}
-\LL{$\vee$I}
-\UnaryInfC{$\tr\tj{\inl{\lambda x. (\comodL)x}}{[0](P\supset Q) \lor
- [1](Q\supset P)}
- \hmid
- \tr\tj{\lambda y.(\comodR)y}{[1](Q\supset P)}$}
-\LL{$\vee$I}
-\UnaryInfC{$\tr\tj{\inl{\lambda x. (\comodL)x}}{[0](P\supset Q) \lor
- [1](Q\supset P)}\hmid
-\tr \tj{\inr{\lambda y.(\comodR)y}}{[0](P\supset Q) \lor [1](Q\supset
- P)}$}
+ \tj{\lambda y.(\comodR)y}{[0](Q\supset P)}$}
 \LL{EC}
 \UnaryInfC{$
 \tr \tj{\left[{\lambda x. (\comodL)x} ,\quad {\lambda
  y.(\comodR)y} \right]}
- {[0](P\supset Q)\lor [1](Q\supset P)} $}
+ {[0]((P\supset Q)\lor (Q\supset P))} $}
 \DisplayProof
  \caption{An example of a typed term in \lgd. \fix{has to be changed}}
  \label{fig:typed-term}
@@ -453,51 +433,29 @@ annotated as in Figure~\ref{fig:typed-term}.
    \vskip 2mm
  % internal contraction
    \UnaryRule
-   {$\hypert\hmid \Gamma\tr\tj M {\m\varphi}$}
+   {$\hypert\hmid \Gamma\tr\tj {\m M} {\m\varphi}$}
    {}
-   {$\hypert\hmid \tj x {\m\psi}, \Gamma\tr \tj{M}{\m\varphi}$}
+   {$\hypert\hmid \tj x {[i]\psi}, \Gamma\tr \tj{\m M}{\m\varphi}$}
    \hfill
    \UnaryRule
-   {$\hypert\hmid \tj{x}{\m\varphi}, \tj{y}{\m\varphi}, \Gamma\tr \tj
+   {$\hypert\hmid \tj{x}{[i]\phi}, \tj{y}{[i]\phi}, \Gamma\tr \tj
    M{\m\psi}$}
    {}
-   {$\hypert \hmid \tj{x}{\m\varphi}, \Gamma\tr \tj{M[x/y]}{\m\psi}$}
+   {$\hypert \hmid \tj{x}{[i]\phi}, \Gamma\tr \tj{\m{M}[x/y]}{\m\psi}$}
+ \fix{define substitution on global terms}
 \vskip 2mm
 \UnaryRule
-   {$\hypert\hmid\Gamma,\tj x{\m\varphi},\tj y{\m\psi},\Delta\tr
-   \tj M{\m\theta}$}{}
-   {$\hypert\hmid\Gamma,\tj y{\m\psi},\tj x{\m\varphi},\Delta\tr \tj M{\m\theta}$} %IE
+   {$\hypert\hmid\Gamma,\tj x{[i]\phi},\tj y{[j]\psi},\Delta\tr
+   \tj {\m M}{\m\theta}$}{}
+   {$\hypert\hmid\Gamma,\tj y{[j]\psi},\tj x{[i]\phi},\Delta\tr \tj
+ {\m M}{\m\theta}$} %IE
 \hfill
 %% conj intro
-\BinaryRule
-   {$\hypert_0\hmid\Gamma\tr \tj M{\m\varphi}$}
-   {$\hypert_1\hmid\Gamma\tr \tj N{\m\psi}$}
-   {}
-   {$\cotuple{\hypert_0,\hypert_1}\hmid\Gamma\tr
-     \tj{\gpair{M,N}}{\m\varphi\wedge\m\psi}$}
+ \fix{conj intro}
    \vskip 2mm
 %% conj elim
-  \UnaryRule
-   {$\hypert\hmid\Gamma\tr \gpair{M,N}\colon\m\varphi\wedge\m\psi$}
-   {}
-   {$\hypert\hmid\Gamma\tr M\colon\m\varphi$}
-   \hfill
-  \UnaryRule
-   {$\hypert\hmid\Gamma\tr \gpair{M,N}\colon\m\varphi\wedge\m\psi$}
-   {}
-   {$\hypert\hmid\Gamma\tr\gpir N\colon\m\psi$}
-\vskip 2mm
-%% disj intro
-  \UnaryRule
-   {$\hypert\hmid\Gamma\tr M\colon\m\varphi$}
-   {}
-   {$\hypert\hmid\Gamma\tr\ginl{M}\colon\m\varphi\vee\m\psi$}
-   \hfill
-  \UnaryRule
-   {$\hypert\hmid\Gamma\tr M\colon\m\psi$}
-   {}
-   {$\hypert\hmid\Gamma\tr \ginr{M}\colon\m\varphi\vee\m\psi$}
-\vskip 2mm
+ \fix{conj elim rule}
+\ruleskip
 \textbf{Inner Local Rules}
 \vskip 2mm
 %% axiom
@@ -559,6 +517,7 @@ annotated as in Figure~\ref{fig:typed-term}.
 \vskip 2mm
  \caption[Term assignment of \lgd.]
  {Term assignment.
+ Metavariable $\m M$ stands for global terms.
  When we remove variables and terms, we obtain the derivation rules for
  the underlying logic (Figure~\ref{fig:logic}).
  $\hypert$ stands for
@@ -568,7 +527,7 @@ annotated as in Figure~\ref{fig:typed-term}.
  same length and the same type so that $\cotuple{\hypert_0,\hypert_1}$
  can be defined as
  the elementwise application of $\cotuple{\term,\term}$. \fix{ needs
- more explanation}
+ more explanation} \fix{add [i] in front of local terms}
  }
  \label{termassign}
 \end{figure}
@@ -582,15 +541,17 @@ annotated as in Figure~\ref{fig:typed-term}.
 
 \subsection{Reduction}
 
-A closed term~$M$ is \textit{of} type~$\m\varphi$ iff there is a derivation of
+\fix{somewhere, define closed global terms}
+A closed global term~$\m M$ is \textit{of} type~$\m\varphi$ iff there is
+a derivation of
 $\tr
-\tj{M}{\m\varphi}$.
-A local term\index{local term|see{term}}\index{term!local} is a term
+\tj{\m M}{\m\varphi}$.
+A pure term\index{pure term|see{term}}\index{term!pure} is a term
 without $\comod c c$,
 $\reader c$ or any $\g$ constructs.
 A hyperterm\index{hyperterm}~$\hypert$ is a nonempty sequence of terms.
 A store\index{store} maps a channel to a
-local term or $\epsilon$.
+pure term or $\epsilon$.
 For a store~$\sigma$, the updated store $\sigma[c\mapsto x]$ maps $c$ to
 $x$ and $d$ to $\sigma(d)$ if $d$ is different from~$c$.
 A configuration\index{configuration} is a pair $\conf{}\hypert$ of a
@@ -606,13 +567,7 @@ To complete the definition of \lgd,
  We consider terms up to $\alpha$-equivalence and implicitly
  require all instances
  of $\rightsquigarrow_\spadesuit$ to avoid free variable captures.
- Below, $\square$ and $\blacksquare$ match $\g$ or nothing.
-For example
-$\spil{\spair{M,N}} \reduce M$
-stands for two rules
-$\lpil{\lpair{M,N}} \reduce M$ and
-$\gpil{\gpair{M,N}} \reduce M$.  Note that the two $\square$'s are
- replaced consistently.
+ \fix{define congruences to be used below}
 
 \begin{definition}[Basic reduction]
  The basic reduction $\breduce$ is the smallest congruence containing
@@ -620,13 +575,13 @@ $\gpil{\gpair{M,N}} \reduce M$.  Note that the two $\square$'s are
  \begin{itemize}
   \item  $\conf{}{(\lambda x.M)O}\breduce
  \conf{}{M[O/x]}$
-  \item $\conf{}{\spil{\spair{M,N}}} \breduce
+  \item $\conf{}{\lpil{\lpair{M,N}}} \breduce
 	 \conf{}{           M   }$
-  \item $\conf{}{\spir{\spair{M,N}}} \breduce
+  \item $\conf{}{\lpir{\lpair{M,N}}} \breduce
 	 \conf{}{             N }$
-  \item $\conf{}{\mat{\sinl M}x N y O} \breduce
+  \item $\conf{}{\mat{\linl M}x N y O} \breduce
 	 \conf{}{              N[M/x]}$
-  \item $\conf{}{\mat{\sinr M}x N y O} \breduce
+  \item $\conf{}{\mat{\linr M}x N y O} \breduce
 	 \conf{}{                  O[M/y]}$
  \end{itemize}
 \end{definition}
@@ -641,18 +596,18 @@ This property will be used in the proof of \thref{first:sn}.
 The formal definition of the reductions follows.
 \begin{definition}[Write reduction]
  The write reduction $\wreduce$ is the smallest congruence
- containing the followings where $M$ is a local term:
+ containing the followings:
  \begin{itemize}
   \item $\conf{[c\mapsto \epsilon]}{(\comodR)M} \wreduce
 	\conf{[c\mapsto M]}{\reader d}
-	$ where $M$ is a local term
+	$ where $M$ is a pure term
   \item $\conf{[c\mapsto N]}{(\comodR) M} \wreduce \conf{[c\mapsto
-	N]}{\reader d}$ where $M$ is a local term
+	N]}{\reader d}$ where $M$ is a pure term
  \end{itemize}
 \end{definition}
 In the first clause of this definition of write reductions, we require
-$M$ to be a local
-term because a store can only contain local terms.
+$M$ to be a pure
+term because a store can only contain pure terms.
 We require the same condition in the second clause as well because
 otherwise, whether a configuration admits a write reduction or not
 would depend on the contents of the store, which would make the
@@ -679,9 +634,13 @@ The special term $\abort$ means failure, so, a term containing $\abort$
 also reduces to abort except $\cotuple{M,N}$.  The concurrent
 construction $\cotuple{M,N}$ runs $M$ and $N$ concurrently and throws
 away those subterms that reduces to $\abort$.
-To be specific, the term $\cotuple{M,N}$ reduces to $\ginl{\ginl{M}}$,
-$\ginl{\ginr{N}}$ or $\ginr{\gpair{M,N}}$ with $\mathsf{inl}$ and
+To be specific, the term $\cotuple{M,N}$ reduces to $\linl{M}$
+ or $\linr{N}$ with $\mathsf{inl}$ and
 $\mathsf{inr}$ labels showing which components failed.
+The reduction rules are not symmetric with regard to the left component
+and the right component of the concurrent construct $[M, M]$ because
+when both components succeed, the whole construct reduces to
+the left component.
 \begin{definition}[Abort reduction]
  The abort propagation reduction $\areduce$ is the smallest
  congruence containing the
@@ -701,8 +660,8 @@ $\mathsf{inr}$ labels showing which components failed.
 C[\bullet] N \mid
 {M C[\bullet]}\mid
 (\comod c c)C[\bullet]\mid
-\sinl{C[\bullet]}\mid
-\sinr{C[\bullet]}\mid
+\linl{C[\bullet]}\mid
+\linr{C[\bullet]}\mid
 \lpair {C[\bullet], N}\mid \\&
 \lpair {M, C[\bullet]}\mid
 \pi^\square_i{C[\bullet]}\mid
@@ -735,10 +694,10 @@ we add yet another kind of reduction rules called permutative reductions.
                           u P v Q
                       }\preduce$ \\
        $(\lstore,
-        \mathsf{match}^{\blacksquare}\,{M}\,\mathsf{of}\, \bsinl{x}. {
+        \mathsf{match}^{\blacksquare}\,{M}\,\mathsf{of}\, \linl{x}. {
                           {\left(\mat N u P v Q\right)}
        } /$ \\ \phantom{mmmmmmmmmmm}$
-       \bsinr{y}. {\left(\mat  O u P v Q\right)}
+       \linr{y}. {\left(\mat  O u P v Q\right)}
                       )
        $}
  \item $\conf{}{ \cotuple{M, N} P }\preduce
@@ -875,10 +834,11 @@ hyperterm has a component not containing $\abort$.
  \lgd\, is strongly normalizing.
 \end{theorem}
 \begin{proof}
-For proving this, we consider the local fragment\index{local fragment} that does not contain
-$(\comodL)M$, $(\comodR)N$ or any construct with $\g$.
+For proving this, we consider the pure fragment\index{pure fragment}
+ that does not contain
+$(\comodL)M$, $(\comodR)N$.
 We first reduce the strong
-normalization of the \lgd\, to that of the local fragment, and
+normalization of the \lgd\, to that of the pure fragment, and
 ultimately to that of de Groote's
 natural deduction with permutation-conversion~\cite{Philippe2002js}%
 \footnote{
@@ -899,7 +859,7 @@ $
 \conf{_2}{\hypert_2}
 \reduce\cdots
 $.  From this, we are going to construct an infinite sequence of
-reductions in the local fragment.
+reductions in the pure fragment.
 
 For that, we first
 build an infinite reduction sequence with constant stores.
@@ -969,7 +929,7 @@ strictly shortens the term under operation.
  sequence for at most one read step.
  Replacing every such occurrences
  makes an infinite reduction sequence where every occurring term is
- in the local fragment.
+ in the pure fragment.
  Moreover,
  the result of the translation is also well-typed.
  A typing derivation of the resulting hyperterm can be obtained by
@@ -1018,11 +978,12 @@ waitfreedom,
 a single process waitfree protocol can solve any undecidable problem
 because a waitfree protocol can contain arbitrary functions.
 
-For that, we let $\lterm(\varphi)$ denote the set of closed, local terms of
+For that, we let $\lterm(\varphi)$ denote the set of closed, pure terms of
 type~$\varphi$,
 and $\lval(\varphi)$ denote the set of normal terms in $\lterm(\varphi)$.
 For a finite set of processes~$\processes$,
-a typed input-output problem\index{typed input-output problem} consists of each process's input type
+a typed input-output problem\index{typed input-output problem} consists
+of each process's input type
 $(\iota_i)_{i\in \processes}$, each process's output type $(o_i)_{i\in
 \processes}$, and a
 task $R\subseteq \prod_{i\in \processes}\left(\lterm(\iota_i)\right)\times
@@ -1240,14 +1201,12 @@ We show that the ability of the waitfree protocols and \lgd\, are the same.
 \begin{definition}
  A typed input-output problem
  $\tuple{(\iota_i)_{i\in \processes}, (o_i)_{i\in \processes}, R}$ is
- solvable by a term
- $M$ of contexted type
+ solvable by a global term
+ $\m M$ of contexted type
  $\left(\tj{x_i}{[i]\iota_i}\right)_{i\in\processes}
- \tr\left(\wwedge_{i\in
- \processes}[i]o_i\right)$
- iff
+ \tr\left(o_i\right)_{i\in \processes}$ iff
  for any closed $(N_i)_{i\in \processes}$ of $\iota_i$,
- all normal forms of $M[\vec{N_i}/\vec{x_i}]$
+ all normal forms of $\m{M}[\vec{N_i}/\vec{x_i}]$
  are in the form
  $\tuple{{V_0}, \tuple{{V_1},
  \cdots\tuple{{V_{n-2}},\tuple{{V_{n-1}},\bullet}}\cdots}}$
@@ -1374,16 +1333,6 @@ The definition is inductive over the type derivation:
  \semo{\hypert\hmid \pi_a^\g(M)}=&\semo{\hypert\hmid M}\enspace,\\
  \semoi{\hypert\hmid\pi_a^\g(M)}=&\semoi{\hypert\hmid M}\enspace,
 \end{align*}
- \item[$\vee\intro_0$]
-      \begin{align*}
-       \semo{\hypert\hmid \ginl{M}}&=\semo{\hypert\hmid M}\enspace,\\
-       \semoi{\hypert\hmid\ginl(M)}&=\semoi{\hypert\hmid M}\enspace,
-      \end{align*}
- \item[$\vee\intro_1$] 
-      \begin{align*}
-       \semo{\hypert\hmid \ginr{M}}&=\semo{\hypert\hmid M}\enspace,\\
-       \semoi{\hypert\hmid\ginr(M)}&=\semoi{\hypert\hmid M}\enspace,
-      \end{align*}
  \item[${\brac{i}}\bot\elim$] 
  \item[$\brac i\supset\intro$] 
 \begin{align*}
