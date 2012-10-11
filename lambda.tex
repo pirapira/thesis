@@ -106,15 +106,12 @@ although $\bot$ is not necessary for us to encode waitfree computation.}%
  \varphi,\psi ::= \bot \mid I \mid (\varphi\supset\psi) \mid (\varphi\wedge\psi) \mid
  (\varphi\vee\psi)\enspace.
 \]
-Further, we define global formulae \index{formula!global}
- \index{global formula|see{formula}}$\m\varphi, \m\psi$ with the following
-BNF:
-\[
- \m\varphi,\m\psi :: = [i]\varphi \mid
- (\m\varphi\wedge\m\psi)\mid (\m\varphi\vee\m\psi)
-\]
-where $i$ is a natural number (representing a process).  The unary operators $[0],
-[1],\ldots$ are called modalities%
+A global formula is a non-empty partial mapping from processes to local
+formulae.
+For a natural number~$i$ (representing a process),
+As a notation, $[i]\phi$ is a global formula that maps $i$ to $\phi$ but
+does not map any other processes to local formulae.
+The unary operators $[0], [1],\ldots$ are called modalities%
 \index{modality}.
 We omit parentheses following the usual convention.
 Informally, the local formulae describe datatypes used by each process.
@@ -140,46 +137,18 @@ $[0](\varphi\supset\psi)\vee[1](\psi\supset\varphi)$ is provable (Figure~\ref{fi
 \LL{[0]Ax}
 \UnaryInfC{$[0]P\vdash [0]P$}
 \AxiomC{}
-\LL{[1]Ax}
-\UnaryInfC{$[1]Q\vdash[1]Q$}
-\LL{01-com}
-\BinaryInfC{$[0]P\vdash[0]Q\hmid [1]Q\vdash[1]P$}
+\LL{[0]Ax}
+\UnaryInfC{$[0]Q\vdash[0]Q$}
+\LL{00-com}
+\BinaryInfC{$[0]P\vdash[0]Q\hmid [0]Q\vdash[0]P$}
 \LL{$[0]\supset$I}
-\UnaryInfC{$\vdash[0](P\supset Q)\hmid [1]Q\vdash[1]P$}
-\LL{$[1]\supset$I}
-\UnaryInfC{$\vdash[0](P\supset Q)\hmid \vdash[1](Q\supset P)$}
+\UnaryInfC{$\vdash[0](P\supset Q)\hmid [0]Q\vdash[0]P$}
+\LL{$[0]\supset$I}
+\UnaryInfC{$\vdash[0](P\supset Q)\hmid \vdash[0](Q\supset P)$}
 \LL{EC}
 \UnaryInfC{$
 \vdash
- ([0](P\supset Q)\lor [1](Q\supset P)) \lor
- ([0](P\supset Q)\land [1](Q\supset P))
- $}
-
-\AxiomC{$\vdots$}
- \UnaryInfC{$[0](P\supset Q)\lor [1](Q\supset P) \vdash [0](P\supset Q)\lor
- [1](Q\supset P)$}
-
- \AxiomC{$\vdots$}
- \UnaryInfC{
-$ [0](P\supset Q)\land [1](Q\supset P) \tr [0](P\supset Q)\land
- [1](Q\supset P)  $
-}
- \LL{$\wedge\elim_0$}
- \UnaryInfC{
-$ [0](P\supset Q)\land [1](Q\supset P) \tr [0](P\supset Q)$
- }
- \LL{$\vee\intro_0$}
- \UnaryInfC{
-$ [0](P\supset Q)\land [1](Q\supset P) \tr [0](P\supset Q) \lor
- [1](Q\supset P)$
- }
- \LL{$\vee\elim$}
- \TrinaryInfC{
- $
- \tr [0](P\supset Q) \lor
- [1](Q\supset P)
- $
- }
+ [0]((P\supset Q)\lor (Q\supset P)) $}
  \DisplayProof
 
  \caption{Something like Dummett's axiom is provable.}
@@ -267,14 +236,6 @@ $ [0](P\supset Q)\land [1](Q\supset P) \tr [0](P\supset Q) \lor
    {$\vee\intro_1$}
    {$\hyper\hmid\Gamma\vdash\m\varphi\vee\m\psi$}
 \vskip 2mm
-%% local disj elim
-   \TrinaryRule
-   {$\hyper\hmid\Gamma\vdash           \m\varphi\vee\m\psi$}
-   {$\hyper\hmid\m\varphi, \Gamma\vdash\m\theta$}
-   {$\hyper\hmid\m\psi,    \Gamma\vdash\m\theta$}
-   {$\vee\elim$}
-   {$\hyper\hmid         \Gamma\vdash\m\theta$}
-\vskip 2mm
 \textbf{Inner Local Rules}
 \vskip 2mm
 %% axiom
@@ -342,7 +303,11 @@ $ [0](P\supset Q)\land [1](Q\supset P) \tr [0](P\supset Q) \lor
  elimination or exchange.  The I's in front stand for internal and E
  for external.  For structural rules, E stands for exchange, W for
  weakening and C for contraction.  The external contraction (EC) is
- different from standard ones but yields the same set of derivable sequents.
+ different from standard ones but yields the same set of derivable
+ sequents.
+ There are no disjunction elimination in the inner global rules lest it
+ is difficult (if possible) to translate the rule into
+ waitfree computation.
  }
 \label{fig:logic}
 \end{figure}
@@ -365,20 +330,20 @@ This behavior will be shown later in the definition of reductions.
 
 We define terms\index{term}~$\term$ by the BNF
 where $\Gamma$ is a sequence of variables:
+\fix{remove gpil, gpir}
 \begin{align*}
 \term ::=&\,
  x\mid (\comod c c) \term \mid \reader c
  \mid \rtol i l \Gamma \term \mid
  \gpair {\term,\term}\mid
- \gpil \term \mid \gpir \term \mid
  \ginl\term \mid
- \ginr\term \mid \\ & \gmat \term x\term y \term \mid
+ \ginr\term \mid \\ & 
  \cotuple{\term,\term} \mid \abort \mid
   \lpil \term \mid \lpir \term \mid
  \lpair {\term,\term}\mid \\&
   \linl \term \mid  \linr \term \mid
  \lambda x.\term\mid (\term \term)
-\mid \lmat \term x\term y \term
+\mid \mat \term x\term y \term
 \end{align*}
 where $x$ is a variable and $c$ is a channel.
 All variable occurrences (including those in $\Gamma$)
@@ -443,9 +408,11 @@ annotated as in Figure~\ref{fig:typed-term}.
  y.(\comodR)y} \right]}
  {[0](P\supset Q)\lor [1](Q\supset P)} $}
 \DisplayProof
- \caption{An example of a typed term in \lgd.}
+ \caption{An example of a typed term in \lgd. \fix{has to be changed}}
  \label{fig:typed-term}
 \end{sidewaysfigure}
+
+\fix{contexts can only contain singleton global formulae}
 
 
 \begin{figure}[p]
@@ -468,12 +435,15 @@ annotated as in Figure~\ref{fig:typed-term}.
  {}
  {$\hypert^+\hmid\Gamma\tr \tj \abort {\m\phi}$}
 \vskip 2mm
- \UnaryRule
- {$\hypert\hmid\Gamma\tr\tj M {\m\phi}\hmid\Gamma\tr \tj N {\m\phi}$}
- {}
- {$\hypert\hmid\Gamma\tr \tj
- {\cotuple{M,N}}{\m\phi}$}
-\hfill
+ \AxiomC{$\hypert\hmid \G\tr\tj{(M_i)_{i\in I}}{(\phi_i)_{i\in I}}\hmid
+ \G\tr\tj{(N_i)_{i\in I}}{(\psi_i)_{i\in I}}$}
+ \UnaryInfC{$\hypert\hmid
+ \G\tr\tj{\cotuple{M_i',N_i'}}{(\phi'_i\lor\psi'_i)_{i\in I}}$}
+ \DisplayProof \\where $I$ is a nonempty subset of $\processes$ and, for
+ each $i\in\processes$, the pair of pairs $\tuple{(M_i',\phi'_i), (N_i',\psi'_i)}$
+ is identical to either $\tuple{(M_i,\phi_i), (N_i,\psi_i)}$
+ or $\tuple{(N_i,\psi_i), (M_i,\phi_i)}$.
+\ruleskip
  \UnaryRule
  {$\hypert\hmid\Gamma\tr M\colon\m\varphi\hmid\Delta\tr N\colon \m\psi\hmid \hypert'$}
  {}
@@ -481,6 +451,7 @@ annotated as in Figure~\ref{fig:typed-term}.
  \vskip 2mm
 \textbf{Inner Global Rules}
    \vskip 2mm
+ % internal contraction
    \UnaryRule
    {$\hypert\hmid \Gamma\tr\tj M {\m\varphi}$}
    {}
@@ -507,14 +478,14 @@ annotated as in Figure~\ref{fig:typed-term}.
    \vskip 2mm
 %% conj elim
   \UnaryRule
-   {$\hypert\hmid\Gamma\tr M\colon\m\varphi\wedge\m\psi$}
+   {$\hypert\hmid\Gamma\tr \gpair{M,N}\colon\m\varphi\wedge\m\psi$}
    {}
-   {$\hypert\hmid\Gamma\tr \gpil{M}\colon\m\varphi$}
+   {$\hypert\hmid\Gamma\tr M\colon\m\varphi$}
    \hfill
   \UnaryRule
-   {$\hypert\hmid\Gamma\tr M\colon\m\varphi\wedge\m\psi$}
+   {$\hypert\hmid\Gamma\tr \gpair{M,N}\colon\m\varphi\wedge\m\psi$}
    {}
-   {$\hypert\hmid\Gamma\tr\gpir M\colon\m\psi$}
+   {$\hypert\hmid\Gamma\tr\gpir N\colon\m\psi$}
 \vskip 2mm
 %% disj intro
   \UnaryRule
@@ -526,14 +497,6 @@ annotated as in Figure~\ref{fig:typed-term}.
    {$\hypert\hmid\Gamma\tr M\colon\m\psi$}
    {}
    {$\hypert\hmid\Gamma\tr \ginr{M}\colon\m\varphi\vee\m\psi$}
-\vskip 2mm
-%% disj elim
-\TrinaryRule
-   {$\hypert_0\hmid\Gamma\tr \tj M {\m\varphi\vee\m\psi}$}
-   {$\hypert_1\hmid\tj x{\m\varphi},\Gamma\tr \tj {N_0}{\m\theta}$}
-   {$\hypert_2\hmid\tj y{\m\psi},   \Gamma\tr \tj {N_1}{\m\theta}$}
-   {}
-   {$\cotuple{\cotuple{\hypert_0,\hypert_1},\hypert_2}\hmid\Gamma \tr \tj{\gmat M x {N_0} y {N_1}}{\m\theta}$}
 \vskip 2mm
 \textbf{Inner Local Rules}
 \vskip 2mm
@@ -592,7 +555,7 @@ annotated as in Figure~\ref{fig:typed-term}.
    {$\hypert_1\hmid\tj x{[i]\varphi},\Gamma\tr \tj {N_0}{[i]\theta}$}
    {$\hypert_2\hmid\tj y{[i]\psi},   \Gamma\tr \tj {N_1}{[i]\theta}$}
    {}
-   {$\cotuple{\cotuple{\hypert_0,\hypert_1},\hypert_2}\hmid\Gamma \tr \tj{\lmat M x {N_0} y {N_1}}{[i]\theta}$}
+   {$\cotuple{\cotuple{\hypert_0,\hypert_1},\hypert_2}\hmid\Gamma \tr \tj{\mat M x {N_0} y {N_1}}{[i]\theta}$}
 \vskip 2mm
  \caption[Term assignment of \lgd.]
  {Term assignment.
@@ -609,6 +572,13 @@ annotated as in Figure~\ref{fig:typed-term}.
  }
  \label{termassign}
 \end{figure}
+
+
+\fix{is this typeable?, then copy the reductions in C}
+\[
+ \gpair{\cotuple{\{(\comodL)x,x\},\{x\}},\cotuple{\{(\comodR)y,y\},\{y\}}}
+\]
+
 
 \subsection{Reduction}
 
@@ -654,9 +624,9 @@ $\gpil{\gpair{M,N}} \reduce M$.  Note that the two $\square$'s are
 	 \conf{}{           M   }$
   \item $\conf{}{\spir{\spair{M,N}}} \breduce
 	 \conf{}{             N }$
-  \item $\conf{}{\smat{\sinl M}x N y O} \breduce
+  \item $\conf{}{\mat{\sinl M}x N y O} \breduce
 	 \conf{}{              N[M/x]}$
-  \item $\conf{}{\smat{\sinr M}x N y O} \breduce
+  \item $\conf{}{\mat{\sinr M}x N y O} \breduce
 	 \conf{}{                  O[M/y]}$
  \end{itemize}
 \end{definition}
@@ -736,23 +706,15 @@ C[\bullet] N \mid
 \lpair {C[\bullet], N}\mid \\&
 \lpair {M, C[\bullet]}\mid
 \pi^\square_i{C[\bullet]}\mid
-\smat M x N y {C[\bullet]}\mid\\ &
-\smat  {C[\bullet]} x N y O\mid \\&
-\smat  M x {C[\bullet]} y O
+\mat M x N y {C[\bullet]}\mid\\ &
+\mat  {C[\bullet]} x N y O\mid \\&
+\mat  M x {C[\bullet]} y O
 \end{align*}
 \end{itemize}
-For example, $(\sigma, \cotuple{\abort,\abort})$ reduces to $(\sigma, \abort)$ in two
- different ways:
-\begin{align*}
-  (\sigma, \cotuple{\abort,\abort}) \areduce (\sigma,
-  \ginl{\ginl{\abort}})
-  \areduce (\sigma, \abort)\phantom{\enspace.} \\
-  (\sigma, \cotuple{\abort,\abort}) \areduce (\sigma,
-  \ginl{\ginr{\abort}})
-  \areduce (\sigma, \abort){\enspace.}
-\end{align*}
-
 \end{definition}
+For example, $(\sigma, \cotuple{\abort,\abort})$ reduces to $(\sigma,
+\abort)$.
+
 In order to obtain the subformula property
  via proof normalization
 we add yet another kind of reduction rules called permutative reductions.
@@ -761,32 +723,32 @@ we add yet another kind of reduction rules called permutative reductions.
  containing the followings:
 \begin{itemize}
  \small
- \item $\conf{}{ \left(\smat  M x N y O\right) P }\preduce$ \\
-       $\conf{}{ \smat M x {N P} y {O P} }$
- \item $\conf{}{ \pi^\square_d \left(\bsmat M x N y
+ \item $\conf{}{ \left(\mat  M x N y O\right) P }\preduce$ \\
+       $\conf{}{ \mat M x {N P} y {O P} }$
+ \item $\conf{}{ \pi^\square_d \left(\mat M x N y
        O\right)}\preduce$\\
-       $\conf{}{ \bsmat M x
+       $\conf{}{ \mat M x
        {\pi^\square_d N} y {\pi^\square_d O} }$
  \item {
-       $\conf{}{ \smat
-                          {\left(\bsmat  M x N y O\right)}
+       $\conf{}{ \mat
+                          {\left(\mat  M x N y O\right)}
                           u P v Q
                       }\preduce$ \\
        $(\lstore,
         \mathsf{match}^{\blacksquare}\,{M}\,\mathsf{of}\, \bsinl{x}. {
-                          {\left(\smat N u P v Q\right)}
+                          {\left(\mat N u P v Q\right)}
        } /$ \\ \phantom{mmmmmmmmmmm}$
-       \bsinr{y}. {\left(\smat  O u P v Q\right)}
+       \bsinr{y}. {\left(\mat  O u P v Q\right)}
                       )
        $}
  \item $\conf{}{ \cotuple{M, N} P }\preduce
         \conf{}{ \cotuple{MP, NP} }$
  \item $\conf{}{ \pi^\square_d\cotuple{M,N} }\preduce
         \conf{}{ \cotuple{\pi^\square_d M, \pi^\square_d N} }$
- \item $\conf{}{ \smat {\cotuple{M,N}} x P y Q }\preduce$\\
+ \item $\conf{}{ \mat {\cotuple{M,N}} x P y Q }\preduce$\\
        $\conf{}{ \cotuple{
-                          \smat  M x P y Q,
-                          \smat N x P y Q
+                          \mat  M x P y Q,
+                          \mat N x P y Q
                         } }$
 \end{itemize}
 \end{definition}
@@ -800,31 +762,6 @@ A configuration~$\mathcal{C}$ is normal\index{normal} when there is no configura
 $\mathcal{D}$ with $\mathcal{C}\reduce \mathcal{D}$.
 A term~$M$ is normal\index{normal} when the configuration $\conf{}{M}$ is
 normal (the choice of $\lstore$ is irrelevant).
-
-For closed terms $M$ and $N$,
-the term $\cotuple{(\comodL)M,(\comodR)N}$ nondeterministically reduces
-to $\ginl{\ginr{M}}$, $\ginl{\ginl{N}}$ and $\ginr{\gpair{N,M}}$.
-To $\ginl{\ginr{M}}$, the term reduces as:
-\begin{align*}
-  (\emptyset, &\cotuple{(\comodL)M,(\comodR)N}) \\
- \wreduce (\{d\mapsto M\}, &\cotuple{\reader c,(\comodR)N}) \\
- \rreduce (\{d\mapsto M\}, &\cotuple{\abort,   (\comodR)N}) \\
- \areduce (\{d\mapsto M\}, &\ginl{\ginr{(\comodR)N}}) \\
- \wreduce (\{d\mapsto M, c\mapsto N\}, &\ginl{\ginr{\reader d}}) \\
- \rreduce (\{d\mapsto M, c\mapsto N\}, &\ginl{\ginr{M}})
-\end{align*}
-and symmetrically to $\ginl{\ginl{N}}$.
-In the reduction to $\ginr{\gpair{N,M}}$, the writes are followed by the reads:
-\begin{align*}
- (\emptyset, &\cotuple{(\comodL)M,(\comodR)N})\\
- \wreduce (\{d\mapsto M\}, &\cotuple{\reader c, (\comodR)N}) \\
- \wreduce (\{d\mapsto M, c\mapsto N\}, &\cotuple{\reader c,\reader
- d}) \\
- \rreduce (\{d\mapsto M, c\mapsto N\}, &\cotuple{N, \reader d})\\
- \rreduce (\{d\mapsto M, c\mapsto N\}, &\cotuple{N, M}) \\
- \areduce (\{d\mapsto M, c\mapsto N\}, &\ginr{\gpair{N,M}})\enspace.
-\end{align*}
-
 
 \subsection{Properties}
 
@@ -1113,7 +1050,7 @@ where an expression\index{expression} is
  ::=\,\,
  &x\mid \p x \mid c \mid (EE)\mid \lambda
  x.E\mid \tuple{E,E}\mid \linl{E}\mid \linr{E}\mid \\
- &\lpil{E}\mid\lpir{E}\mid  \lmat E x {E} y {E}\mid \epsilon\enspace.
+ &\lpil{E}\mid\lpir{E}\mid  \mat E x {E} y {E}\mid \epsilon\enspace.
 \end{align*}
 The expression~$\epsilon$ is used as the initial content of the shared
 memory \fix{really?}.
@@ -1197,6 +1134,7 @@ We define $
 $ by defining
 $u_i$ and $m_i$
 where $s_i = \tuple{p,x}$:
+\fix{should not abort}
 \begin{align*}
  u_i & =
  \begin{cases}
@@ -1446,65 +1384,55 @@ The definition is inductive over the type derivation:
        \semo{\hypert\hmid \ginr{M}}&=\semo{\hypert\hmid M}\enspace,\\
        \semoi{\hypert\hmid\ginr(M)}&=\semoi{\hypert\hmid M}\enspace,
       \end{align*}
- \item[$\vee\elim$] 
-\begin{align*}
-  \semo{\cotuple{\cotuple{\hypert_0,\hypert_1},\hypert_2}\hmid
-   \gmat  M x {N_0} y {N_1}}
- =&\semo{\hypert_0\hmid M}; \\
-  \p{x}_x \leftarrow \lmat {\semoi{\hypert_0\hmid \hat M}'} {x} {x} {y} {\epsilon}; &\semo{\hypert_1 \hmid N_0}; \\
-  \p{x}_y \leftarrow \lmat {\semoi{\hypert_0\hmid \hat M}'} {x} {\epsilon} {y} {y}; &\semo{\hypert_2 \hmid N_1}\enspace,\\
-  \semoi{\cotuple{\cotuple{\hypert_0,\hypert_1},\hypert_2}\hmid \gmat  M x {N_0} y {N_1}}
- =&\semoi{\hypert_1 \hmid N_0}\cup \semoi{\hypert_2 \hmid N_1}\enspace,\\
-\end{align*}
  \item[${\brac{i}}\bot\elim$] 
  \item[$\brac i\supset\intro$] 
 \begin{align*}
- \semo{\hypert\hmid \lambda x.M}=& \semo{\hypert\hmid M}; \p z\leftarrow
- \lambda x. \semoi{\hypert\hmid\hat M}' \enspace,\\
+ \semo{\hypert\hmid \lambda x.M}=& \semo{\hypert\hmid M}; \left(\p z\leftarrow
+ \lambda x. \semoi{\hypert\hmid\hat M}'\right)_i \enspace,\\
  \semoi{\hypert\hmid \lambda x.M} =& \semoi{\hat\hypert\hmid M} \hmid
  \{\tuple{i,\p z}\}\enspace,
 \end{align*}
  \item[$\brac i\supset\elim$] 
 \begin{align*}
  \semo{\cotuple{\hypert_0,\hypert_1}\hmid MN}=& \semo{\hypert_0\hmid M}; \semo{\hypert_1\hmid N}; \\&
- \p z\leftarrow \semoi{\hypert_0\hmid \hat M}'\semoi{\hypert_1\hmid \hat N}'\enspace,\\
+ \left(\p z\leftarrow \semoi{\hypert_0\hmid \hat M}'\semoi{\hypert_1\hmid \hat N}'\right)_i\enspace,\\
  \semoi{\cotuple{\hypert_0,\hypert_1}\hmid MN} =& (\semoi{\hat \hypert_0 \hmid M}\cup
  \semoi{\hat\hypert_1\hmid N})\hmid \{\tuple{i,\p z}\}\enspace,
 \end{align*}
  \item[$\brac i\wedge\intro$]
       \begin{align*}
-       \semo{\cotuple{\hypert_0,\hypert_1}\hmid \tuple{M,N}}&=
-       \semo{\hypert_0\hmid M}; \semo{\hypert_1\hmid N}; \p z
+       \semo{\cotuple{\hypert_0,\hypert_1}\hmid \tuple{M,N}}=&
+       \semo{\hypert_0\hmid M}; \semo{\hypert_1\hmid N};\\ & \left(\p z
        \leftarrow \tuple{\semoi{\hypert_0\hmid \hat
-       M}',\semo{\hypert_1\hmid\hat N}'}\enspace,\\
+       M}',\semo{\hypert_1\hmid\hat N}'}\right)_i\enspace,\\
        \semoi{\cotuple{\hypert_0,\hypert_1}\hmid \tuple{M,N}} =& (\semoi{\hat \hypert_0 \hmid M}\cup
        \semoi{\hat\hypert_1\hmid N})\hmid \{\tuple{i,\p z}\}\enspace,
       \end{align*}
  \item[$\brac i\wedge\elim_0$] 
 \begin{align*}
- \semo{\hypert\hmid \lpil M} =& \semo{\hypert\hmid M}; \p z \leftarrow
- \lpil {\semoi{\hypert\hmid\hat M}'}\enspace, \\
+ \semo{\hypert\hmid \lpil M} =& \semo{\hypert\hmid M}; \left(\p z \leftarrow
+ \lpil {\semoi{\hypert\hmid\hat M}'}\right)_i\enspace, \\
  \semoi{\hypert\hmid \lpil M}=& \semoi{\hat \hypert\hmid M}\hmid
  \{\tuple{i, \p z}\}\enspace,
 \end{align*}
  \item[$\brac i\wedge\elim_1$] 
 \begin{align*}
- \semo{\hypert\hmid \lpir M} =& \semo{\hypert\hmid M}; \p z \leftarrow
- \lpir{ \semoi{\hypert\hmid\hat M}' }\enspace, \\
+ \semo{\hypert\hmid \lpir M} =& \semo{\hypert\hmid M}; \left(\p z \leftarrow
+ \lpir{ \semoi{\hypert\hmid\hat M}' }\right)_i\enspace, \\
  \semoi{\hypert\hmid \lpir M}=& \semoi{\hat \hypert\hmid M}\hmid
  \{\tuple{i, \p z}\}\enspace,
 \end{align*}
  \item[$\brac i\vee\intro_0$] 
 \begin{align*}
- \semo{\hypert\hmid \linl{M}} =& \semo{\hypert\hmid M}; \p z \leftarrow
- \linl{ \semoi{\hypert\hmid\hat M}'}\enspace, \\
+ \semo{\hypert\hmid \linl{M}} =& \semo{\hypert\hmid M}; \left(\p z \leftarrow
+ \linl{ \semoi{\hypert\hmid\hat M}'}\right)_i\enspace, \\
  \semoi{\hypert\hmid \linl M}=& \semoi{\hat \hypert\hmid M}\hmid
  \{\tuple{i, \p z}\}\enspace,
 \end{align*}
  \item[$\brac i\vee\intro_1$] 
 \begin{align*}
- \semo{\hypert\hmid \linr M} =& \semo{\hypert\hmid M}; \p z \leftarrow
- \linr{\semoi{\hypert\hmid\hat M}'}\enspace, \\
+ \semo{\hypert\hmid \linr M} =& \semo{\hypert\hmid M}; \left(\p z \leftarrow
+ \linr{\semoi{\hypert\hmid\hat M}'}\right)_i\enspace, \\
  \semoi{\hypert\hmid \linr{M}}=& \semoi{\hat \hypert\hmid M}\hmid
  \{\tuple{i, \p z}\}\enspace,
 \end{align*}
@@ -1591,7 +1519,7 @@ The additional reduction is
 Also,
 ${\ifte M {N_0} {N_1}}$
 is an abbreviation for
-${\lmat M x {N_0} y {N_1}}$.
+${\mat M x {N_0} y {N_1}}$.
 
 We represent a finite set of id's as a
 typed lambda term, whose type is $[i](\Id\supset 2)$.  Intuitively, a
@@ -1606,36 +1534,10 @@ like $\{c_0, c_1, c_2\}$.
 Now, we are ready to construct a hyperterm solving the two-party
 participating set problem.
 We can obtain a derivation of \fix{something else}:
-\begin{center}
- \small
-$
- \tj{x}{[0]\Id},
- \tj{y}{[1]\Id}
- \tr
- \tj{\cotuple{\gpair{\{(\comodL)x, x\}, \{y\}},
- \gpair{\{x\}, \{(\comodR) y, y\}}
- }}
- {[0](\Id\supset 2)\wedge ([1](\Id\supset 2))}\enspace.$
-\end{center}
 
 One possible reduction sequence is as follows: \fix{according to the new
 rule?}
-\begin{align*}
- & \concreteconf{[]}
- {\cotuple{\gpair{\{(\comodL) {c_0}, {c_0}\}, \{{c_1}\}},
- \gpair {\{{c_0}\}, \{(\comodR) {c_1}, {c_1}\}}}} \\
- \reduction &
- \concreteconf{[d\mapsto {c_0}]}
- {
- \cotuple{
- \gpair{\{\abort, {c_0}\}, \{{c_1}\}},
- \gpair{\{{c_0}\}, \{(\comodR){c_1}, {c_1}\}}
- }
- }
- \\
- \reduction &
- \concreteconf{[d\mapsto {c_0}, c\mapsto {c_1}]}{\gpair{\{{c_0}\}, \{c_0, c_1\}}}\enspace.
-\end{align*}
+
 Moreover, the same initial configuration can reduce to
 \[
  \concreteconf{[d\mapsto c_0,c\mapsto c_1]}{\gpair{\{c_1,c_0\},
