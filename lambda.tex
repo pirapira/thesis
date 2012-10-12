@@ -95,8 +95,7 @@ guaranteed to succeed.
 Let us assume a countably infinite set of propositional variables%
 \index{propositional variable|see{variable}}\index{variable!propositional}.
 The set of propositional variables is written~$\pvar$.
-We define local formulae \index{formula!local}
-\index{local formula|see{formula}}
+We define local formulae \index{formula!local}\index{local formula|see{formula}}%
 $\varphi, \psi$ by the following BNF,
 where $I$ is a
 propositional variable%
@@ -114,7 +113,8 @@ We use $\m\phi$ and $\m\psi$ for global formulae.
 For a natural number~$i$ (representing a process),
 as a notation, $[i]\phi$ is a global formula that maps $i$ to $\phi$ but
 does not map any other processes to local formulae.
-We call such global formulae as singleton global formulae.
+We call such global formulae that map only one process as singleton
+global formulae.
 The unary operators $[0], [1],\ldots$ are called modalities%
 \index{modality}.
 Informally, the local formulae describe datatypes used by each process.
@@ -133,7 +133,7 @@ we omit all the modalities, these rules characterize
 G\"odel--Dummett logic.
 Indeed,
 $[0]((\varphi\supset\psi)\vee(\psi\supset\varphi))$ is provable (Figure~\ref{fig:dummett-modal}).
-\begin{sidewaysfigure}
+\begin{figure}
  \footnotesize
  \centering
 \AxiomC{}
@@ -154,9 +154,9 @@ $[0]((\varphi\supset\psi)\vee(\psi\supset\varphi))$ is provable (Figure~\ref{fig
  [0]((P\supset Q)\lor (Q\supset P)) $}
  \DisplayProof
 
- \caption{Something like Dummett's axiom is provable.}
+ \caption{Derivation of Dummett's axiom under modality~$[0]$.}
  \label{fig:dummett-modal}
-\end{sidewaysfigure}
+\end{figure}
 
 % \section{About the modality}
 
@@ -173,7 +173,7 @@ $[0]((\varphi\supset\psi)\vee(\psi\supset\varphi))$ is provable (Figure~\ref{fig
    \vskip 2mm
 %%communication
    \BinaryRule
-   {$\hyper\hmid\G\vdash[i]\varphi$}
+   {$\hyper\hmid\G\vdash[i]\phi$}
    {$\hyper\hmid\D\vdash[j]\psi$}
    {$ij$-com}
    {$\hyper\hmid\Gamma\vdash[i]\psi\hmid\Delta\vdash[j]\varphi$}
@@ -322,7 +322,7 @@ terms, but in this calculus, terms may interact with the store (like
 a program written in Haskell or OCaml does with an i-var).
 This behavior will be shown later in the definition of reductions.
 
-We define local terms\index{term!local}~$\term$ by the BNF:
+We define local terms\index{term!local}~$\term$ by BNF:
 \begin{align*}
 \term ::=&\,
  x\mid (\comod c c) \term \mid \reader c
@@ -339,13 +339,14 @@ All variable occurrences (including those in $\Gamma$)
 except the first clause are
 binding.
 
-\fix{C}
+A global term is a partial mapping from processes to local
+terms.  For example, a global term $\{0\mapsto \lambda x.x, 1\mapsto
+y\}$ maps process~$0$ to local term $\lambda x.x$ and process~$1$ to
+local term $y$.
+A closed global term is a global term whose image only contains closed local terms.
 Informally, the local terms represent parts of
 programs executed by the processes.
 Especially, $(\comod c c)t$ and $\reader c$ denote processes' communication.
-The constructs with
-$\mathtt{g}$ represent parts of programs that are used for preparing
-inputs for processes and collecting outputs of the processes.
 
 Using these terms, we annotate the hypersequent system in Fig.~\ref{fig:logic}.
 We extend a sequent
@@ -363,7 +364,7 @@ where the same
 variable has the same type even if it appears in different components.
 The typing rules for the terms are given in Fig.~\ref{termassign}.
 For example, the proof in Figure~\ref{fig:dummett-modal} can be
-annotated as in Figure~\ref{fig:typed-term}.
+annotated as in Figure~\ref{fig:typed}.
 \begin{sidewaysfigure}
  \centering
 \AxiomC{}
@@ -388,12 +389,9 @@ annotated as in Figure~\ref{fig:typed-term}.
  y.(\comodR)y} \right]}
  {[0]((P\supset Q)\lor (Q\supset P))} $}
 \DisplayProof
- \caption{An example of a typed term in \lgd. \fix{has to be changed}}
- \label{fig:typed-term}
+ \caption{An example of a typed term in \lgd.}
+ \label{fig:typed}
 \end{sidewaysfigure}
-
-\fix{contexts can only contain singleton global formulae}
-
 
 \begin{figure}[p]
  \small
@@ -402,18 +400,18 @@ annotated as in Figure~\ref{fig:typed-term}.
 \vskip 2mm
 %% communication
 \BinaryRule
-   {$\hypert_0\hmid\G\tr\tj{M}{[i]\varphi}$}
-   {$\hypert_1\hmid\D\tr\tj{N}{[j]\psi}$}
+   {$\hypert_0\hmid\G\tr\tj{\imapsto{M}}{[i]\phi}$}
+   {$\hypert_1\hmid\D\tr\tj{\jmapsto{N}}{[j]\psi}$}
    {}
-   {$\cotuple{\hypert_0,\hypert_1}\hmid\Gamma\tr\tj{(\comodL)M}{[i]\psi}\hmid
-   \Delta\tr\tj{(\comodR)N}{[j]\varphi}$}
+   {$\cotuple{\hypert_0,\hypert_1}\hmid\Gamma\tr\tj{\imapsto{(\comodL)M}}{[i]\psi}\hmid
+   \Delta\tr\tj{\jmapsto{(\comodR)N}}{[j]\phi}$}
    where $c$ and $d$ are fresh.
 \vskip 2mm
 %% external structural
  \UnaryRule
  {$\hypert^+$}
  {}
- {$\hypert^+\hmid\Gamma\tr \tj \abort {\m\phi}$}
+ {$\hypert^+\hmid\Gamma\tr \tj {\{\}} {\m\phi}$}
 \vskip 2mm
  \AxiomC{$\hypert\hmid \G\tr\tj{(M_i)_{i\in I}}{(\phi_i)_{i\in I}}\hmid
  \G\tr\tj{(N_i)_{i\in I}}{(\psi_i)_{i\in I}}$}
@@ -459,61 +457,63 @@ annotated as in Figure~\ref{fig:typed-term}.
 \textbf{Inner Local Rules}
 \vskip 2mm
 %% axiom
-  \UnaryRule{}{}{$\tj x{[i]\varphi}, \Gamma\tr \tj x{[i]\varphi}$}
+  \UnaryRule{}{}{$\tj {x}{[i]\varphi}, \Gamma\tr \tj
+ {\imapsto x}{[i]\varphi}$}
                        \hfill
 %% bot elim
  \UnaryRule
-   {$\hypert\hmid\Gamma\tr \tj M{[i]\bot}$} {}
-   {$\hypert\hmid\Gamma\tr \tj{\abort}{[i]\varphi}$}
+   {$\hypert\hmid\Gamma\tr \tj {\imapsto M}{[i]\bot}$} {}
+   {$\hypert\hmid\Gamma\tr \tj{\imapsto{\abort}}{[i]\varphi}$}
    \vskip 2mm
 %% local imp intro
   \UnaryRule
-   {$\hypert\hmid\tj x{[i]\varphi},\Gamma\tr \tj M{[i]\psi}$}
+   {$\hypert\hmid\tj x{[i]\varphi},\Gamma\tr \tj {\imapsto{M}}{[i]\psi}$}
    {}
-   {$\hypert\hmid\Gamma\tr \tj{\lambda x.M}{[i](\varphi\supset\psi)}$}
+   {$\hypert\hmid\Gamma\tr \tj{\imapsto{\lambda x.M}}{[i](\varphi\supset\psi)}$}
                        \hfill
 %% local imp elim
-  \BinaryRule{$\hypert_0\hmid\Gamma \tr \tj M{[i](\varphi\supset \psi)}$}
-  {$\hypert_1\hmid\Gamma\tr \tj N{[i]\varphi}$}
+  \BinaryRule{$\hypert_0\hmid\Gamma \tr \tj {\imapsto{M}}{[i](\varphi\supset \psi)}$}
+  {$\hypert_1\hmid\Gamma\tr \tj {\imapsto{N}}{[i]\varphi}$}
   {}
-  {$\cotuple{\hypert_0,\hypert_1}\hmid\Gamma\tr \tj{MN}{[i]\psi}$}
+  {$\cotuple{\hypert_0,\hypert_1}\hmid\Gamma\tr \tj{\imapsto{MN}}{[i]\psi}$}
                        \vskip 2mm
 %% local conj intro
-\BinaryRule{$\hypert_0\hmid\Gamma\tr \tj M{[i]\varphi}$}
-   {$\hypert_1\hmid\Gamma\tr \tj N{[i]\psi}$}
+\BinaryRule{$\hypert_0\hmid\Gamma\tr \tj {\imapsto{M}}{[i]\varphi}$}
+   {$\hypert_1\hmid\Gamma\tr \tj {\imapsto{N}}{[i]\psi}$}
    {}
    {$\cotuple{\hypert_0,\hypert_1}\hmid\Gamma\tr
-     \tj{\lpair {M,N}}{[i](\varphi\wedge\psi)}$}
+     \tj{\imapsto{\lpair{M,N}}}{[i](\varphi\wedge\psi)}$}
    \vskip 2mm
 %% local conj elim
   \UnaryRule
-   {$\hypert\hmid\Gamma\tr M\colon[i](\varphi\wedge\psi)$}
+   {$\hypert\hmid\Gamma\tr \tj{\imapsto{M}}{[i](\phi\land\psi)}$}
    {}
-   {$\hypert\hmid\Gamma\tr \lpil{M}\colon[i]\varphi$}
+   {$\hypert\hmid\Gamma\tr \tj{\imapsto{\lpil{M}}}{[i]\phi}$}
    \hfill
   \UnaryRule
-   {$\hypert\hmid\Gamma\tr M\colon[i](\varphi\wedge\psi)$}
+   {$\hypert\hmid\Gamma\tr \tj{\imapsto{M}}{[i](\varphi\wedge\psi)}$}
    {}
-   {$\hypert\hmid\Gamma\tr\lpir M\colon[i]\psi$}
+   {$\hypert\hmid\Gamma\tr \tj{\imapsto{\lpir M}}{[i]\psi}$}
 \vskip 2mm
 %% local disj intro
   \UnaryRule
-   {$\hypert\hmid\Gamma\tr M\colon[i]\varphi$}
+   {$\hypert\hmid\Gamma\tr \tj{\imapsto{M}}{[i]\varphi}$}
    {}
-   {$\hypert\hmid\Gamma\tr\linl {M}\colon[i](\varphi\vee\psi)$}
+   {$\hypert\hmid\Gamma\tr \tj{\imapsto{\linl{M}}}{[i](\varphi\vee\psi)}$}
    \hfill
   \UnaryRule
-   {$\hypert\hmid\Gamma\tr M\colon[i]\psi$}
+   {$\hypert\hmid\Gamma\tr \tj{\imapsto{M}}{[i]\psi}$}
    {}
-   {$\hypert\hmid\Gamma\tr \linr{M}\colon[i](\varphi\vee\psi)$}
+   {$\hypert\hmid\Gamma\tr \tj{\imapsto{\linr{M}}}{[i](\varphi\vee\psi)}$}
 \vskip 2mm
 %% local disj elim
 \TrinaryRule
-   {$\hypert_0\hmid\Gamma\tr \tj M {[i](\varphi\vee\psi)}$}
-   {$\hypert_1\hmid\tj x{[i]\varphi},\Gamma\tr \tj {N_0}{[i]\theta}$}
-   {$\hypert_2\hmid\tj y{[i]\psi},   \Gamma\tr \tj {N_1}{[i]\theta}$}
+   {$\hypert_0\hmid\Gamma\tr \tj{\imapsto{M}}{[i](\varphi\vee\psi)}$}
+   {$\hypert_1\hmid\tj x{[i]\phi},\G\tr \tj{\imapsto{N_0}}{[i]\theta}$}
+   {$\hypert_2\hmid\tj y{[i]\psi},\G\tr \tj{\imapsto{N_1}}{[i]\theta}$}
    {}
-   {$\cotuple{\cotuple{\hypert_0,\hypert_1},\hypert_2}\hmid\Gamma \tr \tj{\mat M x {N_0} y {N_1}}{[i]\theta}$}
+   {$\cotuple{\cotuple{\hypert_0,\hypert_1},\hypert_2}\hmid\Gamma \tr
+ \tj{\imapsto{\mat M x {N_0} y {N_1}}}{[i]\theta}$}
 \vskip 2mm
  \caption[Term assignment of \lgd.]
  {Term assignment.
@@ -527,16 +527,70 @@ annotated as in Figure~\ref{fig:typed-term}.
  same length and the same type so that $\cotuple{\hypert_0,\hypert_1}$
  can be defined as
  the elementwise application of $\cotuple{\term,\term}$. \fix{ needs
- more explanation} \fix{add [i] in front of local terms}
+ more explanation}
  }
  \label{termassign}
 \end{figure}
 
+For example, the global term
+$[0\mapsto
+\cotuple{\lpair{(\comodL)x, x}, x}
+,1\mapsto
+\cotuple{\lpair{(\comodR)y, y}, y}
+]$
+ can be typed (Figure~\ref{fig:typed2}).
 
-\fix{is this typeable?, then copy the reductions in C}
-\[
- \gpair{\cotuple{\{(\comodL)x,x\},\{x\}},\cotuple{\{(\comodR)y,y\},\{y\}}}
-\]
+ \fix{introduce multiplicative and additive contexts in the rules}
+
+ \begin{sidewaysfigure}
+  \centering
+ \AxiomC{$\tj{x}{[0]X}\tr\tj{\{0\mapsto x\}}{[0]X}$}
+ \AxiomC{$\tj{y}{[1]Y}\tr \tj{\{1\mapsto y\}}{[1]Y}$}
+ \LL{com}
+ \BinaryInfC{
+ $
+  \tj{x}{[0]X}\tr\tj{\{0\mapsto (\comodL)x\}}{[0]Y} \hmid
+  \tj{y}{[1]Y}\tr\tj{\{1\mapsto (\comodR)y\}}{[1]X}$
+ }
+ \doubleLine
+ \UnaryInfC{
+ $
+ \tj{x}{[0]X}, \tj{y}{[1]Y}\tr
+ \tj{\{
+  0\mapsto \lpair{(\comodL)x,x}, 1\mapsto y
+  \}}
+  {[0\mapsto (Y\land X), 1\mapsto Y]}
+  \hmid
+  \tj{x}{[0]X}, \tj{y}{[1]Y}\tr
+  \tj
+  {\{
+  0\mapsto x,
+  1\mapsto \cotuple{\lpair{(\comodR)y, y}, y}
+  \}}
+  {0\mapsto
+  X
+  , 1\mapsto
+  X\land Y
+  }
+ $
+ }
+  \LL{EC}
+  \UnaryInfC{$
+  \tj{x}{[0]X}, \tj{y}{[1]Y}\tr\tj
+  {\{
+  0\mapsto \cotuple{\lpair{(\comodL)x,x},x},
+  1\mapsto \cotuple{\lpair{(\comodR)y,y},y}
+  \}}
+  {
+  0\mapsto ((Y\land X)\lor X),
+  1\mapsto ((X\land Y)\lor Y)
+  }
+  $
+  }
+ \DisplayProof
+  \caption{An example of a type derivation.}
+  \label{fig:typed2}
+ \end{sidewaysfigure}
 
 
 \subsection{Reduction}
@@ -547,18 +601,17 @@ a derivation of
 $\tr
 \tj{\m M}{\m\varphi}$.
 A pure term\index{pure term|see{term}}\index{term!pure} is a term
-without $\comod c c$,
-$\reader c$ or any $\g$ constructs.
-A hyperterm\index{hyperterm}~$\hypert$ is a nonempty sequence of terms.
-A store\index{store} maps a channel to a
-pure term or $\epsilon$.
+without $\comod c c$ or $\reader c$.
+A hyperterm\index{hyperterm}~$\hypert$ is a nonempty sequence of global terms.
+\fix{define when a hyperterm is typeable}
+A store\index{store} maps a channel to a pure term or $\epsilon$.
 For a store~$\sigma$, the updated store $\sigma[c\mapsto x]$ maps $c$ to
 $x$ and $d$ to $\sigma(d)$ if $d$ is different from~$c$.
 A configuration\index{configuration} is a pair $\conf{}\hypert$ of a
 store~$\lstore$ and a hyperterm~$\hypert$.
 A typed configuration\index{typed configuration} is a
 configuration $(\epsilon, \mathcal O)$ where $\epsilon$ is the empty
-store and $\mathcal O$ is derivable.
+store and $\mathcal O$ is typeable.
 
 To complete the definition of \lgd,
  we define the \textit{reductions} $\reduce_\spadesuit$ of
@@ -567,22 +620,22 @@ To complete the definition of \lgd,
  We consider terms up to $\alpha$-equivalence and implicitly
  require all instances
  of $\rightsquigarrow_\spadesuit$ to avoid free variable captures.
- \fix{define congruences to be used below}
+\fix{K}
 
 \begin{definition}[Basic reduction]
  The basic reduction $\breduce$ is the smallest congruence containing
  the followings:
  \begin{itemize}
-  \item  $\conf{}{(\lambda x.M)O}\breduce
- \conf{}{M[O/x]}$
-  \item $\conf{}{\lpil{\lpair{M,N}}} \breduce
-	 \conf{}{           M   }$
-  \item $\conf{}{\lpir{\lpair{M,N}}} \breduce
-	 \conf{}{             N }$
-  \item $\conf{}{\mat{\linl M}x N y O} \breduce
-	 \conf{}{              N[M/x]}$
-  \item $\conf{}{\mat{\linr M}x N y O} \breduce
-	 \conf{}{                  O[M/y]}$
+  \item  $\conf{}{\imapsto{(\lambda x.M)O}}\breduce
+	 \conf{}{\imapsto{M[O/x]}}$
+  \item $\conf{}{\imapsto{\lpil{\lpair{M,N}}}} \breduce
+	 \conf{}{           \imapsto{M}   }$
+  \item $\conf{}{\imapsto{\lpir{\lpair{M,N}}}} \breduce
+	 \conf{}{             \imapsto{N} }$
+  \item $\conf{}{\imapsto{\mat{\linl M}x N y O}} \breduce
+	 \conf{}{              \imapsto{N[M/x]}}$
+  \item $\conf{}{\imapsto{\mat{\linr M}x N y O}} \breduce
+	 \conf{}{                  \imapsto{O[M/y]}}$
  \end{itemize}
 \end{definition}
 
@@ -598,11 +651,11 @@ The formal definition of the reductions follows.
  The write reduction $\wreduce$ is the smallest congruence
  containing the followings:
  \begin{itemize}
-  \item $\conf{[c\mapsto \epsilon]}{(\comodR)M} \wreduce
-	\conf{[c\mapsto M]}{\reader d}
+  \item $\conf{[c\mapsto \epsilon]}{\imapsto{(\comodR)M}} \wreduce
+	\conf{[c\mapsto M]}{\imapsto{\reader d}}
 	$ where $M$ is a pure term
-  \item $\conf{[c\mapsto N]}{(\comodR) M} \wreduce \conf{[c\mapsto
-	N]}{\reader d}$ where $M$ is a pure term
+  \item $\conf{[c\mapsto N]}{\imapsto{(\comodR) M}} \wreduce
+	\conf{[c\mapsto	N]}{\imapsto{\reader d}}$ where $M$ is a pure term
  \end{itemize}
 \end{definition}
 In the first clause of this definition of write reductions, we require
@@ -625,8 +678,9 @@ the term changes into $\abort$.
  containing the
  followings:
 \begin{itemize}
- \item $\conf{[c\mapsto M]}{\reader c}\rreduce \conf{[c\mapsto M]}{M}$
- \item $\conf{[c\mapsto \epsilon]}{\reader c} \rreduce \conf{[c\mapsto \epsilon]}{\abort}$
+ \item $\conf{[c\mapsto M]}{\imapsto{\reader c}}\rreduce \conf{[c\mapsto M]}{\imapsto{M}}$
+ \item $\conf{[c\mapsto \epsilon]}{\imapsto{\reader c}}
+       \rreduce \conf{[c\mapsto \epsilon]}{\imapsto{\abort}}$
 \end{itemize}
 \end{definition}
 
@@ -646,15 +700,15 @@ the left component.
  congruence containing the
  followings:
 \begin{itemize}
- \item  $\conf{}{\cotuple{\abort, M}}\areduce
- \conf{}{{M}}$, and
-   $\conf{}{\cotuple{M,\abort}}\areduce
+ \item  $\conf{}{\imapsto{\cotuple{\abort, M}}}\areduce
+ \conf{}{\imapsto{M}}$, and
+   $\conf{}{\imapsto{\cotuple{M,\abort}}}\areduce
  \conf{}{{M}}$
- \item $\conf{}{\cotuple{M,N}}\areduce \conf{}{M}$ where
+ \item $\conf{}{\imapsto{\cotuple{M,N}}}\areduce \conf{}{\imapsto{M}}$ where
        $M$ and $N$ do not contain $\abort$, $\comodL$ or $\reader c$
        for any channels $c,d$;
- \item  $\conf{}{C[\abort]}\areduce
- \conf{}{\abort}$  where $C[\bullet]$ is defined by BNF:
+ \item  $\conf{}{\imapsto{C[\abort]}}\areduce
+ \conf{}{\imapsto{\abort}}$  where $C[\bullet]$ is defined by BNF:
 \begin{align*}
   C[\bullet] ::= &\bullet \mid
 C[\bullet] N \mid
@@ -749,26 +803,26 @@ If the former is the case, we can rewrite
 a communication rule occurrence
 \begin{center}
  \BinaryRule
- {$\hypert_0\hmid \Gamma,\Delta\tr \tj M{[i]\psi}$}
- {$\hypert_1\hmid \Gamma,\Delta\tr \tj N{[j]\tau}$}
+ {$\hypert_0\hmid \G,\D\tr \tj{\imapsto{M}}{[i]\psi}$}
+ {$\hypert_1\hmid \G,\D\tr \tj{\jmapsto{N}}{[j]\tau}$}
  {}
  {$\cotuple{\hypert_0,\hypert_1}\hmid
  \Gamma\tr \tj
-   {(\comodL)M}{[i]\tau}\hmid
-   \Delta\tr \tj{(\comodR)N}{[j]\psi}$}
+   {\imapsto{(\comodL)M}}{[i]\tau}\hmid
+   \Delta\tr \tj{\jmapsto{(\comodR)N}}{[j]\psi}$}
 \end{center}
 into a weakening occurrence (using Proposition~\ref{process-change} stated below)
 \begin{center}
  \AxiomC
  {$\hypert_0\hmid  \Gamma^j, \Delta^j\tr \tj M{[j]\psi}$}
  \UnaryInfC
- {$\hypert_0\hmid \tr \tj \abort
+ {$\hypert_0\hmid \tr \tj {\imapsto\abort}
  {[i]\tau}\hmid
-   \Gamma^j,\Delta^j\tr \tj{M}{[j]\psi}$}
+   \Gamma^j,\Delta^j\tr \tj{\jmapsto{M}}{[j]\psi}$}
  \DisplayProof
 \end{center}
  where $\G^j$ denotes the context obtained by replacing every modality
- in $\G$ with $[j]$.
+ in $\G$ with $j$.
  In the lattar case, we can do the symmetric.
 
 After these rewritings for all appearing channels,
@@ -780,14 +834,26 @@ resulting hyperterm.  And, even after reductions, the resulting
 hyperterm has a component not containing $\abort$.
 \end{proof}
 
+\fix{define $\m\phi[j/i]$}
+
  \begin{proposition}
   \label{process-change}
-  When $\mathcal O \hmid \G_0,\D_0\tr\tj{P}{[k]\psi_0}$ is derivable,
-  $\mathcal O\hmid \G_0^m, \D_0^m\tr\tj{P}{[m]\psi_0}$ is also
+  When $\mathcal O \hmid \G_0,\D_0\tr\tj{\kmapsto{P}}{[k]\psi_0}$ is derivable,
+  $\mathcal O\hmid \G_0^m, \D_0^m\tr\tj{\mmapsto{P}}{[m]\psi_0}$ is also
   derivable%
   \footnote{Note that the modalities in $\mathcal O$ are not changed
   while the modalities in $\G_0$ and $\D_0$ are turned into $[k]$.}.
  \end{proposition}
+ We have to generalize this statement in order to use induction on the
+ derivations because a global type is not always a singleton type as in
+ this statement.  In order to generalize the statement, we have to
+ define the renaming of processes in global types.
+  \begin{definition}
+  \end{definition}
+
+  \begin{proposition}
+   \label{process-change-gen}
+  \end{proposition}
   \begin{proof}
    By induction on the height of derivation.
    All rules except com and EC rules are trivial because they do not interact
@@ -829,6 +895,14 @@ hyperterm has a component not containing $\abort$.
    }.
   \end{proof}
 
+ \begin{proof}[of Proposition~\ref{process-change}]
+  Folloows from Proposition~\ref{process-change-gen}
+ \end{proof}
+
+\subsubsection{Strong Normalization}
+
+\fix{define symmetric reductions, the other side of abort}
+
 \begin{theorem}[Strong normalization]
  \label{first:sn}
  \lgd\, is strongly normalizing.
@@ -858,8 +932,9 @@ $
 \reduce
 \conf{_2}{\hypert_2}
 \reduce\cdots
-$.  From this, we are going to construct an infinite sequence of
-reductions in the pure fragment.
+$.
+From this, we are going to construct an infinite sequence of
+symmetricreductions in the pure fragment.
 
 For that, we first
 build an infinite reduction sequence with constant stores.
@@ -901,7 +976,9 @@ invariant inductively on the number of steps
        Thus, the invariant
        holds for $k+1$.
  \item a write reduction disappears;
- \item an $\abort$ propagation
+ \item an $\abort$ reduction of the form $\cotuple{\abort, M}\areduce M$ \fix{fill}
+ \item an $\abort$ reduction of the form $\cotuple{M, N}\areduce M$ \fix{fill}
+ \item an $\abort$ reduction of the form
        $\hypc{}{C[\abort]} \areduce \hypc{}{\abort}$ can be translated
        either to a similar reduction or no reduction if the $\abort$ in
        the redex is replaced by another term in the $\mathcal{M'}_k$.
@@ -914,11 +991,11 @@ invariant inductively on the number of steps
        $\conf{_\infty}{\hypc{'}{M'}}\bpreduce
         \conf{_\infty}{\hypc{'}{N'}}$.
 \end{itemize}
-Here, we have to show that the translated sequence is infinite.
- For that, we can use the facts that
- there are only finite
-number of mentioned locations each of which allows only one write, and that
-an $\abort$ propagation always
+Here, we have to show that the translated sequence of symmetric
+reductions is infinite.
+For that, we can use the facts that there are only finite
+number of mentioned locations each of which allows only one write,
+ and that an $\abort$ propagation always
 strictly shortens the term under operation.
 
  After that, we can replace
@@ -1039,20 +1116,20 @@ a typed protocol\index{typed protocol} has:
        \processes$ (specifying the writer and the reader of
        each channel);
  \item $W$: maps a channel in $C$ to a contexted type;
- \item a function $t_i$ for each $i\in \processes$;
+ \item a function~$t_i$ for each $i\in \processes$;
        that maps a program variable to a contexted type
-       $(\tj{x_k}{\varphi_k})_k \tr[i]\varphi$ with a special condition
+       $(\tj{x_k}{[i]\phi_k})_k \tr[i]\varphi$ with a special condition
        $t_i(\p i_i)= \iota_i$;
- \item a typed program~$p_i$ for each $i\in \processes$,
-       where
+ \item a typed program~$p_i$ for each $i\in \processes$, where
        a typed program\index{typed program} is a well-formed program where all
        sentences are typed according to the rules below.
-       A sentence $\p x \leftarrow E$ is typed  iff $\tr E\colon t(\p x)$ is derivable with
-       assumptions of the form $\tr\tj{\p y}{t(\p y)}$ and $\tr\tj{c}{W(c)}$.
+       A sentence $\p x \leftarrow E$ is typed  iff $\tr E\colon t(\p
+       x)$ is derivable with assumptions of the form $\tr\tj{\p y}{t(\p
+       y)}$ and $\tr\tj{c}{W(c)}$.
        A sentence $c\leftarrow E$ is typed iff
-       $\tr\tj{E}{W(c)}$ is derivable
-       with
-       assumptions of the form $\tr\tj{\p y}{t(\p y)}$ and $\tr\tj{c}{W(c)}$.
+       $\tr\tj{E}{[i]W(c)}$ is derivable with
+       assumptions of the form $\tr\tj{\p y}{[i]t(\p y)}$ and
+       $\tr\tj{c}{[i]W(c)}$.
 \end{itemize}
 \fix{example, for the above example problem}
 
@@ -1062,15 +1139,14 @@ We define when a protocol solves a typed
 input-output problem.
 These definitions are transferred from \citet{Saks:1993vq}.
 
-Let $\processes$ be $\{0,\ldots, n-1\}$ and fix
-a typed protocol.
+\fix{define closed local term}
+
+Let $\processes$ be $\{0,\ldots, n-1\}$ and fix a typed protocol.
 A program variable content\index{program variable content} for $i\in\processes$ is a
-partial
-function
-that maps a program variable to a term of $t_i(\p x)$.
-A term~$M$ \textit{is of} a contexted type $\Gamma\tr\varphi$ when
-$\Gamma\tr
-\tj M\varphi$ is derivable.
+partial function that maps a program variable to a closed local term of
+$t_i(\p x)$.
+A global term~$\m M$ \textit{is of} a contexted type $\Gamma\tr\m\varphi$ when
+$\Gamma\tr\tj {\m{M}}{\m\phi}$ is derivable.
 A process snapshot\index{process snapshot} of $i\in\processes$ is a tuple
 $\tuple{p,m}$ where $p$ is either a program or $\abort$ and $m$ is a
 program variable content for $i$.
@@ -1095,23 +1171,19 @@ We define $
 $ by defining
 $u_i$ and $m_i$
 where $s_i = \tuple{p,x}$:
-\fix{should not abort}
 \begin{align*}
  u_i & =
  \begin{cases}
  \tuple{p',x}  & (\text{if } p = c
  \leftarrow E; p' \text{ and }\semo{E}_{x,\vec v} \neq \epsilon)
  \\
- \tuple{\epsilon,x}  & (\text{if } p = c
+ \tuple{p',x}  & (\text{if } p = c
  \leftarrow E; p' \text{ and }\semo{E}_{x,\vec v} = \epsilon)
  \\
  \tuple{p', x[\p x \mapsto \semo{E}_{x, \vec v}]}&
                        (\text{if } p = \p x \leftarrow E; p', \quad
  x(\p x) = \epsilon  \text{ and } \semo{E}_{x, \vec v} \neq \epsilon) \\
- \tuple{\epsilon, x}&
-                      (\text{if } p = \p x \leftarrow E; p',  \quad
- x(\p x) = \epsilon  \text{ and } \semo{E}_{x, \vec v} = \epsilon) \\
- \tuple{\epsilon, x} & (\text{if } p = \p x \leftarrow E; p' \text{
+ \tuple{p', x} & (\text{if } p = \p x \leftarrow E; p' \text{
  and }
  x(\p x) \neq \epsilon) \\
  s_i & (\text{if } p = \epsilon)
@@ -1199,6 +1271,7 @@ schedule~$\sigma$,
 
 We show that the ability of the waitfree protocols and \lgd\, are the same.
 \begin{definition}
+ \label{def:solvable}
  A typed input-output problem
  $\tuple{(\iota_i)_{i\in \processes}, (o_i)_{i\in \processes}, R}$ is
  solvable by a global term
@@ -1207,9 +1280,7 @@ We show that the ability of the waitfree protocols and \lgd\, are the same.
  \tr\left(o_i\right)_{i\in \processes}$ iff
  for any closed $(N_i)_{i\in \processes}$ of $\iota_i$,
  all normal forms of $\m{M}[\vec{N_i}/\vec{x_i}]$
- are in the form
- $\tuple{{V_0}, \tuple{{V_1},
- \cdots\tuple{{V_{n-2}},\tuple{{V_{n-1}},\bullet}}\cdots}}$
+ are in the form $(V_i)_{i\in\processes}$
  where $\tuple{(N_i)_{i\in \processes}, (V_i)_{i\in \processes}}\in R$.
  % looks like we assume subformula property
 \end{definition}
@@ -1222,25 +1293,11 @@ there exists a typed protocol that solves the problem.
 We are going to translate a typed hyperterm into a protocol inductively
 on the type derivation.
 To make induction work, we use the following auxiliary notions.
-An investigator\index{investigator} $\tuple{i, \p x}$ is a pair of a process and a program
-variable.
-For a local formula~$\varphi$, a system snapshot $\tuple{\vec s,\vec v}$
-satisfies
-$\tuple{i,\p x}(\varphi)$ iff
-$s_i(\p x)$ is an expression of $\varphi$.
-For a set of investigators~$I$,
-a system snapshot satisfies
-$I([i]\varphi)$ iff it satisfies
-$\tuple{i, \p x}(\varphi)$ for at least one
-$\tuple{i,\p x}\in I$.
-This can be extended to all global formulae, as
-$I(\m\varphi\wedge\m\psi)$ iff $I(\m\varphi)$ and $I(\m\psi)$;
-$I(\m\varphi\vee\m\psi)$ iff $I(\m\varphi)$ or $I(\m\psi)$.
+An investigator\index{investigator} is a partial mapping from processes
+to program variable.
 A system snapshot satisfies a global formula%
 \index{satisfy!system snapshot ---s a global formula}~$\m\varphi$
-iff there exists a
-finite set of
-investigators~$I$ such that the system snapshot satisfies $I(\m\varphi)$.
+iff \fix{fill}.
 A system snapshot satisfies a context%
 \index{satisfy!system snapshot ---s a context} iff it
 satisfies every global formula in the context.
@@ -1303,7 +1360,7 @@ The definition is inductive over the type derivation:
  \semo{\hypert\hmid \abort}=\semo{\hypert}\enspace,\quad
  \semoi{\hypert\hmid\abort}=&\semoi{\hypert}\hmid \emptyset\enspace,\quad
 	   \end{align*}
- \item[EC]
+ \item[EC] \fix{forms of types are different}
 \begin{align*}
  \semo{\hypert\hmid \cotuple{M,N}}&= \semo{\hypert\hmid M \hmid N}\\
  \semoi{\hypert\hmid \cotuple{M,N}}&= \semoi{\hat\hypert\hmid M\hmid N}
@@ -1320,18 +1377,6 @@ The definition is inductive over the type derivation:
  \semo{x}=& \epsilon \enspace\\
  \semoi{x}=& \{\tuple{i,\p x_x}\} \text{ where $[i]\varphi$ is the type
  of $x$}\enspace,
-\end{align*}
- \item[$\wedge\intro$] 
-\begin{align*}
- \semo{\hypert\hmid \gpair{M,N}}=&
- \semo{\hypert\hmid M}; \semo{\hypert\hmid N}\enspace,\\
- \semoi{\hypert\hmid \gpair{M,N}} =&
- \semoi{\hypert\hmid M}\cup \semoi{\hypert\hmid N}\enspace,
-\end{align*}
- \item[$\wedge\elim_a$] 
-\begin{align*}
- \semo{\hypert\hmid \pi_a^\g(M)}=&\semo{\hypert\hmid M}\enspace,\\
- \semoi{\hypert\hmid\pi_a^\g(M)}=&\semoi{\hypert\hmid M}\enspace,
 \end{align*}
  \item[${\brac{i}}\bot\elim$] 
  \item[$\brac i\supset\intro$] 
