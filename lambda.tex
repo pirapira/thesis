@@ -340,8 +340,8 @@ We define local terms\index{term!local}~$\term$ by BNF:
 \end{align*}
 where $x$ is a variable and $c$ is a channel.
 All variable occurrences (including those in $\Gamma$)
-except the first clause are
-binding.
+except the first clause are binding.
+A closed local term has no free variables.  \fix{what is a free variable?}
 
 A global term is a partial mapping from processes to local
 terms.  For example, a global term $\{0\mapsto \lambda x.x, 1\mapsto
@@ -599,14 +599,10 @@ $
   \label{fig:typed2}
  \end{sidewaysfigure}
 
-
 \subsection{Reduction}
 
-\fix{somewhere, define closed global terms}
 A closed global term~$\m M$ is \textit{of} type~$\m\varphi$ iff there is
-a derivation of
-$\tr
-\tj{\m M}{\m\varphi}$.
+a derivation of $\tr \tj{\m M}{\m\varphi}$.
 A pure term\index{pure term|see{term}}\index{term!pure} is a term
 without $\comod c c$ or $\reader c$.
 A hyperterm\index{hyperterm}~$\hypert$ is a nonempty sequence of global terms.
