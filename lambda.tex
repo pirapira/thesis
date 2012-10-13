@@ -236,30 +236,31 @@ $[0]((\varphi\supset\psi)\vee(\psi\supset\varphi))$ is provable (Figure~\ref{fig
 \ruleskip
 %% axiom
   \UnaryRule{}{$[i]$Ax}
-   {$[i]\varphi,\Gamma\vdash [i]\varphi$}
+   {$[i]\phi,\Gamma\vdash [i]\phi$}
    \hfill
 %% bot elim
  \UnaryRule{$\hyper\hmid\Gamma\vdash[i]\bot$}
    {$[i]\bot\elim$}
-   {$\hyper\hmid\Gamma\vdash[i]\varphi$}
+   {$\hyper\hmid\Gamma\vdash[i]\phi$}
    \vskip 2mm
 %% local imp intro
-  \UnaryRule{$\hyper\hmid[i]\varphi,\Gamma\vdash [i]\psi$}
+  \UnaryRule{$\hyper\hmid[i]\varphi,\G\vdash [i]\psi$}
   {$[i]\supset\intro$}
-  {$\hyper\hmid\Gamma\vdash [i](\varphi\supset \psi)$}
+  {$\hyper\hmid\G\vdash [i](\varphi\supset \psi)$}
   \hfill
 %% local imp elim
   \BinaryRule
-  {$\hyper\hmid\Gamma\vdash [i](\varphi\supset\psi)$}
-  {$\hyper\hmid\Gamma\vdash [i]\varphi$}
+  {$\hyper\hmid\G,\D_0\vdash [i](\phi\imp\psi)$}
+  {$\hyper\hmid\G,\D_1\vdash [i]\phi$}
   {$[i]\supset\elim$}
-  {$\hyper\hmid\Gamma\vdash [i]\psi$}
+  {$\hyper\hmid\G,\D_0,\D_1\vdash [i]\psi$}
    \vskip 2mm
 %% local conj intro
-  \BinaryRule{$\hyper\hmid\Gamma\vdash [i]\varphi$}
-   {$\hyper\hmid\Gamma\vdash [i]\psi$}
-   {$[i]\wedge\intro$}
-   {$\hyper\hmid\Gamma\vdash [i](\varphi\wedge\psi)$}
+ \BinaryRule
+ {$\hyper\hmid\G,\D_0\vdash [i]\phi$}
+ {$\hyper\hmid\G,\D_1\vdash [i]\psi$}
+ {$[i]\wedge\intro$}
+ {$\hyper\hmid\G,\D_0,\D_1\vdash [i](\phi\land\psi)$}
    \vskip 2mm
 %% local conj elim
   \UnaryRule{$\hyper\hmid\Gamma\vdash [i](\varphi\wedge\psi)$}
@@ -282,11 +283,11 @@ $[0]((\varphi\supset\psi)\vee(\psi\supset\varphi))$ is provable (Figure~\ref{fig
 \vskip 2mm
 %% local disj elim
    \TrinaryRule
-   {$\hyper\hmid\Gamma\vdash[i](\varphi\vee\psi)$}
-   {$\hyper\hmid[i]\varphi, \Gamma\vdash[i]\theta$}
-   {$\hyper\hmid[i]\psi,    \Gamma\vdash[i]\theta$}
+   {$\hyper\hmid\G,\D_0\vdash[i](\phi\vee\psi)$}
+   {$\hyper\hmid[i]\varphi, \G,\D_1\vdash[i]\theta$}
+   {$\hyper\hmid[i]\psi,    \G,\D_2\vdash[i]\theta$}
    {$[i]\vee\elim$}
-   {$\hyper\hmid         \Gamma\vdash[i]\theta$}
+   {$\hyper\hmid         \G,\D_0,\D_1,\D_2\vdash[i]\theta$}
 \vskip 2mm
 \caption[The underlying logic \fix{of what}.]
  {The underlying logic.
@@ -473,19 +474,21 @@ annotated as in Figure~\ref{fig:typed}.
    {$\hypert\hmid\tj x{[i]\varphi},\Gamma\tr \tj {\imapsto{M}}{[i]\psi}$}
    {}
    {$\hypert\hmid\Gamma\tr \tj{\imapsto{\lambda x.M}}{[i](\varphi\supset\psi)}$}
-                       \hfill
+                       \ruleskip
 %% local imp elim
-  \BinaryRule{$\hypert_0\hmid\Gamma \tr \tj {\imapsto{M}}{[i](\varphi\supset \psi)}$}
-  {$\hypert_1\hmid\Gamma\tr \tj {\imapsto{N}}{[i]\varphi}$}
-  {}
-  {$\cotuple{\hypert_0,\hypert_1}\hmid\Gamma\tr \tj{\imapsto{MN}}{[i]\psi}$}
-                       \vskip 2mm
+ \BinaryRule
+ {$\hypert_0\hmid\G,\D_0 \tr \tj {\imapsto{M}}{[i](\varphi\supset \psi)}$}
+ {$\hypert_1\hmid\G,\D_1 \tr \tj {\imapsto{N}}{[i]\varphi}$}
+ {}
+ {$\cotuple{\hypert_0,\hypert_1}\hmid\G,\D_0,\D_1\tr \tj{\imapsto{MN}}{[i]\psi}$}
+                       \ruleskip
 %% local conj intro
-\BinaryRule{$\hypert_0\hmid\Gamma\tr \tj {\imapsto{M}}{[i]\varphi}$}
-   {$\hypert_1\hmid\Gamma\tr \tj {\imapsto{N}}{[i]\psi}$}
-   {}
-   {$\cotuple{\hypert_0,\hypert_1}\hmid\Gamma\tr
-     \tj{\imapsto{\lpair{M,N}}}{[i](\varphi\wedge\psi)}$}
+ \BinaryRule
+ {$\hypert_0\hmid\G,\D_0\tr \tj {\imapsto{M}}{[i]\varphi}$}
+ {$\hypert_1\hmid\G,\D_1\tr \tj {\imapsto{N}}{[i]\psi}$}
+ {}
+ {$\cotuple{\hypert_0,\hypert_1}\hmid\G,\D_0,\D_1\tr
+ \tj{\imapsto{\lpair{M,N}}}{[i](\varphi\land\psi)}$}
    \vskip 2mm
 %% local conj elim
   \UnaryRule
@@ -511,11 +514,11 @@ annotated as in Figure~\ref{fig:typed}.
 \vskip 2mm
 %% local disj elim
 \TrinaryRule
-   {$\hypert_0\hmid\Gamma\tr \tj{\imapsto{M}}{[i](\varphi\vee\psi)}$}
-   {$\hypert_1\hmid\tj x{[i]\phi},\G\tr \tj{\imapsto{N_0}}{[i]\theta}$}
-   {$\hypert_2\hmid\tj y{[i]\psi},\G\tr \tj{\imapsto{N_1}}{[i]\theta}$}
+   {$\hypert_0\hmid\G,\D_0\tr \tj{\imapsto{M}}{[i](\phi\lor\psi)}$}
+   {$\hypert_1\hmid\tj x{[i]\phi},\G,\D_1\tr \tj{\imapsto{N_0}}{[i]\theta}$}
+   {$\hypert_2\hmid\tj y{[i]\psi},\G,\D_2\tr \tj{\imapsto{N_1}}{[i]\theta}$}
    {}
-   {$\cotuple{\cotuple{\hypert_0,\hypert_1},\hypert_2}\hmid\Gamma \tr
+   {$\cotuple{\cotuple{\hypert_0,\hypert_1},\hypert_2}\hmid\G,\D_0,\D_1,\D_2 \tr
  \tj{\imapsto{\mat M x {N_0} y {N_1}}}{[i]\theta}$}
 \vskip 2mm
  \caption[Term assignment of \lgd.]
@@ -724,7 +727,7 @@ C[\bullet] N \mid
 \lpair {M, C[\bullet]}\mid
 \pi^\square_i{C[\bullet]}\mid
 \mat M x N y {C[\bullet]}\mid\\ &
-\mat  {C[\bullet]} x N y O\mid \\&
+\mat  {C[\bullet]} x N y O\mid 
 \mat  M x {C[\bullet]} y O
 \end{align*}
 \end{itemize}
