@@ -217,13 +217,11 @@ $[0]((\varphi\supset\psi)\vee(\psi\supset\varphi))$ is provable (Figure~\ref{fig
    \ruleskip
 %% global conj intro
  \BinaryRule
- {$\hyper\hmid\G\tr(\phi_i)_{i\in I}$}
- {$\hyper\hmid\G\tr(\psi_j)_{j\in J}$}
+ {$\hyper\hmid\G,\D_0\tr(\phi_i)_{i\in I}$}
+ {$\hyper\hmid\G,\D_1\tr(\psi_j)_{j\in J}$}
  {$\wedge\intro$}
- {$\hyper\hmid\G\tr(\phi_k\land\psi_k)_{k\in I\cap J}\sqcup
+ {$\hyper\hmid\G,\D_0,\D_1\tr(\phi_k\land\psi_k)_{k\in I\cap J}\sqcup
  (\phi_i)_{i\in I\setminus J}\sqcup (\psi_j)_{j\in J\setminus I}$}
-
- \fix{explain sqcup}
  \ruleskip
 %% global conj elim
  \UnaryRule
@@ -254,13 +252,6 @@ $[0]((\varphi\supset\psi)\vee(\psi\supset\varphi))$ is provable (Figure~\ref{fig
   {$\hyper\hmid\G,\D_1\vdash [i]\phi$}
   {$[i]\supset\elim$}
   {$\hyper\hmid\G,\D_0,\D_1\vdash [i]\psi$}
-   \vskip 2mm
-%% local conj intro
- \BinaryRule
- {$\hyper\hmid\G,\D_0\vdash [i]\phi$}
- {$\hyper\hmid\G,\D_1\vdash [i]\psi$}
- {$[i]\wedge\intro$}
- {$\hyper\hmid\G,\D_0,\D_1\vdash [i](\phi\land\psi)$}
    \vskip 2mm
 %% local conj elim
   \UnaryRule{$\hyper\hmid\Gamma\vdash [i](\varphi\wedge\psi)$}
@@ -306,6 +297,8 @@ $[0]((\varphi\supset\psi)\vee(\psi\supset\varphi))$ is provable (Figure~\ref{fig
  There are no disjunction elimination in the inner global rules lest it
  is difficult (if possible) to translate the rule into
  waitfree computation.
+ A rule $[i]\wedge\intro$ is omitted because the inner global rule
+ $\wedge\intro$ is more general.
  }
 \label{fig:logic}
 \end{figure}
@@ -347,6 +340,9 @@ A global term is a partial mapping from processes to local
 terms.  For example, a global term $\{0\mapsto \lambda x.x, 1\mapsto
 y\}$ maps process~$0$ to local term $\lambda x.x$ and process~$1$ to
 local term $y$.
+We can substitute a local term for a variable in a global term.
+The substitution is defined elmeentwise: i.e.,
+the result of the substitution $\m{M}[N/x]$ maps a process~$i$ to $(\m{M}(i))[N/x]$.
 A closed global term is a global term whose image only contains closed local terms.
 Informally, the local terms represent parts of
 programs executed by the processes.
@@ -369,7 +365,7 @@ variable has the same type even if it appears in different components.
 The typing rules for the terms are given in Fig.~\ref{termassign}.
 For example, the proof in Figure~\ref{fig:dummett-modal} can be
 annotated as in Figure~\ref{fig:typed}.
-\begin{sidewaysfigure}
+\begin{figure}
  \centering
 \AxiomC{}
 \LL{[0]Ax}
@@ -395,7 +391,7 @@ annotated as in Figure~\ref{fig:typed}.
 \DisplayProof
  \caption{An example of a typed term in \lgd.}
  \label{fig:typed}
-\end{sidewaysfigure}
+\end{figure}
 
 \begin{figure}[p]
  \small
@@ -453,7 +449,15 @@ annotated as in Figure~\ref{fig:typed}.
  {\m M}{\m\theta}$} %IE
 \hfill
 %% conj intro
- \fix{conj intro}
+ \BinaryRule
+ {$\hypert\hmid\G,\D_0\tr\tj{(M_i)_{i\in I}}{(\phi_i)_{i\in I}}$}
+ {$\hypert\hmid\G,\D_1\tr\tj{(N_j)_{j\in J}}{(\psi_j)_{j\in J}}$}
+ {}
+ {$\cotuple{\hypert_0,\hypert_1}\hmid \G,\D_0,\D_1\tr\tj
+ {(\lpair{M_k,N_k})_{k\in I\cap J}\sqcup (M_i)_{i\in I\setminus J}\sqcup
+ (N_j)_{j\in J\setminus I}}
+ {(\phi_k\land\psi_k)_{k\in I\cap J}\sqcup
+ (\phi_i)_{i\in I\setminus J}\sqcup (\psi_j)_{j\in J\setminus I}}$}
    \vskip 2mm
 %% conj elim
  \fix{conj elim rule}
@@ -482,13 +486,6 @@ annotated as in Figure~\ref{fig:typed}.
  {}
  {$\cotuple{\hypert_0,\hypert_1}\hmid\G,\D_0,\D_1\tr \tj{\imapsto{MN}}{[i]\psi}$}
                        \ruleskip
-%% local conj intro
- \BinaryRule
- {$\hypert_0\hmid\G,\D_0\tr \tj {\imapsto{M}}{[i]\varphi}$}
- {$\hypert_1\hmid\G,\D_1\tr \tj {\imapsto{N}}{[i]\psi}$}
- {}
- {$\cotuple{\hypert_0,\hypert_1}\hmid\G,\D_0,\D_1\tr
- \tj{\imapsto{\lpair{M,N}}}{[i](\varphi\land\psi)}$}
    \vskip 2mm
 %% local conj elim
   \UnaryRule
@@ -606,7 +603,11 @@ a derivation of $\tr \tj{\m M}{\m\varphi}$.
 A pure term\index{pure term|see{term}}\index{term!pure} is a term
 without $\comod c c$ or $\reader c$.
 A hyperterm\index{hyperterm}~$\hypert$ is a nonempty sequence of global terms.
-\fix{define when a hyperterm is typeable}
+From a hypersequent $\G_0\tr\tj{\m{M_0}}{\m{\phi_0}}\hmid \cdots \hmid
+\G_n\tr\tj{\m{M_n}}{\m{\phi_n}}$,
+we can construct a hyperterm $(\m{M_i})_{0\le i \le n}$.
+The hyperterm $(\m{M_i})_{0\le i \le n}$ is typeable when the
+aforementioned hypersequent is typeable for some $\G_i$'s and $\m{\phi_i}$'s.
 A store\index{store} maps a channel to a pure term or $\epsilon$.
 For a store~$\sigma$, the updated store $\sigma[c\mapsto x]$ maps $c$ to
 $x$ and $d$ to $\sigma(d)$ if $d$ is different from~$c$.
@@ -623,7 +624,6 @@ To complete the definition of \lgd,
  We consider terms up to $\alpha$-equivalence and implicitly
  require all instances
  of $\rightsquigarrow_\spadesuit$ to avoid free variable captures.
-\fix{K}
 
 \begin{definition}[Basic reduction]
  The basic reduction $\breduce$ is the smallest congruence containing
@@ -1141,8 +1141,6 @@ a typed protocol\index{typed protocol} has:
 We define when a protocol solves a typed
 input-output problem.
 These definitions are transferred from \citet{Saks:1993vq}.
-
-\fix{define closed local term}
 
 Let $\processes$ be $\{0,\ldots, n-1\}$ and fix a typed protocol.
 A program variable content\index{program variable content} for $i\in\processes$ is a
