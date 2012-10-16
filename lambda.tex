@@ -186,20 +186,22 @@ $[0]((\varphi\supset\psi)\vee(\psi\supset\varphi))$ is provable (Figure~\ref{fig
  {$\hyper^+$}
  {EW}
  {$\hyper^+\hmid\Gamma\vdash \m\varphi$}
- \vskip 2mm
+ \ruleskip
+ %
  \UnaryRule
  {$\hyper\hmid\Gamma\vdash \m\phi\hmid\Gamma\vdash \m\phi$}
  {EC}
  {$\hyper\hmid\Gamma\vdash \m\phi$}
  \hfill
+ %
  \UnaryRule
  {$\hyper\hmid\Gamma\vdash \m\varphi\hmid\Delta\vdash \m\psi\hmid \hyper'$}
  {EE}
  {$\hyper\hmid\Delta\vdash \m\psi   \hmid\Gamma\vdash \m\varphi\hmid
    \hyper'$}
- \vskip 2mm
+ \ruleskip
 \textbf{Inner Global Rules}
-\vskip 2mm
+\ruleskip
 %% structural
    \UnaryRule
    {$\hyper\hmid\Gamma,[i]\phi,[j]\psi,\Delta\tr\m\theta$}
@@ -240,7 +242,7 @@ $[0]((\varphi\supset\psi)\vee(\psi\supset\varphi))$ is provable (Figure~\ref{fig
  \UnaryRule{$\hyper\hmid\Gamma\vdash[i]\bot$}
    {$[i]\bot\elim$}
    {$\hyper\hmid\Gamma\vdash[i]\phi$}
-   \vskip 2mm
+   \ruleskip
 %% local imp intro
   \UnaryRule{$\hyper\hmid[i]\varphi,\G\vdash [i]\psi$}
   {$[i]\supset\intro$}
@@ -252,7 +254,7 @@ $[0]((\varphi\supset\psi)\vee(\psi\supset\varphi))$ is provable (Figure~\ref{fig
   {$\hyper\hmid\G,\D_1\vdash [i]\phi$}
   {$[i]\supset\elim$}
   {$\hyper\hmid\G,\D_0,\D_1\vdash [i]\psi$}
-   \vskip 2mm
+   \ruleskip
 %% local conj elim
   \UnaryRule{$\hyper\hmid\Gamma\vdash [i](\varphi\wedge\psi)$}
    {$[i]\wedge\elim_0$}
@@ -261,7 +263,7 @@ $[0]((\varphi\supset\psi)\vee(\psi\supset\varphi))$ is provable (Figure~\ref{fig
   \UnaryRule{$\hyper\hmid\Gamma\vdash[i](\varphi\wedge\psi)$}
    {$[i]\wedge\elim_1$}
    {$\hyper\hmid\Gamma\vdash[i]\psi$}
-\vskip 2mm
+\ruleskip
 %% local disj intro
   \UnaryRule
    {$\hyper\hmid\Gamma\vdash[i]\varphi$}
@@ -271,7 +273,7 @@ $[0]((\varphi\supset\psi)\vee(\psi\supset\varphi))$ is provable (Figure~\ref{fig
   \UnaryRule{$\hyper\hmid\Gamma\vdash[i]\psi$}
    {$[i]\vee\intro_1$}
    {$\hyper\hmid\Gamma\vdash[i](\varphi\vee\psi)$}
-\vskip 2mm
+\ruleskip
 %% local disj elim
    \TrinaryRule
    {$\hyper\hmid\G,\D_0\vdash[i](\phi\vee\psi)$}
@@ -279,7 +281,7 @@ $[0]((\varphi\supset\psi)\vee(\psi\supset\varphi))$ is provable (Figure~\ref{fig
    {$\hyper\hmid[i]\psi,    \G,\D_2\vdash[i]\theta$}
    {$[i]\vee\elim$}
    {$\hyper\hmid         \G,\D_0,\D_1,\D_2\vdash[i]\theta$}
-\vskip 2mm
+\ruleskip
 \caption[The underlying logic \fix{of what}.]
  {The underlying logic.
  Metavariables $\m\phi$ and $\m\psi$ stand for global formulae.
@@ -397,7 +399,7 @@ annotated as in Figure~\ref{fig:typed}.
  \small
 \centering
 \textbf{External Rules}
-\vskip 2mm
+\ruleskip
 %% communication
 \BinaryRule
    {$\hypert_0\hmid\G\tr\tj{\imapsto{M}}{[i]\phi}$}
@@ -406,29 +408,28 @@ annotated as in Figure~\ref{fig:typed}.
    {$\cotuple{\hypert_0,\hypert_1}\hmid\Gamma\tr\tj{\imapsto{(\comodL)M}}{[i]\psi}\hmid
    \Delta\tr\tj{\jmapsto{(\comodR)N}}{[j]\phi}$}
    where $c$ and $d$ are fresh.
-\vskip 2mm
+\ruleskip
 %% external structural
  \UnaryRule
  {$\hypert^+$}
  {}
  {$\hypert^+\hmid\Gamma\tr \tj {\{\}} {\m\phi}$}
-\vskip 2mm
+\ruleskip
  \AxiomC{$\hypert\hmid \G\tr\tj{(M_i)_{i\in I}}{(\phi_i)_{i\in I}}\hmid
- \G\tr\tj{(N_i)_{i\in I}}{(\psi_i)_{i\in I}}$}
+ \G\tr\tj{(N_i)_{i\in I}}{(\phi_i)_{i\in I}}$}
  \UnaryInfC{$\hypert\hmid
- \G\tr\tj{\cotuple{M_i',N_i'}}{(\phi'_i\lor\psi'_i)_{i\in I}}$}
+ \G\tr\tj{\cotuple{M_i',N_i'}}{(\phi_i)_{i\in I}}$}
  \DisplayProof \\where $I$ is a nonempty subset of $\processes$ and, for
- each $i\in\processes$, the pair of pairs $\tuple{(M_i',\phi'_i), (N_i',\psi'_i)}$
- is identical to either $\tuple{(M_i,\phi_i), (N_i,\psi_i)}$
- or $\tuple{(N_i,\psi_i), (M_i,\phi_i)}$.
+ each $i\in\processes$, the pairs $\cotuple{M_i', N_i'}$
+ is identical to either $\cotuple{M_i, N_i}$ or $\cotuple{N_i, M_i}$.
 \ruleskip
  \UnaryRule
  {$\hypert\hmid\Gamma\tr M\colon\m\varphi\hmid\Delta\tr N\colon \m\psi\hmid \hypert'$}
  {}
  {$\hypert\hmid\Delta\tr N\colon\m\psi   \hmid\Gamma\tr M\colon \m\varphi\hmid \hypert'$}
- \vskip 2mm
+ \ruleskip
 \textbf{Inner Global Rules}
-   \vskip 2mm
+   \ruleskip
  % internal contraction
    \UnaryRule
    {$\hypert\hmid \Gamma\tr\tj {\m M} {\m\varphi}$}
@@ -441,7 +442,7 @@ annotated as in Figure~\ref{fig:typed}.
    {}
    {$\hypert \hmid \tj{x}{[i]\phi}, \Gamma\tr \tj{\m{M}[x/y]}{\m\psi}$}
  \fix{define substitution on global terms}
-\vskip 2mm
+\ruleskip
 \UnaryRule
    {$\hypert\hmid\Gamma,\tj x{[i]\phi},\tj y{[j]\psi},\Delta\tr
    \tj {\m M}{\m\theta}$}{}
@@ -458,12 +459,16 @@ annotated as in Figure~\ref{fig:typed}.
  (N_j)_{j\in J\setminus I}}
  {(\phi_k\land\psi_k)_{k\in I\cap J}\sqcup
  (\phi_i)_{i\in I\setminus J}\sqcup (\psi_j)_{j\in J\setminus I}}$}
-   \vskip 2mm
+   \ruleskip
 %% conj elim
- \fix{conj elim rule}
+\UnaryRule
+ {$\hypert\hmid\G\tr\tj{(M_i)_{i\in I}}{(\phi_i)_{i\in I}}$}
+ {}
+ {$\hypert\hmid\G\tr\tj{(M_j)_{j\in J}}{(\phi_j)_{j\in J}}$}
+ where $J$ is a subset of $I$.
 \ruleskip
 \textbf{Inner Local Rules}
-\vskip 2mm
+\ruleskip
 %% axiom
   \UnaryRule{}{}{$\tj {x}{[i]\varphi}, \Gamma\tr \tj
  {\imapsto x}{[i]\varphi}$}
@@ -472,7 +477,7 @@ annotated as in Figure~\ref{fig:typed}.
  \UnaryRule
    {$\hypert\hmid\Gamma\tr \tj {\imapsto M}{[i]\bot}$} {}
    {$\hypert\hmid\Gamma\tr \tj{\imapsto{\abort}}{[i]\varphi}$}
-   \vskip 2mm
+   \ruleskip
 %% local imp intro
   \UnaryRule
    {$\hypert\hmid\tj x{[i]\varphi},\Gamma\tr \tj {\imapsto{M}}{[i]\psi}$}
@@ -486,7 +491,7 @@ annotated as in Figure~\ref{fig:typed}.
  {}
  {$\cotuple{\hypert_0,\hypert_1}\hmid\G,\D_0,\D_1\tr \tj{\imapsto{MN}}{[i]\psi}$}
                        \ruleskip
-   \vskip 2mm
+   \ruleskip
 %% local conj elim
   \UnaryRule
    {$\hypert\hmid\Gamma\tr \tj{\imapsto{M}}{[i](\phi\land\psi)}$}
@@ -497,7 +502,7 @@ annotated as in Figure~\ref{fig:typed}.
    {$\hypert\hmid\Gamma\tr \tj{\imapsto{M}}{[i](\varphi\wedge\psi)}$}
    {}
    {$\hypert\hmid\Gamma\tr \tj{\imapsto{\lpir M}}{[i]\psi}$}
-\vskip 2mm
+\ruleskip
 %% local disj intro
   \UnaryRule
    {$\hypert\hmid\Gamma\tr \tj{\imapsto{M}}{[i]\varphi}$}
@@ -508,7 +513,7 @@ annotated as in Figure~\ref{fig:typed}.
    {$\hypert\hmid\Gamma\tr \tj{\imapsto{M}}{[i]\psi}$}
    {}
    {$\hypert\hmid\Gamma\tr \tj{\imapsto{\linr{M}}}{[i](\varphi\vee\psi)}$}
-\vskip 2mm
+\ruleskip
 %% local disj elim
 \TrinaryRule
    {$\hypert_0\hmid\G,\D_0\tr \tj{\imapsto{M}}{[i](\phi\lor\psi)}$}
@@ -517,7 +522,7 @@ annotated as in Figure~\ref{fig:typed}.
    {}
    {$\cotuple{\cotuple{\hypert_0,\hypert_1},\hypert_2}\hmid\G,\D_0,\D_1,\D_2 \tr
  \tj{\imapsto{\mat M x {N_0} y {N_1}}}{[i]\theta}$}
-\vskip 2mm
+\ruleskip
  \caption[Term assignment of \lgd.]
  {Term assignment.
  Metavariable $\m M$ stands for global terms.
@@ -535,7 +540,8 @@ annotated as in Figure~\ref{fig:typed}.
  \label{termassign}
 \end{figure}
 
-For example, the global term
+ \begin{example}
+The global term
 $
 \{0\mapsto
 \cotuple{\lpair{(\comodL)x, x}, x}
@@ -543,56 +549,166 @@ $
 \cotuple{\lpair{(\comodR)y, y}, y}
 \}$
  can be typed (Figure~\ref{fig:typed2}).
-
- \fix{introduce multiplicative and additive contexts in the rules}
+ \end{example}
 
  \begin{sidewaysfigure}
   \centering
- \AxiomC{$\tj{x}{[0]X}\tr\tj{\{0\mapsto x\}}{[0]X}$}
- \AxiomC{$\tj{y}{[1]Y}\tr \tj{\{1\mapsto y\}}{[1]Y}$}
- \LL{com}
+   \begin{flushleft}
+    \textsf{Part A}
+   \end{flushleft}
+  \AxiomC{}
+  \LL{Ax}
+  \UnaryInfC{$\tj{x}{[0]X}\tr\tj{x}{[0]X}$}
+  \AxiomC{$\vdots$}
+  \LL{$\wedge\intro$}
+  \BinaryInfC{$
+  \tj{x}{[0]X}\tr\tj{\{0\mapsto \lpair{(\comodL)x,x}\}}{[0](Y\land X)}\hmid
+  \tj{y}{[1]Y}\tr\tj{\{1\mapsto (\comodR)y\}}{[1]X}
+  $}
+  \AxiomC{}
+  \LL{Ax}
+  \UnaryInfC{$\tj{y}{[1]Y}\tr\tj{y}{[1]Y}$}
+  \LL{$\wedge\intro$}
+  \BinaryInfC{$
+  \tj{x}{[0]X}\tr\tj{\{0\mapsto \lpair{(\comodL)x,x}\}}{[0](Y\land X)}\hmid
+  \tj{y}{[1]Y}\tr\tj{\{1\mapsto \lpair{(\comodR)y,y}\}}{[1](X\land Y)}
+  $}
+  \LL{$[0]\vee\intro$}
+  \UnaryInfC{$
+  \tj{x}{[0]X}\tr\tj{\{0\mapsto
+  \linl{\lpair{(\comodL)x,x}}\}}{[0](Y\land X)\lor X}\hmid
+  \tj{y}{[1]Y}\tr\tj{\{1\mapsto \lpair{(\comodR)y,y}\}}{[1](X\land Y)}
+  $}
+  \LL{$[1]\vee\intro$}
+  \UnaryInfC{$
+  \tj{x}{[0]X}\tr\tj{\{0\mapsto
+  \linl{\lpair{(\comodL)x,x}}\}}{[0](Y\land X)\lor X}\hmid
+  \tj{y}{[1]Y}\tr\tj{\{1\mapsto \inr{\lpair{(\comodR)y,y}}\}}{[1](X\land
+  Y)\lor Y}
+  $}
+  \DisplayProof
+  \begin{flushleft}
+   \textsf{Part B}
+  \end{flushleft}
+  \AxiomC{}
+  \LL{Ax}
+  \UnaryInfC{$\tj{y}{[1]Y}\tr\tj{y}{[1]Y}$}
+  \LL{$[1]\vee\intro$}
+  \UnaryInfC{$\tj{y}{[1]Y}\tr\tj{\inr{y}}{[1]((X\land Y)\lor Y)}$}
+  \AxiomC{$\vdots$}
+  \LL{$\wedge\intro$}
+  \BinaryInfC{$
+  \tj{x}{[0]X}\tr\tj{\{0\mapsto
+  \linl{\lpair{(\comodL)x,x}},
+  1\mapsto\inr{y}
+  \}}{\{0\mapsto (Y\land X)\lor X, 1\mapsto (X\land Y)\lor Y\}}\hmid
+  $}
+  \noLine
+  \UnaryInfC{$
+  \tj{y}{[1]Y}\tr\tj{\{1\mapsto \inr{\lpair{(\comodR)y,y}}\}}{[1](X\land
+  Y)\lor Y}
+  $}
+  \AxiomC{}
+  \LL{Ax}
+  \UnaryInfC{$\tj{x}{[0]X}\tr\tj{x}{[0]X}$}
+  \LL{$[0]\vee\intro$}
+  \UnaryInfC{$\tj{\inr{x}}{[0]X}\tr\tj{x}{[0]((Y\land X)\lor X)}$}
+  \LL{$\wedge\intro$}
+  \BinaryInfC{$
+  \tj{x}{[0]X}, \tj{y}{[1]Y}\tr
+  \tj{\{
+  0\mapsto \inl{\lpair{(\comodL)x,x}}, 1\mapsto \inr{y}
+  \}}
+  {\{0\mapsto (Y\land X)\lor X, 1\mapsto (X\land Y)\lor Y\}}
+  \hmid
+  $}
+  \noLine
+  \UnaryInfC{
+  $
+  \tj{x}{[0]X}, \tj{y}{[1]Y}\tr
+  \tj
+  {\{
+  0\mapsto \inr{x},
+  1\mapsto \inl{\lpair{(\comodR)y, y}}
+  \}}
+  {\{0\mapsto
+  (Y\land X)\lor X
+  , 1\mapsto
+  (X\land Y)\lor Y
+  \}}
+  \phantom{\hmid}$
+  }
+  \DisplayProof
+  \begin{flushleft}
+    \textsf{Whole Derivation}
+  \end{flushleft}
+  \AxiomC{}
+  \LL{Ax}
+ \UnaryInfC{$\tj{x}{[0]X}\tr\tj{\{0\mapsto x\}}{[0]X}$}
+  \AxiomC{}
+  \LL{Ax}
+ \UnaryInfC{$\tj{y}{[1]Y}\tr \tj{\{1\mapsto y\}}{[1]Y}$}
+ \LL{01-com}
  \BinaryInfC{
  $
   \tj{x}{[0]X}\tr\tj{\{0\mapsto (\comodL)x\}}{[0]Y} \hmid
   \tj{y}{[1]Y}\tr\tj{\{1\mapsto (\comodR)y\}}{[1]X}$
  }
+  \LL{\textsf{Part A}}
  \doubleLine
+  \UnaryInfC{$
+  \tj{x}{[0]X}\tr\tj{\{0\mapsto\inl{\lpair{(\comodL)x,x}}\}}{[0]((Y\land
+  X)\lor X)}
+  \hmid
+  \tj{y}{[1]Y}\tr\tj{\{1\mapsto\inl{\lpair{(\comodR)y,y}}\}}{[1]((X\land
+  Y)\lor Y)}
+  $}
+  \LL{\textsf{Part B}}
+  \doubleLine
  \UnaryInfC{
  $
  \tj{x}{[0]X}, \tj{y}{[1]Y}\tr
  \tj{\{
-  0\mapsto \lpair{(\comodL)x,x}, 1\mapsto y
+  0\mapsto \inl{\lpair{(\comodL)x,x}}, 1\mapsto \inr{y}
   \}}
-  {[0\mapsto (Y\land X), 1\mapsto Y]}
+  {\{0\mapsto (Y\land X)\lor X, 1\mapsto (X\land Y)\lor Y\}}
   \hmid
+ $
+ }
+  \noLine
+  \UnaryInfC{
+  $
   \tj{x}{[0]X}, \tj{y}{[1]Y}\tr
   \tj
   {\{
-  0\mapsto x,
-  1\mapsto \cotuple{\lpair{(\comodR)y, y}, y}
+  0\mapsto \inr{x},
+  1\mapsto \inl{\lpair{(\comodR)y, y}}
   \}}
-  {0\mapsto
-  X
+  {\{0\mapsto
+  (Y\land X)\lor X
   , 1\mapsto
-  X\land Y
+  (X\land Y)\lor Y
+  \}}
+  \phantom{\hmid}$
   }
- $
- }
   \LL{EC}
   \UnaryInfC{$
   \tj{x}{[0]X}, \tj{y}{[1]Y}\tr\tj
   {\{
-  0\mapsto \cotuple{\lpair{(\comodL)x,x},x},
-  1\mapsto \cotuple{\lpair{(\comodR)y,y},y}
+  0\mapsto \cotuple{\inl{\lpair{(\comodL)x,x}},\inr{x}},
+  1\mapsto \cotuple{\inl{\lpair{(\comodR)y,y}},\inr{y}}
   \}}
-  {
+  {\{
   0\mapsto ((Y\land X)\lor X),
   1\mapsto ((X\land Y)\lor Y)
+  \}
   }
   $
   }
  \DisplayProof
-  \caption{An example of a type derivation.}
+  \ruleskip
+  \fix{just typed so check typos}
+  \caption{An example of a typing derivation.}
   \label{fig:typed2}
  \end{sidewaysfigure}
 
@@ -723,7 +839,7 @@ C[\bullet] N \mid
 \lpair {M, C[\bullet]}\mid
 \pi^\square_i{C[\bullet]}\mid
 \mat M x N y {C[\bullet]}\mid\\ &
-\mat  {C[\bullet]} x N y O\mid 
+\mat  {C[\bullet]} x N y O\mid
 \mat  M x {C[\bullet]} y O
 \end{align*}
 \end{itemize}
@@ -733,39 +849,41 @@ For example, $(\sigma, \cotuple{\abort,\abort})$ reduces to $(\sigma,
 
 In order to obtain the subformula property
  via proof normalization
-we add yet another kind of reduction rules called permutative reductions.
+we add yet another kind of reduction rules called permutative
+ reductions.
 \begin{definition}[Permutative reduction]
  The permutative reduction~$\preduce$ is the smallest congruence
  containing the followings:
 \begin{itemize}
  \small
- \item $\conf{}{ \left(\mat  M x N y O\right) P }\preduce$ \\
-       $\conf{}{ \mat M x {N P} y {O P} }$
- \item $\conf{}{ \pi^\square_d \left(\mat M x N y
-       O\right)}\preduce$\\
-       $\conf{}{ \mat M x
-       {\pi^\square_d N} y {\pi^\square_d O} }$
+ \item $\conf{}{\imapsto{ \left(\mat  M x N y O\right) P }}\preduce$ \\
+       $\conf{}{\imapsto{ \mat M x {N P} y {O P} }}$
+ \item $\conf{}{\imapsto{ \pi_d \left(\mat M x N y
+       O\right)}}\preduce$\\
+       $\conf{}{\imapsto{ \mat M x
+       {\pi_d N} y {\pi_d O} }}$
  \item {
-       $\conf{}{ \mat
+       $\conf{}{\imapsto{ \mat
                           {\left(\mat  M x N y O\right)}
                           u P v Q
-                      }\preduce$ \\
+                     } }\preduce$ \\
        $(\lstore,
-        \mathsf{match}^{\blacksquare}\,{M}\,\mathsf{of}\, \linl{x}. {
+       \{i\mapsto
+        \mathsf{match}\,{M}\,\mathsf{of}\, \linl{x}. {
                           {\left(\mat N u P v Q\right)}
        } /$ \\ \phantom{mmmmmmmmmmm}$
        \linr{y}. {\left(\mat  O u P v Q\right)}
-                      )
+                      \})
        $}
- \item $\conf{}{ \cotuple{M, N} P }\preduce
-        \conf{}{ \cotuple{MP, NP} }$
- \item $\conf{}{ \pi^\square_d\cotuple{M,N} }\preduce
-        \conf{}{ \cotuple{\pi^\square_d M, \pi^\square_d N} }$
- \item $\conf{}{ \mat {\cotuple{M,N}} x P y Q }\preduce$\\
-       $\conf{}{ \cotuple{
+ \item $\conf{}{ \imapsto{\cotuple{M, N} P} }\preduce
+        \conf{}{ \imapsto{\cotuple{MP, NP} }}$
+ \item $\conf{}{ \imapsto{\pi_d\cotuple{M,N} }}\preduce
+        \conf{}{ \imapsto{\cotuple{\pi_d M, \pi_d N}} }$
+ \item $\conf{}{ \imapsto{\mat {\cotuple{M,N}} x P y Q }}\preduce$\\
+       $\conf{}{ \imapsto{\cotuple{
                           \mat  M x P y Q,
                           \mat N x P y Q
-                        } }$
+                        }} }$
 \end{itemize}
 \end{definition}
 
@@ -778,6 +896,112 @@ A configuration~$\mathcal{C}$ is normal\index{normal} when there is no configura
 $\mathcal{D}$ with $\mathcal{C}\reduce \mathcal{D}$.
 A term~$M$ is normal\index{normal} when the configuration $\conf{}{M}$ is
 normal (the choice of $\lstore$ is irrelevant).
+
+\begin{example}
+ Here is an example of reductions.  We take the term shown in
+ Figure~\ref{fig:typed2}.
+ Below, an underlined subterm is a redex.  A redex is a subterm that
+ pattern-matches a reduction rule.
+ \begin{align*}
+  &\left(\{\}, \{
+  0\mapsto\cotuple{\lpair{\underline{(\comodL)x},x},x},
+  1\mapsto\cotuple{\lpair{           (\comodR)y ,y},y}
+  \right)
+  \\   \wreduce &
+  \left( \{d\mapsto x\},
+  \{
+  0\mapsto \cotuple{{\lpair{\underline{\reader c},  x}}, x},
+  1\mapsto \cotuple{           \lpair{(\comodR)y,y},y}
+  \}
+  \right)
+  \\ \rreduce &
+  \left( \{d\mapsto x\},
+  \{
+  0\mapsto \cotuple{\underline{\lpair{\abort,  x}}, x},
+  1\mapsto \cotuple{           \lpair{(\comodR)y,y},y}
+  \}
+  \right)
+  \\
+  \areduce &
+  \left(
+  \{d\mapsto x\},
+  \{
+  0\mapsto\underline{\cotuple{\abort,x}},
+  1\mapsto{\cotuple{\lpair{(\comodL)y,y},y}}
+  \}
+  \right)
+  \\
+  \areduce &
+  \left(\{d\mapsto x\},
+  \{
+  0\mapsto\linr{x},
+  1\mapsto\cotuple{\lpair{\underline{(\comodR)y},y},y}
+  \}
+  \right)
+  \\
+  \wreduce &
+  \left(
+  \{c\mapsto y, d\mapsto x\}
+  ,
+  \{
+  0\mapsto \linr{x},
+  1\mapsto \cotuple{\lpair{\underline{\reader d}, y}, y}
+  \}
+  \right)
+  \\
+  \rreduce &
+  \left(
+  \{c\mapsto y, d\mapsto x\}
+  ,
+  \{
+  0\mapsto \linr{x},
+  1\mapsto \underline{\cotuple{\lpair{x,y},y}}
+  \}
+  \right)
+  \\
+  \areduce &
+  \left(
+  \{c\mapsto y, d\mapsto x\}
+  ,
+  \{
+  0\mapsto \linr{x},
+  1\mapsto \linr{\lpair{x,y}}
+  \}
+  \right)
+ \end{align*}
+ The overall effect is the transfer of variable~$x$ from process~0 to
+ process~1.  In the beginning, $x$ only appeared in the process~0's
+ local term but not in process~1's local term.  In the end, the
+ variable~$x$ appears in both processes' local terms.
+ From the first line to the second line,
+ process~0's communication term succeeds in writing variable~$x$ to the
+ store under the channel~$d$.
+ From the second line to the third line, process~0 fails to read from
+ channel~$c$ so that a reader construct is turned into an $\abort$.
+ This failure occures because process~0 tries to read before process~1
+ writes.  In a different scheduling (or, evaluation strategy) such a
+ failure can be avoided.  The degree of nondeterminism is essential to
+ characterize waitfreedom later.
+ From the third line to the fourth line,
+ the $\abort$ in process~0's subterm is propagated so that a whole pair
+ containing $\abort$ is turned into $\abort$.
+ From the fourth line to the fifth line,
+ the aborted subterm in process~0's local term is thrown away: this is
+ the main functionality of the concurrent construction $\cotuple{t,t,}$.
+ From the fifth line to the sixth line,
+ process~1 writes to the store under channel~$c$.
+ From the sixth line to the seventh line,
+ process~1 reads what process~0 wrote.
+ In this case, the reader construct in process~1's local term does not
+ yield $\abort$ but a previous content of the store.
+ From the seventh line to the last line,
+ the right side component of $\cotuple{\lpair{x,y},y}$ is thrown away:
+ we chose to throw away the right hand side component when both sides
+ contain no $\abort$.  When we view the concurrent construction
+ $\cotuple{t,t}$, this asymmetry is strange, but it plays a significant
+ role in encoding waitfree computation in our calculus.
+\end{example}
+
 
 \subsection{Properties}
 
@@ -837,7 +1061,7 @@ resulting hyperterm.  And, even after reductions, the resulting
 hyperterm has a component not containing $\abort$.
 \end{proof}
 
-\fix{define $\m\phi[j/i]$}
+\fix{define $\m\phi[j/i]$ 10 min}
 
  \begin{proposition}
   \label{process-change}
@@ -856,8 +1080,10 @@ hyperterm has a component not containing $\abort$.
 
   \begin{proposition}
    \label{process-change-gen}
+   \fix{20 min to state}
   \end{proposition}
   \begin{proof}
+   \fix{fix proof 50 min}
    By induction on the height of derivation.
    All rules except com and EC rules are trivial because they do not interact
    with the modalities.  For EC rule, we have to apply the induction
@@ -899,12 +1125,30 @@ hyperterm has a component not containing $\abort$.
   \end{proof}
 
  \begin{proof}[of Proposition~\ref{process-change}]
-  Folloows from Proposition~\ref{process-change-gen}
+  Follows from Proposition~\ref{process-change-gen}
  \end{proof}
 
 \subsubsection{Strong Normalization}
+\newcommand{\sreduce}{\leadsto}
 
-\fix{define symmetric reductions, the other side of abort}
+For proving strong normalization, we use an auxiliary relation which is
+similar to the reduction $\reduce$, which is so similar that we denote
+the relation by $\leadsto$.  The $\leadsto$ relation (symmetric
+reduction) is also a
+congruence.  All reductions are symmetric reductions.
+In addition to reductions, symmetric reductions contain pairs like
+$\cotuple{M, N}\sreduce N$ when $N$ does not contain any~$\abort$,
+$\comodL$ or $\reader c$.
+Ordinary reductions are not symmetric because it allows
+$\conf{}{\imapsto{\cotuple{M,N}}}\areduce \conf{}{\imapsto{M}}$
+but not
+$\conf{}{\imapsto{\cotuple{M,N}}}\areduce \conf{}{\imapsto{N}}$%
+.  This asymmetricity allows us to encode waitfree
+computation in our calculus.  However, it is easier to prove strong
+normalization for the symmetric reductions.  When strong normalization
+for the symmetric reductions holds, the same property holds for the
+reductions because there are less pairs in reductions than in symmetric
+reductions.
 
 \begin{theorem}[Strong normalization]
  \label{first:sn}
@@ -979,8 +1223,10 @@ invariant inductively on the number of steps
        Thus, the invariant
        holds for $k+1$.
  \item a write reduction disappears;
- \item an $\abort$ reduction of the form $\cotuple{\abort, M}\areduce M$ \fix{fill}
- \item an $\abort$ reduction of the form $\cotuple{M, N}\areduce M$ \fix{fill}
+ \item an $\abort$ reduction of the form $\cotuple{\abort, M}\areduce M$
+       \fix{fill 20 min}
+ \item an $\abort$ reduction of the form $\cotuple{M, N}\areduce M$
+       \fix{fill 20 min}
  \item an $\abort$ reduction of the form
        $\hypc{}{C[\abort]} \areduce \hypc{}{\abort}$ can be translated
        either to a similar reduction or no reduction if the $\abort$ in
@@ -1031,7 +1277,9 @@ We can deal with the permutative reductions following de
  there are no infinite sequence of abort reductions.
 \end{proof}
 
-\fix{subformula property around here}
+\fix{subformula property around here state in 6min}
+
+\fix{prove subfmla in 90min}
 
 \section{Typed Waitfreedom}
 \label{waitfreedom}
@@ -1069,7 +1317,49 @@ $(\iota_i)_{i\in \processes}$, each process's output type $(o_i)_{i\in
 task $R\subseteq \prod_{i\in \processes}\left(\lterm(\iota_i)\right)\times
  \prod_{i\in \processes}\left(\lval(o_i)\right)$.
 
- \fix{example}
+\newcommand{\true}{\texttt{t\kern -1.2pt t}}
+\newcommand{\false}{\texttt{f\kern -1.7pt f}}
+\newcommand{\xor}{\mathbin{\mathtt{xor}}}
+ \begin{example}[The exclusive-or problem]
+  \label{ex:xor}
+  Let the set~$\processes$ be $\{0,1\}$,
+  the types $\iota_0$, $\iota_1$, $o_0$ and $o_1$ be
+  $\bool = (\bot\imp\bot)\lor(\bot\imp\bot)$.
+  We define terms
+  $\true$ to be $\inl{\lambda x.x}$ and
+  $\false$ to be $\inr{\lambda x.x}$.
+  We define a binary operator exclusive-or ($\mathtt{xor}$) on
+  $\{\true,\false\}$:
+  $x \xor y$ is $\false$ when $x$ and $y$ are equal, $\true$ when $x$
+  and $y$ are different.
+  Now we can define a task where at least one of the processes outputs
+  the exclusive-or of the inputs.  Specifically,
+  \begin{align*}
+   R_{\mathtt{xor}} =&
+   \{\tuple{\{0\mapsto x, 1\mapsto y\},\{0\mapsto (x\xor y), 1\mapsto z\}}\mid
+   x,y,z\in\{\true,\false\}\}
+   \\ \cup & \{\tuple{\{0\mapsto x, 1\mapsto y\},\{0\mapsto z, 1\mapsto
+   (x \xor y)\}}\mid
+   x,y,z\in\{\true,\false\}\}\enspace.
+  \end{align*}
+  The equation above says the task allows two different kinds of
+  behaviour.  The first clause says if process~0 receives $x$ and
+  process~1 receives $y$ as their inputs, and process~0 outputs $x\xor
+  y$; then whatever process~1 outputs, the two processes are considered
+  to have solved the task.  The second clause poses a symmetric
+  condition where the two processes are swapped.
+  In order to solve the task,
+  it is enough for the processes to pass one of these clauses.
+ \end{example}
+  \begin{example}[The exchange problem]
+   On the same set of processes, there is another problem that requires
+   the processes to exchange their inputs.  Namely,
+  \begin{align*}
+   R_{\mathtt{exch}} =&
+   \{\tuple{\{0\mapsto x, 1\mapsto y\},\{0\mapsto y, 1\mapsto x\}}\mid
+   x,y\in\{\true,\false\}\}\enspace.
+  \end{align*}
+  \end{example}
 
 \subsection{Typed Protocol}
 
@@ -1119,8 +1409,10 @@ a typed protocol\index{typed protocol} has:
        \processes$ (specifying the writer and the reader of
        each channel);
  \item $W$: maps a channel in $C$ to a contexted type;
+ \item $V$: a finite set of program variables that contains $\p i_i$'s
+       and $\p o_i$'s.
  \item a function~$t_i$ for each $i\in \processes$;
-       that maps a program variable to a contexted type
+       that maps a program variable in $V$ to a contexted type
        $(\tj{x_k}{[i]\phi_k})_k \tr[i]\varphi$ with a special condition
        $t_i(\p i_i)= \iota_i$;
  \item a typed program~$p_i$ for each $i\in \processes$, where
@@ -1134,7 +1426,35 @@ a typed protocol\index{typed protocol} has:
        assumptions of the form $\tr\tj{\p y}{[i]t(\p y)}$ and
        $\tr\tj{c}{[i]W(c)}$.
 \end{itemize}
-\fix{example, for the above example problem}
+ \begin{example}
+  \label{ex:xor-protocol}
+  We give a concrete typed protocol for the exclusive-or task
+  (Example~\ref{ex:xor}).
+  The set of channels~$C$ contains two elements $c$ and $d$.
+  Process~0 writes to $d$ and reads from $c$, and process~1
+  writes to $c$ and reads from $d$.
+  Formally, $w(c) = 1$, $w(d) = 0$, $r(c) = 0$ and $r(d) = 1$.
+  Both channels will contain boolean values.
+  Formally, $W(c) = W(d) = (\bot\imp\bot)\lor(\bot\imp\bot)$.
+  The set of program variables~$V$ is just $\{\p i_0, \p i_1, \p o_0, \p
+  o_1\}$.
+  Then $t_0$ and $t_1$ are determined by the given conditions.
+  The programs are
+  \begin{align*}
+   p_0 &= d\leftarrow \p i_0; \p o_0\leftarrow xor(c, \p i_0); \p o_0
+   \leftarrow \p i_0 \\
+   p_1 &= c\leftarrow \p i_1; \p o_1\leftarrow xor(c, \p i_1); \p o_1
+   \leftarrow \p i_1
+  \end{align*}
+  where $xor(M,N)$ is an abbreviation for
+  \begin{align*}
+  \mathsf{match\,}{M}\mathsf{of}\,&\inl{x}.{
+  (\mat{N}{z}{\false}{w}{\true})
+  }\,/\\ &\inr{y}.{
+  (\mat{N}{z}{\true}{w}{\false})
+  }\enspace.
+  \end{align*}
+ \end{example}
 
 \subsection{Typed Waitfree Computation}
 
@@ -1159,7 +1479,7 @@ is a pair $\tuple{\vec s, \vec v}$, where $\vec s = \tuple{s_0,
 $
 and
 $\vec v =
-\left(\vg{v}{l}, \vd{v}{l}\right)_{c\in C} \in \prod_{c\in C}(\val(W(c))\cup\{\epsilon\})
+\left(v_c\right)_{c\in C} \in \prod_{c\in C}(\val(W(c))\cup\{\epsilon\})
 $.
 
 For a nonempty subset~$J$ of $\processes$, we define an operator $\update J$ that
@@ -1172,6 +1492,8 @@ We define $
 $ by defining
 $u_i$ and $m_i$
 where $s_i = \tuple{p,x}$:
+when $i$ is not in $J$, $u_i$ is identical to $s_i$; otherwise, when $i$
+is in $J$:
 \begin{align*}
  u_i & =
  \begin{cases}
@@ -1192,7 +1514,7 @@ where $s_i = \tuple{p,x}$:
  \vg m c & =
  \begin{cases}
  \semo{E}_{x, \vec v} & (\text{if } p = c \leftarrow E; p',\quad w(c)= i
-  \text{\fix{is this condition necessary?}
+  \text{
  and } \vg v c = \epsilon) \\
  \vg v c &(\text{otherwise})
  \end{cases}\\
@@ -1223,11 +1545,116 @@ The execution\index{execution} associated to the run
 is defined as the infinite sequence of system snapshots
 $C_0C_1C_2\cdots$, where $C_0 = \tuple{\vec{s^0}, \vec{v^0}}$ is
 defined by $\vec{s^0_i} = \tuple{p_i, [\p i_i\mapsto x_i]}$ and
-$\vg v l  = \vd v l = \epsilon$,
+$v_c = \epsilon$,
 and $C_{k+1} = C_{k}\update
-\sigma_{i+1}$.
+\sigma_{k}$.
 
-\fix{example}
+ \begin{example}
+  Let $\processes$ be $\{0,1\}$ and $\Pi$ be the typed protocol given in
+  Example~\ref{ex:xor-protocol}.
+  let us take $x_0 = \true$ and $x_1 = \false$.
+  Also we choose a schedule $\sigma$ as
+  $\{0\}, \{0\}, \{0,1\}, \{1\}, \{1\}$, followed by an infinite
+  sequence of $\{0,1\}$'s.
+  The triple $\tuple{\Pi,\vec x,\sigma}$ constitutes a run.
+
+  We can associate an execution with this run.
+  The initial system snapshot $C_0=\tuple{\vec{s^0},\vec{v^0}}$ contains
+  process snapshots
+  \begin{align*}
+   s_0^0 = \tuple{p_0,\{\p i_0\mapsto \true\}}\text{ and }
+   s_1^0 = \tuple{p_1,\{\p i_1\mapsto \false\}}
+  \end{align*}
+  where $p_0$ and $p_1$ are defined in Example~\ref{ex:xor-protocol}.
+  In the system snapshot, $\vec{v^0}$ maps both channels $c$ and $d$ to
+  $\epsilon$.
+  The next system snapshot $C_1$ is defined to be $C_0\update\sigma_0$.
+  Since $\sigma_0 = \{0\}$, it does not contain 1.
+  So, $s_1^1$ is the same as $s_1^0$.
+  On the other hand, since $p_0$ is $d\leftarrow \p i_0; \p o_0\leftarrow
+  xor(c, \p i_0); \p o_0
+   \leftarrow \p i_0$, $s_0^1$ is defined to be
+  $\tuple{\p o_0\leftarrow
+  xor(c, \p i_0); \p o_0
+   \leftarrow \p i_0, \{\p i_0\mapsto \true\}}$ and
+  $v_d^1$ is defined to be $\true$.
+  However, $v_c^1$ is the same as $v_c^0$ and thus remains to be
+  $\epsilon$.
+  Now, we conclude that $C_1=\tuple{\{0\mapsto s_0^1,1\mapsto s_1^1\},
+  \{c\mapsto \epsilon, d\mapsto \true\}}$.
+  Again, the next snapshot $C_2$ is defined to be $C_1\update \sigma_1$.
+  Since $\sigma_1 = \{0\}$, process~1's state is not changed so that
+  $s_0^2 = s_0^1 = \tuple{p_1,\{\p i_1\mapsto\false\}}$.
+  On the other hand, since $s_0^1 = \tuple{\p o_0\leftarrow
+  xor(c, \p i_0); \p o_0
+   \leftarrow \p i_0, \{\p i_0\mapsto \true\}}$ and 0 is in $\sigma_1$,
+  process~0's state is updated to
+  $s_0^2 = \tuple{\p o_0
+   \leftarrow \p i_0, \{\p i_0\mapsto \true\}}$
+  where the process failed to read from the channel~$c$ because $v_c^1$
+  is $\epsilon$.  As a result, the program variable~$o_i$ obtained
+  no assignments.
+  The store contents are not updated either so that $v_c^2 = v_c^1 =
+  \epsilon$ and $v_d^2 = v_d^1 = \true$.
+  After four more rounds (including $i = 6$ to confirm $C_5 = C_6$), we
+  obtain an execution shown in Table~\ref{table:exec}.
+ \end{example}
+  \begin{sidewaystable}
+   \centering
+   \caption{An example of execution of a typed protocol defined in
+   Example~\ref{ex:xor-protocol}.
+   In the leftmost two columns,
+   $xor(M,N)$ is an abbreviation for
+   $\mathsf{match\,}{M}\mathsf{of}\,\inl{x}.{
+  (\mat{N}{z}{\false}{w}{\true})
+  }\,/ \inr{y}.{
+  (\mat{N}{z}{\true}{w}{\false})
+  }\enspace.$
+   }
+   \label{table:exec}
+   \begin{tabular}{cllcc|l}
+    $i$    & $s_0^i$&$s_1^i$ &$v_c^i$ &$v_d^i$ & $\sigma_i$ \\ \hline
+    0      & $\tuple{d\leftarrow \p i_0; \p o_0\leftarrow xor(c, \p i_0); \p o_0
+   \leftarrow \p i_0, \{\p i_0\mapsto \true\}}$
+	& $\tuple{c\leftarrow \p i_1; \p o_1\leftarrow xor(c, \p i_1); \p o_1
+   \leftarrow \p i_1, \{\p i_1\mapsto \false\}}$
+	    & $\epsilon$
+		& $\epsilon$
+		    & $\{0\}$ \\ \hline
+    1      & $\tuple{\p o_0\leftarrow
+  xor(c, \p i_0); \p o_0
+   \leftarrow \p i_0, \{\p i_0\mapsto \true\}}$
+	& $\tuple{c\leftarrow \p i_1; \p o_1\leftarrow xor(c, \p i_1); \p o_1
+   \leftarrow \p i_1, \{\p i_1\mapsto \false\}}$
+	    & $\epsilon$
+		& $\true$
+		    & $\{0\}$ \\ \hline
+    2      & $\tuple{\p o_0
+   \leftarrow \p i_0, \{\p i_0\mapsto \true\}}$
+	& $\tuple{c\leftarrow \p i_1; \p o_1\leftarrow xor(c, \p i_1); \p o_1
+   \leftarrow \p i_1, \{\p i_1\mapsto \false\}}$
+	    & $\epsilon$
+		& $\true$
+		    & \{0,1\} \\ \hline
+    3      & $\tuple{\epsilon, \{\p i_0\mapsto \true, \p o_0 \mapsto \true\}}$
+	& $\tuple{\p o_1\leftarrow xor(c, \p i_1); \p o_1
+   \leftarrow \p i_1, \{\p i_1\mapsto \false\}}$
+	    & $\false$
+		& $\true$
+		    & $\{1\}$ \\ \hline
+    4      & $\tuple{\epsilon, \{\p i_0\mapsto \true, \p o_0 \mapsto \true\}}$
+	& $\tuple{\p o_1
+   \leftarrow \p i_1, \{\p i_1\mapsto \false, \p o_1\mapsto \true\}}$
+	    & $\false$
+		& $\true$
+		    & $\{1\}$\\ \hline
+    $\ge 5$& $\tuple{\epsilon, \{\p i_0\mapsto \true, \p o_0 \mapsto \true\}}$
+	& $\tuple{\epsilon, \{\p i_1\mapsto \false, \p o_1\mapsto \true\}}$
+	    & $\false$
+		& $\true$
+		    & $\{0,1\}$ \\ \hline
+   \end{tabular}
+  \end{sidewaystable}
 
 Process~$i$'s output\index{output}~$\hat{o_k}$ at step~$k$ is
 $M$ if the $i$-th process snapshot of $C_k$ is
@@ -1262,9 +1689,26 @@ schedule~$\sigma$,
  In that case, the typed input-output problem is
  waitfreely solvable\index{waitfreely solvable}.
 
- \fix{show example solvable}
+ \begin{example}
+  In the execution in Table~\ref{table:exec}, we can replace $\true$
+  with $\false$ altogether, $\false$ with $\true$ altogether, or perform
+  both replacements.
+  This shows that the typed protocol in Example~\ref{ex:xor-protocol}
+  solves the exclusive-or problem in Example~\ref{ex:xor} on the
+  schedule
+  $(\{0\}, \{0\}, \{0,1\}, \{1\}, \{1\}, \{0,1\}, \{0,1\},\ldots)$ where
+  the last $\ldots$ represents an infinite sequence consisting of
+  $\{0,1\}$'s.
+  On this schedule, both processes 0 and 1 are nonfaulty.
+  In Table~\ref{table:exec}, the decision value of process~0 is $d_0 =
+  \true$ and the decision value of process~1 is $d_1=\false$.
+  The tuple $\tuple{(x_0,x_1),(d_0,d_1)}$ is in $R_{\mathtt{xor}}$.
+  The same argument goes for different $(x_0,x_1)$'s.
+  Thus, the protocol solves the exclusive-or problem on $\sigma$.
+  Actually, the protocol solves the problem for all schedules.
+ \end{example}
 
- \fix{show example not solvable, why? see saks or see below}
+ \fix{show example not solvable, why? see saks or see below 40min}
 
 
 \section{Characterization of Waitfreedom and \lgd}
@@ -1285,6 +1729,170 @@ We show that the ability of the waitfree protocols and \lgd\, are the same.
  where $\tuple{(N_i)_{i\in \processes}, (V_i)_{i\in \processes}}\in R$.
  % looks like we assume subformula property
 \end{definition}
+
+ \begin{example}
+  For the exclusive-or problem (defined in Example~\ref{ex:xor}), there is
+  a global term $\{0\mapsto \cotuple{xor((\comodL)x_0,x_0),x_0},
+  1\mapsto\cotuple{xor((\comodR)x_1,x_1),x_1}\}$ that solves the
+  problem.
+  The global term can be typed as in Figure~\ref{fig:solving}.
+ \end{example}
+
+ \begin{sidewaysfigure}  %fig:solve
+  \centering
+   \begin{flushleft}
+    \textsf{Part A}
+   \end{flushleft}
+  \AxiomC{}
+  \LL{Ax}
+  \UnaryInfC{$\tj{x}{[0]\bool}\tr\tj{x}{[0]\bool}$}
+  \AxiomC{$\vdots$}
+  \LL{$xor$}
+  \BinaryInfC{$
+  \tj{x}{[0]\bool}\tr\tj{\{0\mapsto xor((\comodL)x,x)\}}{[0]\bool}\hmid
+  \tj{y}{[1]\bool}\tr\tj{\{1\mapsto (\comodR)y\}}{[1]\bool}
+  $}
+  \AxiomC{}
+  \LL{Ax}
+  \UnaryInfC{$\tj{y}{[1]\bool}\tr\tj{y}{[1]\bool}$}
+  \LL{$xor$}
+  \BinaryInfC{$
+  \tj{x}{[0]\bool}\tr\tj{\{0\mapsto xor((\comodL)x,x)\}}{[0]\bool}\hmid
+  \tj{y}{[1]\bool}\tr\tj{\{1\mapsto xor((\comodR)y,y)\}}{[1]\bool}
+  $}
+  \LL{$[0]\vee\intro$}
+  \UnaryInfC{$
+  \tj{x}{[0]\bool}\tr\tj{\{0\mapsto
+  xor((\comodL)x,x)\}}{[0]\bool}\hmid
+  \tj{y}{[1]\bool}\tr\tj{\{1\mapsto xor((\comodR)y,y)\}}{[1]\bool}
+  $}
+  \LL{$[1]\vee\intro$}
+  \UnaryInfC{$
+  \tj{x}{[0]\bool}\tr\tj{\{0\mapsto
+  {xor((\comodL)x,x)}\}}{[0]\bool}\hmid
+  \tj{y}{[1]\bool}\tr\tj{\{1\mapsto {xor((\comodR)y,y)}\}}
+  {[1]\bool}
+  $}
+  \DisplayProof
+  \begin{flushleft}
+   \textsf{Part B}
+  \end{flushleft}
+  \AxiomC{}
+  \LL{Ax}
+  \UnaryInfC{$\tj{y}{[1]\bool}\tr\tj{y}{[1]\bool}$}
+  \AxiomC{$\vdots$}
+  \LL{$\wedge\intro$}
+  \BinaryInfC{$
+  \tj{x}{[0]\bool}\tr\tj{\{0\mapsto
+  {xor((\comodL)x,x)},
+  1\mapsto{y}
+  \}}{\{0\mapsto \bool, 1\mapsto \bool\}}\hmid
+  $}
+  \noLine
+  \UnaryInfC{$
+  \tj{y}{[1]\bool}\tr\tj{\{1\mapsto {xor((\comodR)y,y)}\}}
+  {[1]\bool}
+  $}
+  \AxiomC{}
+  \LL{Ax}
+  \UnaryInfC{$\tj{x}{[0]\bool}\tr\tj{x}{[0]\bool}$}
+  \LL{$\wedge\intro$}
+  \BinaryInfC{$
+  \tj{x}{[0]\bool}, \tj{y}{[1]\bool}\tr
+  \tj{\{
+  0\mapsto {xor((\comodL)x,x)}, 1\mapsto {y}
+  \}}
+  {\{0\mapsto \bool, 1\mapsto \bool\}}
+  \hmid
+  $}
+  \noLine
+  \UnaryInfC{
+  $
+  \tj{x}{[0]\bool}, \tj{y}{[1]\bool}\tr
+  \tj
+  {\{
+  0\mapsto {x},
+  1\mapsto {xor((\comodR)y, y)}
+  \}}
+  {\{0\mapsto\bool
+  , 1\mapsto \bool
+  \}}
+  \phantom{\hmid}$
+  }
+  \DisplayProof
+  \begin{flushleft}
+    \textsf{Whole Derivation}
+  \end{flushleft}
+  \AxiomC{}
+  \LL{Ax}
+ \UnaryInfC{$\tj{x}{[0]\bool}\tr\tj{\{0\mapsto x\}}{[0]\bool}$}
+  \AxiomC{}
+  \LL{Ax}
+ \UnaryInfC{$\tj{y}{[1]\bool}\tr \tj{\{1\mapsto y\}}{[1]\bool}$}
+ \LL{01-com}
+ \BinaryInfC{
+ $
+  \tj{x}{[0]\bool}\tr\tj{\{0\mapsto (\comodL)x\}}{[0]\bool} \hmid
+  \tj{y}{[1]\bool}\tr\tj{\{1\mapsto (\comodR)y\}}{[1]\bool}$
+ }
+  \LL{\textsf{Part A}}
+ \doubleLine
+  \UnaryInfC{$
+  \tj{x}{[0]\bool}\tr\tj{\{0\mapsto{xor((\comodL)x,x)}\}}
+  {[0]\bool}
+  \hmid
+  \tj{y}{[1]\bool}\tr\tj{\{1\mapsto{xor((\comodR)y,y)}\}}{[1]\bool}
+  $}
+  \LL{\textsf{Part B}}
+  \doubleLine
+ \UnaryInfC{
+ $
+ \tj{x}{[0]\bool}, \tj{y}{[1]\bool}\tr
+ \tj{\{
+  0\mapsto {xor((\comodL)x,x)}, 1\mapsto {y}
+  \}}
+  {\{0\mapsto \bool, 1\mapsto \bool\}}
+  \hmid
+ $
+ }
+  \noLine
+  \UnaryInfC{
+  $
+  \tj{x}{[0]\bool}, \tj{y}{[1]\bool}\tr
+  \tj
+  {\{
+  0\mapsto {x},
+  1\mapsto {xor((\comodR)y, y)}
+  \}}
+  {\{0\mapsto
+  \bool
+  , 1\mapsto
+  \bool
+  \}}
+  \phantom{\hmid}$
+  }
+  \LL{EC}
+  \UnaryInfC{$
+  \tj{x}{[0]\bool}, \tj{y}{[1]\bool}\tr\tj
+  {\{
+  0\mapsto \cotuple{{xor((\comodL)x,x)},x},
+  1\mapsto \cotuple{{xor((\comodR)y,y)},y}
+  \}}
+  {\{
+  0\mapsto \bool,
+  1\mapsto \bool
+  \}
+  }
+  $
+  }
+ \DisplayProof
+  \ruleskip
+  \fix{just typed so check typos}
+  \caption{A typed global term that solves the exclusive-or
+  problem~(Example~\ref{ex:xor}).}
+  \label{fig:solving}
+ \end{sidewaysfigure}
+
 
 \begin{theorem}[Soundness]
 If a typed input-output problem is solvable by a term,
@@ -1394,15 +2002,6 @@ The definition is inductive over the type derivation:
  \semoi{\cotuple{\hypert_0,\hypert_1}\hmid MN} =& (\semoi{\hat \hypert_0 \hmid M}\cup
  \semoi{\hat\hypert_1\hmid N})\hmid \{\tuple{i,\p z}\}\enspace,
 \end{align*}
- \item[$\brac i\wedge\intro$]
-      \begin{align*}
-       \semo{\cotuple{\hypert_0,\hypert_1}\hmid \tuple{M,N}}=&
-       \semo{\hypert_0\hmid M}; \semo{\hypert_1\hmid N};\\ & \left(\p z
-       \leftarrow \tuple{\semoi{\hypert_0\hmid \hat
-       M}',\semo{\hypert_1\hmid\hat N}'}\right)_i\enspace,\\
-       \semoi{\cotuple{\hypert_0,\hypert_1}\hmid \tuple{M,N}} =& (\semoi{\hat \hypert_0 \hmid M}\cup
-       \semoi{\hat\hypert_1\hmid N})\hmid \{\tuple{i,\p z}\}\enspace,
-      \end{align*}
  \item[$\brac i\wedge\elim_0$] 
 \begin{align*}
  \semo{\hypert\hmid \lpil M} =& \semo{\hypert\hmid M}; \left(\p z \leftarrow
