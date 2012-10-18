@@ -404,28 +404,29 @@ annotated as in Figure~\ref{fig:typed}.
 \BinaryRule
    {$\hypert_0\hmid\G\tr\tj{\imapsto{M}}{[i]\phi}$}
    {$\hypert_1\hmid\D\tr\tj{\jmapsto{N}}{[j]\psi}$}
-   {}
+   {com}
    {$\cotuple{\hypert_0,\hypert_1}\hmid\Gamma\tr\tj{\imapsto{(\comodL)M}}{[i]\psi}\hmid
    \Delta\tr\tj{\jmapsto{(\comodR)N}}{[j]\phi}$}
-   where $c$ and $d$ are fresh.
+ \\ where channels $c$ and $d$ are fresh.
 \ruleskip
 %% external structural
  \UnaryRule
  {$\hypert^+$}
- {}
+ {EW}
  {$\hypert^+\hmid\Gamma\tr \tj {\{\}} {\m\phi}$}
 \ruleskip
  \AxiomC{$\hypert\hmid \G\tr\tj{(M_i)_{i\in I}}{(\phi_i)_{i\in I}}\hmid
  \G\tr\tj{(N_i)_{i\in I}}{(\phi_i)_{i\in I}}$}
  \UnaryInfC{$\hypert\hmid
- \G\tr\tj{\cotuple{M_i',N_i'}}{(\phi_i)_{i\in I}}$}
- \DisplayProof \\where $I$ is a nonempty subset of $\processes$ and, for
+ \G\tr\tj{(\cotuple{M_i',N_i'})_{i\in I}}{(\phi_i)_{i\in I}}$}
+ \DisplayProof
+ \\where $I$ is a nonempty subset of $\processes$ and, for
  each $i\in\processes$, the pairs $\cotuple{M_i', N_i'}$
  is identical to either $\cotuple{M_i, N_i}$ or $\cotuple{N_i, M_i}$.
 \ruleskip
  \UnaryRule
  {$\hypert\hmid\Gamma\tr M\colon\m\varphi\hmid\Delta\tr N\colon \m\psi\hmid \hypert'$}
- {}
+ {EC}
  {$\hypert\hmid\Delta\tr N\colon\m\psi   \hmid\Gamma\tr M\colon \m\varphi\hmid \hypert'$}
  \ruleskip
 \textbf{Inner Global Rules}
@@ -433,27 +434,28 @@ annotated as in Figure~\ref{fig:typed}.
  % internal contraction
    \UnaryRule
    {$\hypert\hmid \Gamma\tr\tj {\m M} {\m\varphi}$}
-   {}
+   {IW}
    {$\hypert\hmid \tj x {[i]\psi}, \Gamma\tr \tj{\m M}{\m\varphi}$}
    \hfill
    \UnaryRule
    {$\hypert\hmid \tj{x}{[i]\phi}, \tj{y}{[i]\phi}, \Gamma\tr \tj
    M{\m\psi}$}
-   {}
+   {IC}
    {$\hypert \hmid \tj{x}{[i]\phi}, \Gamma\tr \tj{\m{M}[x/y]}{\m\psi}$}
  \fix{define substitution on global terms}
 \ruleskip
 \UnaryRule
    {$\hypert\hmid\Gamma,\tj x{[i]\phi},\tj y{[j]\psi},\Delta\tr
-   \tj {\m M}{\m\theta}$}{}
+   \tj {\m M}{\m\theta}$}
+ {IE}
    {$\hypert\hmid\Gamma,\tj y{[j]\psi},\tj x{[i]\phi},\Delta\tr \tj
  {\m M}{\m\theta}$} %IE
-\hfill
+\ruleskip
 %% conj intro
  \BinaryRule
  {$\hypert\hmid\G,\D_0\tr\tj{(M_i)_{i\in I}}{(\phi_i)_{i\in I}}$}
  {$\hypert\hmid\G,\D_1\tr\tj{(N_j)_{j\in J}}{(\psi_j)_{j\in J}}$}
- {}
+ {$\wedge\intro$}
  {$\cotuple{\hypert_0,\hypert_1}\hmid \G,\D_0,\D_1\tr\tj
  {(\lpair{M_k,N_k})_{k\in I\cap J}\sqcup (M_i)_{i\in I\setminus J}\sqcup
  (N_j)_{j\in J\setminus I}}
@@ -463,65 +465,66 @@ annotated as in Figure~\ref{fig:typed}.
 %% conj elim
 \UnaryRule
  {$\hypert\hmid\G\tr\tj{(M_i)_{i\in I}}{(\phi_i)_{i\in I}}$}
- {}
+ {$\wedge\elim$}
  {$\hypert\hmid\G\tr\tj{(M_j)_{j\in J}}{(\phi_j)_{j\in J}}$}
  where $J$ is a subset of $I$.
 \ruleskip
 \textbf{Inner Local Rules}
 \ruleskip
 %% axiom
-  \UnaryRule{}{}{$\tj {x}{[i]\varphi}, \Gamma\tr \tj
+  \UnaryRule{}{$[i]$Ax}{$\tj {x}{[i]\varphi}, \Gamma\tr \tj
  {\imapsto x}{[i]\varphi}$}
                        \hfill
 %% bot elim
  \UnaryRule
-   {$\hypert\hmid\Gamma\tr \tj {\imapsto M}{[i]\bot}$} {}
+   {$\hypert\hmid\Gamma\tr \tj {\imapsto M}{[i]\bot}$} {$[i]\bot\elim$}
    {$\hypert\hmid\Gamma\tr \tj{\imapsto{\abort}}{[i]\varphi}$}
    \ruleskip
 %% local imp intro
   \UnaryRule
    {$\hypert\hmid\tj x{[i]\varphi},\Gamma\tr \tj {\imapsto{M}}{[i]\psi}$}
-   {}
+   {$[i]\imp\intro$}
    {$\hypert\hmid\Gamma\tr \tj{\imapsto{\lambda x.M}}{[i](\varphi\supset\psi)}$}
                        \ruleskip
 %% local imp elim
  \BinaryRule
  {$\hypert_0\hmid\G,\D_0 \tr \tj {\imapsto{M}}{[i](\varphi\supset \psi)}$}
  {$\hypert_1\hmid\G,\D_1 \tr \tj {\imapsto{N}}{[i]\varphi}$}
- {}
+ {$[i]\imp\elim$}
  {$\cotuple{\hypert_0,\hypert_1}\hmid\G,\D_0,\D_1\tr \tj{\imapsto{MN}}{[i]\psi}$}
                        \ruleskip
    \ruleskip
 %% local conj elim
   \UnaryRule
    {$\hypert\hmid\Gamma\tr \tj{\imapsto{M}}{[i](\phi\land\psi)}$}
-   {}
+   {$[i]\wedge\elim_0$}
    {$\hypert\hmid\Gamma\tr \tj{\imapsto{\lpil{M}}}{[i]\phi}$}
    \hfill
   \UnaryRule
    {$\hypert\hmid\Gamma\tr \tj{\imapsto{M}}{[i](\varphi\wedge\psi)}$}
-   {}
+   {$[i]\wedge\elim_1$}
    {$\hypert\hmid\Gamma\tr \tj{\imapsto{\lpir M}}{[i]\psi}$}
 \ruleskip
 %% local disj intro
   \UnaryRule
    {$\hypert\hmid\Gamma\tr \tj{\imapsto{M}}{[i]\varphi}$}
-   {}
+   {$[i]\vee\intro_0$}
    {$\hypert\hmid\Gamma\tr \tj{\imapsto{\linl{M}}}{[i](\varphi\vee\psi)}$}
-   \hfill
+   \ruleskip
   \UnaryRule
    {$\hypert\hmid\Gamma\tr \tj{\imapsto{M}}{[i]\psi}$}
-   {}
+   {$[i]\vee\intro_1$}
    {$\hypert\hmid\Gamma\tr \tj{\imapsto{\linr{M}}}{[i](\varphi\vee\psi)}$}
-\ruleskip
+ \ruleskip
 %% local disj elim
 \TrinaryRule
    {$\hypert_0\hmid\G,\D_0\tr \tj{\imapsto{M}}{[i](\phi\lor\psi)}$}
    {$\hypert_1\hmid\tj x{[i]\phi},\G,\D_1\tr \tj{\imapsto{N_0}}{[i]\theta}$}
    {$\hypert_2\hmid\tj y{[i]\psi},\G,\D_2\tr \tj{\imapsto{N_1}}{[i]\theta}$}
-   {}
+   {$[i]\vee\elim$}
    {$\cotuple{\cotuple{\hypert_0,\hypert_1},\hypert_2}\hmid\G,\D_0,\D_1,\D_2 \tr
  \tj{\imapsto{\mat M x {N_0} y {N_1}}}{[i]\theta}$}
+ \fix{solve space problem}
 \ruleskip
  \caption[Term assignment of \lgd.]
  {Term assignment.
@@ -1352,6 +1355,7 @@ task $R\subseteq \prod_{i\in \processes}\left(\lterm(\iota_i)\right)\times
   it is enough for the processes to pass one of these clauses.
  \end{example}
   \begin{example}[The exchange problem]
+   \label{ex:exchange}
    On the same set of processes, there is another problem that requires
    the processes to exchange their inputs.  Namely,
   \begin{align*}
@@ -1533,9 +1537,9 @@ $\semo{E}_{x, \vec v}$ is $\epsilon$.
 
 A schedule\index{schedule} is an infinite sequence of nonempty subsets of~$\processes$,
 which looks like $\sigma = \sigma_0\sigma_1\sigma_2\cdots$.
-We say $i$ is nonfaulty\index{nonfaulty} in $\sigma$
-if it appears infinitely often.
-% probably not used anywhere % When every process is nonfaulty, the schedule is \textit{fair}.
+We say $i$ is nonfaulty\index{nonfaulty} (resp.~faulty\index{faulty}) in
+$\sigma$ if it appears infinitely (resp. only finitely many) often.
+When every process is nonfaulty, the schedule is \textit{fair}.
 
 A run\index{run} is a triple $\tuple{\Pi, \vec x, \sigma}$,
 where $\Pi$ is a typed protocol,
@@ -1545,9 +1549,7 @@ The execution\index{execution} associated to the run
 is defined as the infinite sequence of system snapshots
 $C_0C_1C_2\cdots$, where $C_0 = \tuple{\vec{s^0}, \vec{v^0}}$ is
 defined by $\vec{s^0_i} = \tuple{p_i, [\p i_i\mapsto x_i]}$ and
-$v_c = \epsilon$,
-and $C_{k+1} = C_{k}\update
-\sigma_{k}$.
+$v_c = \epsilon$, and $C_{k+1} = C_{k}\update\sigma_{k}$.
 
  \begin{example}
   Let $\processes$ be $\{0,1\}$ and $\Pi$ be the typed protocol given in
@@ -1690,6 +1692,7 @@ schedule~$\sigma$,
  waitfreely solvable\index{waitfreely solvable}.
 
  \begin{example}
+  \label{ex:solv}
   In the execution in Table~\ref{table:exec}, we can replace $\true$
   with $\false$ altogether, $\false$ with $\true$ altogether, or perform
   both replacements.
@@ -1706,9 +1709,37 @@ schedule~$\sigma$,
   The same argument goes for different $(x_0,x_1)$'s.
   Thus, the protocol solves the exclusive-or problem on $\sigma$.
   Actually, the protocol solves the problem for all schedules.
+  To see why, we can do case analysis on the schedule:
+  one case where all processes are non-faulty and the other case where
+  one of the prcesses is faulty.  There is no possibility where all
+  processes are faulty because there are infinitely many blocks in a
+  schedule and each block contains at least one process.
+  In the first case with all non-faulty processes, when the first block
+  contains 0, the execution proceeds like in Table~\ref{table:exec}.
+  Otherwise, the first block must contain 1 so that the execution
+  proceeds like Table~\ref{table:exec} with 0 and 1 swapped.
+  In the second case with one faulty process, the other process can
+  produce whatever output to meet the task.  Since the other process is
+  non-faulty, it surely produces an output.
  \end{example}
-
- \fix{show example not solvable, why? see saks or see below 40min}
+  \begin{example}
+   On the other hand, there is no typed protocol that solves
+   the exchange problem (Example~\ref{ex:exchange}).
+   To see the reason, take any typed protocol.
+   There exist natural numbers $m$ and $n$ so that
+   the typed protocol contains $m$ commands
+   for process~0 and $n$ commands for process~1.
+   Consider a schedule that consists of the first~$m$ blocks $\{0\}$ and
+   the following~$n$ blocks $\{1\}$ and the rest $\{0,1\}$.
+   Because of the infinitely many $\{0,1\}$'s at the tail,
+   under the schedule, both processes are non-faulty so that they must
+   produce the correct outputs.
+   However, since process~0 finishes before process~1 starts, there is
+   no way process~0 can output process~1's input, not by chance.
+   Even when process~0 produces the correct output by chance, when we
+   change process~1's input, then, process~0's output is wrong with
+   regard to process~1's new input.
+  \end{example}
 
 
 \section{Characterization of Waitfreedom and \lgd}
@@ -1904,23 +1935,23 @@ on the type derivation.
 To make induction work, we use the following auxiliary notions.
 An investigator\index{investigator} is a partial mapping from processes
 to program variable.
-A system snapshot satisfies a global formula%
-\index{satisfy!system snapshot ---s a global formula}~$\m\varphi$
-iff \fix{fill}.
-A system snapshot satisfies a context%
-\index{satisfy!system snapshot ---s a context} iff it
-satisfies every global formula in the context.
-A protocol\index{protocol} $p$ \textit{realizes a hypersequent}~$
-\left(\Gamma_0\vdash
-\m\varphi_0 \hmid \cdots\hmid\Gamma_{k}\vdash \m\varphi_{k}\right)$
-iff
-for any initial system snapshot satisfying
-every~$\Gamma_{k'}$,
-there exists a family of investigator sets
-$(I_{k'})_{k'\in\{0,\ldots,k\}}$ and,
-when $p$ is executed with any schedule,
-the resulting system snapshots eventually satisfy at least one of
-$\varphi_{k'}^+$.
+% A system snapshot satisfies a global formula%
+% \index{satisfy!system snapshot ---s a global formula}~$\m\varphi$
+% iff \fix{fill}.
+% A system snapshot satisfies a context%
+% \index{satisfy!system snapshot ---s a context} iff it
+% satisfies every global formula in the context.
+% A protocol\index{protocol} $p$ \textit{realizes a hypersequent}~$
+% \left(\Gamma_0\vdash
+% \m\varphi_0 \hmid \cdots\hmid\Gamma_{k}\vdash \m\varphi_{k}\right)$
+% iff
+% for any initial system snapshot satisfying
+% every~$\Gamma_{k'}$,
+% there exists a family of investigator sets
+% $(I_{k'})_{k'\in\{0,\ldots,k\}}$ and,
+% when $p$ is executed with any schedule,
+% the resulting system snapshots eventually satisfy at least one of
+% $\varphi_{k'}^+$.
 
 For a typed
 hyperterm~$\hypert$,
@@ -1931,11 +1962,10 @@ $\semo{\hypert}$, where
 $\semoi{\hypert}$ is a sequence of investigators whose
 length is the same as that of $\hypert$.
 We refer to the last element of $\semoi{\hypert\hmid M}$ as
-$\semoi{\hypert\hmid \hat{M}}$, the second to last element of
+$\semoi{\hypert\hmid \overline{M}}$, the second to last element of
 $\semoi{\hypert\hmid M\hmid N}$ as
-$\semoi{\hypert\hmid \hat M\hmid N}$ and so on.
-We denote the right projection of $\semoi{\hypert\hmid \hat{M}}$ as
-$\semoi{\hypert\hmid \hat{M}}'$.
+$\semoi{\hypert\hmid \overline M\hmid N}$ and so on.
+\fix{do not use the projection apostrophy.  apply a process number.}
 If two sequents of investigator sets $\semoi{\hypert}$ and $\semoi{\hypert'}$
 have the same length, we define $\semoi{\hypert}\cup \semoi{\hypert'}$ to
 be the elementwise union.
@@ -1945,55 +1975,118 @@ for all $i\in\processes$.
 Also, $(p_i)_{i\in\processes}; (q_i)_{i\in\processes}$ denotes
 $(p_i; q_i)_{i\in\processes}$ where the
 same program variable does not have multiple substitutions
-(we rename variables in the original typing derivation to satisfy this).
+(we can rename variables in the original typing derivation to satisfy
+this).
 And $(p)_j$ denotes $(q_i)_{i\in\processes}$ where $q_j = p$ and $q_i =
 \epsilon$ for all $i\neq j$.
 Below, we always choose fresh program variables.
-The definition is inductive over the type derivation:
-\fix{put process numbers after the local operations}
-\fix{not hat, rather overlines}
+The definition is inductive over the type derivation, which is
+essentially compilation from lambda-terms to imperative programs:
 \begin{description}
  \item[$ij$-com]
       \begin{align*}
  \semo{\cotuple{\hypert_0,\hypert_1}\hmid (\comodL) M\hmid (\comodR) N}
  =& \semo{\hypert_0\hmid M};
  \semo{\hypert_1\hmid N};\\
- &(d\leftarrow \semoi{\hypert_0\hmid\hat M}'; \p
+ &(d\leftarrow \semoi{\hypert_0\hmid\overline{M}}'; \p
  y\leftarrow c;)_j; \\
- &(c\leftarrow \semoi{\hypert_1\hmid\hat N}'; \p
+ &(c\leftarrow \semoi{\hypert_1\hmid\overline{N}}'; \p
  x\leftarrow d;)_i\enspace,\\
- \semoi{\cotuple{\hypert_0,\hypert_1}\hmid\ltor j l \Delta M\hmid \rtol
-       i l\Gamma N} =&
- \semoi{\hat \hypert_0\hmid M} \cup \semoi{\hat \hypert_1\hmid N}
+ \semoi{\cotuple{\hypert_0,\hypert_1}\hmid (\comodL) M\hmid (\comodR) N} =&
+ \semoi{\overline{\hypert_0}\hmid M} \cup \semoi{\overline{\hypert_1}\hmid N}
        \hmid\\& \{j\mapsto\p y\}\hmid \{i\mapsto \p x\}\enspace,
       \end{align*}
  \item[EW] \begin{align*}
  \semo{\hypert\hmid \abort}=\semo{\hypert}\enspace,\quad
  \semoi{\hypert\hmid\abort}=&\semoi{\hypert}\hmid \emptyset\enspace,\quad
 	   \end{align*}
- \item[EC] \fix{forms of types are different}
-\begin{align*}
- \semo{\hypert\hmid }&= \semo{\hypert\hmid M \hmid N}\\
- \semoi{\hypert\hmid }&= \semoi{\hat\hypert\hmid M\hmid N}
- \hmid
- \enspace.
-\end{align*}
- \item[EE] 
- \item[IE] 
- \item[IW] 
- \item[IC] 
- \item[$\brac i$Ax] 
-\begin{align*}
- \semo{x}=& \epsilon \enspace\\
- \semoi{x}=& \{i\mapsto \p i_x\}\enspace,
-\end{align*}
- \item[${\brac{i}}\bot\elim$] 
- \item[$\brac i\supset\intro$] 
+ \item[EC]
+      \begin{align*}
+         &\semo{ \hypert \hmid \left(\cotuple{M'_i,N'_i}\right)_{i\in I}
+       } \\
+       =& \semo{\hypert\hmid \left(M_i\right) \hmid
+       \left(N_i\right)}; \\
+       &\left(\p k_i\leftarrow
+       \semoi{\hypert\hmid \overline{(M_i)}\hmid
+       (N_i)}(i)
+       ; \p k_i \leftarrow \semoi{\hypert\hmid {(M_i)}\hmid
+       \overline{(N_i)}}(i)\right)_{i\in I\mid M_i =
+       M'_i};
+       \\ &
+       \left(\p k_i\leftarrow
+       \semoi{\hypert\hmid {(M_i)}\hmid
+       \overline{(N_i)}}(i)
+       ; \p k_i \leftarrow
+       \semoi{\hypert\hmid \overline{(M_i)}\hmid
+       (N_i)}(i)
+       \right)_{i\in I\mid M_i \neq
+       M'_i}\enspace,\\
+       &\semoi{ \hypert \hmid \left(\cotuple{M'_i,N'_i}\right)_{i\in I}
+       } \\
+       = &
+       \semoi{\overline{\hypert}\hmid \left(\cotuple{M'_i,N'_i}\right)_{i \in I}}
+       \hmid \{i\mapsto \p k_i\}_{i\in I}
+      \end{align*}
+      \fix{above, give an example of this kind of notations}
+ \item[EE]
+      \begin{align*}
+       &\semo{\hypert \hmid \m{N} \hmid \m{M} \hmid \hypert'}
+       \\
+       =&
+       \semo{\overline{\hypert}\hmid \m{N}\hmid \m{M}\hmid \hypert'}
+       \hmid \\
+       &
+       \semo{{\hypert}\hmid \m{N}\hmid \overline{\m{M}}\hmid \hypert'}
+       \hmid \\
+       &
+       \semo{{\hypert}\hmid \overline{\m{N}}\hmid \m{M}\hmid \hypert'}
+       \hmid \\
+       &
+       \semo{{\hypert}\hmid \m{N}\hmid \m{M}\hmid
+       \overline{\hypert'}}\enspace,\\
+       &\semoi{\hypert \hmid \m{N} \hmid \m{M} \hmid \hypert'}
+       \\
+       =&
+       \semoi{\overline{\hypert}\hmid \m{N}\hmid \m{M}\hmid \hypert'}
+       \hmid \\
+       &
+       \semoi{{\hypert}\hmid \m{N}\hmid \overline{\m{M}}\hmid \hypert'}
+       \hmid \\
+       &
+       \semoi{{\hypert}\hmid \overline{\m{N}}\hmid \m{M}\hmid \hypert'}
+       \hmid \\
+       &
+       \semoi{{\hypert}\hmid \m{N}\hmid \m{M}\hmid
+       \overline{\hypert'}}\enspace,
+      \end{align*}
+ \item[IC]
+      \begin{align*}
+       \semo{\hypert\hmid \m{M}[x/y]}&=
+       \semo{\overline{\hypert}\hmid \m{M}} \hmid
+       \semo{{\hypert}\hmid \overline{\m{M}}}[\p x_x/ \p x_y]\\
+       \semoi{\hypert\hmid \m{M}[x/y]}&=
+       \semoi{\overline{\hypert}\hmid \m{M}} \hmid
+       \semoi{{\hypert}\hmid \overline{\m{M}}}[\p x_x/ \p x_y]
+      \end{align*}
+ \item[$\brac i$Ax]
+      \begin{align*}
+       \semo{x}=& \epsilon \enspace,\\
+       \semoi{x}=& \{i\mapsto \p i_x\}\enspace,
+      \end{align*}
+ \item[${\brac{i}}\bot\elim$]
+      \begin{align*}
+       \semo{\hypert\hmid\{i\mapsto\abort\}}
+       =&\semo{\hypert\hmid\{i\mapsto M\}} ; (\p x\leftarrow \epsilon)_i\enspace,\\
+       \semoi{\hypert\hmid\{i\mapsto\abort\}}
+       =&\semoi{\overline{\hypert}\hmid\{i\mapsto M\}} \hmid \{i\mapsto
+       \p x\}\enspace,
+      \end{align*}
+ \item[$\brac i\supset\intro$]
 \begin{align*}
  \semo{\hypert\hmid \{i\mapsto \lambda x.M\}}=
  & \semo{\hypert\hmid \imapsto{M}}; \left(\p z\leftarrow
- \lambda x. \semoi{\hypert\hmid\hat{\imapsto{M}}}'\right)_i \enspace,\\
- \semoi{\hypert\hmid \imapsto{\lambda x.M}} =& \semoi{\hat\hypert\hmid
+ \lambda x. \semoi{\hypert\hmid\overline{\imapsto{M}}}'\right)_i \enspace,\\
+ \semoi{\hypert\hmid \imapsto{\lambda x.M}} =& \semoi{\overline\hypert\hmid
  \imapsto{M}} \hmid \{i\mapsto \p z\}\enspace,
 \end{align*}
  \item[$\brac i\supset\elim$] 
@@ -2002,8 +2095,8 @@ The definition is inductive over the type derivation:
  \semo{\hypert_0\hmid \imapsto{M}};
  \semo{\hypert_1\hmid \imapsto{N}}; \text{\fix{do something to merge two
  contexts}}\\&
- \left(\p z\leftarrow \semoi{\hypert_0\hmid \hat
- M}'\semoi{\hypert_1\hmid \hat N}'\right)_i\enspace,\\
+ \left(\p z\leftarrow \semoi{\hypert_0\hmid \overline{
+ M}}'\semoi{\hypert_1\hmid \overline N}'\right)_i\enspace,\\
  \semoi{\cotuple{\hypert_0,\hypert_1}\hmid \imapsto{MN}} =&
  \text{\fix{fill}}
  \hmid \{i\mapsto \p z\}\enspace,
@@ -2012,16 +2105,16 @@ The definition is inductive over the type derivation:
 \begin{align*}
  \semo{\hypert\hmid \imapsto{\lpil M}} =& \semo{\hypert\hmid \imapsto{M}};
  \left(\p z \leftarrow
- \lpil {\semoi{\hypert\hmid\hat{\imapsto{M}}}'}\right)_i\enspace, \\
- \semoi{\hypert\hmid \imapsto{\lpil M}}=& \semoi{\hat \hypert\hmid
+ \lpil {\semoi{\hypert\hmid\overline{\imapsto{M}}}'}\right)_i\enspace, \\
+ \semoi{\hypert\hmid \imapsto{\lpil M}}=& \semoi{\overline \hypert\hmid
  \imapsto{M}}\hmid \{{i\mapsto \p z}\}\enspace,
 \end{align*}
  \item[$\brac i\wedge\elim_1$] 
 \begin{align*}
  \semo{\hypert\hmid \imapsto{\lpir M}} =& \semo{\hypert\hmid \imapsto{M}};
  \left(\p z \leftarrow
- \lpir{ \semoi{\hypert\hmid\hat{\imapsto{M}}}' }\right)_i\enspace, \\
- \semoi{\hypert\hmid \imapsto{\lpir{M}}}=& \semoi{\hat \hypert\hmid
+ \lpir{ \semoi{\hypert\hmid\overline{\imapsto{M}}}' }\right)_i\enspace, \\
+ \semoi{\hypert\hmid \imapsto{\lpir{M}}}=& \semoi{\overline \hypert\hmid
  \imapsto{M}}\hmid
  \{{i\mapsto \p z}\}\enspace,
 \end{align*}
@@ -2029,8 +2122,8 @@ The definition is inductive over the type derivation:
 \begin{align*}
  \semo{\hypert\hmid \imapsto{\linl{M}}} =
  & \semo{\hypert\hmid \imapsto{M}}; \left(\p z \leftarrow
- \linl{ \semoi{\hypert\hmid\hat{\imapsto{M}}}'}\right)_i\enspace, \\
- \semoi{\hypert\hmid \imapsto{\linl M}}=& \semoi{\hat \hypert\hmid
+ \linl{ \semoi{\hypert\hmid\overline{\imapsto{M}}}'}\right)_i\enspace, \\
+ \semoi{\hypert\hmid \imapsto{\linl M}}=& \semoi{\overline \hypert\hmid
  \imapsto{M}}
  \hmid
  \{{i\mapsto \p z}\}\enspace,
@@ -2039,12 +2132,14 @@ The definition is inductive over the type derivation:
 \begin{align*}
  \semo{\hypert\hmid \imapsto{\linr M}} =& \semo{\hypert\hmid M};
  \left(\p z \leftarrow
- \linr{\semoi{\hypert\hmid\hat M}'}\right)_i\enspace, \\
- \semoi{\hypert\hmid \linr{M}}=& \semoi{\hat \hypert\hmid M}\hmid
+ \linr{\semoi{\hypert\hmid\overline{\imapsto{M}}}'}\right)_i\enspace, \\
+ \semoi{\hypert\hmid \linr{M}}=& \semoi{\overline \hypert\hmid M}\hmid
  \{{i, \p z}\}\enspace,
 \end{align*}
  \item[$\brac{i}\vee\elim$] 
 \end{description}
+The rules IE and IW do not appear above because these rules do not
+change the form of global terms.
 \fix{before finishing the above list, make an example first}
 When $(\tj{x_i}{[i]\iota_i})_{i\in\processes}
 \tr\tj{M}(\wwedge_{i\in \processes}[i]o_i)$ is
@@ -2053,65 +2148,55 @@ we can define a protocol using the above translation.
 We set $\mathtt i_i$ to be ${\p x}_{x_i}$, ${\p o}_i$ to be arbitrarily
 chosen fresh program variables, $L$ to be the set of locations
 occurring in the derivation, we set the family of programs to be
-$\semo{M}; ({\p o}_i\leftarrow \pi_i(\semoi{\hat M}'))_{i\in\processes}$,
+$\semo{M}; ({\p o}_i\leftarrow \pi_i(\semoi{\overline M}'))_{i\in\processes}$,
 where $\pi_i$ is obtained by composing $i$~times $\pi_{\mathrm r}$ to
 $\pi_{\mathrm l}$.
 We set $g,d,t_i$ accordingly so that the program is typed.
  \begin{example}
-  The typing derivation in Figure~\ref{fig:solving} can be translated.
+  The typing derivation in Figure~\ref{fig:solving} can be translated
+  as follows.
   \begin{align*}
-   \semo{\tj{x}{[0]\bool}\tr\tj{\{0\mapsto x\}}{[0]\bool}}&= \epsilon\\
-   \semoi{\tj{x}{[0]\bool}\tr\tj{\{0\mapsto x\}}{[0]\bool}} &=
+   \semo{{\{0\mapsto x\}}}&= \epsilon\\
+   \semoi{{\{0\mapsto x\}}} &=
    \{0\mapsto \p i_x\} \\
-   \semo{\tj{y}{[1]\bool}\tr \tj{\{1\mapsto y\}}{[1]\bool}} &=
+   \semo{{\{1\mapsto y\}}} &=
    \epsilon\\
-   \semoi{\tj{y}{[1]\bool}\tr \tj{\{1\mapsto y\}}{[1]\bool}} &=
+   \semoi{{\{1\mapsto y\}}} &=
    \{1\mapsto \p i_y\}
   \end{align*}
   \begin{align*}
-    &
-   \semo{\tj{x}{[0]\bool}\tr\tj{\{0\mapsto (\comodL)x\}}{[0]\bool} \hmid
-   \tj{y}{[1]\bool}\tr\tj{\{1\mapsto (\comodR)y\}}{[1]\bool}} \\
+   \semo{{\{0\mapsto (\comodL)x\}} \hmid
+   {\{1\mapsto (\comodR)y\}}}
    =&
    \left(d\leftarrow\p i_x; \p y \leftarrow c\right)_0;
    \left(c\leftarrow\p i_y; \p x \leftarrow d\right)_1\\
-   &\semoi{\tj{x}{[0]\bool}\tr\tj{\{0\mapsto (\comodL)x\}}{[0]\bool} \hmid
-   \tj{y}{[1]\bool}\tr\tj{\{1\mapsto (\comodR)y\}}{[1]\bool}} \\
+   \semoi{{\{0\mapsto (\comodL)x\}} \hmid
+   {\{1\mapsto (\comodR)y\}}}
    =& \{0\mapsto \p y\}\hmid \{1\mapsto \p x\}
   \end{align*}
 \begin{align*}
- &\semo{\tj{x}{[0]\bool}\tr\tj{\{0\mapsto xor((\comodL)x,x)\}}{[0]\bool}\hmid
-  \tj{y}{[1]\bool}\tr\tj{\{1\mapsto xor((\comodR)y,y)\}}{[1]\bool}}\\
+ &\semo{{\{0\mapsto xor((\comodL)x,x)\}}\hmid
+  {\{1\mapsto xor((\comodR)y,y)\}}}\\
 &= \left(d\leftarrow \p i_x; \p y\leftarrow c\right)_0;
  \left(c\leftarrow \p i_y; \p x\leftarrow d\right)_1;
  \left(\p z\leftarrow xor(\p y,\p i_x)\right)_0;
  \left(\p w\leftarrow xor(\p x,\p i_y)\right)_1
  \\
- &\semoi{\tj{x}{[0]\bool}\tr\tj{\{0\mapsto xor((\comodL)x,x)\}}{[0]\bool}\hmid
-  \tj{y}{[1]\bool}\tr\tj{\{1\mapsto xor((\comodR)y,y)\}}{[1]\bool}} \\
+ &\semoi{{\{0\mapsto xor((\comodL)x,x)\}}\hmid
+  \{1\mapsto xor((\comodR)y,y)\}} \\
  &= \{0\mapsto \p z\} \hmid \{1\mapsto \p x\}
 \end{align*}
   \begin{align*}
 &\llbracket
- \tj{x}{[0]\bool}, \tj{y}{[1]\bool}\tr
- \tj{\{
+ {\{
   0\mapsto {xor((\comodL)x,x)}, 1\mapsto {y}
   \}}
-  {\{0\mapsto \bool, 1\mapsto \bool\}}
-  \hmid\phantom{\rrbracket}
-   \\
-&\phantom{\llbracket}
-     \tj{x}{[0]\bool}, \tj{y}{[1]\bool}\tr
-  \tj
+  \hmid
   {\{
   0\mapsto {x},
   1\mapsto {xor((\comodR)y, y)}
   \}}
-  {\{0\mapsto
-  \bool
-  , 1\mapsto
-  \bool
-  \}}\rrbracket\phantom{\hmid}\\
+   \rrbracket\phantom{\hmid}\\
    =& \left(d\leftarrow \p i_x; \p y\leftarrow c\right)_0;
  \left(c\leftarrow \p i_y; \p x\leftarrow d\right)_1;
  \left(\p z\leftarrow xor(\p y,\p i_x)\right)_0;
@@ -2119,25 +2204,15 @@ We set $g,d,t_i$ accordingly so that the program is typed.
    & \left(\p{x'}\leftarrow \p i_x\right)_0;
      \left(\p{y'}\leftarrow \p i_y\right)_1 \\
 &\llparenthesis
- \tj{x}{[0]\bool}, \tj{y}{[1]\bool}\tr
- \tj{\{
+ {\{
   0\mapsto {xor((\comodL)x,x)}, 1\mapsto {y}
   \}}
-  {\{0\mapsto \bool, 1\mapsto \bool\}}
-  \hmid\phantom{\rrparenthesis}
-   \\
-&\phantom{\llparenthesis}
-     \tj{x}{[0]\bool}, \tj{y}{[1]\bool}\tr
-  \tj
+  \hmid
   {\{
   0\mapsto {x},
   1\mapsto {xor((\comodR)y, y)}
   \}}
-  {\{0\mapsto
-  \bool
-  , 1\mapsto
-  \bool
-  \}}\rrparenthesis\phantom{\hmid}\\
+  \rrparenthesis\phantom{\hmid}\\
    =&
    \{0\mapsto \p z, 1\mapsto \p{y'}\} \hmid \{0\mapsto\p{x'}, 1\mapsto
    \p w\}
@@ -2166,11 +2241,14 @@ We set $g,d,t_i$ accordingly so that the program is typed.
    \\
    =&\{0\mapsto\p u,1\mapsto v\}
   \end{align*}
-  \fix{remove types and contexts: they are not necessary}
+  The last two equations translates the global term that solves the
+  exclusive-or problem (Example~\ref{ex:xor}) for the same argument as
+  in Example~\ref{ex:solv}.
  \end{example}
 
 We can simulate a reduction sequence of
-the hyperterm using a fair execution of the protocol.
+the hyperterm using an execution of the protocol where every process is
+non-faulty.
 And, since the protocol solves a problem for any fair schedule, it
 solves the problem waitfreely.
 If we deny the claim, there must be an execution where a nonfaulty
@@ -2185,6 +2263,8 @@ keeeping the failing behavior of
 the process.
 
 \fix{add example}
+
+\fix{finish the proof of soundness}
 
 \begin{theorem}[Completeness]
 If there exists a typed protocol that solves a typed input-output
