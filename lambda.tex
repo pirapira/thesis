@@ -1965,7 +1965,6 @@ We refer to the last element of $\semoi{\hypert\hmid M}$ as
 $\semoi{\hypert\hmid \overline{M}}$, the second to last element of
 $\semoi{\hypert\hmid M\hmid N}$ as
 $\semoi{\hypert\hmid \overline M\hmid N}$ and so on.
-\fix{do not use the projection apostrophy.  apply a process number.}
 If two sequents of investigator sets $\semoi{\hypert}$ and $\semoi{\hypert'}$
 have the same length, we define $\semoi{\hypert}\cup \semoi{\hypert'}$ to
 be the elementwise union.
@@ -1988,9 +1987,9 @@ essentially compilation from lambda-terms to imperative programs:
  \semo{\cotuple{\hypert_0,\hypert_1}\hmid (\comodL) M\hmid (\comodR) N}
  =& \semo{\hypert_0\hmid M};
  \semo{\hypert_1\hmid N};\\
- &(d\leftarrow \semoi{\hypert_0\hmid\overline{M}}'; \p
+ &(d\leftarrow \semoi{\hypert_0\hmid\overline{M}}(i); \p
  y\leftarrow c;)_j; \\
- &(c\leftarrow \semoi{\hypert_1\hmid\overline{N}}'; \p
+ &(c\leftarrow \semoi{\hypert_1\hmid\overline{N}}(i); \p
  x\leftarrow d;)_i\enspace,\\
  \semoi{\cotuple{\hypert_0,\hypert_1}\hmid (\comodL) M\hmid (\comodR) N} =&
  \semoi{\overline{\hypert_0}\hmid M} \cup \semoi{\overline{\hypert_1}\hmid N}
@@ -2085,58 +2084,58 @@ essentially compilation from lambda-terms to imperative programs:
 \begin{align*}
  \semo{\hypert\hmid \{i\mapsto \lambda x.M\}}=
  & \semo{\hypert\hmid \imapsto{M}}; \left(\p z\leftarrow
- \lambda x. \semoi{\hypert\hmid\overline{\imapsto{M}}}'\right)_i \enspace,\\
+ \lambda x. \semoi{\hypert\hmid\overline{\imapsto{M}}}(i)\right)_i \enspace,\\
  \semoi{\hypert\hmid \imapsto{\lambda x.M}} =& \semoi{\overline\hypert\hmid
  \imapsto{M}} \hmid \{i\mapsto \p z\}\enspace,
 \end{align*}
- \item[$\brac i\supset\elim$] 
+ \item[$\brac i\supset\elim$]
 \begin{align*}
  \semo{\cotuple{\hypert_0,\hypert_1}\hmid \imapsto{MN}}=&
  \semo{\hypert_0\hmid \imapsto{M}};
  \semo{\hypert_1\hmid \imapsto{N}}; \text{\fix{do something to merge two
  contexts}}\\&
  \left(\p z\leftarrow \semoi{\hypert_0\hmid \overline{
- M}}'\semoi{\hypert_1\hmid \overline N}'\right)_i\enspace,\\
+ M}}(i)\semoi{\hypert_1\hmid \overline N}(i)\right)_i\enspace,\\
  \semoi{\cotuple{\hypert_0,\hypert_1}\hmid \imapsto{MN}} =&
  \text{\fix{fill}}
  \hmid \{i\mapsto \p z\}\enspace,
 \end{align*}
- \item[$\brac i\wedge\elim_0$] 
+ \item[$\brac i\wedge\elim_0$]
 \begin{align*}
  \semo{\hypert\hmid \imapsto{\lpil M}} =& \semo{\hypert\hmid \imapsto{M}};
  \left(\p z \leftarrow
- \lpil {\semoi{\hypert\hmid\overline{\imapsto{M}}}'}\right)_i\enspace, \\
+ \lpil {\semoi{\hypert\hmid\overline{\imapsto{M}}}(i)}\right)_i\enspace, \\
  \semoi{\hypert\hmid \imapsto{\lpil M}}=& \semoi{\overline \hypert\hmid
  \imapsto{M}}\hmid \{{i\mapsto \p z}\}\enspace,
 \end{align*}
- \item[$\brac i\wedge\elim_1$] 
+ \item[$\brac i\wedge\elim_1$]
 \begin{align*}
  \semo{\hypert\hmid \imapsto{\lpir M}} =& \semo{\hypert\hmid \imapsto{M}};
  \left(\p z \leftarrow
- \lpir{ \semoi{\hypert\hmid\overline{\imapsto{M}}}' }\right)_i\enspace, \\
+ \lpir{ \semoi{\hypert\hmid\overline{\imapsto{M}}}(i) }\right)_i\enspace, \\
  \semoi{\hypert\hmid \imapsto{\lpir{M}}}=& \semoi{\overline \hypert\hmid
  \imapsto{M}}\hmid
  \{{i\mapsto \p z}\}\enspace,
 \end{align*}
- \item[$\brac i\vee\intro_0$] 
+ \item[$\brac i\vee\intro_0$]
 \begin{align*}
  \semo{\hypert\hmid \imapsto{\linl{M}}} =
  & \semo{\hypert\hmid \imapsto{M}}; \left(\p z \leftarrow
- \linl{ \semoi{\hypert\hmid\overline{\imapsto{M}}}'}\right)_i\enspace, \\
+ \linl{ \semoi{\hypert\hmid\overline{\imapsto{M}}}(i)}\right)_i\enspace, \\
  \semoi{\hypert\hmid \imapsto{\linl M}}=& \semoi{\overline \hypert\hmid
  \imapsto{M}}
  \hmid
  \{{i\mapsto \p z}\}\enspace,
 \end{align*}
- \item[$\brac i\vee\intro_1$] 
+ \item[$\brac i\vee\intro_1$]
 \begin{align*}
  \semo{\hypert\hmid \imapsto{\linr M}} =& \semo{\hypert\hmid M};
  \left(\p z \leftarrow
- \linr{\semoi{\hypert\hmid\overline{\imapsto{M}}}'}\right)_i\enspace, \\
+ \linr{\semoi{\hypert\hmid\overline{\imapsto{M}}}(i)}\right)_i\enspace, \\
  \semoi{\hypert\hmid \linr{M}}=& \semoi{\overline \hypert\hmid M}\hmid
  \{{i, \p z}\}\enspace,
 \end{align*}
- \item[$\brac{i}\vee\elim$] 
+ \item[$\brac{i}\vee\elim$]
 \end{description}
 The rules IE and IW do not appear above because these rules do not
 change the form of global terms.
@@ -2148,7 +2147,7 @@ we can define a protocol using the above translation.
 We set $\mathtt i_i$ to be ${\p x}_{x_i}$, ${\p o}_i$ to be arbitrarily
 chosen fresh program variables, $L$ to be the set of locations
 occurring in the derivation, we set the family of programs to be
-$\semo{M}; ({\p o}_i\leftarrow \pi_i(\semoi{\overline M}'))_{i\in\processes}$,
+$\semo{M}; ({\p o}_i\leftarrow \pi_i(\semoi{\overline M}(i)))_{i\in\processes}$,
 where $\pi_i$ is obtained by composing $i$~times $\pi_{\mathrm r}$ to
 $\pi_{\mathrm l}$.
 We set $g,d,t_i$ accordingly so that the program is typed.
