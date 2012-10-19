@@ -56,12 +56,15 @@ start after the faster one finishes.
 So, the computation is nondeterministic.
 \fix{add history of waitfree}
 
-The contribution of this paper is capturing
+The contribution of this chapter is capturing
 this nondeterminism using the nondeterministic $\lambda$-calculus for
 G\"odel--Dummett logic.  \fix{herlihyのコの字型の例}
 
-In Sect.~\ref{comparison}, we show that the
-$\lambda$-terms in the calculus can solve a typed input-output
+First we define a lambda calculus and prove some of its properties.
+Second we define typed waitfreedom.
+Finally we prove that the lambda calculus characterizes typed waitfreedom.
+In other words, we show that the
+$\lambda$-terms in the lambda calculus can solve a typed input-output
 problems if and only if it is waitfreely solvable.
 
 \section{\lgd}
@@ -96,7 +99,8 @@ Let us assume a countably infinite set of propositional variables%
 \index{propositional variable|see{variable}}\index{variable!propositional}.
 The set of propositional variables is written~$\pvar$.
 We define local formulae \index{formula!local}\index{local formula|see{formula}}%
-$\varphi, \psi$ by the following BNF,
+$\varphi, \psi$ (also called local types\index{type!local}\index{local
+type|see{type}}) by the following BNF,
 where $I$ is a
 propositional variable%
 \footnote{We include $\bot$ because G\"odel--Dummett logic has it
@@ -107,7 +111,10 @@ although $\bot$ is not necessary for us to encode waitfree computation.}%
  (\varphi\vee\psi)\enspace.
 \]
 We omit parentheses following the usual convention.
-A global formula is a non-empty partial mapping from processes to local
+A global formula\index{formula!global}\index{global
+formula|see{formula}}
+(also called a global type\index{type!global}\index{global type|see{type}})
+is a non-empty partial mapping from processes to local
 formulae.
 We use $\m\phi$ and $\m\psi$ for global formulae.
 For a natural number~$i$ (representing a process),
@@ -417,6 +424,7 @@ annotated as in Figure~\ref{fig:typed}.
 \ruleskip
  \AxiomC{$\hypert\hmid \G\tr\tj{(M_i)_{i\in I}}{(\phi_i)_{i\in I}}\hmid
  \G\tr\tj{(N_i)_{i\in I}}{(\phi_i)_{i\in I}}$}
+ \LL{EC}
  \UnaryInfC{$\hypert\hmid
  \G\tr\tj{(\cotuple{M_i',N_i'})_{i\in I}}{(\phi_i)_{i\in I}}$}
  \DisplayProof
@@ -426,7 +434,7 @@ annotated as in Figure~\ref{fig:typed}.
 \ruleskip
  \UnaryRule
  {$\hypert\hmid\Gamma\tr M\colon\m\varphi\hmid\Delta\tr N\colon \m\psi\hmid \hypert'$}
- {EC}
+ {EE}
  {$\hypert\hmid\Delta\tr N\colon\m\psi   \hmid\Gamma\tr M\colon \m\varphi\hmid \hypert'$}
  \ruleskip
 \textbf{Inner Global Rules}
@@ -442,7 +450,6 @@ annotated as in Figure~\ref{fig:typed}.
    M{\m\psi}$}
    {IC}
    {$\hypert \hmid \tj{x}{[i]\phi}, \Gamma\tr \tj{\m{M}[x/y]}{\m\psi}$}
- \fix{define substitution on global terms}
 \ruleskip
 \UnaryRule
    {$\hypert\hmid\Gamma,\tj x{[i]\phi},\tj y{[j]\psi},\Delta\tr
@@ -453,8 +460,8 @@ annotated as in Figure~\ref{fig:typed}.
 \ruleskip
 %% conj intro
  \BinaryRule
- {$\hypert\hmid\G,\D_0\tr\tj{(M_i)_{i\in I}}{(\phi_i)_{i\in I}}$}
- {$\hypert\hmid\G,\D_1\tr\tj{(N_j)_{j\in J}}{(\psi_j)_{j\in J}}$}
+ {$\hypert_0\hmid\G,\D_0\tr\tj{(M_i)_{i\in I}}{(\phi_i)_{i\in I}}$}
+ {$\hypert_1\hmid\G,\D_1\tr\tj{(N_j)_{j\in J}}{(\psi_j)_{j\in J}}$}
  {$\wedge\intro$}
  {$\cotuple{\hypert_0,\hypert_1}\hmid \G,\D_0,\D_1\tr\tj
  {(\lpair{M_k,N_k})_{k\in I\cap J}\sqcup (M_i)_{i\in I\setminus J}\sqcup
@@ -1064,34 +1071,32 @@ resulting hyperterm.  And, even after reductions, the resulting
 hyperterm has a component not containing $\abort$.
 \end{proof}
 
-\fix{define $\m\phi[j/i]$ 10 min}
+In order to justify the renaming operation appearing in the proof of
+\thref{nab}, we first define the renaming operation on global types.
+Of a global type $\m\phi = (\phi_i)_{i \in I}$,
+the $j$-replacement~$\phi^{+j}$ is
+$\{j \mapsto \bigwedge_{i\in I} (\phi_i)\}$.  For example, the
+1-replacement of $[0]\bot$ is $[0]\bot^1 = [1]\bot$.
 
- \begin{proposition}
-  \label{process-change}
-  When $\mathcal O \hmid \G_0,\D_0\tr\tj{\kmapsto{P}}{[k]\psi_0}$ is derivable,
-  $\mathcal O\hmid \G_0^m, \D_0^m\tr\tj{\mmapsto{P}}{[m]\psi_0}$ is also
-  derivable%
-  \footnote{Note that the modalities in $\mathcal O$ are not changed
-  while the modalities in $\G_0$ and $\D_0$ are turned into $[k]$.}.
- \end{proposition}
- We have to generalize this statement in order to use induction on the
- derivations because a global type is not always a singleton type as in
- this statement.  In order to generalize the statement, we have to
- define the renaming of processes in global types.
-  \begin{definition}
-  \end{definition}
+For a context $\G = \tj{x_0}{[i_0]\phi_0}, \tj{x_1}{[i_1]\phi_1},
+\tj{x_2}{[i_2]\phi_2}, \ldots,\tj{x_n}{[i_n]\phi_n}$,
+the $j$-replacement $\G^j$ is
+$\tj{x_0}{[j]\phi_0}, \tj{x_1}{[j]\phi_1},
+\tj{x_2}{[j]\phi_2}, \ldots,\tj{x_n}{[j]\phi_n}$.
 
   \begin{proposition}
-   \label{process-change-gen}
-   \fix{20 min to state}
+   \label{process-change}
+  When $\mathcal O \hmid \G_0,\D_0\tr\tj{\m{M}}{\m\phi}$ is derivable,
+  $\mathcal O\hmid \G_0^m, \D_0^m\tr\tj{\mmapsto{M'}}{\phi^{+m}}$ is also
+  derivable for some local term~$M'$.
   \end{proposition}
   \begin{proof}
-   \fix{fix proof 50 min}
    By induction on the height of derivation.
-   All rules except com and EC rules are trivial because they do not interact
+   All rules except com and EC rules are trivial because
+   they do not interact
    with the modalities.  For EC rule, we have to apply the induction
-   hypothesis twice to change modalities in two components.  For com rule,
-   let us assume the derivation ends in com rule as:
+   hypothesis twice to change modalities in two components.
+   For com rule, let us assume the derivation ends in com rule as:
    \[
    \BinaryRule
    {$\hypert_0\hmid\G\tr\tj{M}{[i]\varphi}$}
@@ -1101,14 +1106,15 @@ hyperterm has a component not containing $\abort$.
    \Delta\tr\tj{(\comodR)N}{[j]\varphi}$}\enspace.
    \]
    We have to consider three cases:  first, when
-   $\G_0,\D_0\tr\tj{P}{[k]\psi_0}$ is in $[\mathcal O_0, \mathcal O_1]$;
-   second, when $\G_0,\D_0\tr\tj{P}{[k]\psi_0}$ is identical to
-   $ \Gamma\tr\tj{(\comodL)M}{[i]\psi} $; and third,
-   when $\G_0,\D_0\tr\tj{P}{[k]\psi_0}$ is identical to
-   $\Delta\tr\tj{(\comodR)N}{[j]\varphi}$.
-   The second and third cases are symmetric.  In the first case, $P$ is
-   actually a concurrent construct $[P_0,P_1]$. We can apply the
-   induction hypothesis to $P_0$ and $P_1$ and combine them again.
+   $\G_0,\D_0\tr\tj{\m M}{\m \phi}$ is in $[\mathcal O_0, \mathcal O_1]$;
+   second, when $\G_0,\D_0\tr\tj{\m{M}}{\m{\phi}}$ is identical to
+   $\G\tr\tj{(\comodL)M}{[i]\psi} $; and third,
+   when $\G_0,\D_0\tr\tj{\m{M}}{\m{\phi}}$ is identical to
+   $\D\tr\tj{(\comodR)N}{[j]\varphi}$.
+   The second and third cases are symmetric.  In the first case, $\m{M}$ is
+   actually a concurrent construct $([P_i,Q_i])_{i\in I}$. We can apply the
+   induction hypothesis to $P$ and $Q$ and combine them
+   again~$\mmapsto{\cotuple{P', Q'}}$.
    In the second case, we can use the induction hypothesis on the left branch%
    \footnote{One crucial thing is the choice of the form of the com rule.
    If we use the com' rule by Avron~\cite{avron91}, the proof does not
@@ -1126,10 +1132,6 @@ hyperterm has a component not containing $\abort$.
    rightmost component.
    }.
   \end{proof}
-
- \begin{proof}[of Proposition~\ref{process-change}]
-  Follows from Proposition~\ref{process-change-gen}
- \end{proof}
 
 \subsubsection{Strong Normalization}
 \newcommand{\sreduce}{\leadsto}
@@ -1379,7 +1381,7 @@ A program\index{program} is defined by BNF:
  \p x\leftarrow E; p \mid
  l \leftarrow E; p
 \]
-where an expression\index{expression} is
+where an expression\index{expression}~$E$ is
 \begin{align*}
  E
  ::=\,\,
@@ -1387,8 +1389,8 @@ where an expression\index{expression} is
  x.E\mid \tuple{E,E}\mid \linl{E}\mid \linr{E}\mid \\
  &\lpil{E}\mid\lpir{E}\mid  \mat E x {E} y {E}\mid \epsilon\enspace.
 \end{align*}
-The expression~$\epsilon$ is used as the initial content of the shared
-memory \fix{really?}.
+Here, the expression~$\epsilon$ is used as the initial content of the shared
+memory.
 
 \newcommand{\Wg}{W_{\mathrm g}}
 \newcommand{\Wd}{W_{\mathrm d}}
@@ -1524,22 +1526,43 @@ is in $J$:
  \end{cases}\\
 \end{align*}
 with the following notations.
-We let $i(l)$ to be $\vg v l$ if $d(l)=i$ and
-$\vd v l$ if $g(l) = i$.
 The term
 $\semo{E}_{x, \vec v}$ is defined as the unique normal form
 %{show, show, show}
-of $E[x(\vec{\p y}) / \vec{\p y}][\vec{i(l)}/\vec c]$ \fix{what is this vector?}, where
-every program variable~$\p y$ is replaced by $x(\p y)$ and the
-uniqueness is guaranteed by the absence of $c$.
+of the local term~$E[x(\vec{\p y}) / \vec{\p y}][\vec{v_c}/\vec c]$, where
+every program variable~$\p y$ is replaced by $x(\p y)$
+and every channel~$c$. is replaced by $v_c$.
 If any of the substitutes is $\epsilon$,
-$\semo{E}_{x, \vec v}$ is $\epsilon$.
+$\semo{E}_{x, \vec v}$ is defined to be $\epsilon$.
 
-A schedule\index{schedule} is an infinite sequence of nonempty subsets of~$\processes$,
+A schedule\index{schedule} is an infinite sequence of nonempty subsets
+of~$\processes$,
 which looks like $\sigma = \sigma_0\sigma_1\sigma_2\cdots$.
 We say $i$ is nonfaulty\index{nonfaulty} (resp.~faulty\index{faulty}) in
 $\sigma$ if it appears infinitely (resp. only finitely many) often.
-When every process is nonfaulty, the schedule is \textit{fair}.
+When every process is nonfaulty, the schedule is fair\index{fair}%
+\footnote{The difference of strong fairness and weak fairness does not
+arise here.  \fix{cite something}
+}.
+ \begin{example}
+  \label{ex:schedules}
+  When $\processes$ is a singleton $\{0\}$, there is only one schedule
+  $(\{0\},\{0\},\{0\},\ldots)$ where $\ldots$ contains only $\{0\}$'s.
+  Since 0 is the only process and 0 is nonfaulty, this schedule is fair.
+
+  Assume $\processes = \{0,1\}$.
+  There is a schedule which is not fair: $(\{0\}, \{0\}, \{0\}, \ldots)$
+  where $\ldots$ contains only $\{0\}$'s.
+  Even when we add a finite prefix to an unfair schedule, the schedule
+  is still not fair because no process can appear infinitely often in that
+  finite prefix.
+
+  Obviously, when a schedule contains infinitely many
+  $\{0,1\}$'s, then the schedule is fair.  Not only that, but when a
+  schedule contains infinitely many $\{0\}$'s and infinitely many $\{1\}$'s,
+  then the schedule is fair.  On the other direction, a fair schedule
+  must satisfy one of these conditions.
+ \end{example}
 
 A run\index{run} is a triple $\tuple{\Pi, \vec x, \sigma}$,
 where $\Pi$ is a typed protocol,
@@ -1926,11 +1949,13 @@ We show that the ability of the waitfree protocols and \lgd\, are the same.
 
 
 \begin{theorem}[Soundness]
+ \label{th:soundness}
 If a typed input-output problem is solvable by a term,
 there exists a typed protocol that solves the problem.
 \end{theorem}
 
-We are going to translate a typed hyperterm into a protocol inductively
+In order to prove this theorem,
+we are going to translate a typed hyperterm into a protocol inductively
 on the type derivation.
 To make induction work, we use the following auxiliary notions.
 An investigator\index{investigator} is a partial mapping from processes
@@ -2019,18 +2044,17 @@ essentially compilation from lambda-terms to imperative programs:
        \semoi{\hypert\hmid \overline{(M_i)}\hmid
        (N_i)}(i)
        \right)_{i\in I\mid M_i \neq
-       M'_i}\enspace,\\
+       M'_i}\enspace,\\ \\
        &\semoi{ \hypert \hmid \left(\cotuple{M'_i,N'_i}\right)_{i\in I}
        } \\
        = &
        \semoi{\overline{\hypert}\hmid \left(\cotuple{M'_i,N'_i}\right)_{i \in I}}
        \hmid \{i\mapsto \p k_i\}_{i\in I}
       \end{align*}
-      \fix{above, give an example of this kind of notations}
+      \fix{explain?}
  \item[EE]
       \begin{align*}
-       &\semo{\hypert \hmid \m{N} \hmid \m{M} \hmid \hypert'}
-       \\
+       \semo{\hypert \hmid \m{N} \hmid \m{M} \hmid \hypert'}
        =&
        \semo{\overline{\hypert}\hmid \m{N}\hmid \m{M}\hmid \hypert'}
        \hmid \\
@@ -2043,8 +2067,7 @@ essentially compilation from lambda-terms to imperative programs:
        &
        \semo{{\hypert}\hmid \m{N}\hmid \m{M}\hmid
        \overline{\hypert'}}\enspace,\\
-       &\semoi{\hypert \hmid \m{N} \hmid \m{M} \hmid \hypert'}
-       \\
+       \semoi{\hypert \hmid \m{N} \hmid \m{M} \hmid \hypert'}
        =&
        \semoi{\overline{\hypert}\hmid \m{N}\hmid \m{M}\hmid \hypert'}
        \hmid \\
@@ -2245,6 +2268,8 @@ We set $g,d,t_i$ accordingly so that the program is typed.
   in Example~\ref{ex:solv}.
  \end{example}
 
+ \begin{proof}[of \thref{th:soundness}]
+  \fix{prove}
 We can simulate a reduction sequence of
 the hyperterm using an execution of the protocol where every process is
 non-faulty.
@@ -2260,10 +2285,7 @@ wrong answer or
 We can modify the schedule after step $k$ to a fair one,
 keeeping the failing behavior of
 the process.
-
-\fix{add example}
-
-\fix{finish the proof of soundness}
+ \end{proof}
 
 \begin{theorem}[Completeness]
 If there exists a typed protocol that solves a typed input-output
