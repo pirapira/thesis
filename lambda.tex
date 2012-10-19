@@ -183,10 +183,10 @@ $[0]((\varphi\supset\psi)\vee(\psi\supset\varphi))$ is provable (Figure~\ref{fig
    \vskip 2mm
 %%communication
    \BinaryRule
-   {$\hyper\hmid\G\vdash[i]\phi$}
-   {$\hyper\hmid\D\vdash[j]\psi$}
+   {$\hyper_0\hmid\G\vdash[i]\phi$}
+   {$\hyper_1\hmid\D\vdash[j]\psi$}
    {$ij$-com}
-   {$\hyper\hmid\Gamma\vdash[i]\psi\hmid\Delta\vdash[j]\varphi$}
+   {$\hyper_0\hmid\hyper_1\hmid\Gamma\vdash[i]\psi\hmid\Delta\vdash[j]\varphi$}
   \hfill
 %% external structural
  \UnaryRule
@@ -226,10 +226,10 @@ $[0]((\varphi\supset\psi)\vee(\psi\supset\varphi))$ is provable (Figure~\ref{fig
    \ruleskip
 %% global conj intro
  \BinaryRule
- {$\hyper\hmid\G,\D_0\tr(\phi_i)_{i\in I}$}
- {$\hyper\hmid\G,\D_1\tr(\psi_j)_{j\in J}$}
+ {$\hyper_0\hmid\G,\D_0\tr(\phi_i)_{i\in I}$}
+ {$\hyper_1\hmid\G,\D_1\tr(\psi_j)_{j\in J}$}
  {$\wedge\intro$}
- {$\hyper\hmid\G,\D_0,\D_1\tr(\phi_k\land\psi_k)_{k\in I\cap J}\sqcup
+ {$\hyper_0\hmid\hyper_1\hmid\G,\D_0,\D_1\tr(\phi_k\land\psi_k)_{k\in I\cap J}\sqcup
  (\phi_i)_{i\in I\setminus J}\sqcup (\psi_j)_{j\in J\setminus I}$}
  \ruleskip
 %% global conj elim
@@ -257,10 +257,10 @@ $[0]((\varphi\supset\psi)\vee(\psi\supset\varphi))$ is provable (Figure~\ref{fig
   \hfill
 %% local imp elim
   \BinaryRule
-  {$\hyper\hmid\G,\D_0\vdash [i](\phi\imp\psi)$}
-  {$\hyper\hmid\G,\D_1\vdash [i]\phi$}
+  {$\hyper_0\hmid\G,\D_0\vdash [i](\phi\imp\psi)$}
+  {$\hyper_1\hmid\G,\D_1\vdash [i]\phi$}
   {$[i]\supset\elim$}
-  {$\hyper\hmid\G,\D_0,\D_1\vdash [i]\psi$}
+  {$\hyper_0\hmid\hyper_1\hmid\G,\D_0,\D_1\vdash [i]\psi$}
    \ruleskip
 %% local conj elim
   \UnaryRule{$\hyper\hmid\Gamma\vdash [i](\varphi\wedge\psi)$}
@@ -283,11 +283,12 @@ $[0]((\varphi\supset\psi)\vee(\psi\supset\varphi))$ is provable (Figure~\ref{fig
 \ruleskip
 %% local disj elim
    \TrinaryRule
-   {$\hyper\hmid\G,\D_0\vdash[i](\phi\vee\psi)$}
-   {$\hyper\hmid[i]\varphi, \G,\D_1\vdash[i]\theta$}
-   {$\hyper\hmid[i]\psi,    \G,\D_2\vdash[i]\theta$}
+   {$\hyper_0\hmid\G,\D_0\vdash[i](\phi\vee\psi)$}
+   {$\hyper_1\hmid[i]\varphi, \G,\D_1\vdash[i]\theta$}
+   {$\hyper_2\hmid[i]\psi,    \G,\D_2\vdash[i]\theta$}
    {$[i]\vee\elim$}
-   {$\hyper\hmid         \G,\D_0,\D_1,\D_2\vdash[i]\theta$}
+   {$\hyper_0\hmid\hyper_1\hmid\hyper_2\hmid
+ \G,\D_0,\D_1,\D_2\vdash[i]\theta$}
 \ruleskip
 \caption[The underlying logic \fix{of what}.]
  {The underlying logic.
@@ -405,14 +406,14 @@ annotated as in Figure~\ref{fig:typed}.
 \begin{figure}[p]
  \small
 \centering
-\textbf{External Rules}
-\ruleskip
+% \textbf{External Rules}
+% \ruleskip
 %% communication
 \BinaryRule
    {$\hypert_0\hmid\G\tr\tj{\imapsto{M}}{[i]\phi}$}
    {$\hypert_1\hmid\D\tr\tj{\jmapsto{N}}{[j]\psi}$}
    {com}
-   {$\cotuple{\hypert_0,\hypert_1}\hmid\Gamma\tr\tj{\imapsto{(\comodL)M}}{[i]\psi}\hmid
+   {$\hypert_0\hmid\hypert_1\hmid\Gamma\tr\tj{\imapsto{(\comodL)M}}{[i]\psi}\hmid
    \Delta\tr\tj{\jmapsto{(\comodR)N}}{[j]\phi}$}
  \\ where channels $c$ and $d$ are fresh.
 \ruleskip
@@ -429,7 +430,7 @@ annotated as in Figure~\ref{fig:typed}.
  \G\tr\tj{(\cotuple{M_i',N_i'})_{i\in I}}{(\phi_i)_{i\in I}}$}
  \DisplayProof
  \\where $I$ is a nonempty subset of $\processes$ and, for
- each $i\in\processes$, the pairs $\cotuple{M_i', N_i'}$
+ each $i\in\processes$, \\the pairs $\cotuple{M_i', N_i'}$
  is identical to either $\cotuple{M_i, N_i}$ or $\cotuple{N_i, M_i}$.
 \ruleskip
  \UnaryRule
@@ -437,8 +438,8 @@ annotated as in Figure~\ref{fig:typed}.
  {EE}
  {$\hypert\hmid\Delta\tr N\colon\m\psi   \hmid\Gamma\tr M\colon \m\varphi\hmid \hypert'$}
  \ruleskip
-\textbf{Inner Global Rules}
-   \ruleskip
+% \textbf{Inner Global Rules}
+%    \ruleskip
  % internal contraction
    \UnaryRule
    {$\hypert\hmid \Gamma\tr\tj {\m M} {\m\varphi}$}
@@ -459,15 +460,30 @@ annotated as in Figure~\ref{fig:typed}.
  {\m M}{\m\theta}$} %IE
 \ruleskip
 %% conj intro
- \BinaryRule
+ {
+ \AxiomC
  {$\hypert_0\hmid\G,\D_0\tr\tj{(M_i)_{i\in I}}{(\phi_i)_{i\in I}}$}
+ \AxiomC
  {$\hypert_1\hmid\G,\D_1\tr\tj{(N_j)_{j\in J}}{(\psi_j)_{j\in J}}$}
+ \LL
  {$\wedge\intro$}
- {$\cotuple{\hypert_0,\hypert_1}\hmid \G,\D_0,\D_1\tr\tj
+ \BinaryInfC
+ {{
+ $\hypert_0\hmid\hypert_1\hmid \G,\D_0,\D_1\tr$\phantom{some text
+ necessary here, enough to make a line long}
+ }}
+ \noLine
+ \UnaryInfC{
+ $
+ \tj
  {(\lpair{M_k,N_k})_{k\in I\cap J}\sqcup (M_i)_{i\in I\setminus J}\sqcup
  (N_j)_{j\in J\setminus I}}
  {(\phi_k\land\psi_k)_{k\in I\cap J}\sqcup
- (\phi_i)_{i\in I\setminus J}\sqcup (\psi_j)_{j\in J\setminus I}}$}
+ (\phi_i)_{i\in I\setminus J}\sqcup (\psi_j)_{j\in J\setminus I}}
+ $
+ }
+ \DisplayProof
+ }
    \ruleskip
 %% conj elim
 \UnaryRule
@@ -476,8 +492,8 @@ annotated as in Figure~\ref{fig:typed}.
  {$\hypert\hmid\G\tr\tj{(M_j)_{j\in J}}{(\phi_j)_{j\in J}}$}
  where $J$ is a subset of $I$.
 \ruleskip
-\textbf{Inner Local Rules}
-\ruleskip
+% \textbf{Inner Local Rules}
+% \ruleskip
 %% axiom
   \UnaryRule{}{$[i]$Ax}{$\tj {x}{[i]\varphi}, \Gamma\tr \tj
  {\imapsto x}{[i]\varphi}$}
@@ -498,8 +514,7 @@ annotated as in Figure~\ref{fig:typed}.
  {$\hypert_0\hmid\G,\D_0 \tr \tj {\imapsto{M}}{[i](\varphi\supset \psi)}$}
  {$\hypert_1\hmid\G,\D_1 \tr \tj {\imapsto{N}}{[i]\varphi}$}
  {$[i]\imp\elim$}
- {$\cotuple{\hypert_0,\hypert_1}\hmid\G,\D_0,\D_1\tr \tj{\imapsto{MN}}{[i]\psi}$}
-                       \ruleskip
+ {$\hypert_0\hmid\hypert_1\hmid\G,\D_0,\D_1\tr \tj{\imapsto{MN}}{[i]\psi}$}
    \ruleskip
 %% local conj elim
   \UnaryRule
@@ -513,25 +528,31 @@ annotated as in Figure~\ref{fig:typed}.
    {$\hypert\hmid\Gamma\tr \tj{\imapsto{\lpir M}}{[i]\psi}$}
 \ruleskip
 %% local disj intro
+ {\footnotesize
   \UnaryRule
    {$\hypert\hmid\Gamma\tr \tj{\imapsto{M}}{[i]\varphi}$}
    {$[i]\vee\intro_0$}
    {$\hypert\hmid\Gamma\tr \tj{\imapsto{\linl{M}}}{[i](\varphi\vee\psi)}$}
-   \ruleskip
+   \hfill
   \UnaryRule
    {$\hypert\hmid\Gamma\tr \tj{\imapsto{M}}{[i]\psi}$}
    {$[i]\vee\intro_1$}
-   {$\hypert\hmid\Gamma\tr \tj{\imapsto{\linr{M}}}{[i](\varphi\vee\psi)}$}
+   {$\hypert\hmid\Gamma\tr
+ \tj{\imapsto{\linr{M}}}{[i](\varphi\vee\psi)}$}
+}
  \ruleskip
 %% local disj elim
-\TrinaryRule
+\AxiomC
    {$\hypert_0\hmid\G,\D_0\tr \tj{\imapsto{M}}{[i](\phi\lor\psi)}$}
-   {$\hypert_1\hmid\tj x{[i]\phi},\G,\D_1\tr \tj{\imapsto{N_0}}{[i]\theta}$}
-   {$\hypert_2\hmid\tj y{[i]\psi},\G,\D_2\tr \tj{\imapsto{N_1}}{[i]\theta}$}
-   {$[i]\vee\elim$}
-   {$\cotuple{\cotuple{\hypert_0,\hypert_1},\hypert_2}\hmid\G,\D_0,\D_1,\D_2 \tr
+ \noLine
+ \UnaryInfC{$\hypert_1\hmid\tj x{[i]\phi},\G,\D_1\tr
+ \tj{\imapsto{N_0}}{[i]\theta}$}
+ \noLine
+ \UnaryInfC{$\hypert_2\hmid\tj y{[i]\psi},\G,\D_2\tr \tj{\imapsto{N_1}}{[i]\theta}$}
+ \LL{$[i]\vee\elim$}
+ \UnaryInfC{$\hypert_0\hmid\hypert_1\hmid\hypert_2\hmid\G,\D_0,\D_1,\D_2 \tr
  \tj{\imapsto{\mat M x {N_0} y {N_1}}}{[i]\theta}$}
- \fix{solve space problem}
+ \DisplayProof
 \ruleskip
  \caption[Term assignment of \lgd.]
  {Term assignment.
@@ -541,11 +562,6 @@ annotated as in Figure~\ref{fig:typed}.
  $\hypert$ stands for
  a possibly empty hypersequent (with possible subscripts).
  $\hypert^+$ stands for a non-empty hypersequent.
- Within each rule, $\hypert_0$, $\hypert_1$ and $\hypert_2$ have the
- same length and the same type so that $\cotuple{\hypert_0,\hypert_1}$
- can be defined as
- the elementwise application of $\cotuple{\term,\term}$. \fix{ needs
- more explanation}
  }
  \label{termassign}
 \end{figure}
@@ -858,7 +874,7 @@ For example, $(\sigma, \cotuple{\abort,\abort})$ reduces to $(\sigma,
 \abort)$.
 
 In order to obtain the subformula property
- via proof normalization
+ using proof normalization \fix{show subfmla or change here},
 we add yet another kind of reduction rules called permutative
  reductions.
 \begin{definition}[Permutative reduction]
@@ -1043,7 +1059,7 @@ a communication rule occurrence
  {$\hypert_0\hmid \G,\D\tr \tj{\imapsto{M}}{[i]\psi}$}
  {$\hypert_1\hmid \G,\D\tr \tj{\jmapsto{N}}{[j]\tau}$}
  {}
- {$\cotuple{\hypert_0,\hypert_1}\hmid
+ {$\hypert_0\hmid\hypert_1\hmid
  \Gamma\tr \tj
    {\imapsto{(\comodL)M}}{[i]\tau}\hmid
    \Delta\tr \tj{\jmapsto{(\comodR)N}}{[j]\psi}$}
@@ -1124,7 +1140,7 @@ $\tj{x_0}{[j]\phi_0}, \tj{x_1}{[j]\phi_1},
    {$\hypert_0\hmid\G,\D\tr\tj{M}{[i]\varphi}$}
    {$\hypert_1\hmid\G,\D\tr\tj{N}{[j]\psi}$}
    {}
-   {$\cotuple{\hypert_0,\hypert_1}\hmid\G\tr\tj{(\comodL)M}{[i]\psi}\hmid
+   {$\hypert_0\hmid\hypert_1\hmid\G\tr\tj{(\comodL)M}{[i]\psi}\hmid
    \D\tr\tj{(\comodR)N}{[j]\varphi}$}\enspace.
    \]
    There, if we want to change the modalities in the rightmost component
@@ -1176,7 +1192,7 @@ same effect, we might be able to use other strong normalization
 }%
 .
 
-We assume an infinite sequence of reductions
+We assume an infinite sequence of reductions, namely,
 $
 \conf{_0}{\hypert_0}
 \reduce
@@ -1186,20 +1202,20 @@ $
 \reduce\cdots
 $.
 From this, we are going to construct an infinite sequence of
-symmetricreductions in the pure fragment.
+symmetric reductions in the pure fragment.
 
 For that, we first
 build an infinite reduction sequence with constant stores.
 Using the original infinite sequence, we define a pair of stores called the
 store prophecy\index{store!--- prophecy} $\lstore_\infty$ where
-$ \lstore_\infty(l)= \epsilon$ if $\lstore_k(l)=\epsilon$ for all
+$ \lstore_\infty(c)= \epsilon$ if $\lstore_k(c)=\epsilon$ for all
  $k\in\omega$ and
-$ \lstore_\infty(l)=M $ if $\lstore_k(l)=M$ for some $k\in\omega$.
+$ \lstore_\infty(c)=M $ if $\lstore_k(c)=M$ for some $k\in\omega$.
 Since store contents are never overwritten,
 $\lstore_\infty$ is well-defined.
 Moreover,
-$\lstore_i(l)$ and $\lstore_\infty(l)$ coincide unless
-$\lstore_i(l)=\epsilon$.
+$\lstore_i(c)$ and $\lstore_\infty(c)$ coincide unless
+$\lstore_i(c)=\epsilon$.
 
 We build another reduction sequence
 $
@@ -1210,7 +1226,7 @@ $
 \conf{_\infty}{\hypert'_2}
 \reduce^\ast\cdots
 $
-with the following invariant:
+with the following invariant \fix{what is $\mathcal M$?}:
 $\mathcal M'_i$ can be obtained by replacing some $\abort$ occurrences
 in $\mathcal M_i$ with some terms.
 More specifically, we translate each reduction as follows, keeping the
@@ -1227,11 +1243,12 @@ invariant inductively on the number of steps
        Otherwise, $O'$ must be $\abort$.
        Thus, the invariant
        holds for $k+1$.
- \item a write reduction disappears;
- \item an $\abort$ reduction of the form $\cotuple{\abort, M}\areduce M$
-       \fix{fill 20 min}
- \item an $\abort$ reduction of the form $\cotuple{M, N}\areduce M$
-       \fix{fill 20 min}
+ \item a write reduction $\conf{[c\mapsto \epsilon]}{\imapsto{(\comodR)M}} \wreduce
+	\conf{[c\mapsto M]}{\imapsto{\reader d}}
+	$ is translated into
+       $\conf{_\infty}{\imapsto{(\comodR)M}} \wreduce
+	\conf{_\infty}{\imapsto{\reader d}}
+	$;
  \item an $\abort$ reduction of the form
        $\hypc{}{C[\abort]} \areduce \hypc{}{\abort}$ can be translated
        either to a similar reduction or no reduction if the $\abort$ in
@@ -1256,7 +1273,7 @@ strictly shortens the term under operation.
  every ${\reader c}$ with
  $\lstore_\infty(c)$.
  Since $\reader c$ either reduces to $\lstore_\infty(c)$ or $\abort$,
- replacing it with $\lstore_\infty(l)$ will only ``shorten'' the reduction
+ replacing it with $\lstore_\infty(c)$ will only ``shorten'' the reduction
  sequence for at most one read step.
  Replacing every such occurrences
  makes an infinite reduction sequence where every occurring term is
@@ -1282,9 +1299,9 @@ We can deal with the permutative reductions following de
  there are no infinite sequence of abort reductions.
 \end{proof}
 
-\fix{subformula property around here state in 6min}
+% \fix{subformula property around here state in 6min}
 
-\fix{prove subfmla in 90min}
+% \fix{prove subfmla in 90min}
 
 \section{Typed Waitfreedom}
 \label{waitfreedom}
@@ -2113,14 +2130,14 @@ essentially compilation from lambda-terms to imperative programs:
 \end{align*}
  \item[$\brac i\supset\elim$]
 \begin{align*}
- \semo{\cotuple{\hypert_0,\hypert_1}\hmid \imapsto{MN}}=&
+ \semo{\hypert_0\hmid\hypert_1\hmid \imapsto{MN}}=&
  \semo{\hypert_0\hmid \imapsto{M}};
- \semo{\hypert_1\hmid \imapsto{N}}; \text{\fix{do something to merge two
- contexts}}\\&
+ \semo{\hypert_1\hmid \imapsto{N}};\\&
  \left(\p z\leftarrow \semoi{\hypert_0\hmid \overline{
- M}}(i)\semoi{\hypert_1\hmid \overline N}(i)\right)_i\enspace,\\
- \semoi{\cotuple{\hypert_0,\hypert_1}\hmid \imapsto{MN}} =&
- \text{\fix{fill}}
+ M}}(i)\,\,\semoi{\hypert_1\hmid \overline N}(i)\right)_i\enspace,\\
+ \semoi{\hypert_0\hmid\hypert_1\hmid \imapsto{MN}} =&
+ \semoi{\overline{\hypert_0}\hmid \imapsto{M}} \hmid
+ \semoi{\overline{\hypert_1}\hmid \imapsto{N}}
  \hmid \{i\mapsto \p z\}\enspace,
 \end{align*}
  \item[$\brac i\wedge\elim_0$]
@@ -2162,7 +2179,6 @@ essentially compilation from lambda-terms to imperative programs:
 \end{description}
 The rules IE and IW do not appear above because these rules do not
 change the form of global terms.
-\fix{before finishing the above list, make an example first}
 When $(\tj{x_i}{[i]\iota_i})_{i\in\processes}
 \tr\tj{M}(\wwedge_{i\in \processes}[i]o_i)$ is
 derivable,
@@ -2269,7 +2285,7 @@ We set $g,d,t_i$ accordingly so that the program is typed.
  \end{example}
 
  \begin{proof}[of \thref{th:soundness}]
-  \fix{prove}
+  \fix{prove on paper 80min}
 We can simulate a reduction sequence of
 the hyperterm using an execution of the protocol where every process is
 non-faulty.
@@ -2351,7 +2367,7 @@ like $\{c_0, c_1, c_2\}$.
 
 Now, we are ready to construct a hyperterm solving the two-party
 participating set problem.
-We can obtain a derivation of \fix{something else}:
+We can obtain a derivation of \fix{something else 20min}:
 
 One possible reduction sequence is as follows: \fix{according to the new
 rule?}
@@ -2457,14 +2473,15 @@ store prophecy.
 If we can find a semantic counterpart $\mathsf{Sch}$ of the store
 prophecy, possibly, we
 can obtain a denotation $\mathcal{D}^\mathsf{Sch}$ of terms
-using a denotation $\mathcal{D}$ for normal forms\fix{pursue this in the
-following chapters}.
+using a denotation $\mathcal{D}$ for normal forms%
+% \fix{pursue this in the
+% following chapters}
+.
 If that succeeds for classical logic, it will be interesting%
 \footnote{Kazushige Terui suggested the potential impact for classical logic.}%
 .
 
-\fix{external contraction is not general.}
-\fix{no problem with regard to provability}
+\fix{say, no problem with regard to provability 40min}
 
 \section{Conclusion}
 \label{conc}
