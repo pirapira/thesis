@@ -342,9 +342,25 @@ We define local terms\index{term!local}~$\term$ by BNF:
 \mid \mat \term x\term y \term
 \end{align*}
 where $x$ is a variable and $c$ is a channel.
-All variable occurrences (including those in $\Gamma$)
-except the first clause are binding.
-A closed local term has no free variables.  \fix{what is a free variable?}
+All variable occurrences except the first clause are binding.
+The set of free variables of a local term $FV(M)$ is defined inductively
+on $M$:
+\begin{align*}
+ FV(x)&= \{x\}\\
+ FV(\comod c c) M&= FV(M)\\
+ FV(\reader c) &= \emptyset\\
+ FV(\cotuple{M,N})&= FV(M)\cup FV(N)\\
+ FV(\abort)&= \emptyset\\
+ FV(\lpil{M})&= FV(M)\\
+ FV(\lpir{N})&= FV(N)\\
+ FV(\lpair{M,N})&= FV(M)\cup FV(N)\\
+ FV(\inl{M})&= FV(M)\\
+ FV(\inr{M})&= FV(M)\\
+ FV(\lambda x.M)&= FV(M) \setminus \{x\}\\
+ FV((M N))&= FV(M)\cup FV(N)\\
+ FV(\mat M x N y O)&= FV(M)\cup (FV(N)\setminus \{x\}) \cup (FV(O)\setminus\{y\})
+\end{align*}
+A closed local term is a local term that has no free variables.
 
 A global term is a partial mapping from processes to local
 terms.  For example, a global term $\{0\mapsto \lambda x.x, 1\mapsto
@@ -751,8 +767,8 @@ we can construct a hyperterm $(\m{M_i})_{0\le i \le n}$.
 The hyperterm $(\m{M_i})_{0\le i \le n}$ is typeable when the
 aforementioned hypersequent is typeable for some $\G_i$'s and $\m{\phi_i}$'s.
 A store\index{store} maps a channel to a pure term or $\epsilon$.
-For a store~$\sigma$, the updated store $\sigma[c\mapsto x]$ maps $c$ to
-$x$ and $d$ to $\sigma(d)$ if $d$ is different from~$c$.
+For a store~$S$, the updated store $S[c\mapsto x]$ maps $c$ to
+$x$ and $d$ to $S(d)$ if $d$ is different from~$c$.
 A configuration\index{configuration} is a pair $\conf{}\hypert$ of a
 store~$\lstore$ and a hyperterm~$\hypert$.
 A typed configuration\index{typed configuration} is a
@@ -766,6 +782,9 @@ To complete the definition of \lgd,
  We consider terms up to $\alpha$-equivalence and implicitly
  require all instances
  of $\rightsquigarrow_\spadesuit$ to avoid free variable captures.
+
+ \fix{define congruence}\\
+ \fix{let configuration contain hyperterms}
 
 \begin{definition}[Basic reduction]
  The basic reduction $\breduce$ is the smallest congruence containing
@@ -823,8 +842,9 @@ the term changes into $\abort$.
  containing the
  followings:
 \begin{itemize}
- \item $\conf{[c\mapsto M]}{\imapsto{\reader c}}\rreduce \conf{[c\mapsto M]}{\imapsto{M}}$
- \item $\conf{[c\mapsto \epsilon]}{\imapsto{\reader c}}
+   \item $\conf{[c\mapsto M]}{\imapsto{\reader c}}\rreduce 
+      \conf{[c\mapsto M]}{\imapsto{M}}$
+   \item $\conf{[c\mapsto \epsilon]}{\imapsto{\reader c}}
        \rreduce \conf{[c\mapsto \epsilon]}{\imapsto{\abort}}$
 \end{itemize}
 \end{definition}
@@ -834,7 +854,7 @@ also reduces to abort except $\cotuple{M,N}$.  The concurrent
 construction $\cotuple{M,N}$ runs $M$ and $N$ concurrently and throws
 away those subterms that reduces to $\abort$.
 To be specific, the term $\cotuple{M,N}$ reduces to $\linl{M}$
- or $\linr{N}$ with $\mathsf{inl}$ and
+or $\linr{N}$ with $\mathsf{inl}$ and
 $\mathsf{inr}$ labels showing which components failed.
 The reduction rules are not symmetric with regard to the left component
 and the right component of the concurrent construct $[M, M]$ because
@@ -870,7 +890,7 @@ C[\bullet] N \mid
 \end{align*}
 \end{itemize}
 \end{definition}
-For example, $(\sigma, \cotuple{\abort,\abort})$ reduces to $(\sigma,
+For example, $(S, \cotuple{\abort,\abort})$ reduces to $(S,
 \abort)$.
 
 In order to obtain the subformula property
@@ -1495,8 +1515,10 @@ A process snapshot\index{process snapshot} of $i\in\processes$ is a tuple
 $\tuple{p,m}$ where $p$ is either a program or $\abort$ and $m$ is a
 program variable content for $i$.
 We let $S_i$ denote the set of process snapshots for~$i$.
+\fix{define shared memory snapshot}
 A system snapshot\index{system snapshot}
-is a pair $\tuple{\vec s, \vec v}$, where $\vec s = \tuple{s_0,
+is a pair $\tuple{\vec s, \vec v}$ of a process snapshot and a shared
+memory snapshot, where $\vec s = \tuple{s_0,
 {s_1,{\ldots,s_{n-1}}}} \in
 \prod_{i\in \processes}\left(S_i\right)
 $
@@ -1534,12 +1556,12 @@ is in $J$:
  x(\p x) \neq \epsilon) \\
  s_i & (\text{if } p = \epsilon)
  \end{cases}\\
- \vg m c & =
+ m_c & =
  \begin{cases}
  \semo{E}_{x, \vec v} & (\text{if } p = c \leftarrow E; p',\quad w(c)= i
   \text{
- and } \vg v c = \epsilon) \\
- \vg v c &(\text{otherwise})
+ and } v_c = \epsilon) \\
+ v_c &(\text{otherwise})
  \end{cases}\\
 \end{align*}
 with the following notations.
@@ -1967,8 +1989,8 @@ We show that the ability of the waitfree protocols and \lgd\, are the same.
 
 \begin{theorem}[Soundness]
  \label{th:soundness}
-If a typed input-output problem is solvable by a term,
-there exists a typed protocol that solves the problem.
+ If a typed input-output problem is solvable by a global term,
+ there exists a typed protocol that solves the problem.
 \end{theorem}
 
 In order to prove this theorem,
@@ -1976,7 +1998,7 @@ we are going to translate a typed hyperterm into a protocol inductively
 on the type derivation.
 To make induction work, we use the following auxiliary notions.
 An investigator\index{investigator} is a partial mapping from processes
-to program variable.
+to program variables.
 % A system snapshot satisfies a global formula%
 % \index{satisfy!system snapshot ---s a global formula}~$\m\varphi$
 % iff \fix{fill}.
@@ -2176,6 +2198,7 @@ essentially compilation from lambda-terms to imperative programs:
  \{{i, \p z}\}\enspace,
 \end{align*}
  \item[$\brac{i}\vee\elim$]
+      \fix{fill}
 \end{description}
 The rules IE and IW do not appear above because these rules do not
 change the form of global terms.
@@ -2284,23 +2307,48 @@ We set $g,d,t_i$ accordingly so that the program is typed.
   in Example~\ref{ex:solv}.
  \end{example}
 
+ \fix{define finished execution}\\
+ \fix{define final shared memory snapshot, final system snapshot}
+
+  \begin{proposition}
+   \label{general-sound}
+   For a typed hypersequent~$\hypert$, let $\semoi{\hypert} = f_0\hmid
+   f_1\hmid\cdots \hmid f_n$ so that each $f_j$ is a partial mapping
+   from processes in $\processes$ to program variables.
+   Assume that there is a finished execution of $\semo{\hypert}$ whose final
+   shared memory snapshot~$s$ satisfies
+   $s_{f_j(i)} = V_{ji}$ for each $i \in \dom(f_j)$.
+   Then, there exists a reduction relation
+   \[
+   \concreteconf{\{\}}{\hypert}\reduction
+   \concreteconf{S}{
+   \{i\mapsto V_{0i}\}_{i\in\dom(f_0)}\hmid
+   \cdots\hmid
+   \{i\mapsto V_{ni}\}_{i\in\dom(f_n)}
+   }
+   \]
+   for some store~$S$.
+  \end{proposition}
+   \begin{proof}
+    By induction on the typing derivation for $\hypert$.
+    \fix{prove}
+   \end{proof}
+
  \begin{proof}[of \thref{th:soundness}]
-  \fix{prove on paper 80min}
-We can simulate a reduction sequence of
-the hyperterm using an execution of the protocol where every process is
-non-faulty.
-And, since the protocol solves a problem for any fair schedule, it
-solves the problem waitfreely.
-If we deny the claim, there must be an execution where a nonfaulty
-process
-either (a)~gives a
-wrong answer or
- (b)~never gives an answer.
- Either case, there is a step~$k$ when
- such a failure is inevitable.
-We can modify the schedule after step $k$ to a fair one,
-keeeping the failing behavior of
-the process.
+  Assume a global term~$\m{M}$ solves a typed input-output problem~$R$.
+  We claim that the typed protocol
+  $\semo{\m{M}}; (\p o_i\leftarrow \semoi{\m{M}}(i))_{i\in \processes}$
+  solves $R$.
+  By \thref{general-sound},
+  if there is an execution of $\semo{\m{M}}[N_i / \p i_i]$ that yields
+  the content of $\semoi{\m{M}}(i)$ to be $V_i$ for each $i\in
+  \processes$,
+  the reduction relation $\concreteconf{\{\}}{\m{M}[N_i/x_i]}\reduce
+  \concreteconf{S}{\{i\mapsto V_i\}_{i\in \processes}}$ holds for some
+  store~$S$.
+  Since the global term~$\m{M}$ solves $R$, the pair
+  $\tuple{(N_i)_{i\in \processes}, (V_i)_{i\in\processes}}$ is compatible
+  with $R$.
  \end{proof}
 
 \begin{theorem}[Completeness]
@@ -2331,7 +2379,7 @@ We are going to encode the participating set problem in \lgd.
 For this, we introduce a base type called $\Id$ for process id's.
 Let there be an injection that maps a natural number~$i$ to a constant
 $C_i\colon\Id$.
-The additional typing rules involving $\Id$ are as follows, where $2 = (\bot\supset\bot)\vee(\bot\supset\bot)$:
+The additional typing rules involving $\Id$ are as follows, where $\bool = (\bot\supset\bot)\vee(\bot\supset\bot)$:
 \begin{center}
  \UnaryRule{}{}
  {$\tr \tj{c_n}{[i]\Id}$}
@@ -2340,7 +2388,7 @@ The additional typing rules involving $\Id$ are as follows, where $2 = (\bot\sup
  {$\Gamma\tr \tj{M_0}[i]\Id$}
  {$\Gamma\tr \tj{M_1}[i]\Id$}
  {}
- {$\Gamma \tr \tj{\compare{M_0}{M_1}}{[i]2}$}\enspace.
+ {$\Gamma \tr \tj{\compare{M_0}{M_1}}{[i]\bool}$}\enspace.
 \end{center}
 The additional reduction is
 \[
@@ -2356,7 +2404,7 @@ is an abbreviation for
 ${\mat M x {N_0} y {N_1}}$.
 
 We represent a finite set of id's as a
-typed lambda term, whose type is $[i](\Id\supset 2)$.  Intuitively, a
+typed lambda term, whose type is $[i](\Id\supset \bool)$.  Intuitively, a
 set takes an id and decides whether it is \textit{in} or \textit{out}.
 The emptyset is represented by a term $\lambda x. \linr {\bullet}$.
 When a finite set~$S$ is represented by a term~$M$,
@@ -2367,20 +2415,67 @@ like $\{c_0, c_1, c_2\}$.
 
 Now, we are ready to construct a hyperterm solving the two-party
 participating set problem.
-We can obtain a derivation of \fix{something else 20min}:
+We can obtain a derivation of
+\[
+\tj{x}{[0]\Id}, \tj{y}{[1]\Id}\tr
+\tj{\{0\mapsto\cotuple{\{(\comodL)x,x\},\{x\}},
+1\mapsto\cotuple{\{(\comodR)y,y\},\{y\}}\}}
+{0\mapsto \Id\imp \bool, 1\mapsto \Id\imp \bool}\enspace.
+\]
 
-One possible reduction sequence is as follows: \fix{according to the new
-rule?}
+One possible reduction sequence is as follows:
+\begin{align*}
+ &
+ \concreteconf{\{\}}{\{0\mapsto\cotuple{\{\underline{(\comodL)x},x\},\{x\}},
+ 1\mapsto \cotuple{\{(\comodR)y,y\},\{y\}}\}}\\
+ \wreduce
+ &\concreteconf{\{d\mapsto x\}}
+ {\{0\mapsto\cotuple{\{\underline{\reader c},x\},\{x\}},
+ 1\mapsto\cotuple{\{(\comodR)y,y\},\{y\}}\}}
+ \\
+ \rreduce
+ &
+ \concreteconf{\{d\mapsto x\}}
+ {\{0\mapsto \cotuple{\{\abort,x\},
+ \{x\}},1\mapsto\cotuple{\{\underline{(\comodR)y},y\},\{y\}}\}}
+ \\
+ \wreduce
+ &
+ \concreteconf{\{c\mapsto y, d\mapsto x\}}
+ {\{0\mapsto \cotuple{\{\abort,x\},\{x\}}, 1\mapsto
+ \cotuple{\{\underline{\reader d},y\},y},\{y\}\}} \\
+ \rreduce
+ &
+ \concreteconf{\{c\mapsto y, d\mapsto x\}}
+ {\{0\mapsto \cotuple{\underline{\{\abort, x\}},\{x\}},
+ 1\mapsto\cotuple{\{x,y\},\{y\}}\}}
+ \\
+ \areduce
+ &
+ \concreteconf{\{c\mapsto y,d\mapsto
+ x\}}{\{0\mapsto\underline{\cotuple{\abort,\{x\}}}, 1\mapsto\cotuple{\{x,y\},\{y\}}\}}
+ \\
+ \areduce
+ &
+ \concreteconf{\{c\mapsto y,d\mapsto
+ x\}}{\{0\mapsto\{x\}, 1\mapsto\underline{\cotuple{\{x,y\},\{y\}}}\}}
+ \\
+ \areduce
+ &
+ \concreteconf{\{c\mapsto y,d\mapsto
+ x\}}{\{0\mapsto\{x\}, 1\mapsto\{x,y\}\}}
+\end{align*}
 
 Moreover, the same initial configuration can reduce to
 \[
- \concreteconf{[d\mapsto c_0,c\mapsto c_1]}{\gpair{\{c_1,c_0\},
- \{c_1\}}}\text{ and }
- \concreteconf{[d\mapsto c_0,c\mapsto c_1]}{\gpair{\{c_1,c_0\},
- \{c_0, c_1\}}}\enspace.
+\concreteconf{\{c\mapsto y,d\mapsto
+ x\}}{\{0\mapsto\{y,x\}, 1\mapsto\{y\}\}}\] and
+\[
+\concreteconf{\{c\mapsto y,d\mapsto
+ x\}}{\{0\mapsto\{y,x\}, 1\mapsto\{x,y\}\}}\enspace.
 \]
 There are no other normal forms.
-These three normal forms correspond to the three answers for the
+These three normal forms correspond to the three answers of the
 two-party participating set problem.
 
 \section{Related Work}
@@ -2491,9 +2586,7 @@ G\"odel--Dummett logic.
 We proved normalization and non-abortfullness.
 The calculus characterizes
 the typed version of waitfree computation.
-Our result
-hints broader correspondence between
-proof theory and distributed computation.
+Our result hints broader correspondence between proof theory and distributed computation.
 
 \renewcommand{\comodL}{\comod{c}{\co c}}
 \renewcommand{\comodR}{\comod{\co c}{c}}

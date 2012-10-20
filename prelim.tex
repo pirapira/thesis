@@ -1,24 +1,28 @@
-\section{Preliminaries}
+ \section{Preliminaries}
 
-We use set-theoretic concepts such as sets, relations and functions.
-  $\powerset X$ denotes the powerset of $X$.
-  In any case, we consider countably infinite set of logical formulae.
-  A logic is a set of logical formulae, thus, there are at most
-  $\powerset{\mathbb N}$ different logics.
-  Likewise, we consider at most countably many proofs and lambda terms.
-  In the classical realizability argument in Chapter~\fix{},
+ We use set-theoretic concepts such as sets, relations and functions.
+ $\powerset X$ denotes the powerset of $X$.
+   $X\setminus Y$ denotes the largest subset of $X$ that does not contain
+   any elements of $Y$.
+   Everywhere, we consider countably infinite set of logical formulae.
+   A logic is a set of logical formulae, thus, there are at most
+   $\powerset{\mathbb N}$ different logics.
+   Likewise, we consider at most countably many proofs and lambda terms.
+   In the classical realizability argument in Chapter~\fix{},
 
-  We denote partial maps as graphs.
-  For example, ${0\mapsto M, 1\mapsto N}$ denotes a partial map that
-  maps 0 to $M$ and 1 to $N$.
-  We also denote partial maps as sequence whose index is the domain.
-  For example, $(y_i)_{i\in I}$ denotes the partial mapping that maps
-  $i\in I$ to $y_i$.
-  For partial mappings whose domains are disjoint, we use $\sqcup$ to
-  denote the union.
-  When $f$ and $g$ have disjoint domains, $f\sqcup g$ denotes the
-  partial map that maps $x$ to $f(x)$ or $g(x)$ when one of these is
-  defined, or otherwise to nothing.
+   We denote partial maps as graphs.
+   For example, ${0\mapsto M, 1\mapsto N}$ denotes a partial map that
+   maps 0 to $M$ and 1 to $N$.
+   We denote by $\dom(f)$ the domain of $f$, that is,
+   the set of elements that are mapped to something.
+   We also denote partial maps as sequence whose index is the domain.
+   For example, $(y_i)_{i\in I}$ denotes the partial mapping that maps
+   $i\in I$ to $y_i$.
+   For partial mappings whose domains are disjoint, we use $\sqcup$ to
+   denote the union.
+   When $f$ and $g$ have disjoint domains, $f\sqcup g$ denotes the
+   partial map that maps $x$ to $f(x)$ or $g(x)$ when one of these is
+   defined, or otherwise to nothing.
 
   For a symbol or a sequence of symbols $p$,
   $p^+$ denotes repetition of $p$ more than zero times and

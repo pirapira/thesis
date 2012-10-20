@@ -50,10 +50,7 @@
 \newcommand{\p}[1]{\texttt{#1}}
 
 %% terms
-\newcommand{\g} [0]{\mathsf{g}}
-\newcommand{\spair} [1]{\langle{#1}\rangle^{\square}}
 \newcommand{\lpair} [1]{\langle{#1}\rangle}
-\newcommand{\gpair} [1]{\langle{#1}\rangle^{\g}}
 \newcommand{\cotuple}[1]{[{#1}]}
 \newcommand{\ev}[1]{\mathsf{ev}\left({#1}\right)}
 
@@ -66,11 +63,7 @@
 \newcommand{\lpil}[1]{\pi_{\mathsf l}\left({#1}\right)}
 \newcommand{\lpir}[1]{\pi_{\mathsf r}\left({#1}\right)}
 
-\newcommand{\vg}[2]{{#1}_{#2}}
-\newcommand{\vd}[2]{{#1}_{#2}}
-
 \newcommand{\mats}[6]{\langle \inl{#1}. ({#2},{#3})/ \inr{#4}. ({#5},{#6})\rangle}
-
 \newcommand{\mat} [5]{\mathsf{match}\,{#1}\,\mathsf{of}\, \inl{#2}. {#3}/
 \inr{#4}. {#5}}
 
@@ -93,7 +86,7 @@
 \newcommand{\lgd}{$\lambda$-GD}
 
 %% configuration
-\newcommand{\lstore}{{\sigma}}
+\newcommand{\lstore}{{S}}
 \newcommand{\conf}[2]{(\lstore{#1},{#2})}
 \newcommand{\confwithcontext}[3]{\conf{#1}{#2}{\hypert\hmid C[{{#3}}]\hmid\hypert'}}
 \newcommand{\concreteconf}[2]{({#1},{#2})}
@@ -240,3 +233,5 @@
 \newcommand{\jmapsto}[1]{\{j\mapsto {#1}\}}
 
 \newcommand{\bool}{\mathbb{B}}
+
+\newcommand{\dom}{\mathop{\mathrm{dom}}}
