@@ -1612,6 +1612,9 @@ is defined as the infinite sequence of system snapshots
 $C_0C_1C_2\cdots$, where $C_0 = \tuple{\vec{s^0}, \vec{v^0}}$ is
 defined by $\vec{s^0_i} = \tuple{p_i, [\p i_i\mapsto x_i]}$ and
 $v_c = \epsilon$, and $C_{k+1} = C_{k}\update\sigma_{k}$.
+Since all programs are finite, the system snapshot will stay constant
+after first finite steps.  We call that constant system snapshot the
+final system snapshot of an execution.
 
  \begin{example}
   Let $\processes$ be $\{0,1\}$ and $\Pi$ be the typed protocol given in
@@ -1662,6 +1665,8 @@ $v_c = \epsilon$, and $C_{k+1} = C_{k}\update\sigma_{k}$.
   \epsilon$ and $v_d^2 = v_d^1 = \true$.
   After four more rounds (including $i = 6$ to confirm $C_5 = C_6$), we
   obtain an execution shown in Table~\ref{table:exec}.
+  Since $C_i = C_5$ for $i > 5$, the system snapshot~$C_5$ is the final
+  system snapshot of this execution.
  \end{example}
   \begin{sidewaystable}
    \centering
@@ -2029,9 +2034,13 @@ We refer to the last element of $\semoi{\hypert\hmid M}$ as
 $\semoi{\hypert\hmid \overline{M}}$, the second to last element of
 $\semoi{\hypert\hmid M\hmid N}$ as
 $\semoi{\hypert\hmid \overline M\hmid N}$ and so on.
-If two sequents of investigator sets $\semoi{\hypert}$ and $\semoi{\hypert'}$
-have the same length, we define $\semoi{\hypert}\cup \semoi{\hypert'}$ to
-be the elementwise union.
+ \begin{example}
+Suppose $\semoi{\m{M}\hmid \m{N}} = \{0\mapsto \p x, 1\mapsto \p
+  y\}\hmid \{0\mapsto \p z\}$.
+  Then,
+  $\semoi{\m{M}\hmid \overline{\m{N}}} = \{0\mapsto\p z\}$ and thus
+  $\semoi{\m{M}\hmid \overline{\m{N}}}(0) = \p z$.
+ \end{example}
 
 We let $\epsilon$ denote $(p_i)_{i\in\processes}$ where $p_i=\epsilon$
 for all $i\in\processes$.
@@ -2045,20 +2054,25 @@ And $(p)_j$ denotes $(q_i)_{i\in\processes}$ where $q_j = p$ and $q_i =
 Below, we always choose fresh program variables.
 The definition is inductive over the type derivation, which is
 essentially compilation from lambda-terms to imperative programs:
+\fix{specify where we rename variables}
 \begin{description}
  \item[$ij$-com]
       \begin{align*}
- \semo{\cotuple{\hypert_0,\hypert_1}\hmid (\comodL) M\hmid (\comodR) N}
- =& \semo{\hypert_0\hmid M};
- \semo{\hypert_1\hmid N};\\
- &(d\leftarrow \semoi{\hypert_0\hmid\overline{M}}(i); \p
- y\leftarrow c;)_j; \\
- &(c\leftarrow \semoi{\hypert_1\hmid\overline{N}}(i); \p
- x\leftarrow d;)_i\enspace,\\
- \semoi{\cotuple{\hypert_0,\hypert_1}\hmid (\comodL) M\hmid (\comodR) N} =&
- \semoi{\overline{\hypert_0}\hmid M} \cup \semoi{\overline{\hypert_1}\hmid N}
+       &\semo{\hypert_0\hmid\hypert_1\hmid \imapsto{(\comodL) M}\hmid
+       \jmapsto{(\comodR) N}} \\
+       =& \semo{\hypert_0\hmid \imapsto{M}};
+       \semo{\hypert_1\hmid \jmapsto{N}};\\
+       &(d\leftarrow \semoi{\hypert_0\hmid\overline{\imapsto{M}}}(i); \p
+       x\leftarrow c)_i; \\
+       &(c\leftarrow \semoi{\hypert_1\hmid\overline{\jmapsto{N}}}(j); \p
+       y\leftarrow d)_j\enspace,\\ \\
+       &\semoi{\hypert_0\hmid\hypert_1\hmid \imapsto{(\comodL) M}\hmid
+       \jmapsto{(\comodR) N}} \\=&
+       \semoi{\overline{\hypert_0}\hmid \imapsto{M}} \hmid
+       \semoi{\overline{\hypert_1}\hmid \jmapsto{N}}
        \hmid\\& \{j\mapsto\p y\}\hmid \{i\mapsto \p x\}\enspace,
       \end{align*}
+      \fix{say something about freshness}
  \item[EW] \begin{align*}
  \semo{\hypert\hmid \abort}=\semo{\hypert}\enspace,\quad
  \semoi{\hypert\hmid\abort}=&\semoi{\hypert}\hmid \emptyset\enspace,\quad
@@ -2191,14 +2205,39 @@ essentially compilation from lambda-terms to imperative programs:
 \end{align*}
  \item[$\brac i\vee\intro_1$]
 \begin{align*}
- \semo{\hypert\hmid \imapsto{\linr M}} =& \semo{\hypert\hmid M};
+ \semo{\hypert\hmid \imapsto{\linr M}} =& \semo{\hypert\hmid \imapsto{M}};
  \left(\p z \leftarrow
  \linr{\semoi{\hypert\hmid\overline{\imapsto{M}}}(i)}\right)_i\enspace, \\
- \semoi{\hypert\hmid \linr{M}}=& \semoi{\overline \hypert\hmid M}\hmid
+ \semoi{\hypert\hmid \imapsto{\linr{M}}}=& \semoi{\overline \hypert\hmid
+ \imapsto{M}}\hmid
  \{{i, \p z}\}\enspace,
 \end{align*}
  \item[$\brac{i}\vee\elim$]
-      \fix{fill}
+\begin{align*}
+ &\semo{\hypert_0\hmid \hypert_1\hmid \hypert_2\hmid \{i\mapsto
+ \mat M x{N_0}y{N_1}\}}
+ \\
+ =&\semo{\hypert_0\hmid\imapsto{M}};\\&
+ \left(\p x_x\leftarrow
+ \mat{\semoi{\hypert_0\hmid\overline{\imapsto{M}}}(i)}{z}{z}{w}{\epsilon}\right)_i;
+ \semo{\hypert_1\hmid\imapsto{N_0}};\\&
+ \left(\p x_y\leftarrow
+ \mat{\semoi{\hypert_0\hmid\overline{\imapsto{M}}}(i)}{z}{\epsilon}{w}{w}\right)_i;
+ \semo{\hypert_2\hmid\imapsto{N_1}};\\&
+ \Big(\p k \leftarrow
+ \mathsf{match}
+ {\semoi{\hypert_0\hmid\overline{\imapsto{M}}}(i)}
+ \mathsf{of} \\
+ &\phantom{k\leftarrow}\inl{z}. {\semoi{\hypert_1\hmid\overline{\imapsto{N_0}}}(i)}/\inr{w}. {\semoi{\hypert_2\hmid\overline{\imapsto{N_1}}}(i)}\Big)_i\enspace,
+ \\
+ \\
+ &\semoi{\hypert_0\hmid \hypert_1\hmid \hypert_2\hmid \{i\mapsto
+ \mat M x{N_0}y{N_1}\}}\\
+ =&
+ \semoi{\overline{\hypert_0}\hmid \imapsto{M}}\hmid
+ \semoi{\overline{\hypert_1}\hmid \imapsto{N_0}}\hmid
+ \semoi{\overline{\hypert_2}\hmid \imapsto{N_1}}\hmid \imapsto{\p k}\enspace.
+\end{align*}
 \end{description}
 The rules IE and IW do not appear above because these rules do not
 change the form of global terms.
@@ -2307,16 +2346,13 @@ We set $g,d,t_i$ accordingly so that the program is typed.
   in Example~\ref{ex:solv}.
  \end{example}
 
- \fix{define finished execution}\\
- \fix{define final shared memory snapshot, final system snapshot}
-
   \begin{proposition}
    \label{general-sound}
    For a typed hypersequent~$\hypert$, let $\semoi{\hypert} = f_0\hmid
    f_1\hmid\cdots \hmid f_n$ so that each $f_j$ is a partial mapping
    from processes in $\processes$ to program variables.
-   Assume that there is a finished execution of $\semo{\hypert}$ whose final
-   shared memory snapshot~$s$ satisfies
+   Assume that there is an execution of $\semo{\hypert}$ whose
+   final system snapshot~$s$ satisfies \fix{is this correct? usage of s}
    $s_{f_j(i)} = V_{ji}$ for each $i \in \dom(f_j)$.
    Then, there exists a reduction relation
    \[
@@ -2331,7 +2367,125 @@ We set $g,d,t_i$ accordingly so that the program is typed.
   \end{proposition}
    \begin{proof}
     By induction on the typing derivation for $\hypert$.
-    \fix{prove}
+    All cases are more or less straightforward, of which the most
+    compilicated cases are com rule and EC rule.
+    \begin{description}
+     \item[$ij$-com]
+	  Assume that there is an execution of
+	  \begin{align*}
+	   &\semo{\hypert_0\hmid \imapsto{M}};
+	   \semo{\hypert_1\hmid \jmapsto{N}};\\
+	   &(d\leftarrow \semoi{\hypert_0\hmid\overline{\imapsto M}}(i); \p
+	   x\leftarrow c)_i; \\
+	   &(c\leftarrow \semoi{\hypert_1\hmid\overline{\jmapsto N}}(j); \p
+	   y\leftarrow d)_j
+	  \end{align*}
+	  whose final system snapshot contains process snapshots~$s_l$
+	  that map program variables as:
+	  \begin{align*}
+	   \semoi{\overline{\hypert_0}\hmid \imapsto{M}}&\mapsto
+	   (V_{kl})_{0\le k < |\hypert_0|}\\
+	   \semoi{\overline{\hypert_1}\hmid \jmapsto{N}}&\mapsto
+	   (V_{kl})_{|\hypert_0|\le k < |\hypert_0| + |\hypert_1|}\enspace.
+	  \end{align*}
+	  Moreover, we assume $s_i(\p x) = V_{|\hypert_0|+|\hypert_1|+1,i}$
+	  and $s_j(\p y) = V_{|\hypert_0| + |\hypert_1|,j}$.
+
+	  By the form of programs,
+	  there exists an execution of $\semo{\hypert_0\hmid
+	  \imapsto{M}}$
+	  whose final system snapshot map contains process snapshots
+	  $s'_l$
+	  that map program variables as:
+	  \begin{align*}
+	   \semoi{\overline{\hypert_0}\hmid \imapsto{M}}&\mapsto
+	   (V_{kl})_{0\le k < |\hypert_0|}
+	  \end{align*}
+	  and moreover $s'_i$ maps $\semoi{\hypert_0\hmid
+	  \overline{\imapsto{M}}}$ to $V$ where $V$ is equal to
+	  $V_{|\hypert_0|+|\hypert_1|+1,i}$ unless
+	  $V_{|\hypert_0|+|\hypert_1|+1,i}$ is $\epsilon$.
+	  Simillarly,
+	  there exists an execution of $\semo{\hypert_1\hmid
+	  \jmapsto{N}}$
+	  whose final system snapshot map contains process snapshots
+	  $s''_l$
+	  that map program variables as:
+	  \begin{align*}
+	   \semoi{\overline{\hypert_1}\hmid \jmapsto{N}}&\mapsto
+	   (V_{kl})_{|\hypert_0|\le k < |\hypert_0| + |\hypert_1|}
+	  \end{align*}
+	  and moreover $s''_j$ maps $\semoi{\hypert_1\hmid
+	  \overline{\jmapsto{N}}}$ to $W$ where $W$ is
+	  equal to $V_{|\hypert_0|+|\hypert_1|,j}$ unless
+	  $V_{|\hypert_0|+|\hypert_1|,j}$ is $\epsilon$.
+
+	  By induction hypothesis on $\hypert_0\hmid \imapsto{M}$,
+	  there exists a reduction relation
+	  \begin{align*}
+	   &\concreteconf{\{\}}{ \hypert_0\hmid \imapsto{M} } \\
+	   \reduce&
+	   \concreteconf{S'}{\operatorname*{\hmid}_{0\le k<|\hypert_0|}
+	   \left(\m{M}_k\right)
+	   \hmid \{i\mapsto {V}\}}
+	  \end{align*}
+	  for some store~$S'$ and $\m{M}_k(l) = V_{kl}$ for each $l\in
+	  \processes$.
+	  Also,
+	  by induction hypothesis on $\hypert_1\hmid \jmapsto{N}$,
+	  there exists a reduction relation
+	  \begin{align*}
+	   &\concreteconf{\{\}}{ \hypert_1\hmid \jmapsto{N} } \\
+	   \reduce&
+	   \concreteconf{S''}{\operatorname*{\hmid}_{|\hypert_0|\le
+	   k<|\hypert_0| + |\hypert_1|}
+	   \left(\m{M}_k\right)
+	   \hmid \{j\mapsto {W}\}}
+	  \end{align*}
+	  for some store~$S''$ and $\m{M}_k(l) = V_{kl}$ for each $l\in
+	  \processes$.
+
+	  When we combine these induction hypotheses,
+	  we obtain
+	  \begin{align*}
+	   &\concreteconf{\{\}}{
+	   \hypert_0\hmid \hypert_1\hmid \{i\mapsto (\comodL) M\}\hmid
+	   \{j\mapsto (\comodR)N\}
+	   }\\
+	   \reduction & \concreteconf{S'\sqcup S''}{ (\m{M}_k)_{0\le k <
+	   |\hypert_0|+ |\hypert_1|} \hmid
+	   \{i\mapsto(\comodL)V\} \hmid \{j\mapsto (\comodR)W\}}\\
+	   \reduction&
+	   \concreteconf{S}{(\m{M}_k)_{0\le k <
+	   |\hypert_0|+ |\hypert_1|}\hmid
+	   \imapsto{V_{|\hypert_0|+|\hypert_1|+1,i}}
+	   \hmid\jmapsto{V_{|\hypert_0|+|\hypert_1|,j}}
+	   }\enspace.
+	  \end{align*}
+	  for some~$S$.
+     \item[EC]
+	  Assume that there exists an execution of
+	  \begin{align*}
+	   &\semo{\hypert\hmid \left(M_i\right) \hmid
+       \left(N_i\right)}; \\
+       &\left(\p k_i\leftarrow
+       \semoi{\hypert\hmid \overline{(M_i)}\hmid
+       (N_i)}(i)
+       ; \p k_i \leftarrow \semoi{\hypert\hmid {(M_i)}\hmid
+       \overline{(N_i)}}(i)\right)_{i\in I\mid M_i =
+       M'_i};
+       \\ &
+       \left(\p k_i\leftarrow
+       \semoi{\hypert\hmid {(M_i)}\hmid
+       \overline{(N_i)}}(i)
+       ; \p k_i \leftarrow
+       \semoi{\hypert\hmid \overline{(M_i)}\hmid
+       (N_i)}(i)
+       \right)_{i\in I\mid M_i \neq
+       M'_i}
+	  \end{align*}
+	  whose final system snap shot is $\tuple{\vec s, \vec v}$.
+    \end{description}
    \end{proof}
 
  \begin{proof}[of \thref{th:soundness}]
