@@ -6,24 +6,20 @@
 
 \subsection{Summary}
 
-We propose a typed lambda calculus based on Avron's hypersequent
-calculus~\citep{avron91} for G\"odel--Dummett logic.  This calculus
-turns out to model
+We define a typed lambda calculus based on Avron's hypersequent
+calculus~\citep{avron91} for G\"odel--Dummett logic.
+We show that this calculus models
 waitfree computation~\citep{Herlihy88,Saks:1993vq}.
 Besides strong normalization and non-abortfullness,
 we give soundness and completeness of
 the calculus against the typed version of waitfree protocols.
 The calculus is not only proof theoretically interesting,
 but also valuable as a basis for distributed programming languages.
-
-The Curry--Howard isomorphism~\cite{curryhoward} is surprising because the same
-method works for two different purposes: a logical purpose of
-removing redundancy from proofs and a computational purpose of finding a
-class of terminating programs.
-We extend
-this surprise to G\"odel--Dummett logic and
+In other words, we extend
+Curry--Howard isomorphism~\cite{curryhoward} to G\"odel--Dummett logic and
 waitfreedom.
-G\"odel--Dummett logic~\cite{dummett59}
+
+On one hand, G\"odel--Dummett logic~\cite{dummett59}
 is one of the intermediate logics
 between classical and intuitionistic logics.
 Waitfreedom~\cite{Herlihy88,Saks:1993vq} is a class of distributed
@@ -47,19 +43,21 @@ Such a term
 $\tj{M}{(\varphi\supset\psi)\vee(\psi\supset\varphi)}$ must choose
 $M\reduction \linl\cdots$ or $M\reduction \linr\cdots$.
 We devise a nondeterministic $\lambda$-calculus in Sect.~\ref{lgd}.
+In essence, the nondeterminism arises from the scheduling of concurrent
+processes: which process can take a step before which process does.
 
-Waitfreedom is a class of distributed computation where
-processes cannot wait for other processes.  When two processes try to
-exchange information, the faster process can pass information to the
+On the other hand, waitfreedom is a class of distributed computation
+where processes cannot wait for other processes.  When two processes try
+to exchange information, the faster process can pass information to the
 slower one, but not always vice versa because the slower process might
 start after the faster one finishes.
 So, the computation is nondeterministic.
-\fix{add history of waitfree}
+% see introduction for history of waitfreedom
 
 The contribution of this chapter is capturing
 this nondeterminism using the nondeterministic $\lambda$-calculus for
-G\"odel--Dummett logic.  \fix{herlihyのコの字型の例}
-
+G\"odel--Dummett logic.
+\fix{add number}
 First we define a lambda calculus and prove some of its properties.
 Second we define typed waitfreedom.
 Finally we prove that the lambda calculus characterizes typed waitfreedom.
@@ -78,15 +76,20 @@ We show the proof system using the hypersequent
 style~\citep{avron91}.
 In the usual sequent calculi, each reasoning step concludes a sequent
 $\G\vdash\phi$ where $\G$ is a sequence of formulae.
-In the hypersequent calculi, each reasoning step concludes a
+By contrast,
+in the hypersequent calculi, each reasoning step concludes a
 hypersequent, which is a finite, non-empty sequence of sequents.
 Of the hypersequent
 $\G_0\vdash\phi_0\hmid\G_1\vdash\phi_1\hmid\cdots\hmid\G_n\vdash\phi_n$,
-each sequent $\G_i\vdash\phi_i$ is called a \textit{component}.
+each sequent $\G_i\vdash\phi_i$ is called a
+\textit{component}\index{component}.
 Each component $\G_i\vdash\phi_i$ is interpreted as an implication: the
 conjunction of $\G_i$ implies $\phi_i$.
 The whole hypersequent is interpreted as disjunction of implications.
-When we introduce terms, we still interpret the components
+In other words, $\tr$ is interpreted as implication and $\hmid$ as
+disjunction.
+When we give computational interpretation to proofs, we still interpret
+the components
 disjunctively: namely, a derivation tree concluding a hypersequent
 represents a sequence of concurrent processes at least one of which is
 guaranteed to succeed.
@@ -95,22 +98,20 @@ guaranteed to succeed.
 
 \newcommand{\m}[1]{{#1}^+}
 
-Let us assume a countably infinite set of propositional variables%
-\index{propositional variable|see{variable}}\index{variable!propositional}.
-The set of propositional variables is written~$\pvar$.
-We define local formulae \index{formula!local}\index{local formula|see{formula}}%
+Let us assume a countably infinite set~$\pvar$ of propositional
+variables \index{propositional
+variable|see{variable}}\index{variable!propositional}.  We define local
+formulae \index{formula!local}\index{local formula|see{formula}}
 $\varphi, \psi$ (also called local types\index{type!local}\index{local
-type|see{type}}) by the following BNF,
-where $I$ is a
-propositional variable%
-\footnote{We include $\bot$ because G\"odel--Dummett logic has it
-although $\bot$ is not necessary for us to encode waitfree computation.}%
+type|see{type}}) by the following BNF, where $I$ is a propositional
+variable \footnote{We include $\bot$ because G\"odel--Dummett logic has
+$\bot$ although $\bot$ is not necessary to encode waitfree computation.}
 :
 \[
  \varphi,\psi ::= \bot \mid I \mid (\varphi\supset\psi) \mid (\varphi\wedge\psi) \mid
  (\varphi\vee\psi)\enspace.
 \]
-We omit parentheses following the usual convention.
+We omit parentheses when no ambiguity occurs.
 A global formula\index{formula!global}\index{global
 formula|see{formula}}
 (also called a global type\index{type!global}\index{global type|see{type}})
@@ -130,8 +131,9 @@ The unary operators $[0], [1],\ldots$ are called modalities%
 Informally, the local formulae describe datatypes used by each process.
 The global formulae describe inputs or outputs of all
 processes together.
+\fix{example, with $\sqcup$}
 
-A contex\index{context} (denoted by $\Gamma$ and $\Delta$ possibly
+A context\index{context} (denoted by $\Gamma$ and $\Delta$ possibly
 subscripted) is a potentially empty
 finite sequence of singleton global formulae.
 A sequent\index{sequent}~$\Gamma\vdash\m\varphi$ is a pair of a context and a
@@ -141,6 +143,8 @@ A hypersequent\index{hypersequent} is a finite sequence of sequents.
 The underlying logic has the derivation rules in Fig.~\ref{fig:logic}.  If
 we omit all the modalities, these rules characterize
 G\"odel--Dummett logic.
+For any local formula~$\phi$, $\phi$ is a theorem in G\"odel--Dummett
+logic iff $[0]\phi$ is provable.
 Indeed,
 $[0]((\varphi\supset\psi)\vee(\psi\supset\varphi))$ is provable (Figure~\ref{fig:dummett-modal}).
 \begin{figure}
@@ -154,10 +158,15 @@ $[0]((\varphi\supset\psi)\vee(\psi\supset\varphi))$ is provable (Figure~\ref{fig
 \UnaryInfC{$[0]Q\vdash[0]Q$}
 \LL{00-com}
 \BinaryInfC{$[0]P\vdash[0]Q\hmid [0]Q\vdash[0]P$}
-\LL{$[0]\supset$I}
+\LL{$[0]\supset\intro$}
 \UnaryInfC{$\vdash[0](P\supset Q)\hmid [0]Q\vdash[0]P$}
-\LL{$[0]\supset$I}
+\LL{$[0]\supset\intro$}
 \UnaryInfC{$\vdash[0](P\supset Q)\hmid \vdash[0](Q\supset P)$}
+\LL{$[0]\vee\intro$}
+\UnaryInfC{$\vdash[0]((P\supset Q)\lor(Q\supset P))\hmid \vdash[0](Q\supset P)$}
+\LL{$[0]\vee\intro$}
+\UnaryInfC{$\vdash[0]((P\supset Q)\lor(Q\supset P))\hmid
+ \vdash[0](P\supset Q) \lor (Q\supset P)$}
 \LL{EC}
 \UnaryInfC{$
 \vdash
@@ -293,40 +302,40 @@ $[0]((\varphi\supset\psi)\vee(\psi\supset\varphi))$ is provable (Figure~\ref{fig
 \caption[The underlying logic \fix{of what}.]
  {The underlying logic.
  Metavariables $\m\phi$ and $\m\psi$ stand for global formulae.
- Metavariables~$i$ and $j$ stand for a process.
- $\hyper$ stands for a
- hypersequent.
+ Metavariables~$i$ and $j$ stand for processes.
+ $\hyper$ stands for a possibly empty hypersequent.
  $\hyper^+$ stands for a nonempty hypersequent.
  $\Gamma$ and $\Delta$ stand for possibly empty contexts.
- In the names of rules, I at the end stands for introduction and E for
- elimination or exchange.  The I's in front stand for internal and E
- for external.  For structural rules, E stands for exchange, W for
- weakening and C for contraction.  The external contraction (EC) is
- different from standard ones but yields the same set of derivable
- sequents.
- There are no disjunction elimination in the inner global rules lest it
- is difficult (if possible) to translate the rule into
- waitfree computation.
+ In the names of rules, $\intro$ at the end stands for introduction and $\elim$ for
+ elimination.  For structural rules, E stands for exchange, W for
+ weakening and C for contraction.  The I's in front stand for internal and E
+ for external.
  A rule $[i]\wedge\intro$ is omitted because the inner global rule
  $\wedge\intro$ is more general.
  }
 \label{fig:logic}
 \end{figure}
 
+\fix{put this sentence somewhere appropriate}
+ There are no disjunction elimination in the inner global rules lest it
+ is difficult (if possible) to translate the rule into
+ waitfree computation.
+
+
 \subsection{Term Assignment}
 \label{term}
 
 We assume distinct, countably infinite sets of variables\index{variable},
-channels\index{channel}
+locations\index{location}
 and
 processes\index{process}.
-Channels are denoted by~$c,d,\ldots$; process~$i,j, \ldots$ and variables~$x,
+Locations are denoted by~$c,d,\ldots$; process~$i,j, \ldots$ and variables~$x,
 y, \ldots$.
-Later, channels will be used to specify a store
-holding a term or being empty.
+Later, locations will be used to specify a location in a store
+A location in a store can hold a term or be empty.
 Like in the $\lambda$-calculus, some terms reduces to other
-terms, but in this calculus, terms may interact with the store (like
-a program written in Haskell or OCaml does with an i-var).
+terms, but in this calculus, terms may interact with stores (like
+a program written in Haskell or OCaml does with i-vars).
 This behavior will be shown later in the definition of reductions.
 
 We define local terms\index{term!local}~$\term$ by BNF:
@@ -341,24 +350,24 @@ We define local terms\index{term!local}~$\term$ by BNF:
  \lambda x.\term\mid (\term \term)
 \mid \mat \term x\term y \term
 \end{align*}
-where $x$ is a variable and $c$ is a channel.
+where $x$ is a variable and $c$ is a location.
 All variable occurrences except the first clause are binding.
-The set of free variables of a local term $FV(M)$ is defined inductively
+The set of free variables of a local term $\FV(M)$ is defined inductively
 on $M$:
 \begin{align*}
- FV(x)&= \{x\}\\
- FV(\comod c c) M&= FV(M)\\
- FV(\reader c) &= \emptyset\\
- FV(\cotuple{M,N})&= FV(M)\cup FV(N)\\
- FV(\abort)&= \emptyset\\
- FV(\lpil{M})&= FV(M)\\
- FV(\lpir{N})&= FV(N)\\
- FV(\lpair{M,N})&= FV(M)\cup FV(N)\\
- FV(\inl{M})&= FV(M)\\
- FV(\inr{M})&= FV(M)\\
- FV(\lambda x.M)&= FV(M) \setminus \{x\}\\
- FV((M N))&= FV(M)\cup FV(N)\\
- FV(\mat M x N y O)&= FV(M)\cup (FV(N)\setminus \{x\}) \cup (FV(O)\setminus\{y\})
+ \FV(x)&= \{x\}\\
+ \FV(\comod c c) M&= \FV(M)\\
+ \FV(\reader c) &= \emptyset\\
+ \FV(\cotuple{M,N})&= \FV(M)\cup \FV(N)\\
+ \FV(\abort)&= \emptyset\\
+ \FV(\lpil{M})&= \FV(M)\\
+ \FV(\lpir{N})&= \FV(N)\\
+ \FV(\lpair{M,N})&= \FV(M)\cup \FV(N)\\
+ \FV(\inl{M})&= \FV(M)\\
+ \FV(\inr{M})&= \FV(M)\\
+ \FV(\lambda x.M)&= \FV(M) \setminus \{x\}\\
+ \FV((M N))&= \FV(M)\cup \FV(N)\\
+ \FV(\mat M x N y O)&= \FV(M)\cup (\FV(N)\setminus \{x\}) \cup (\FV(O)\setminus\{y\})
 \end{align*}
 A closed local term is a local term that has no free variables.
 
@@ -377,21 +386,21 @@ Especially, $(\comod c c)t$ and $\reader c$ denote processes' communication.
 Using these terms, we annotate the hypersequent system in Fig.~\ref{fig:logic}.
 We extend a sequent
 to $\G\tr \tj {\m M}{\m \varphi}$\kern -3pt, where $\G$ is
-a sequence like $\tj{x}{[i]\psi}\kern -3pt, \tj{y}{[j]\theta}$ and $\m M$
+a sequence like $\tj{x}{[i]\psi}\kern -1pt, \tj{y}{[j]\theta}$ and $\m M$
 is a global term.
 In a sequent $\Gamma\tr\tj{M}{\m\varphi}$\kern -3pt, we require the
 variables in $\G$ to be distinct from each other.
-A contexed type\index{contexted type}
- $\Gamma\tr\m\varphi$ is a sequent without a term but with variables in
- $\Gamma$.
-A hypersequent\index{hypersequent} is a finite sequence of sequents (each called
+We do not allow a context to contain both $\tj{x}{[0]I}$ and
+$\tj{x}{[1]I}$, or even $\tj{x}{[0]I}$ twice.
+An (extended) hypersequent\index{hypersequent} is a finite sequence of
+sequents (each called
 a component\index{component})
 where the same
 variable has the same type even if it appears in different components.
 The typing rules for the terms are given in Fig.~\ref{termassign}.
 For example, the proof in Figure~\ref{fig:dummett-modal} can be
 annotated as in Figure~\ref{fig:typed}.
-\begin{figure}
+\begin{sidewaysfigure}
  \centering
 \AxiomC{}
 \LL{[0]Ax}
@@ -409,15 +418,24 @@ annotated as in Figure~\ref{fig:typed}.
 \LL{$[0]\supset\intro$}
 \UnaryInfC{$\tr\tj{\lambda x. (\comodL)x}{[0](P\supset Q)}\hmid \tr
  \tj{\lambda y.(\comodR)y}{[0](Q\supset P)}$}
+\LL{$[0]\vee\intro$}
+\UnaryInfC{$\tr\tj{\inl{\lambda x. (\comodL)x}}{[0]((P\supset Q)\lor
+ (Q\supset P))}\hmid \tr
+ \tj{\lambda y.(\comodR)y}{[0](Q\supset P)}$}
+\LL{$[0]\vee\intro$}
+\UnaryInfC{$\tr\tj{\inl{\lambda x. (\comodL)x}}{[0]((P\supset Q)\lor
+ (Q\supset P))}\hmid \tr
+ \tj{\inr{\lambda y.(\comodR)y}}{[0]((P\supset Q)\lor(Q\supset P))}$}
 \LL{EC}
 \UnaryInfC{$
-\tr \tj{\left[{\lambda x. (\comodL)x} ,\quad {\lambda
- y.(\comodR)y} \right]}
+\tr \tj{\left[{\inl{\lambda x. (\comodL)x}} ,\quad {\inr{\lambda
+ y.(\comodR)y}} \right]}
  {[0]((P\supset Q)\lor (Q\supset P))} $}
 \DisplayProof
- \caption{An example of a typed term in \lgd.}
+ \caption{An example of a typed term in \lgd that corresponds the
+ derivation in Figure~\ref{fig:dummett-modal}.}
  \label{fig:typed}
-\end{figure}
+\end{sidewaysfigure}
 
 \begin{figure}[p]
  \small
@@ -431,7 +449,7 @@ annotated as in Figure~\ref{fig:typed}.
    {com}
    {$\hypert_0\hmid\hypert_1\hmid\Gamma\tr\tj{\imapsto{(\comodL)M}}{[i]\psi}\hmid
    \Delta\tr\tj{\jmapsto{(\comodR)N}}{[j]\phi}$}
- \\ where channels $c$ and $d$ are fresh.
+ \\ where locations $c$ and $d$ are fresh.
 \ruleskip
 %% external structural
  \UnaryRule
@@ -749,24 +767,22 @@ $
   }
  \DisplayProof
   \ruleskip
-  \fix{just typed so check typos}
   \caption{An example of a typing derivation.}
   \label{fig:typed2}
  \end{sidewaysfigure}
 
 \subsection{Reduction}
 
-A closed global term~$\m M$ is \textit{of} type~$\m\varphi$ iff there is
-a derivation of $\tr \tj{\m M}{\m\varphi}$.
-A pure term\index{pure term|see{term}}\index{term!pure} is a term
-without $\comod c c$ or $\reader c$.
 A hyperterm\index{hyperterm}~$\hypert$ is a nonempty sequence of global terms.
 From a hypersequent $\G_0\tr\tj{\m{M_0}}{\m{\phi_0}}\hmid \cdots \hmid
 \G_n\tr\tj{\m{M_n}}{\m{\phi_n}}$,
 we can construct a hyperterm $(\m{M_i})_{0\le i \le n}$.
 The hyperterm $(\m{M_i})_{0\le i \le n}$ is typeable when the
 aforementioned hypersequent is typeable for some $\G_i$'s and $\m{\phi_i}$'s.
-A store\index{store} maps a channel to a pure term or $\epsilon$.
+
+A store\index{store} maps a location to a pure term or $\epsilon$,
+where a pure term\index{pure term|see{term}}\index{term!pure} is a term
+without $\comod c c$ or $\reader c$.
 For a store~$S$, the updated store $S[c\mapsto x]$ maps $c$ to
 $x$ and $d$ to $S(d)$ if $d$ is different from~$c$.
 A configuration\index{configuration} is a pair $\conf{}\hypert$ of a
@@ -783,8 +799,7 @@ To complete the definition of \lgd,
  require all instances
  of $\rightsquigarrow_\spadesuit$ to avoid free variable captures.
 
- \fix{define congruence}\\
- \fix{let configuration contain hyperterms}
+\fix{A from notebook}
 
 \begin{definition}[Basic reduction]
  The basic reduction $\breduce$ is the smallest congruence containing
@@ -796,17 +811,19 @@ To complete the definition of \lgd,
 	 \conf{}{           \imapsto{M}   }$
   \item $\conf{}{\imapsto{\lpir{\lpair{M,N}}}} \breduce
 	 \conf{}{             \imapsto{N} }$
-  \item $\conf{}{\imapsto{\mat{\linl M}x N y O}} \breduce
+  \item $\conf{}{\imapsto{\mat{(\linl M)}x N y O}} \breduce
 	 \conf{}{              \imapsto{N[M/x]}}$
-  \item $\conf{}{\imapsto{\mat{\linr M}x N y O}} \breduce
+  \item $\conf{}{\imapsto{\mat{(\linr M)}x N y O}} \breduce
 	 \conf{}{                  \imapsto{O[M/y]}}$
  \end{itemize}
 \end{definition}
 
 There are two sorts of reductions that interact with the store.
 In summary, $\comodL$ tries to write to $d$ and read from
-$c$ of the store in the configuration.
- If a term writes to a full channel of
+$c$ in the store of the configuration.
+If a term writes to an empty location, the location is filled with the
+local term written by the term.
+ If a term writes to a full location of
 a store, it does not abort but the store is not updated.  In fact, the
 store contents are never updated after being written.
 This property will be used in the proof of \thref{first:sn}.
@@ -833,7 +850,7 @@ implementation more complicated.
 After the communicating term $(\comodL)$ writes to the memory,
 the term changes into a reader $\reader c$.  When the reader tries to
 read when $c$ is full, the reader is replaced with the content of the
-channel~$c$.
+location~$c$.
 If a term tries to read from an empty location of a store,
 the term changes into $\abort$.
 \begin{definition}[Read reduction]
@@ -871,7 +888,7 @@ the left component.
  \conf{}{{M}}$
  \item $\conf{}{\imapsto{\cotuple{M,N}}}\areduce \conf{}{\imapsto{M}}$ where
        $M$ and $N$ do not contain $\abort$, $\comodL$ or $\reader c$
-       for any channels $c,d$;
+       for any locations $c,d$;
  \item  $\conf{}{\imapsto{C[\abort]}}\areduce
  \conf{}{\imapsto{\abort}}$  where $C[\bullet]$ is defined by BNF:
 \begin{align*}
@@ -893,8 +910,7 @@ C[\bullet] N \mid
 For example, $(S, \cotuple{\abort,\abort})$ reduces to $(S,
 \abort)$.
 
-In order to obtain the subformula property
- using proof normalization \fix{show subfmla or change here},
+In order to avoid the situation where
 we add yet another kind of reduction rules called permutative
  reductions.
 \begin{definition}[Permutative reduction]
@@ -1021,9 +1037,9 @@ normal (the choice of $\lstore$ is irrelevant).
  variable~$x$ appears in both processes' local terms.
  From the first line to the second line,
  process~0's communication term succeeds in writing variable~$x$ to the
- store under the channel~$d$.
+ store under the location~$d$.
  From the second line to the third line, process~0 fails to read from
- channel~$c$ so that a reader construct is turned into an $\abort$.
+ location~$c$ so that a reader construct is turned into an $\abort$.
  This failure occures because process~0 tries to read before process~1
  writes.  In a different scheduling (or, evaluation strategy) such a
  failure can be avoided.  The degree of nondeterminism is essential to
@@ -1035,7 +1051,7 @@ normal (the choice of $\lstore$ is irrelevant).
  the aborted subterm in process~0's local term is thrown away: this is
  the main functionality of the concurrent construction $\cotuple{t,t,}$.
  From the fifth line to the sixth line,
- process~1 writes to the store under channel~$c$.
+ process~1 writes to the store under location~$c$.
  From the sixth line to the seventh line,
  process~1 reads what process~0 wrote.
  In this case, the reader construct in process~1's local term does not
@@ -1066,7 +1082,7 @@ proof is simpler.
  that is not $\abort$.
 \end{theorem}
 \begin{proof}
- When a reduction sequence is fixed, for any channels~$c$ and $d$, depending on
+ When a reduction sequence is fixed, for any locations~$c$ and $d$, depending on
  whether $c$ or $d$ is filled first,
  either:
  (i)  no ${\reader c} \reduce {\abort}$ occurs, or
@@ -1098,8 +1114,8 @@ into a weakening occurrence (using Proposition~\ref{process-change} stated below
  in $\G$ with $j$.
  In the lattar case, we can do the symmetric.
 
-After these rewritings for all appearing channels,
-we obtain a derivation not containing any channels.
+After these rewritings for all appearing locations,
+we obtain a derivation not containing any locations.
 Moreover, the end hypersequent of the resulting derivation has a component
 not containing $\abort$.
 The reductions of the original hyperterm can be simulated by the
@@ -1246,12 +1262,12 @@ $
 \conf{_\infty}{\hypert'_2}
 \reduce^\ast\cdots
 $
-with the following invariant \fix{what is $\mathcal M$?}:
-$\mathcal M'_i$ can be obtained by replacing some $\abort$ occurrences
-in $\mathcal M_i$ with some terms.
+with the following invariant:
+$\mathcal O'_i$ can be obtained by replacing some $\abort$ occurrences
+in $\mathcal O_i$ with some terms.
 More specifically, we translate each reduction as follows, keeping the
 invariant inductively on the number of steps
-(the base case is satisfied by $\mathcal M'_0 = \mathcal M_0$ immediately):
+(the base case is satisfied by $\mathcal O'_0 = \mathcal O_0$ immediately):
 \begin{itemize}
  \item a read reduction $\conf{_k}{\hypc{}{\reader c}}
        \rreduce
@@ -1432,11 +1448,15 @@ memory.
 \newcommand{\Wg}{W_{\mathrm g}}
 \newcommand{\Wd}{W_{\mathrm d}}
 A program is well-formed\index{well-formed program} when
-a program variable (resp. channel) first appears in a $\p x\leftarrow E$
+a program variable (resp. location) first appears in a $\p x\leftarrow E$
 (resp. $c\leftarrow E$)
 sentence, and
 after that, only appears in expressions.
 In other words, a well-formed program is in the single assignment form.
+
+A contexed type\index{contexted type}
+ $\Gamma\tr\m\varphi$ is a sequent without a term but with variables in
+ $\Gamma$.
 For a contexted type $(\Gamma\tr\m\varphi)$,
 we write $\tj{M}{(\Gamma\tr\m\varphi)}$ for
 $\Gamma\tr\tj{M}{\m\varphi}$.
@@ -1446,12 +1466,12 @@ a typed protocol\index{typed protocol} has:
 \begin{itemize}
  \item two program variables
       $\p i_i$ and $\p o_i$ for each process~$i$;
- \item a finite set of channels~$C$;
+ \item a finite set of locations~$C$;
  \item two functions $w\colon C\rightarrow \processes$
        and $r\colon C\rightarrow
        \processes$ (specifying the writer and the reader of
-       each channel);
- \item $W$: maps a channel in $C$ to a contexted type;
+       each location);
+ \item $W$: maps a location in $C$ to a contexted type;
  \item $V$: a finite set of program variables that contains $\p i_i$'s
        and $\p o_i$'s.
  \item a function~$t_i$ for each $i\in \processes$;
@@ -1473,11 +1493,11 @@ a typed protocol\index{typed protocol} has:
   \label{ex:xor-protocol}
   We give a concrete typed protocol for the exclusive-or task
   (Example~\ref{ex:xor}).
-  The set of channels~$C$ contains two elements $c$ and $d$.
+  The set of locations~$C$ contains two elements $c$ and $d$.
   Process~0 writes to $d$ and reads from $c$, and process~1
   writes to $c$ and reads from $d$.
   Formally, $w(c) = 1$, $w(d) = 0$, $r(c) = 0$ and $r(d) = 1$.
-  Both channels will contain boolean values.
+  Both locations will contain boolean values.
   Formally, $W(c) = W(d) = (\bot\imp\bot)\lor(\bot\imp\bot)$.
   The set of program variables~$V$ is just $\{\p i_0, \p i_1, \p o_0, \p
   o_1\}$.
@@ -1503,8 +1523,10 @@ a typed protocol\index{typed protocol} has:
 
 We define when a protocol solves a typed
 input-output problem.
-These definitions are transferred from \citet{Saks:1993vq}.
+These definitions are modification of \citet{Saks:1993vq}.
 
+A closed local term~$M$ is \textit{of} type~$\varphi$ iff there is
+a derivation of $\tr \tj{\{0\mapsto M\}}{[0]\varphi}$.
 Let $\processes$ be $\{0,\ldots, n-1\}$ and fix a typed protocol.
 A program variable content\index{program variable content} for $i\in\processes$ is a
 partial function that maps a program variable to a closed local term of
@@ -1570,7 +1592,7 @@ $\semo{E}_{x, \vec v}$ is defined as the unique normal form
 %{show, show, show}
 of the local term~$E[x(\vec{\p y}) / \vec{\p y}][\vec{v_c}/\vec c]$, where
 every program variable~$\p y$ is replaced by $x(\p y)$
-and every channel~$c$. is replaced by $v_c$.
+and every location~$c$. is replaced by $v_c$.
 If any of the substitutes is $\epsilon$,
 $\semo{E}_{x, \vec v}$ is defined to be $\epsilon$.
 
@@ -1633,7 +1655,7 @@ final system snapshot of an execution.
    s_1^0 = \tuple{p_1,\{\p i_1\mapsto \false\}}
   \end{align*}
   where $p_0$ and $p_1$ are defined in Example~\ref{ex:xor-protocol}.
-  In the system snapshot, $\vec{v^0}$ maps both channels $c$ and $d$ to
+  In the system snapshot, $\vec{v^0}$ maps both locations $c$ and $d$ to
   $\epsilon$.
   The next system snapshot $C_1$ is defined to be $C_0\update\sigma_0$.
   Since $\sigma_0 = \{0\}$, it does not contain 1.
@@ -1658,7 +1680,7 @@ final system snapshot of an execution.
   process~0's state is updated to
   $s_0^2 = \tuple{\p o_0
    \leftarrow \p i_0, \{\p i_0\mapsto \true\}}$
-  where the process failed to read from the channel~$c$ because $v_c^1$
+  where the process failed to read from the location~$c$ because $v_c^1$
   is $\epsilon$.  As a result, the program variable~$o_i$ obtained
   no assignments.
   The store contents are not updated either so that $v_c^2 = v_c^1 =
@@ -2352,7 +2374,7 @@ We set $g,d,t_i$ accordingly so that the program is typed.
    f_1\hmid\cdots \hmid f_n$ so that each $f_j$ is a partial mapping
    from processes in $\processes$ to program variables.
    Assume that there is an execution of $\semo{\hypert}$ whose
-   final system snapshot~$s$ satisfies \fix{is this correct? usage of s}
+   final system snapshot~$\tuple{\vec s,\vec v}$ satisfies
    $s_{f_j(i)} = V_{ji}$ for each $i \in \dom(f_j)$.
    Then, there exists a reduction relation
    \[
@@ -2391,12 +2413,13 @@ We set $g,d,t_i$ accordingly so that the program is typed.
 	  Moreover, we assume $s_i(\p x) = V_{|\hypert_0|+|\hypert_1|+1,i}$
 	  and $s_j(\p y) = V_{|\hypert_0| + |\hypert_1|,j}$.
 
-	  By the form of programs,
+	  By the form of the programs,
 	  there exists an execution of $\semo{\hypert_0\hmid
 	  \imapsto{M}}$
-	  whose final system snapshot map contains process snapshots
-	  $s'_l$
-	  that map program variables as:
+	  whose final system snapshot contains a process snapshot
+	  \fix{change $l$ into $p$}
+	  $s'_l$ for each process~$l\in \processes$
+	  that maps program variables as:
 	  \begin{align*}
 	   \semoi{\overline{\hypert_0}\hmid \imapsto{M}}&\mapsto
 	   (V_{kl})_{0\le k < |\hypert_0|}
@@ -2408,9 +2431,9 @@ We set $g,d,t_i$ accordingly so that the program is typed.
 	  Simillarly,
 	  there exists an execution of $\semo{\hypert_1\hmid
 	  \jmapsto{N}}$
-	  whose final system snapshot map contains process snapshots
-	  $s''_l$
-	  that map program variables as:
+	  whose final system snapshot contains a process snapshot
+	  $s''_l$ for each $l\in\processes$
+	  that maps program variables as:
 	  \begin{align*}
 	   \semoi{\overline{\hypert_1}\hmid \jmapsto{N}}&\mapsto
 	   (V_{kl})_{|\hypert_0|\le k < |\hypert_0| + |\hypert_1|}
@@ -2429,7 +2452,7 @@ We set $g,d,t_i$ accordingly so that the program is typed.
 	   \left(\m{M}_k\right)
 	   \hmid \{i\mapsto {V}\}}
 	  \end{align*}
-	  for some store~$S'$ and $\m{M}_k(l) = V_{kl}$ for each $l\in
+	  for some store~$S'$ and $\m{M}_k(p) = V_{kp}$ for each $p\in
 	  \processes$.
 	  Also,
 	  by induction hypothesis on $\hypert_1\hmid \jmapsto{N}$,
@@ -2466,25 +2489,84 @@ We set $g,d,t_i$ accordingly so that the program is typed.
      \item[EC]
 	  Assume that there exists an execution of
 	  \begin{align*}
-	   &\semo{\hypert\hmid \left(M_i\right) \hmid
-       \left(N_i\right)}; \\
-       &\left(\p k_i\leftarrow
-       \semoi{\hypert\hmid \overline{(M_i)}\hmid
-       (N_i)}(i)
-       ; \p k_i \leftarrow \semoi{\hypert\hmid {(M_i)}\hmid
-       \overline{(N_i)}}(i)\right)_{i\in I\mid M_i =
-       M'_i};
-       \\ &
-       \left(\p k_i\leftarrow
-       \semoi{\hypert\hmid {(M_i)}\hmid
-       \overline{(N_i)}}(i)
-       ; \p k_i \leftarrow
-       \semoi{\hypert\hmid \overline{(M_i)}\hmid
-       (N_i)}(i)
-       \right)_{i\in I\mid M_i \neq
-       M'_i}
+	   &\semo{\hypert\hmid \left(M_i\right)_{i\in I} \hmid
+	   \left(N_i\right)_{i\in I}}; \\
+	   &\left(\p k_i\leftarrow
+	   \semoi{\hypert\hmid \overline{(M_i)}\hmid
+	   (N_i)}(i)
+	   ; \p k_i \leftarrow \semoi{\hypert\hmid {(M_i)}\hmid
+	   \overline{(N_i)}}(i)\right)_{i\in I\mid M_i =
+	   M'_i};
+	   \\ &
+	   \left(\p k_i\leftarrow
+	   \semoi{\hypert\hmid {(M_i)}\hmid
+	   \overline{(N_i)}}(i)
+	   ; \p k_i \leftarrow
+	   \semoi{\hypert\hmid \overline{(M_i)}\hmid
+	   (N_i)}(i)
+	   \right)_{i\in I\mid M_i \neq
+	   M'_i}
 	  \end{align*}
-	  whose final system snap shot is $\tuple{\vec s, \vec v}$.
+	  whose final system snapshot is $\tuple{\vec s, \vec v}$
+	  where for each process $p\in \processes$, $s_p$ maps
+	  \[
+	   \semoi{\overline{\hypert}\hmid
+	  \left(\cotuple{M'_i,N'_i}\right)_{i\in I}}
+	  \mapsto
+	  \left(V_{kp}\right)_{0\le k < |\hypert|}
+	  \]
+	  and moreover $s_i(\p k_i)$ is $V_{|\hypert|,i}$ for each $i\in
+	  I$.
+	  By the form of the programs, there exists an execution of
+	  $\semo{\hypert\hmid (M_i)_{i\in I}\hmid (N_i)_{i\in I}}$
+	  whose final system snapshot $\tuple{\vec{s'}, \vec{v'}}$
+	  satisfies
+	  \begin{itemize}
+	   \item for any $i\in I$ with $\tuple{M_i,N_i} = \tuple{M'_i,
+		 N'_i}$, the proess snapshot
+		 $s'_i$ maps
+		 $\semoi{\hypert\hmid \overline{(M_i)_{i\in I}}\hmid
+		 (N_i)_{i\in I}}$ to $V_i$ and
+		 $\semoi{\hypert\hmid (M_i)_{i\in I}\hmid
+		 \overline{(N_i)_{i\in I}}}$ to $W_i$ where
+		 $V_i$ is identical to $V_{|\hypert|,i}$ or
+		 $V_i$ is $\epsilon$ and $W_i$ is identical to
+		 $V_{|\hypert|,i}$.
+	   \item
+		 for any $i\in I$ with $\tuple{M_i,N_i} = \tuple{N'_i,
+		 M'_i}$, the process snapshot
+		 $s'_i$ maps
+		 $\semoi{\hypert\hmid \overline{(M_i)_{i\in I}}\hmid
+		 (N_i)_{i\in I}}$ to $V_i$ and
+		 $\semoi{\hypert\hmid (M_i)_{i\in I}\hmid
+		 \overline{(N_i)_{i\in I}}}$ to $W_i$ where
+		 $W_i$ is identical to $V_{|\hypert|,i}$ or
+		 $W_i$ is $\epsilon$ and $V_i$ is identical to
+		 $V_{|\hypert|,i}$.
+	   \item for any $p\in\processes$,
+		 $s'_p$ maps $\semoi{\overline{\hypert}\hmid (M_i)_{i\in
+		 I}\hmid (N_i)_{i\in I}}$ to
+		 $(V_{kp})_{0\le p < |\hypert|}$.
+	  \end{itemize}
+	  By induction hypothesis, there exists a reduction relation
+	  \begin{align*}
+	   &\concreteconf{\{\}}{\hypert\hmid (M_i)_{i\in I}\hmid
+	   (N_i)_{i\in I}}
+	   \\
+	   \reduction&\concreteconf{S}{\operatorname*{\hmid}_{0\le k <
+	   |\hypert|}
+	   (\m{M_k})\hmid (V_i)_{i\in I}\hmid (W_i)_{i\in I}}
+	  \end{align*}
+	  for some store~$S$, global terms $\m{M_k}$ satisfying
+	  $\m{M_k}(p) = V_{kp}$ for each $p\in \processes$.
+	  Thus, there is also a reduction relation
+	  \begin{align*}
+	   &\concreteconf{\{\}}{\hypert\hmid (\cotuple{M'_i,N'_i})_{i\in
+	   I}}
+	   \\
+	   \reduction&\concreteconf{S}{\operatorname*{\hmid}_{0\le k <
+	   |\hypert|}(\m{M_k})\hmid (V_{|\hypert|,i})_{i\in I}}\enspace.
+	  \end{align*}
     \end{description}
    \end{proof}
 
@@ -2510,6 +2592,8 @@ If there exists a typed protocol that solves a typed input-output
  problem,
 the problem is solvable by a term.
 \end{theorem}
+
+\begin{proof}
 
 Saks and Zaharoglou~\cite{Saks:1993vq} showed that a finite repetition of the participating set
 problem universally solves any waitfreely solvable problem.
@@ -2570,12 +2654,12 @@ like $\{c_0, c_1, c_2\}$.
 Now, we are ready to construct a hyperterm solving the two-party
 participating set problem.
 We can obtain a derivation of
-\[
-\tj{x}{[0]\Id}, \tj{y}{[1]\Id}\tr
-\tj{\{0\mapsto\cotuple{\{(\comodL)x,x\},\{x\}},
-1\mapsto\cotuple{\{(\comodR)y,y\},\{y\}}\}}
-{0\mapsto \Id\imp \bool, 1\mapsto \Id\imp \bool}\enspace.
-\]
+ \begin{align*}
+\tj{x}{[0]\Id}, \tj{y}{[1]\Id}\tr &
+{\{0\mapsto\cotuple{\{(\comodL)x,x\},\{x\}},
+1\mapsto\cotuple{\{(\comodR)y,y\},\{y\}}\}}\colon\\
+&{0\mapsto \Id\imp \bool, 1\mapsto \Id\imp \bool}\enspace.
+ \end{align*}
 
 One possible reduction sequence is as follows:
 \begin{align*}
@@ -2619,7 +2703,6 @@ One possible reduction sequence is as follows:
  \concreteconf{\{c\mapsto y,d\mapsto
  x\}}{\{0\mapsto\{x\}, 1\mapsto\{x,y\}\}}
 \end{align*}
-
 Moreover, the same initial configuration can reduce to
 \[
 \concreteconf{\{c\mapsto y,d\mapsto
@@ -2631,9 +2714,13 @@ Moreover, the same initial configuration can reduce to
 There are no other normal forms.
 These three normal forms correspond to the three answers of the
 two-party participating set problem.
+\end{proof}
 
 \section{Related Work}
 \label{related}
+
+  \fix{herlihyのコの字型の例?}
+
 Sonobe~\cite{sonobe} gives sequent calculi for intermediate logics $S_i$
 and proved cut-elimination theorem for them.  As a special case he gives
 $S_\omega$, which coincides with G\"odel--Dummett logic.
@@ -2729,8 +2816,6 @@ using a denotation $\mathcal{D}$ for normal forms%
 If that succeeds for classical logic, it will be interesting%
 \footnote{Kazushige Terui suggested the potential impact for classical logic.}%
 .
-
-\fix{say, no problem with regard to provability 40min}
 
 \section{Conclusion}
 \label{conc}
