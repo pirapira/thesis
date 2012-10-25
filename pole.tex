@@ -84,7 +84,7 @@ countably infinite.
 We also assume countably infinitely many channels with involution
 satisfying $\co c\neq c$ and $\co{\co c} = c$.
 Metavariable~$c$ runs over channels.
-An s-term\index{term!s-term} (synchronous term)~$t$ is defined by BNF:
+An \textit{s-term}\index{term!s-term} (synchronous term)~$t$ is defined by BNF:
 \begin{align*}
  t::= \,&x
  \mid (t)t
@@ -100,7 +100,8 @@ An s-term\index{term!s-term} (synchronous term)~$t$ is defined by BNF:
 \end{align*}
 where $x$ is a variable and $c$ is a channel.  The variable occurrences
 except in the first clause are binding.
-An s-stack\index{stack!s-stack} (synchronous stack)~$\pi$ is defined by BNF:
+An \textit{s-stack}\index{stack!s-stack} (synchronous stack)~$\pi$ is
+defined by BNF:
 \[
  \pi ::= \epsilon
  \mid t\cdot \pi
@@ -117,14 +118,14 @@ variable $x$ does not appear more than once after the $/$'s,
 e.g.~$s[t/x][t'/x]$ never happens.
 
 A process is an element of $\sLambda\times\sPi$.
-An s-executable\index{executable!s-executable} (synchronous executable)
+An \textit{s-executable}\index{executable!s-executable} (synchronous executable)
 is a multiset of processes.
 We ruthlessly use $\conc$ both for delimiting elements in an
 s-executable and for addition of multisets.
 We denote the empty multiset by~$\emptyset$.
 
 % 2a' reduction
-A schedule\index{schedule} is a total order on channels.
+A \textit{schedule}\index{schedule} is a total order on channels.
 Given a fixed schedule~$\sche$,
 we define binary relations $\sred'$ and $\sred$
 on s-executables
@@ -199,13 +200,13 @@ as
 $\phi_0\limp(\phi_1\limp\cdots\limp\phi_n)$.
 A type is an element of $\form(\emptyset)$.
 
-A sequent\index{sequent} $\sequent{\G}{\tj t\phi}$ consists of a
+A \textit{sequent}\index{sequent} $\sequent{\G}{\tj t\phi}$ consists of a
 context~$\G$ and an s-term~$t$ associated with a type~$\phi$.
-The context\index{context} is a finite sequence of variables associated
+The \textit{context}\index{context} is a finite sequence of variables associated
 with types where the same variable does not appear more than once.
 When we write a concatenation of contexts $\G,\D$, we assume no variables
 appear in both $\G$ and $\D$.
-A hypersequent\index{hypersequent} is a finite sequence of sequents.
+A \textit{hypersequent}\index{hypersequent} is a finite sequence of sequents.
 In a hypersequent, we also assume that no variable appears more than once in
 the contexts%
 % due to space limitations
@@ -214,7 +215,7 @@ the contexts%
 % external contraction (EC) rule.}%
 .
 
-An $\NMTL$ derivation\index{derivation} is a tree composed of the derivation
+An $\NMTL$ \textit{derivation}\index{derivation!MTL2} is a tree composed of the derivation
 rules in Fig.~\ref{fig:pole-typing}
 whose top rules are Ax.
 A hypersequent is derivable in $\NMTL$ when there is an $\NMTL$
@@ -378,7 +379,7 @@ For example, there is an s-term typed with the prelinearity axiom (Fig.~\ref{fig
 %    Also, make it closed for ``for all''
 \begin{definition}
  \label{def:pole}
-A pole\index{pole}~$\bbot$ is a set of s-executables
+A \textit{pole}\index{pole}~$\bbot$ is a set of s-executables
 which satisfies
 \begin{enumerate}
  \item \label{red-closed} $e$ is in $\bbot$ if $e\sred e'$ and
@@ -398,9 +399,10 @@ Computationally,
 we only guarantee that at least one process of an s-executable
 $[t_0,\pi_0\conc \cdots \conc t_n,\pi_n]$ succeeds.
 
-An environment\index{environment} is a pair of an s-stack and an s-executable.
+An \textit{environment}\index{environment} is a pair of an s-stack and
+an s-executable.
 The set of environments is written as~$E$.
-A program\index{program} is a pair of an s-term and an s-executable.
+A \textit{program}\index{program} is a pair of an s-term and an s-executable.
 For a set~$\mathcal Z$ of environments, $\mathcal Z\rightarrow\bbot$ denotes
 the set of programs $(t,e)$ such that
 for any environment $(\pi,e')\in \mathcal Z$,
@@ -1235,17 +1237,17 @@ and \ref{c:second} uses \ref{c:first} in ($\limp$E,~\textminus) and
 In this section we give another operational semantics involving
 asynchronous shared memory communication, which is similar to Hirai's
 hyper-lambda calculus for G\"odel--Dummett logic~\citep{hiraiflops2012}.
-An a-term\index{term!a-term} (asynchronous term)~$t$ is an s-term or
+An \textit{a-term}\index{term!a-term} (asynchronous term)~$t$ is an s-term or
 $\reader c$.
 The definition of a-stacks is not changed from that of s-stacks except
 that the s-terms in the definition are replaced by a-terms.
 We write the set of a-terms as $\aLambda$ and a-stacks~$\aPi$.
-A store\index{store} maps a location to an a-term, $\bot$ or $\top$.
-The empty store\index{store!empty}%
+A \textit{store}\index{store} maps a location to an a-term, $\bot$ or $\top$.
+The \textit{empty store}\index{store!empty}%
 \index{empty store|see{store}}~$S_\epsilon$ maps any channel to $\bot$.
 For a store $S$, we define a store $S[c\mapsto x]$ to be
 the same as $S$ except that $S[c\mapsto x](c)$ is $x$ whatever $S(c)$ is.
-An a-executable\index{executable!a-executable} (asynchronous executable)
+An \textit{a-executable}\index{executable!a-executable} (asynchronous executable)
 is a finite multiset on $\aLambda \times \aPi$,
 paired with a store.
 

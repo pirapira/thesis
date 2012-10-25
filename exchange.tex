@@ -19,14 +19,14 @@ another and then exchange some pieces of information.
 
 \subsection{Dynamics}
 
-We define terms\index{term}~$t$ by BNF:
+We define \textit{terms}\index{term}~$t$ by BNF:
 \[
  t ::= x\mid \lambda x.t\mid (t)t\mid c \mid (t\conc t)\enspace.
 \]
 By $t^+$ we denote a term of the form $x$, $\lambda x.t$, $c$ or $(t\conc
 t)$.
 We use $\Lambda$ for the set of terms.
-A stack\index{stack}~$\pi$ is defined by BNF:
+A \textit{stack}\index{stack}~$\pi$ is defined by BNF:
 \[
  \pi ::= \epsilon\mid c\cdot\pi \mid \tuple{\pi,\pi} \mid c
 \]
@@ -148,7 +148,7 @@ Subsection~\ref{pole:spec}.
 
 \begin{definition}
  \label{ex:def:pole}
-A pole\index{pole}~$\bbot$ is a set of executables
+A \textit{pole}\index{pole}~$\bbot$ is a set of executables
 which satisfies
 \begin{enumerate}
  \item \label{ex:red-closed} $e$ is in $\bbot$ if $e\red e'$ and
