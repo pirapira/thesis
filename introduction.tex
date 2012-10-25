@@ -2,28 +2,28 @@
 
 \subsection{Our Contributions}
 
-When Ono gave a survey on intermediate logics, which are logics between
-intuitionistic and classical logics,
-he \fix{cite} declared that he chose to study intermediate logics in
-general rather than studying specific logics.
-Since general results are logically stronger than concrete results,
-theoretical scientists seek general results.
-However, concrete results about specific subjects matter when the results
+\citet{hosoi-ono} declared that they chose to study intermediate
+logics in
+general rather than studying specific intermediate logics.
+Concrete results about specific subjects matter when the results
 contain new phenomena.
-This thesis is intended to contain such a concrete discovery.
+This thesis is intended to contain such a concrete discovery
+about a specific intermediate logic.
+An intermediate logic is a logic \textit{between} classical and
+intuitionistic logics, where `between' is defined using the
+set-theoretic inclusion of valid logical formulae of each logic.
 
-Our subject is a typical intermediate logic called G\"odel--Dummett
-logic, known since 1950's.
-Our method is the Curry--Howard correspondence, also known since 1940's.
+Our subject is, G\"odel--Dummett logic, is
+a typical intermediate logic logic known from 1950's.
+Our method is the Curry--Howard correspondence, also known from 1940's.
+Our result is characterization of waitfreedom, a concept in the theory
+of distributed computation extensively studied in 1990's.
+Since both sides of the correspondence is already known,
+the discovery is a replay of Curry's surprise.
 
-
-this is a replay of Curry's expression of surprise.
-
-Of course, there have been many replays of Curry--Howard correspondence.
-
-
-The Curry--Howard isomorphism~\citep{curryhoward} was first made
-precise~\citep[p.97]{curryhoward} by \citet[\textbf{9}E and
+According to \citet[p.97]{curryhoward},
+the Curry--Howard isomorphism~\citep{curryhoward} was first made
+precise by \citet[\textbf{9}E and
 \textbf{9}F]{curry1974combinatory}.
 The intuitionistic propositional logic and the typed lambda calculus
 had been independently invented but Curry discovered them to be the same thing.
@@ -39,16 +39,19 @@ and the computer science bore waitfree computation in
 1970's~\citep{lamport1979make}.
 This thesis is about the unknown connection between these two.
 
+Of course, there have been many instances of Curry--Howard correspondence.
+
 We list our contributions from the most important:
 \begin{enumerate}
  \item identifying the computational ability of the
-G\"odel--Dummett logic with waitfreedom (Chapter~\ref{ch:lambda}),
+G\"odel--Dummett logic with waitfreedom (Chapter~\ref{ch:lambda});
  \item developing a lambda calculus using
-       a hypersequent calculus (Chapter~\ref{ch:lambda}),
+       a hypersequent calculus (Chapter~\ref{ch:lambda});
  \item identifying the communication performed by the prelinearity axiom
-       of monoidal t-norm logic (Chapter~\ref{ch:pole}),
+       of monoidal t-norm logic (Chapter~\ref{ch:pole});
  \item developing a parametricity argument for
-       concurrent processes performing waitfree communication (Chapter~\ref{ch:pole}),
+       concurrent processes performing waitfree communication
+       (Chapter~\ref{ch:pole}); and
  % \item identifying the communication performed by a seemingly unknown axiom
  %       $(p\limp q)\otimes(q\limp p)$ on top of multiplicative linear
  %       logic (Chapter~\ref{ch:exchange}),
@@ -57,11 +60,8 @@ G\"odel--Dummett logic with waitfreedom (Chapter~\ref{ch:lambda}),
        Compiler (Chapter~\ref{ch:haskell}).
 \end{enumerate}
 
-Our first contribution relies on our second contribution, which
-develops a lambda calculus based on \citet{avron91}'s hypersequent
-calculus for G\"odel--Dummett logic.  This justifies our title ``a
-computational interpretation of G\"odel--Dummett logic.''
-We found a way to interpret proofs in G\"odel--Dummett logic as
+Our first contribution is finding a way to interpret proofs in
+G\"odel--Dummett logic as
 concurrently executable programs for waitfree computation.
 Although \citet{avron91} noticed his hypersequent calculus has something
 to do with concurrency (as the title of~\citep{avron91} contains the phrase
@@ -69,9 +69,9 @@ to do with concurrency (as the title of~\citep{avron91} contains the phrase
 the computational interpretation of G\"odel--Dummett logic has
 the degree of synchronization called waitfreedom.  This discovery
 constitutes our first contribution.
+
 This is important because it is the first such computational
 interpretation for intermediate logics (Fig.~\ref{fig:lattice}).
-
 Another significance of this contribution
 is giving interpretation of nondterminism in typed
 lambda calculi.  In the simply typed lambda calculus for intuitionistic
@@ -80,10 +80,11 @@ However, in typed lambda calculi for classical propositional logic,
 there can be multiple normal forms unless we employ an evaluation
 strategy or limit the set of reductions.
 The lack of unique normal forms in the classical propositional proofs
-has puzzled logicians for decades.
+has puzzled logicians for decades. \fix{mention Lafont's example; say it
+is a matter of concurrency}
  \begin{figure}
   \centering
-  \includegraphics{lattice.eps}
+  \includegraphics[scale=0.9]{lattice.eps}
   \caption[The substructural logics with lambda calculi.]
   {The substructural logics for which lambda calculi are found.
   The underlying Hasse diagram of well-known substructural logics is
@@ -130,25 +131,28 @@ has puzzled logicians for decades.
   Daisuke Kimura's thesis~\cite{kimura} is a source of detailed
   information.
   \textsf{Inconsistent} stands for the logic of all logical formulae.
-  Notably, one programming language \texttt{Haskell}, which is based on
+  A programming language \texttt{Haskell}, which is based on
   the typed lambda calculi, has
   an inconsistent type system.
+  \fix{add other works mentioned in the picture}
   }
   \label{fig:lattice}
  \end{figure}
 
+Our second contribution is the technique for our first contribution.
+We developed a lambda calculus based on \citet{avron91}'s hypersequents.
+\citet{avron91} himself noted that it would be important to develop a
+lambda calculus for hypersequents.
 The lambda calculus relies on \citet{avron91}'s hypersequents.
 The hypersequent calculus is a
 variant of the deduction system called sequent calculus.  In sequent
 calculus, each step of a proof tree concludes a sequent $\G\vdash\phi$ that
 consists of a finite sequence of logical formulae~$\G$ and a logical
-formula~$\phi$.  After proving soundness of a sequent calculus, we know
-that whenever a proof tree concludes $\G\vdash\phi$, any state of any model
-satisfying all logical formulae in $\G$ must also satisfy the
-formula~$\phi$.  In other words, the sequent $\G\vdash\phi$ is
+formula~$\phi$.  The sequent $\G\vdash\phi$ is
 interpreted as an implication.  In hypersequent calculus, each step of a
 proof tree concludes a hypersequent instead of a sequent.  A
-hypersequent is a sequence of sequents: $\G\vdash\phi\hmid \D\vdash\psi
+hypersequent is a sequence of sequents delimited by $\hmid$:
+$\G\vdash\phi\hmid \D\vdash\psi
 \hmid \cdots$.  Also here, each component is interpreted as an
 implication, and then the whole hypersequent is interpreted as the
 disjunction of all those implications.
@@ -157,9 +161,10 @@ concurrent processeses.  Following the original disjunctive
 interpretation of components, we regard the proof tree as the guarantee of
 success of at least one process.
 
-Our third contribution treats the prelinearity axiom
+Our third contribution finds the computational interpretation of
+the prelinearity axiom
 $(\phi\limp\psi)\oplus(\psi\limp\phi)$, which is the linear version of
-Dummett's axiom.
+Dummett's axiom.  \fix{add words}
 
 Our fourth contribution is about the parametricity in the second-order
 setting.  When we allow logical formulas to have quantifiers on
@@ -171,32 +176,19 @@ inputs.
 For example, in \fix{specify logic}, a term of type $\forall X(X\imp X)$
 must be the identity function.
 Intuitively, since the term has to work on any type~$X$, the term cannot
-look inside the argument of type~$X$.
+``look inside'' \fix{cite something for this phrase} the data of type~$X$.
 Using this technique, we find the common behaviour of terms of type
-$\forall X \forall Y ((X\limp Y)\lor (Y\limp X))$, thus finding the
+$\forall X \forall Y ((X\limp Y)\oplus (Y\limp X))$, thus finding the
 computational semantics of Dummett's axiom.
 Our technical development here is very similar to that of
 \citet{danos-krivine}.  The crucial difference is that the processes do
 not communicate in the case of \citet{danos-krivine} but they perform
 waitfree communication in our case.
 
-
-\fix{add nth and nth}
-
-Our \fix{nth} contribution is a confirmation of our second contribution.
+Our fifth contribution is a confirmation of our first and second
+contributions.
 We implemented the lambda calculus on top of
 Glasgow Haskell Compiler.
-
-Our \fix{nth} contribution is about proof searching, which is another
-kind of computation arising from propositional logic.
-The lambda calculi is about removing detours from proofs while the proof
-searching is about finding a proof or a counterexample for a given
-conclusion.  \fix{read synch schemes paper and make regorous}
-We are now able to connect our work with the tradition of
-synchronization schemes.
-
-\fix{where to put it}
-Proofs as objects de Bruijin.
 
 % \section{An Introduction for Computer Scientists}
 

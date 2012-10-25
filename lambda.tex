@@ -115,7 +115,7 @@ We omit parentheses when no ambiguity occurs.
 A global formula\index{formula!global}\index{global
 formula|see{formula}}
 (also called a global type\index{type!global}\index{global type|see{type}})
-is a non-empty partial mapping from processes to local
+is a non-empty partial map from processes to local
 formulae.
 We use $\m\phi$ and $\m\psi$ for global formulae.
 For a natural number~$i$ (representing a process),
@@ -173,7 +173,7 @@ $[0]((\varphi\supset\psi)\vee(\psi\supset\varphi))$ is provable (Figure~\ref{fig
  [0]((P\supset Q)\lor (Q\supset P)) $}
  \DisplayProof
 
- \caption{Derivation of Dummett's axiom under modality~$[0]$.}
+ \caption{A derivation of Dummett's axiom under modality~$[0]$ in \lgd.}
  \label{fig:dummett-modal}
 \end{figure}
 
@@ -371,7 +371,7 @@ on $M$:
 \end{align*}
 A closed local term is a local term that has no free variables.
 
-A global term is a partial mapping from processes to local
+A global term is a partial map from processes to local
 terms.  For example, a global term $\{0\mapsto \lambda x.x, 1\mapsto
 y\}$ maps process~$0$ to local term $\lambda x.x$ and process~$1$ to
 local term $y$.
@@ -432,7 +432,7 @@ annotated as in Figure~\ref{fig:typed}.
  y.(\comodR)y}} \right]}
  {[0]((P\supset Q)\lor (Q\supset P))} $}
 \DisplayProof
- \caption{An example of a typed term in \lgd that corresponds the
+ \caption{An example of a typed term in \lgd\, that corresponds the
  derivation in Figure~\ref{fig:dummett-modal}.}
  \label{fig:typed}
 \end{sidewaysfigure}
@@ -588,7 +588,7 @@ annotated as in Figure~\ref{fig:typed}.
  \tj{\imapsto{\mat M x {N_0} y {N_1}}}{[i]\theta}$}
  \DisplayProof
 \ruleskip
- \caption[Term assignment of \lgd.]
+ \caption[Term assignment on \lgd\, rules.]
  {Term assignment.
  Metavariable $\m M$ stands for global terms.
  When we remove variables and terms, we obtain the derivation rules for
@@ -799,7 +799,25 @@ To complete the definition of \lgd,
  require all instances
  of $\rightsquigarrow_\spadesuit$ to avoid free variable captures.
 
-\fix{A from notebook}
+We require all reductions to be congruences.
+A binary relation~$R$ on configurations is a congruence\index{congruence}
+when
+\begin{itemize}
+ \item $\concreteconf{S_0}{\hypert_0} R \concreteconf{S_1}{\hypert_1}$ implies
+       $\concreteconf{S_0}{\hypert_0\hmid \hypert} R
+       \concreteconf{S_1}{\hypert_1\hmid \hypert}$,
+ \item $\concreteconf{S_0}{\hypert_0\hmid \m{M_0}} R
+       \concreteconf{S_1}{\hypert_1 \hmid \m{M_1}}$ implies
+       $\concreteconf{S_0}{\hypert_0\hmid \m{M_0}\sqcup \m{N}} R
+       \concreteconf{S_1}{\hypert_1\hmid \m{M_1}}$, and
+ \item $\concreteconf{S_0}{\hypert_0\hmid \{i\mapsto M_0\}\sqcup
+       \m{M_0}} R \concreteconf{S_1}{\hypert_1\hmid \imapsto{M_1}\sqcup
+       \m{M_1}}$ implies
+       $\concreteconf{S_0}{\imapsto{C[M_0]}\sqcup \m{M_0}} R
+       \concreteconf{S_1}{\imapsto{C[M_1]}\sqcup \m{M_1}}$.
+       \fix{what is C}
+       \fix{how about exchange}
+\end{itemize}
 
 \begin{definition}[Basic reduction]
  The basic reduction $\breduce$ is the smallest congruence containing
@@ -1076,7 +1094,7 @@ $\abort$ terms, a typed hyperterm never reduces to a hyperterm that only
 contains $\abort$'s.  We show the second property first because its
 proof is simpler.
 
-\begin{theorem}[Non-abortfullness]
+\begin{theorem}[Non-abortfullness of \lgd]
  \label{nab}
  All normal forms of a typed configuration contain at least one term
  that is not $\abort$.
@@ -1207,7 +1225,7 @@ for the symmetric reductions holds, the same property holds for the
 reductions because there are less pairs in reductions than in symmetric
 reductions.
 
-\begin{theorem}[Strong normalization]
+\begin{theorem}[Strong normalization of \lgd]
  \label{first:sn}
  \lgd\, is strongly normalizing.
 \end{theorem}
@@ -2008,13 +2026,14 @@ We show that the ability of the waitfree protocols and \lgd\, are the same.
  \DisplayProof
   \ruleskip
   \fix{just typed so check typos}
-  \caption{A typed global term that solves the exclusive-or
+  \caption[A typed global term that solves the exclusive-or
+  problem.]
+  {A typed global term that solves the exclusive-or
   problem~(Example~\ref{ex:xor}).}
   \label{fig:solving}
  \end{sidewaysfigure}
 
-
-\begin{theorem}[Soundness]
+\begin{theorem}[Soundness of \lgd\, with regard to waitfreedom]
  \label{th:soundness}
  If a typed input-output problem is solvable by a global term,
  there exists a typed protocol that solves the problem.
@@ -2024,7 +2043,7 @@ In order to prove this theorem,
 we are going to translate a typed hyperterm into a protocol inductively
 on the type derivation.
 To make induction work, we use the following auxiliary notions.
-An investigator\index{investigator} is a partial mapping from processes
+An investigator\index{investigator} is a partial map from processes
 to program variables.
 % A system snapshot satisfies a global formula%
 % \index{satisfy!system snapshot ---s a global formula}~$\m\varphi$
@@ -2371,7 +2390,7 @@ We set $g,d,t_i$ accordingly so that the program is typed.
   \begin{proposition}
    \label{general-sound}
    For a typed hypersequent~$\hypert$, let $\semoi{\hypert} = f_0\hmid
-   f_1\hmid\cdots \hmid f_n$ so that each $f_j$ is a partial mapping
+   f_1\hmid\cdots \hmid f_n$ so that each $f_j$ is a partial map
    from processes in $\processes$ to program variables.
    Assume that there is an execution of $\semo{\hypert}$ whose
    final system snapshot~$\tuple{\vec s,\vec v}$ satisfies
@@ -2587,20 +2606,24 @@ We set $g,d,t_i$ accordingly so that the program is typed.
   with $R$.
  \end{proof}
 
-\begin{theorem}[Completeness]
+\begin{theorem}[Completeness of \lgd\, with regard to waitfreedom]
 If there exists a typed protocol that solves a typed input-output
  problem,
 the problem is solvable by a term.
 \end{theorem}
 
 \begin{proof}
-
-Saks and Zaharoglou~\cite{Saks:1993vq} showed that a finite repetition of the participating set
-problem universally solves any waitfreely solvable problem.
-Also, $n$-party participating problem can be solved by a tournament of
-the two-party participating set problem.
-It suffices to show a \lgd\, term solving the two-party problem.
-
+\citet{herlihy1999topological} showed that a finite repetition
+ of the participating set
+ problem universally solves any waitfreely solvable problem.
+ Also, $n$-party participating problem can be solved by a tournament of
+ the two-party participating set problem%
+ \footnote{To be exact, the construction for solving the $n$-party
+ participating set problem using 2-party participating set problem
+ is the same as a sorting network \fix{cite something} for sorting $n$
+ elements.}.
+ It suffices to show a \lgd\, term solving the two-party participating
+ set problem.
 
 In the participating set problem\index{participating set problem}~\cite{borowsky},
 each process~$i$ receives an id $c_i$ and
@@ -2739,9 +2762,7 @@ treated similarly.''  He did not mention the possibility of
 any transmission failures, which we exploited
 in order to characterize waitfreedom.
 Ciabattoni, Galatos and Terui~\cite{alg} gives a class of logics
-that have
-hypersequent calculi with
-cut-elimination.
+that have hypersequent calculi with cut-elimination.
 Their cut-elimination proof is general but it does not
 obviously reveal the computational content.
 
@@ -2774,7 +2795,7 @@ G\"odel--Dummett logic.  The current
 work witnesses the constructive content of
 his model theoretic comparison.
 
-\section{Future Work}
+\section{Discussion}
 \label{future}
 
 As a programming language, \lgd\, allows efficient execution because it

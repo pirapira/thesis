@@ -1,32 +1,35 @@
  \section{Preliminaries}
 
+  We use ``iff'' as an abbreviation for ``if and only if.''
  We use set-theoretic concepts such as sets, relations and functions.
- $\powerset X$ denotes the powerset of $X$.
-   $X\setminus Y$ denotes the largest subset of $X$ that does not contain
-   any elements of $Y$.
+ For a set~$X$, $\powerset X$ denotes the powerset of $X$.
+   $X\setminus Y$ denotes the subset of $X$ that consists of those
+   elements of $X$ that are not elements of $Y$.
    Everywhere, we consider countably infinite set of logical formulae.
    A logic is a set of logical formulae, thus, there are at most
-   $\powerset{\mathbb N}$ different logics.
+   $\powerset{\mathbb N}$ different logics once the set of logical
+   formulae is fixed.
    Likewise, we consider at most countably many proofs and lambda terms.
-   In the classical realizability argument in Chapter~\fix{},
 
    We denote partial maps as graphs.
-   For example, ${0\mapsto M, 1\mapsto N}$ denotes a partial map that
+   For example, $\{0\mapsto M, 1\mapsto N\}$ denotes a partial map that
    maps 0 to $M$ and 1 to $N$.
    We denote by $\dom(f)$ the domain of $f$, that is,
    the set of elements that are mapped to something.
-   We also denote partial maps as sequence whose index is the domain.
-   For example, $(y_i)_{i\in I}$ denotes the partial mapping that maps
+   We also denote a partial map as a sequence whose index is the domain.
+   For example, $(y_i)_{i\in I}$ denotes the partial map that maps
    $i\in I$ to $y_i$.
-   For partial mappings whose domains are disjoint, we use $\sqcup$ to
+   For partial maps whose domains are disjoint, we use $\sqcup$ to
    denote the union.
-   When $f$ and $g$ have disjoint domains, $f\sqcup g$ denotes the
+   In other words, when $f$ and $g$ have disjoint domains, $f\sqcup g$
+   denotes the
    partial map that maps $x$ to $f(x)$ or $g(x)$ when one of these is
    defined, or otherwise to nothing.
 
   For a symbol or a sequence of symbols $p$,
   $p^+$ denotes repetition of $p$ more than zero times and
   $p^*$ denotes repetition of $p$ more than or equal to zero times.
+  \fix{are these notations ever used?}
   We use BNF (Backus Naur Form) for giving inductive definitions for sets
   of sequents of symbols.
   For example, when we say we define formulae~$\phi$ by BNF:
@@ -41,37 +44,24 @@
    \item if $\phi$ and $\psi$ are in $\Phi$, then $(\phi\imp\psi)$ is in $\Phi$.
   \end{itemize}
   and then we declare that we call elements of $\Phi$ formulae.
-  We use ``iff'' as an abbreviation for ``if and only if.''
-
-  \fix{hmm}
-  In the first chapters, agents appear.  Later, processes.  Processes
-  are special agents.
-
-  \fix{sequence notation}
-
-  \fix{substitution}
-
-  \fix{bound variable: with graphical notation}
-
 
 \section{History}
 
-Hereby, we briefly review the history of the mathematical logic to the
-extent relevant to the content of this thesis.
-We confine ourselves to the developments ofpropositional logic and
+We briefly review the history of mathematical logic and computer science
+to the extent relevant to the content of this thesis.
+Especially, we focus on the treatments of Dummett's axiom $(a\imp
+b)\lor(b\imp a)$ using the techniques in the history.
+We confine ourselves to the developments of propositional logic and
 ignore anything related to predicate logic or formalizing mathematics on
-logics.
+logics.  Nothing in this section originates from the current author.
 
 \subsection{Birth of Formal Logic}
 
 Implication is an important concept.
-Different treatments of implication has taken place in the realm of
-mathematical logic.
 One treatment of implications called the material implication.
 The material implication can be traced back at least to
 Frege's \textit{Begriffsschrift}~\citep{frege} in 1879.  There, in the
-section called
-``conditionality,''
+section called ``conditionality,''
 he begins by establishing four cases~\citep[p.~13]{frege}:
 \begin{enumerate}
  \item $A$ is affirmed and $B$ is affirmed\,;
@@ -86,7 +76,7 @@ Then he defines a notation involving $A$ and $B$
 which ``stands for the
 judgment that \textit{the third of these possibilities does not take
 place, but one of the three other does\footnote{The emphasis is by
-the English translation~\citep[p.~14]{frege}.}.''}
+the English translation~\citep[p.~14]{frege}.}}''~\citep[p.~14]{frege}.
 In the contemporary common mathematical terminology, this is equivalent
 to stating $B$ implies $A$.
 It was Russell who called this implication the material implication,
@@ -124,12 +114,15 @@ first three binary and the last unary%
 \footnote{Though, in this thesis, we prefer using nullary $\bot$ instead of unary
 $\neg.$}%
 .  Logical formulae are constructed
-using these connectives and the variables.
-Although he already sometimes used parentheses, he still used more points
+using these connectives and the propositional variables.
+Although he sometimes used parentheses, he still used more points
 around outer connectives (e.g. $b\supset \kern -3pt\cdot \kern 2pt  a
 \supset b$ indicates the left $\supset$ is outer and the right one is
 inner), but we use parentheses here.
-These formulae are axioms~\cite{heyting1930}, i.e. assumed to be ``correct formulae'':
+These formulae are axioms\footnote{The axioms with numberings are taken
+from \citet{heyting1930}.}, i.e. assumed to be
+``correct formulae''~\cite{heyting1930}:
+ \begin{quotation}\noindent
 \begin{description}
  \item[2.1.] $a\supset (a\land a)$
  \item[2.11.] $(a\land b)\supset (b\land a)$
@@ -142,30 +135,32 @@ These formulae are axioms~\cite{heyting1930}, i.e. assumed to be ``correct formu
  \item[3.12.] $((a\supset c)\land(b\supset c))\supset ((a\lor b)\supset
       c)$
  \item[4.1.] $\neg a\supset (a\supset b)$
- \item[4.11.] $((a\supset b)\land (a\supset \neg b)) \supset \neg a$
+ \item[4.11.] $((a\supset b)\land (a\supset \neg b)) \supset \neg a$\enspace.
 \end{description}
-Moreover, there are methods~\cite{heyting1930} to recognize more formulae to be correct
-formulae:
+ \end{quotation}
+Moreover, there are methods to recognize more formulae to be correct
+formulae~\cite{heyting1930}:
+ \begin{quotation}\noindent
 \begin{description}
  \item[1.2.] If $a$ and $b$ are correct formulas, then $a\land b$ is a correct
        formula.
  \item[1.3.] If $a$ and $b$ are correct formulas, then $b$ is a correct formula.
 \end{description}
+ \end{quotation}
 
 Following the intuitionists' belief
 that ``it is in principle impossible to set up a system of formulas that
 would be equivalent to intuitionistic mathematics, for the
 possiblitities of thought cannot be reduced to a finite number of rules
 set up in advance,''~\citep{heyting1930} he did not pursue completeness
-results for the
-deduction system%
-\footnote{Except in a remark mentioning Glivenko's theorem.}%
-.
+results for the deduction system
+except a remark mentioning Glivenko's theorem.
 However, he used a form of semantics in order to show that
 each axiom is independent from the other axioms and that
 the excluded middle is unprovable.
 For example, in order to refute the excluded middle, he used the
-following tables:\\
+following tables~\citep{heyting1930}:\\
+ \begin{quotation}
  \begin{center}
   \begin{tabular}{c|ccc}
    $\supset $& 0  & 1  & 2 \\ \hline
@@ -191,26 +186,73 @@ following tables:\\
   \begin{tabular}{c|ccc}
    $\neg $& 0 & 1 & 2\\ \hline
    & 1 & 0 & 1\\
-  \end{tabular}
+  \end{tabular}\enspace.
  \end{center}
+ \end{quotation}
 When we assign one of $\{0,1,2\}$ to each propositional variable, we
 can extend the assignment to all formulae using these tables.
+For binary operators, the columns stand for the prearguments (the
+arguments left of the operator) and the
+rows stand for the postarguments (the arguments right of the operator).
+For example, if we assign 1 to $a$ and 2 to $b$,
+$a\supset b$ obtains value~0.
 Under any assignment to propositional variables, all of Heyting's axioms
 are assigned 0.  Moreover, these tables have two formidable properties:
 \begin{enumerate}
  \item $0\land 0 = 0$
  \item $0\supset a$ has the value 0 only when $a = 0$.
 \end{enumerate}
-From these, all formulae provable in Heyting's deduction system
+From these, all ``correct formulae'' in Heyting's deduction system
 receive the value~0 under any assignments to propositional variables.
-However, if we assign 2 to $a$, $\neg \neg a\supset a$
-is assigned 2.  Note that the natural order between natural numbers
+However, if we assign 2 to $a$, $(\neg \neg a)\supset a$
+is assigned 2.  Thus, we can conclude that $\neg \neg a \supset a$ is
+not a correct formula in Heyting's deduction system.
+Note that the natural order between natural numbers
 plays no rule here: it is not relevant that 2 is larger than 1 or 0 is
 less than 1 (in other places he uses ``all positive and negative
 whole numbers and 0'').  Although Heyting used natural numbers here, he
-already obtained the notion of what is called Heyting algebra today.
+already obtained an equivalent notion of what is called Heyting algebra
+today.
+
 That is why we can refute Dummett's
-axiom $(p\supset q)\lor (q\supset p)$ in the same method.
+axiom $(a\supset b)\lor (b\supset a)$ in the same method.
+Indeed, according to these tables below, when we assign 1 to $a$ and 2
+to $b$, $(a\supset b)\lor (b\supset a)$ obtains 4, which is not 0.
+Since all correct formulae receive 0, $(a\imp b)\lor (b\imp a)$ is not a
+correct formula.
+ \begin{center}
+  \begin{tabular}{c|ccccc}
+   $\imp$ & 0& 1& 2& 3& 4\\ \hline
+   0& 0& 0& 0& 0& 0\\
+   1& 1& 0& 1& 0& 1\\
+   2& 2& 2& 0& 0& 2\\
+   3& 3& 3& 3& 0& 3\\
+   4& 4& 0& 0& 0& 0
+  \end{tabular}
+  \hfill
+  \begin{tabular}{c|ccccc}
+   $\wedge$& 0& 1& 2& 3& 4\\ \hline
+   0 & 0& 1& 2& 3& 4\\
+   1& 1& 1& 3& 3& 1\\
+   2& 2& 3& 2& 3& 2\\
+   3& 3& 3& 3& 3& 3\\
+   4& 4& 1& 2& 3& 4\\
+  \end{tabular}
+  \ruleskip
+  \begin{tabular}{c|ccccc}
+   $\vee$&0 &1 &2 &3 &4 \\ \hline
+   0& 0& 0& 0& 0& 0\\
+   1& 0& 1& 4& 1& 4\\
+   2& 0& 4& 2& 2& 4\\
+   3& 0& 1& 2& 3& 4\\
+   4& 0& 4& 4& 4& 4\\
+  \end{tabular}
+  \hfill
+  \begin{tabular}{c|ccccc}
+   $\neg$& 0& 1& 2& 3& 4\\ \hline
+   & 3& 3& 3& 0& 3\\
+  \end{tabular}
+ \end{center}
 
 \subsubsection{G\"odel}
 In 1932, G\"odel published a short note~\cite{godelprop} on intuitionistic propositional
@@ -250,17 +292,23 @@ there would be no theorems.
 % attempt has been made possible by the development of linear and
 % substructural logics explained below in \ref{linear}.
 In short, in some of those settings, $(p\otimes q)\limp p$ is
-not a theorem because we are not
-allowed to throw away $q$.
+not a theorem because we are not allowed to throw away $q$.
+
+In the final sentence, \citet{godelprop} states what is known as
+disjunction property today: ``\fix{quote}''.
+According to this statement, it is obvious that Dummett's axiom
+$(p\supset q) \lor (q\supset p)$ is not provable.
 
 \subsection{The Brouwer--Heyting--Kolmogorov Interpretation of Logical Connectives}
+
+\subsubsection{Kolmogorov}
 
 Thanks to Heyting~\cite{heyting1930}, we have a formal
 characterization of the intuitionistic implication.
 In 1932, Kolmogorov~\cite{kolmogorov1932} introduced a ``calculus of problems''
 that coincides with the intuitionistic propositional logic.
 In the calculus of problems, the logical connectives $\vee, \wedge,
-\supset$ connects problems to form another problem.
+\supset$ connect problems together to form another problem.
  \begin{quote}
   If $a$ and $b$ are two problems, then $a\land b$ designates the
   problem ``to solve both problems $a$ and $b$,'' while $a\lor b$
@@ -275,12 +323,12 @@ In the calculus of problems, the logical connectives $\vee, \wedge,
  He continues to validate Heyting~\cite{heyting1930}'s axioms, and the
  deduction rules with respect to the problem calculus interpretation.
 
- Furthermore, he finds a rational for not including the law of excluded
+ Furthermore, he finds a rationale for not including the law of excluded
  middle $a\lor \neg a$ by saying ``one must possess a general method
  either to prove or to reduce to a contradiction any proposition.  If
  our reader does not consider himself to be omniscient, he will probably
  determine that the formula cannot be found on the list of problems
- solved by him.''~\cite{kolmogorov1932}
+ solved by him''~\cite{kolmogorov1932}.
  This argument is enough to reject Dummett's axiom $(a\supset b)\lor
  (b\supset a)$ because one must possess a general method, given any two
  problems, to
@@ -291,8 +339,9 @@ In the calculus of problems, the logical connectives $\vee, \wedge,
  And the computational interpretation of Dummett's axiom is
  presented in Chapter~\ref{ch:lambda} in this thesis.
 
-The
-Brouwer--Heyting--Kolmogorov interpretation reads: ``a proof of the
+\subsubsection{Realization as Typed Lambda Terms}
+
+The Brouwer--Heyting--Kolmogorov interpretation reads: ``a proof of the
 implication $\varphi\supset\psi$ is a construction which permits us to
  transform any proof of $\varphi$ into a proof of $\psi$''~\fix{cite}.
 The BHK
@@ -345,21 +394,112 @@ substructural logics albeit it has quantification over propositional variables.
 
 \subsubsection{Gentzen}
 
-\fix{Cite Genztzen}
+The deduction system of \citet{heyting1930} characterizes what is still
+called intuitionistic propositional logic today. However, Heyting's
+system has one flaw: in order to prove a logical formula, we have to
+mention a larger, more complicated formulae sometimes.  Actually there
+are alternative formulations of intuitionistic (and classical)
+propositional logic by \citet{gentzen} where we only have to
+mention subformulae of the formula being proven.
+The alternative proof systems are called natural deduciton and sequent
+calculus.
+
+In contrast to the sytem of \citet{heyting1930} where a proof yields a
+finite set of ``correct formulae'', a proof in natural deduction and
+sequent calculus yields a pair of assumptions and conclusions.
+\citet{gentzen} used the form
+\[
+ \mathbf{A_1},\ldots,\mathbf{A_{\boldsymbol\mu}}\longrightarrow \mathbf{B}
+\]
+as a sequent.  We will use $\vdash$ instead of $\longrightarrow$.
+
+In natural deduction, the assumptions and conclusions are presented
+vertically.  For example,
+ \begin{center}
+  \AxiomC{$A\land B$}
+  \UnaryInfC{$B$}
+  \DisplayProof
+ \end{center}
+ has a single assumption $A\land B$ and a conclusion~$B$.
+ The horizontal line shows an application of an inference rule%
+ \footnote{In \citep{gentzen}, an inference rule is called an inference
+ figure schema.}.
+Natural deduction has introduction rules and elimination rules for each
+logical connectives.  For example, the introduction and elimination
+rules for $\wedge$
+ (conjunction\footnote{\citet{gentzen} and \citet{prawitz1965} used
+ $\&$.}) is as follows:
+ \[
+  \fix{fill} \fix{fill} \fix{fill}
+ \].
+
+
+In later chapters, we will use natural deduction for presenting logics.
 
 \subsubsection{Prawitz}
 
-\fix{cite prawitz}
+\citet{gentzen} did not prove the subformula property immediately for
+natural deduction.  He proved the subformula property for sequent
+calculus first and then after that obtained the property of natural
+deduction as a corollary.
+On the other hand, \citet{prawitz1965} studied natural deduction in
+itself.
+
+Inversion principle states that an occurrence of a logical connective
+in a proof can be removed when the connective is introduced by
+an introduction rule, and then immediately below, eliminated by an
+elimination rule.  A logical formula occurrence containing such a
+connective is called a maximal formula.
+For example, for conjunction, a natural deduction
+derivation~\citep[p.~36]{prawitz1965} can be reduced
+ \begin{center}
+  from
+ \AxiomC{$\Sigma_0$}
+  \UnaryInfC{$A$}
+ \AxiomC{$\Sigma_1$}
+  \UnaryInfC{$B$}
+  \LL{$\wedge\intro$}
+  \BinaryInfC{$A\land B$}
+  \LL{$\wedge\elim$}
+  \UnaryInfC{$A$}
+  \DisplayProof
+  to
+ \AxiomC{$\Sigma_0$}
+  \UnaryInfC{$A$}
+  \DisplayProof
+ \end{center}
+ where $\Sigma_0$ and $\Sigma_1$ stand for derivations with conclusions
+ $A$ and $B$ respectively.
+ In the reduction, the occurrence of $\wedge$ is removed.
+ The same holds for other logical connectives: thus we can remove
+ maximal formulae.
+
+ Further, \citet[Chapter~IV]{prawitz1965} formulated a weaker notion
+ called maximal segments.  Above, in the definition of maximal formulae,
+ the elimination rule must be placed immediately below the corresponding
+ introduction rule.  Prawitz allowed other inference lines between the
+ introduction and elimination rules and defined maximal segments.
+ A derivation without maximal segments is called normal.
+ And Prawitz proved the existence of a normal derivation of $\G\vdash A$
+ given any derivation of $\G\vdash A$.
+ \citet{prawitz} treated first-order, second-order and modal logics but
+ we do not elaborate.
+
+ The reductions and the normal form coincide with the $\beta$-reduction
+ and the normal form in the typed lambda
+ calculi under Curry--Howard isomorphism.
 
 
 \subsection{Curry--Howard Isomorphism}
 
 The Curry--Howard isomorphism is originally a correspondence between
 intuitionistic propositional logic proofs and typed lambda terms, but
-the term has obtained a more general meaning containing
+the technical term has obtained a more general meaning containing
 correspondence between proofs and programs in general.
-\citet{curryhoward} is a comprehensive reference on the topic,
-containing lots of historical and bibliographical remarks.
+The phrase ``computational interpretation'' is reserved for
+the Curry--Howard isomorphism.
+\citet{curryhoward} recently presented a comprehensive reference on the
+topic, containing lots of historical and bibliographical remarks.
 
 \subsubsection{Curry}
 The Curry--Howard isomorphism is originally the correspondence of
@@ -376,7 +516,7 @@ The footnote~28 of \citep{curry1942} reads:
   in any of the former postulates we change $F$ to $P$ and drop the
   combinator we have the corresponding postulate for $P$.
  \end{quote}
- For example, there is Postulate~(PC):
+ On the same page, there is Postulate~(PC):
 \[
  \vdash (\beta\supset (\alpha\supset \gamma))\supset (\alpha \supset
  (\beta\supset \gamma))\enspace.
@@ -425,25 +565,21 @@ propositional algebra.''
 There, Curry notes the correspondence is not isomorphism\fix{or, in
 sorenzen's book ???}  We take a finer approach.
 
+\subsubsection{Application to Programming Languages}
+
 \citet{landin1965} noticed some similarities between ALGOL~60 syntax and
 the untyped lambda calculus.
+\fix{survey ML like languages}
 
-Pfenning
+However, none has employed Dummett's axiom as a type for a language feature.
 
-Davies--Pfenning S4 A Modal Analysis of Staged Computation
-
-Curien
-
-Murphey 7
-
-Game
 
 
 \subsection{G\"odel--Dummett Logic}
 
 \subsubsection{Dummett}
 Dummett~\cite{dummett59} considers a semantics on $\{0,1,2,\ldots,\omega\}$ where
-$\wedge$ is interpreted as max, $\vee$ as min, $\bot$ as $\omega$
+$\wedge$ is interpreted as maximum, $\vee$ as minimum, $\bot$ as $\omega$
 and conjunction~$\wedge$
  and implication as a
 function~$\hat\supset$ where%
@@ -482,7 +618,7 @@ Hypersequent
 
 \subsubsection{Saks and Zaharoglow}
 
-\subsection{Superintuitionistic Logics}
+\subsection{Superintuitionistic (Intermediate) Logics}
 
 A logic is a set of logical formulae which is closed by
 substitution and modus ponens.
@@ -553,7 +689,7 @@ each finite subtheory).
 However, in the case of axiomatic set theory with comprehension,
 \citet{hajek2005} showed that induction over natural numbers is contradictory.
 
-Computationally interesting research on intermediate logics can be found
+Computationally inclined research on intermediate logics can be found
 in proof searching.  For the typical intermediate logic G\"odel--Dummett
 logic, there has been many proof searching implementations.
 Currently, the fastest solver the author is aware of
@@ -671,7 +807,19 @@ Krivine
 
 Curien
 
-\subsection{Our Standing Point}
+\subsubsection{Summary}
+
+Omitted
+
+focusng
+
+sara negri and von plato
+
+expansion to modal logics
+
+tradition of game semantics
+
+\section{Significance of Our Contributions}
 
 At the core of computer science lies the interplay of static formalism
 and dynamic behaviour.  We can find examples in typed lambda calculi,
@@ -724,4 +872,11 @@ requiring that the models are linearly ordered.
 In terms of algebraic semantics, the axiom is sound and complete for
 requiring that the truth values are linearly ordered.
 In terms of computation, what is it?
+
+Each chapter can be read independently, but the most important one is
+the next chapter.
+
+\subsection{\fix{chapter two}}
+\subsection{\fix{chapter three}}
+\subsection{\fix{chapter four}}
 
