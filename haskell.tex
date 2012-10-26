@@ -1,4 +1,4 @@
-\chapter{Hypersequents in Haskell}
+\chapter{Dummett's Axiom in Haskell}
 \label{ch:haskell}
 
 \subsection{Summary}
@@ -19,7 +19,7 @@
  because typical waitfree protocols use the fact that at least one thread
  can successfully read other thread's information.
 
-%if False
+\iffalse
 \begin{code}
  {-# LANGUAGE TypeOperators, MultiParamTypeClasses, FunctionalDependencies, FlexibleInstances, UndecidableInstances #-}
 
@@ -49,10 +49,11 @@ import Control.Concurrent.MVar (MVar, tryPutMVar, readMVar,
  newEmptyMVar, tryTakeMVar)
 import qualified Data.Map as Map
 \end{code}
-
-%endif
+\fi
 
 \section{Introduction}
+
+\fix{introduction must be changed}
 
 We used hypersequents to describe waitfree computation in order to
 conquer two difficulties:
