@@ -1,4 +1,4 @@
-\chapter{Hypersequents in Haskell}
+\chapter{Dummett's Axiom in Haskell}
 \label{ch:haskell}
 
 \subsection{Summary}
@@ -19,7 +19,7 @@
  because typical waitfree protocols use the fact that at least one thread
  can successfully read other thread's information.
 
-%if False
+\iffalse
 \begin{code}
  {-# LANGUAGE TypeOperators, MultiParamTypeClasses, FunctionalDependencies, FlexibleInstances, UndecidableInstances #-}
 
@@ -49,10 +49,11 @@ import Control.Concurrent.MVar (MVar, tryPutMVar, readMVar,
  newEmptyMVar, tryTakeMVar)
 import qualified Data.Map as Map
 \end{code}
-
-%endif
+\fi
 
 \section{Introduction}
+
+\fix{introduction must be changed}
 
 We used hypersequents to describe waitfree computation in order to
 conquer two difficulties:
@@ -67,6 +68,8 @@ application in typed lambda calculi setting (i.e. via Curry-Howard correspondenc
 We demonstrate the effectiveness of our approach by implementing it on
 Haskell%
 \footnote{\texttt{cabal install waitfree} will install this library.}.
+
+\fix{are all these three subsections necessary?}
 
 \subsection{Waitfreedom}
 \label{subsect:wf}
@@ -128,7 +131,7 @@ $\Gamma$, the whole term~$t$ can be typed as $A$.
 
 A hypersequent is a finite sequence of sequents and a derivation
 looks like this.  Each hypersequent consists of a finite number of
-sequents called components\index{component}.  Rules from ordinary sequent calculus
+sequents called \textit{components}\index{component}.  Rules from ordinary sequent calculus
 can be accommodated in a hypersequent calculus by allowing external
 contexts from different branches to merge simply.  The derivation below
 is based on such an accommodated rule.
@@ -1041,6 +1044,9 @@ synchronous communication, waitfreedom can be implemented in a less
 time-consuming manner.  Since our library
 interface captures waitfreedom, it is possible to build a less
 time-consuming implementation for this interface.
+
+
+\fix{X10}
 
 \section{Future Work}
 

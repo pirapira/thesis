@@ -9,6 +9,7 @@
 \usepackage{caption}
 \usepackage{subcaption}
 \usepackage{begriff}
+\usepackage{dsfont}
 
 \makeindex
 
@@ -29,9 +30,9 @@
 
 %%% from haskell symposium submitted paper
 \usepackage{graphicx}
-\usepackage{amsmath,amssymb}
+\usepackage{amssymb,amsmath}
 
-\usepackage[amsmath,standard,thref]{ntheorem}
+\usepackage[amsmath,standard,thref,thmmarks]{ntheorem}
 %\usepackage{showlabels}
 
 % \doublespacing
@@ -59,20 +60,20 @@
 
 \listoffigures
 
-\newpage
-\chapter*{List of Theorems}
+\chapter*{List of Theorems and Examples}
 \theoremlisttype{allname}
-\listtheorems{theorem,lemma}
-% XXX because empty %\listoftables
+\listtheorems{theorem,lemma,example}
+
+% \listoftables
 
 \mainmatter
 
 \input{introduction.tex}
 \input{prelim.tex}
-\input{seqcon.tex}
+% \input{seqcon.tex}
 \input{lambda.tex}
 \input{pole.tex}
-\input{exchange.tex}
+% \input{exchange.tex}
 \input{haskell.tex}
 
 \printindex

@@ -1,25 +1,6 @@
 \chapter{Prelinearity Axiom as an Asynchronous Communication Scheme}
 \label{ch:pole}
 
-	% packages
-% \usepackage{setspace}
-% \doublespacing
-
-% \usepackage{bussproofs}
-% \usepackage{graphicx}
-% \usepackage{amssymb}
-
-% % title, author, etc
-% \title{Some Disjunctive Tautologies as\\
-%  Asynchronous Communication Schemes}
-% \author{Yoichi Hirai}
-
-% \usepackage{amsmath}	% required for `\align*' (yatex added)
-% \begin{document}
-
-% \maketitle
-
-
 \subsection{Summary}
 %%% abstract
 \citet{danos-krivine} state that
@@ -30,8 +11,8 @@ Indeed in their formalism, reduction of one term can wait
 for another, making synchronization.
 However,
 one can find no communication among different
-concurrent elements of an executable.
-In the current paper, we show that logical axioms can specify how
+concurrent elements of an executable.\fix{need a section for this}
+In this chapter, we show that logical axioms can specify how
 concurrent processes exchange information asynchronously.
 
 We investigate the computational behavior of the prelinearity axiom
@@ -49,42 +30,188 @@ we externally specify such nondeterministic choice.
 In Sect.~\ref{sec:async}, where processes do not make synchronization,
 the nondeterminism appears automatically as a slower process cannot pass
 information to a faster one.
-% We adapt \citet{danos-krivine}'s realizability argument to our
-% synchronous case and give simulation from the
-% asynchronous case to the synchronous case.
-%
+We adapt \citet{danos-krivine}'s realizability argument to our
+synchronous case and give simulation from the
+asynchronous case to the synchronous case.
+
 We also
 develop a simulation from the synchronous semantics to the
 asynchronous one.
 The asynchronous semantics here is closely related to
-the hyper-lambda calculus for G\"odel--Dummett logic presented by
-\citet{hiraiflops2012}.
-% On top of intuitionistic logic,
-% G\"odel--Dummett logic is axiomatized by Dummett axiom
-% $(\phi\imp\psi)\lor(\psi\imp\phi)$, which is similar to the prelinearity axiom.
-%
-% Our aim in this paper is reasoning about asynchronous communication on
-% shared memory using parametricity argument.
-% However, since processes can write into and read from shared memory,
-% a straightforward approach would lead us to solving mixed-variant domain
-% equations or using the step-index technique~\citep{ahmed2006}.
-% Although dealing with general references and parametricity
-% is manageable~\citep{birkedal2009relational},
-% we choose a simpler, indirect approach.
-% In Sect.~\ref{sec:sync} we apply the classical realizability argument to
-% an operational semantics where
-% communication is made
-% synchronously.
-% In Sect.~\ref{sec:async} we deal with the
-% operational
-% semantics involving asynchronnous communication using stores and
+the hyper-lambda calculus for G\"odel--Dummett logic presented in
+Chapter~\ref{ch:lambda}.
+On top of intuitionistic logic,
+G\"odel--Dummett logic is axiomatized by Dummett axiom
+$(\phi\imp\psi)\lor(\psi\imp\phi)$, which is similar to the prelinearity axiom.
+
+Our aim in this paper is reasoning about asynchronous communication on
+shared memory using parametricity argument.
+However, since processes can write into and read from shared memory,
+a straightforward approach would lead us to solving mixed-variant domain
+equations or using the step-index technique~\citep{ahmed2006}.
+Although dealing with general references and parametricity
+is manageable~\citep{birkedal2009relational},
+we choose a simpler, indirect approach.
+In Sect.~\ref{sec:sync} we apply the classical realizability argument to
+an operational semantics where
+communication is made
+synchronously.
+In Sect.~\ref{sec:async} we deal with the
+operational
+semantics involving asynchronnous communication using stores and
 In Sect.~\ref{sec:as-logic}, we compare our type system with MTL.
 In sections~\ref{sec:discuss} and \ref{sec:conclude}, we give discussions
 and our conclusion.
 % \fix{is schedule needed? maybe not.}
 % with schedule, the operational semantics becomes deterministic
 
+\section{Motivation}
+
+\fix{describe danos and krivine}
+
+\fix{describe what is interesting}
+
+\fix{should say something about the asynchronous}
+
+\begin{itemize}
+ \item enabling us to what $X\supset X$ does.
+ \item deeper understanding of asynchronity
+\end{itemize}
+
+start weak
+
 %%% 2. terms types and _models_?
+\section{Asynchronous Semantics}
+\label{sec:async}
+
+In this section we give another operational semantics involving
+asynchronous shared memory communication, which is similar to Hirai's
+hyper-lambda calculus for G\"odel--Dummett logic~\citep{hiraiflops2012}.
+An \textit{a-term}\index{term!a-term} (asynchronous term)~$t$ is an s-term or
+$\reader c$.
+The definition of a-stacks is not changed from that of s-stacks except
+that the s-terms in the definition are replaced by a-terms.
+We write the set of a-terms as $\aLambda$ and a-stacks~$\aPi$.
+A \textit{store}\index{store} maps a location to an a-term, $\bot$ or $\top$.
+The \textit{empty store}\index{store!empty}%
+\index{empty store|see{store}}~$S_\epsilon$ maps any location to $\bot$.
+For a store $S$, we define a store $S[c\mapsto x]$ to be
+the same as $S$ except that $S[c\mapsto x](c)$ is $x$ whatever $S(c)$ is.
+An \textit{a-executable}\index{executable!a-executable} (asynchronous executable)
+is a finite multiset on $\aLambda \times \aPi$,
+paired with a store.
+
+% 2a' reduction
+We define binary relations~$\ared'$ and $\ared$ on a-executables to be the smallest binary preorders
+that satisfy:
+\begin{description}
+ \item[(cong)] if
+	    $[t,\pi],         S \ared' [ t',\pi'],        S'$
+	    then
+	    $[t,\pi \conc e], S \ared' [ t',\pi'\conc e], S'$\enspace;
+ \item[(abort)] $[\abort,\pi] \ared' \emptyset$\enspace;
+ \item[(push)]
+	    $[(t)u,\pi],S       \ared' [t,u\cdot\pi],S$;
+ \item[(store)]
+	    $[\lambda x.t,u\cdot\pi],S
+	     \ared'
+	     [t[u/x],      \pi],S$\enspace;
+ \item[(load)]
+	    $[u,\pi],S\ared'[u,\pi],S$\enspace;
+ \item[(ask)]
+      $[\mat t x u y v,\pi], S\ared' [t,\mats x u \pi y v \pi], S$\enspace;
+ \item[(ansL)]
+      $[\inl{v}, \mats xt\pi yu\sigma],S \ared' [t[v/x],\pi],S $ \enspace;
+ \item[(ansR)]
+      $[\inr{w}, \mats xt\pi yu\sigma],S \ared' [u[w/y],\sigma],S $ \enspace;
+ \item[(write)]
+	    $
+	    [\comod c{\co c}, t\cdot\pi], S[\co c\mapsto\bot]
+	    \ared'
+	    [\reader c, \pi],
+	    S[\co c\mapsto t]
+	    $\enspace;
+ \item[(write')]
+	    $
+	    [\comod c{\co c}, t\cdot\pi], S[\co c\mapsto \top]
+	    \ared'
+	    [\reader c, \pi],
+	    S[\co c\mapsto \bot]
+	    $\enspace;
+ \item[(read)]$
+	    [\reader c ,\pi],
+	    S[c\mapsto u]
+	    \ared'
+	    [u,\pi],
+	    S[c\mapsto u]
+	    $\enspace;
+ \item[(fail)]
+	    $
+	    [\reader c,\pi],
+	    S[c\mapsto \bot]
+	    \ared'
+	    \emptyset,S[c\mapsto \top]
+	    $
+	    \enspace; and
+ \item[(local-global)] If $e_0, S_0\ared'e_1, S_1$ then $e_0, S_0\ared e_1,
+      S_1$\enspace; and
+ \item[(dist)]
+	    $[(t\conc u),\pi\conc e],S   \ared' [t,\pi\conc u,\pi\conc
+      e\conc e],S$\enspace.
+\end{description}
+Differently from the synchronous case in Sect.~\ref{sec:sync},
+we do not use an external schedule relation on locations.
+Instead, nondeterminism appears spontaneously.
+Indeed, we can implement something similar to Lafont's
+example~\citep[B.1]{girard1989proofs}.
+Suppose $\tr\tj t\phi$ and $\tr\tj u\phi$ are both derivable.
+Then,
+$\tr\tj{(\comod c{\co c})t\conc(\comod {\co c} c)u}\phi$ is derivable.
+From there $[((\comod c{\co c})t\conc (\comod{\co c} c)u),
+\pi],S_\epsilon$
+can reduce both to $[t,\pi], S_\epsilon$
+and to $[u,\pi], S_\epsilon$ (Fig.~\ref{fig:lafont}).
+\begin{figure}
+ \begin{subfigure}[b]{0.45\textwidth}
+  \begin{align*}
+   & [((\comodL)t\conc (\comodR) u),\pi], S_\epsilon \\
+   \ared & [(\comodL)t,\pi\conc (\comodR)u,\pi], S_\epsilon \\
+   \ared & [\reader c, \pi\conc (\comodR)u,\pi], S_\epsilon[d\mapsto
+   t] \\
+   \ared & [(\comodR)u,\pi], S_\epsilon[c\mapsto \top, \co c\mapsto t] \\
+   \ared & [\reader {\co c}, \pi], S_\epsilon[c\mapsto \bot, \co c\mapsto t] \\
+   \ared & [t,\pi], S_\epsilon[c\mapsto \bot,\co c\mapsto \bot]\enspace.
+  \end{align*}
+ \end{subfigure}
+ \begin{subfigure}[b]{0.45\textwidth}
+  \begin{align*}
+   & [((\comodL)t\conc (\comodR) u),\pi], S_\epsilon \\
+   \ared & [(\comodL)t,\pi\conc (\comodR)u,\pi], S_\epsilon \\
+   \ared & [(\comodL)t,\pi\conc \reader {\co c},\pi], S_\epsilon[c\mapsto u] \\
+   \ared & [(\comodL)t,\pi], S_\epsilon[c\mapsto u, \co c\mapsto \top] \\
+   \ared & [\reader c,\pi], S_\epsilon[c\mapsto u,\co c\mapsto \bot] \\
+   \ared & [u,\pi], S_\epsilon[c\mapsto \bot,\co c\mapsto \bot]\enspace.
+  \end{align*}
+ \end{subfigure}
+ \caption[A non-confluent example similar to Lafont's example.]
+ {A non-confluent example similar to Lafont's example~\citep[B.1]{girard1989proofs}.  Both sides start
+ from the same configuration but reduce to different configurations.
+ Moreover, since terms $t$ and $u$ can be taken arbitrarily, if we
+ equate the terms related by $\ared$, we have to conclude that arbitrary
+ two terms of the same type are equal.}
+ \label{fig:lafont}
+\end{figure}
+
+\begin{proposition}
+ Let $e$ be an s-executable.
+ If $e\sred e'$ then $e, S_\epsilon \ared e', S_\epsilon$.
+\end{proposition}
+\begin{proof}
+ Most reduction rules are common.  Rules (com0) and (com1) are
+ simulated in Fig.~\ref{fig:lafont}.  Rule (com2) can be simulated similarly.
+\end{proof}
+This transfers the semantics of prelinearity (Prop.~\ref{spec:prelin}) to the asynchronous case.
+
 \section{Synchronous Semantics}
 \label{sec:sync}
 
@@ -100,15 +227,14 @@ We consider a programming language, which is a modification of
 Danos and Krivine~\citep{danos-krivine}'s.
 We assume a set~$\pvar$ of propositional variables whose cardinality is
 countably infinite.
-We also assume countably infinitely many channels with involution
+We also assume countably infinitely many locations with involution
 satisfying $\co c\neq c$ and $\co{\co c} = c$.
-Metavariable~$c$ runs over channels.
-An s-term\index{term!s-term} (synchronous term)~$t$ is defined by BNF:
+Metavariable~$c$ runs over locations.
+An \textit{s-term}\index{term!s-term} (synchronous term)~$t$ is defined by BNF:
 \begin{align*}
  t::= \,&x
  \mid (t)t
  \mid \lambda x.t
- \mid \ast_t
  \mid \mat t x t x t
  \mid \inl t
  \mid \inr t
@@ -117,9 +243,10 @@ An s-term\index{term!s-term} (synchronous term)~$t$ is defined by BNF:
  \mid \comod c c
  \mid \abort
 \end{align*}
-where $x$ is a variable and $c$ is a channel.  The variable occurrences
+where $x$ is a variable and $c$ is a location.  The variable occurrences
 except in the first clause are binding.
-An s-stack\index{stack!s-stack} (synchronous stack)~$\pi$ is defined by BNF:
+An \textit{s-stack}\index{stack!s-stack} (synchronous stack)~$\pi$ is
+defined by BNF:
 \[
  \pi ::= \epsilon
  \mid t\cdot \pi
@@ -130,20 +257,22 @@ We write the set of s-terms as $\sLambda$ and s-stacks~$\sPi$.
 For s-terms~$s,t$ and a variable~$x$, $s[t/x]$ denotes the result of
 substitution of $t$ for free $x$'s in $s$.  When more than one
 substitutions are concatenated, e.g. $s[t/x][t'/y]$, the substitutions
-are applied at the same time not one after another.  When we use this
+are applied at the same time not one after another.
+\fix{例がこのへんに欲しいきがする}
+When we use this
 kind of simultaneous substitution, we always make sure that the same
 variable $x$ does not appear more than once after the $/$'s,
 e.g.~$s[t/x][t'/x]$ never happens.
 
 A process is an element of $\sLambda\times\sPi$.
-An s-executable\index{executable!s-executable} (synchronous executable)
+An \textit{s-executable}\index{executable!s-executable} (synchronous executable)
 is a multiset of processes.
 We ruthlessly use $\conc$ both for delimiting elements in an
 s-executable and for addition of multisets.
 We denote the empty multiset by~$\emptyset$.
 
 % 2a' reduction
-A schedule\index{schedule} is a total order on channels.
+A \textit{schedule}\index{schedule} is a total order on locations.
 Given a fixed schedule~$\sche$,
 we define binary relations $\sred'$ and $\sred$
 on s-executables
@@ -160,9 +289,7 @@ that satisfy:
  \item[(store)]
 	    $[\lambda x.t,u\cdot\pi]
 	     \sred'
-	     [t[\ast_u/x],      \pi]$\enspace;
- \item[(load)]
-	    $[\ast_u,\pi]\sred' [u,\pi]$\enspace;
+	     [t[u/x],      \pi]$\enspace;
  \item[(ask)]
       $[\mat t x u y v,\pi]\sred' [t,\mats x u \pi y v \pi]$\enspace;
  \item[(ansL)]
@@ -189,7 +316,7 @@ that satisfy:
 \end{description}
 We say $e$ reduces to $e'$ when $e\sred e'$ holds.
 Below, we sometimes omit the outermost parentheses (i.e. [ and ]) for multisets.
-Rules (cong), (push), (store) and (load) come from
+Rules (cong), (push) and (store) come from
 \citet{danos-krivine}.  (dist) also appears there but we changed it so
 that the proof for adequacy (Thm.~\ref{c:adequacy}) goes through in the
 case (EC, \textminus).
@@ -218,22 +345,22 @@ as
 $\phi_0\limp(\phi_1\limp\cdots\limp\phi_n)$.
 A type is an element of $\form(\emptyset)$.
 
-A sequent\index{sequent} $\sequent{\G}{\tj t\phi}$ consists of a
+A \textit{sequent}\index{sequent} $\sequent{\G}{\tj t\phi}$ consists of a
 context~$\G$ and an s-term~$t$ associated with a type~$\phi$.
-The context\index{context} is a finite sequence of variables associated
+The \textit{context}\index{context} is a finite sequence of variables associated
 with types where the same variable does not appear more than once.
 When we write a concatenation of contexts $\G,\D$, we assume no variables
 appear in both $\G$ and $\D$.
-A hypersequent\index{hypersequent} is a finite sequence of sequents.
+A \textit{hypersequent}\index{hypersequent} is a finite sequence of sequents.
 In a hypersequent, we also assume that no variable appears more than once in
 the contexts%
-% due to space limitations
-% \footnote{The condition is different from that of
-% \citet{hiraiflops2012}.  This is due to different forms of the
-% external contraction (EC) rule.}%
+due to space limitations
+\footnote{The condition is different from that of
+Chapter~\ref{ch:lambda}.  This is due to different forms of the
+external contraction (EC) rule.}%
 .
 
-An $\NMTL$ derivation\index{derivation} is a tree composed of the derivation
+An $\NMTL$ \textit{derivation}\index{derivation!MTL2} is a tree composed of the derivation
 rules in Fig.~\ref{fig:pole-typing}
 whose top rules are Ax.
 A hypersequent is derivable in $\NMTL$ when there is an $\NMTL$
@@ -397,7 +524,7 @@ For example, there is an s-term typed with the prelinearity axiom (Fig.~\ref{fig
 %    Also, make it closed for ``for all''
 \begin{definition}
  \label{def:pole}
-A pole\index{pole}~$\bbot$ is a set of s-executables
+A \textit{pole}\index{pole}~$\bbot$ is a set of s-executables
 which satisfies
 \begin{enumerate}
  \item \label{red-closed} $e$ is in $\bbot$ if $e\sred e'$ and
@@ -417,9 +544,10 @@ Computationally,
 we only guarantee that at least one process of an s-executable
 $[t_0,\pi_0\conc \cdots \conc t_n,\pi_n]$ succeeds.
 
-An environment\index{environment} is a pair of an s-stack and an s-executable.
+An \textit{environment}\index{environment} is a pair of an s-stack and
+an s-executable.
 The set of environments is written as~$E$.
-A program\index{program} is a pair of an s-term and an s-executable.
+A \textit{program}\index{program} is a pair of an s-term and an s-executable.
 For a set~$\mathcal Z$ of environments, $\mathcal Z\rightarrow\bbot$ denotes
 the set of programs $(t,e)$ such that
 for any environment $(\pi,e')\in \mathcal Z$,
@@ -655,11 +783,11 @@ same time.
 	       \]
 	       By (store) and (cong), the s-executable reduces to
 	       \[
-		t_1[\ast_{t_0}/\hat x][\vec{g}/\G],\pi\conc{e}\conc
+		t_1[{t_0}/\hat x][\vec{g}/\G],\pi\conc{e}\conc
 	       e_0\conc{e_1}\conc e_{\mathcal H'}\enspace.
 	       \]
-	       By (load),
-	       we have $(\ast_{t_0}, e_0)\in\sem{\phi_0}$ so, by
+	       By (load), \fix{no load}
+	       we have $({t_0}, e_0)\in\sem{\phi_0}$ so, by
 	       induction hypothesis~\ref{c:first},
 	       the reduct is in $\bbot$.
 	       Since $\bbot$ is closed for $\rev\sred$, the original
@@ -683,12 +811,12 @@ same time.
 	       \]
 	       By (store) and (cong), the s-executable reduces to
 	       \[
-		t_1[v/x][\vec{g}/\G][\ast_{t_0}/\hat x],\pi\conc
+		t_1[v/x][\vec{g}/\G][{t_0}/\hat x],\pi\conc
 	       u[w/y][\vec{d}/\D],\sigma\conc
 	       e'\conc {e}\conc {f} \conc{e_0'}\conc{e_1'}\conc
 	       e_{\hatma H}\conc e_{\hatma I}\enspace.
 	       \]
-	       Since $(\ast_{t_0},e_0')$ is in $\sem{\phi_0}$,
+	       Since $({t_0},e_0')$ is in $\sem{\phi_0}$,
 	       by induction hypothesis~\ref{c:second}, the reduct is in
 	       $\bbot$.  Since $\bbot$ is closed for $\rev\sred$,
 	       the original s-executable is also in $\bbot$.
@@ -850,43 +978,44 @@ same time.
               is also in $\bbot$.
               This shows the statement because we chose an arbitrary
               element of $\nsem{\phi_0\oplus\phi_1}$.
-        \item % If $x$ is in $\mathcal H$, the same argument as
-	     %  \ref{c:first} suffices. Otherwise,
-	     % take any
-	     %  $\takehyper{\mathcal H}$
-	     %  $(v,w,e')\in\sempair{\theta,\tau}$,
-             %  $(\vec g, e)\in\sem{\hat\G}$,
-             %  $(\vec d, f)\in\sem{\hat\D}$,
-             %  $(\mats{\hat x}{\hat v}{\pi_0}{\hat y}w{\pi_1}, e'')\in
-             %  \nsem{\phi_0\oplus\phi_1}$ and
-             %  $(\sigma,f'')\in\nsem{\psi}$.
-             %  We have to show that the following s-executable is in
-             %  $\bbot$:
-             %  \[
-             %   (\inl t)[v/x][\vec g/\hat\G], \mats{\hat x}{\hat v}{\pi_0}{\hat
-             %  y}w{\pi_1}\conc
-             %  u',\sigma\conc
-             %  \hat e\conc e''\conc f''
-             %  \]
-             %  where
-             %  $u' = u[w/y][\vec d/\hat\D]$ and $\hat e=e'\conc  e\conc
-	     %  \conc e_{\mathcal H} \conc
-             %  f$.
-             %  By (ansL), the s-executable reduces to
-             %  $\hat v[t'[v/x][\vec g/\hat\G]/\hat x],\pi_0 \conc
-             %  u',\sigma\conc
-             %  \hat e\conc e''\conc f''
-             %  $.
-             %  By induction hypothesis~\ref{c:second},
-             %  $(t'[v/x][\vec g/\hat \G], u', \hat e)$ is in
-             %  $\sempair{\phi_0,\psi}$.
-             %  So, $(t'[v/x][\vec g/\hat\G], [u',\sigma\conc \hat e\conc
-             %  f''])$ is in $\sem{\phi_0}$.
-             %  By definition of $\nsem{\phi_0\oplus\phi_1}$,
-             %  the reduct is in $\bbot$.
-             %  Since $\bbot$ is closed for $\rev\sred$,
-             %  the original s-executable is also in $\bbot$.
-	      Similar to \ref{c:first}.
+        \item
+	     If $x$ is in $\mathcal H$, the same argument as
+	      \ref{c:first} suffices. Otherwise,
+	     take any
+	      $\takehyper{\mathcal H}$
+	      $(v,w,e')\in\sempair{\theta,\tau}$,
+              $(\vec g, e)\in\sem{\hat\G}$,
+              $(\vec d, f)\in\sem{\hat\D}$,
+              $(\mats{\hat x}{\hat v}{\pi_0}{\hat y}w{\pi_1}, e'')\in
+              \nsem{\phi_0\oplus\phi_1}$ and
+              $(\sigma,f'')\in\nsem{\psi}$.
+              We have to show that the following s-executable is in
+              $\bbot$:
+              \[
+               (\inl t)[v/x][\vec g/\hat\G], \mats{\hat x}{\hat v}{\pi_0}{\hat
+              y}w{\pi_1}\conc
+              u',\sigma\conc
+              \hat e\conc e''\conc f''
+              \]
+              where
+              $u' = u[w/y][\vec d/\hat\D]$ and $\hat e=e'\conc  e\conc
+	      \conc e_{\mathcal H} \conc
+              f$.
+              By (ansL), the s-executable reduces to
+              $\hat v[t'[v/x][\vec g/\hat\G]/\hat x],\pi_0 \conc
+              u',\sigma\conc
+              \hat e\conc e''\conc f''
+              $.
+              By induction hypothesis~\ref{c:second},
+              $(t'[v/x][\vec g/\hat \G], u', \hat e)$ is in
+              $\sempair{\phi_0,\psi}$.
+              So, $(t'[v/x][\vec g/\hat\G], [u',\sigma\conc \hat e\conc
+              f''])$ is in $\sem{\phi_0}$.
+              By definition of $\nsem{\phi_0\oplus\phi_1}$,
+              the reduct is in $\bbot$.
+              Since $\bbot$ is closed for $\rev\sred$,
+              the original s-executable is also in $\bbot$.
+	      % Similar to \ref{c:first}.
        \end{enumerate}
    \item[($\oplus$E, \textminus)]
        The derivation for $t$ ends in
@@ -1137,26 +1266,26 @@ same time.
 	\item We can replace $X$ in the derivation of $t$ with
 	      a propositional variable~$X'$ that does not
 	      occur in the derivation of $u$.
-	      The rest is similar to \ref{c:first}.
-	      % We are going to use the induction hypothesis on the
-	      % renamed derivation with the s-terms and s-stacks taken above.
-	      % Since $\theta$ and $\hat\G$ do not contain
-	      % $X$ freely, we have
-	      % $(v,w,e')\in\sem{\theta[X'/X],\tau}$,
-	      % $(\vec{g},{e\conc e_{\mathcal H}})\in\sem{\hat\G[X'/X]}$ and $(\pi,e'')\in
-	      % \nsem{\forall X'\phi[X'/X]}$.
-	      % By induction hypothesis~\ref{c:second}
-	      % on the renamed derivation,
-	      % the s-terms
-	      % $t' = t[v/x][\vec g/\G]$ and
-	      % $u' = u[w/y][\vec d/\D]$ satisfy
-	      % $(t',u', e\conc  f\conc e_{\mathcal H})\in\sem{\phi[X'/X],\psi'}$ for any $\nsem{X'}_0$.
-	      % That is, for $\mathcal Z\in 2^E$ that makes
-	      % $(\pi,e'')\in\nsem{\phi[X'/X][\mathcal Z/X']}$ and
-	      % $(\sigma,f'')\in\nsem{\psi[\mathcal Z/X']}$,
-	      % $t'\pi\conc u',\sigma\conc e''\conc f''$ is in $\bbot$,
-	      % making $t',\pi\conc u',\sigma$ an element of
-	      % $\bbot$..
+	      % The rest is similar to \ref{c:first}.
+	      We are going to use the induction hypothesis on the
+	      renamed derivation with the s-terms and s-stacks taken above.
+	      Since $\theta$ and $\hat\G$ do not contain
+	      $X$ freely, we have
+	      $(v,w,e')\in\sem{\theta[X'/X],\tau}$,
+	      $(\vec{g},{e\conc e_{\mathcal H}})\in\sem{\hat\G[X'/X]}$ and $(\pi,e'')\in
+	      \nsem{\forall X'\phi[X'/X]}$.
+	      By induction hypothesis~\ref{c:second}
+	      on the renamed derivation,
+	      the s-terms
+	      $t' = t[v/x][\vec g/\G]$ and
+	      $u' = u[w/y][\vec d/\D]$ satisfy
+	      $(t',u', e\conc  f\conc e_{\mathcal H})\in\sem{\phi[X'/X],\psi'}$ for any $\nsem{X'}_0$.
+	      That is, for $\mathcal Z\in 2^E$ that makes
+	      $(\pi,e'')\in\nsem{\phi[X'/X][\mathcal Z/X']}$ and
+	      $(\sigma,f'')\in\nsem{\psi[\mathcal Z/X']}$,
+	      $t'\pi\conc u',\sigma\conc e''\conc f''$ is in $\bbot$,
+	      making $t',\pi\conc u',\sigma$ an element of
+	      $\bbot$..
        \end{enumerate}
   \item[($\forall$E, \textminus)]
        Both statements follow from the induction hypotheses
@@ -1248,139 +1377,9 @@ and \ref{c:second} uses \ref{c:first} in ($\limp$E,~\textminus) and
 %  By definition of $\sred$.
 % \end{proof}
 
-\section{Asynchronous Semantics}
-\label{sec:async}
-
-In this section we give another operational semantics involving
-asynchronous shared memory communication, which is similar to Hirai's
-hyper-lambda calculus for G\"odel--Dummett logic~\citep{hiraiflops2012}.
-An a-term\index{term!a-term} (asynchronous term)~$t$ is an s-term or
-$\reader c$.
-The definition of a-stacks is not changed from that of s-stacks except
-that the s-terms in the definition are replaced by a-terms.
-We write the set of a-terms as $\aLambda$ and a-stacks~$\aPi$.
-A store\index{store} maps a location to an a-term, $\bot$ or $\top$.
-The empty store\index{store!empty}%
-\index{empty store|see{store}}~$S_\epsilon$ maps any channel to $\bot$.
-For a store $S$, we define a store $S[c\mapsto x]$ to be
-the same as $S$ except that $S[c\mapsto x](c)$ is $x$ whatever $S(c)$ is.
-An a-executable\index{executable!a-executable} (asynchronous executable)
-is a finite multiset on $\aLambda \times \aPi$,
-paired with a store.
-
-% 2a' reduction
-We define binary relations~$\ared'$ and $\ared$ on a-executables to be the smallest binary preorders
-that satisfy:
-\begin{description}
- \item[(cong)] if
-	    $[t,\pi],         S \ared' [ t',\pi'],        S'$
-	    then
-	    $[t,\pi \conc e], S \ared' [ t',\pi'\conc e], S'$\enspace;
- \item[(abort)] $[\abort,\pi] \ared' \emptyset$\enspace;
- \item[(push)]
-	    $[(t)u,\pi],S       \ared' [t,u\cdot\pi],S$;
- \item[(store)]
-	    $[\lambda x.t,u\cdot\pi],S
-	     \ared'
-	     [t[\ast_u/x],      \pi],S$\enspace;
- \item[(load)]
-	    $[\ast_u,\pi],S\ared'[u,\pi],S$\enspace;
- \item[(ask)]
-      $[\mat t x u y v,\pi], S\ared' [t,\mats x u \pi y v \pi], S$\enspace;
- \item[(ansL)]
-      $[\inl{v}, \mats xt\pi yu\sigma],S \ared' [t[v/x],\pi],S $ \enspace;
- \item[(ansR)]
-      $[\inr{w}, \mats xt\pi yu\sigma],S \ared' [u[w/y],\sigma],S $ \enspace;
- \item[(write)]
-	    $
-	    [\comod c{\co c}, t\cdot\pi], S[\co c\mapsto\bot]
-	    \ared'
-	    [\reader c, \pi],
-	    S[\co c\mapsto t]
-	    $\enspace;
- \item[(write')]
-	    $
-	    [\comod c{\co c}, t\cdot\pi], S[\co c\mapsto \top]
-	    \ared'
-	    [\reader c, \pi],
-	    S[\co c\mapsto \bot]
-	    $\enspace;
- \item[(read)]$
-	    [\reader c ,\pi],
-	    S[c\mapsto u]
-	    \ared'
-	    [u,\pi],
-	    S[c\mapsto u]
-	    $\enspace;
- \item[(fail)]
-	    $
-	    [\reader c,\pi],
-	    S[c\mapsto \bot]
-	    \ared'
-	    \emptyset,S[c\mapsto \top]
-	    $
-	    \enspace; and
- \item[(local-global)] If $e_0, S_0\ared'e_1, S_1$ then $e_0, S_0\ared e_1,
-      S_1$\enspace; and
- \item[(dist)]
-	    $[(t\conc u),\pi\conc e],S   \ared' [t,\pi\conc u,\pi\conc
-      e\conc e],S$\enspace.
-\end{description}
-Differently from the synchronous case in Sect.~\ref{sec:sync},
-we do not use an external schedule relation on channels.
-Instead, nondeterminism appears spontaneously.
-Indeed, we can implement something similar to Lafont's
-example~\citep[B.1]{girard1989proofs}.
-Suppose $\tr\tj t\phi$ and $\tr\tj u\phi$ are both derivable.
-Then,
-$\tr\tj{(\comod c{\co c})t\conc(\comod {\co c} c)u}\phi$ is derivable.
-From there $[((\comod c{\co c})t\conc (\comod{\co c} c)u),
-\pi],S_\epsilon$
-can reduce both to $[t,\pi], S_\epsilon$
-and to $[u,\pi], S_\epsilon$ (Fig.~\ref{fig:lafont}).
-\begin{figure}
- \begin{subfigure}[b]{0.45\textwidth}
-  \begin{align*}
-   & [((\comodL)t\conc (\comodR) u),\pi], S_\epsilon \\
-   \ared & [(\comodL)t,\pi\conc (\comodR)u,\pi], S_\epsilon \\
-   \ared & [\reader c, \pi\conc (\comodR)u,\pi], S_\epsilon[d\mapsto
-   t] \\
-   \ared & [(\comodR)u,\pi], S_\epsilon[c\mapsto \top, \co c\mapsto t] \\
-   \ared & [\reader {\co c}, \pi], S_\epsilon[c\mapsto \bot, \co c\mapsto t] \\
-   \ared & [t,\pi], S_\epsilon[c\mapsto \bot,\co c\mapsto \bot]\enspace.
-  \end{align*}
- \end{subfigure}
- \begin{subfigure}[b]{0.45\textwidth}
-  \begin{align*}
-   & [((\comodL)t\conc (\comodR) u),\pi], S_\epsilon \\
-   \ared & [(\comodL)t,\pi\conc (\comodR)u,\pi], S_\epsilon \\
-   \ared & [(\comodL)t,\pi\conc \reader {\co c},\pi], S_\epsilon[c\mapsto u] \\
-   \ared & [(\comodL)t,\pi], S_\epsilon[c\mapsto u, \co c\mapsto \top] \\
-   \ared & [\reader c,\pi], S_\epsilon[c\mapsto u,\co c\mapsto \bot] \\
-   \ared & [u,\pi], S_\epsilon[c\mapsto \bot,\co c\mapsto \bot]\enspace.
-  \end{align*}
- \end{subfigure}
- \caption[A non-confluent example similar to Lafont's example.]
- {A non-confluent example similar to Lafont's example~\citep[B.1]{girard1989proofs}.  Both sides start
- from the same configuration but reduce to different configurations.
- Moreover, since terms $t$ and $u$ can be taken arbitrarily, if we
- equate the terms related by $\ared$, we have to conclude that arbitrary
- two terms of the same type are equal.}
- \label{fig:lafont}
-\end{figure}
-
-\begin{proposition}
- Let $e$ be an s-executable.
- If $e\sred e'$ then $e, S_\epsilon \ared e', S_\epsilon$.
-\end{proposition}
-\begin{proof}
- Most reduction rules are common.  Rules (com0) and (com1) are
- simulated in Fig.~\ref{fig:lafont}.  Rule (com2) can be simulated similarly.
-\end{proof}
-This transfers the semantics of prelinearity (Prop.~\ref{spec:prelin}) to the asynchronous case.
 
 
-\section{Comparison with Monoidal t-Norm Logic}
+\section{Characterization of Monoidal t-Norm Logic}
 \label{sec:as-logic}
 
 There is a well-known substructural logic called monoidal t-norm logic
@@ -1588,7 +1587,14 @@ Since their type systems do not incorporate the prelinearity axiom
 we conjecture that we can extend their type systems and their process
 calculi
 with the prelinearity
-axiom representing the same kind of communication schemes as we have shown.
+axiom representing the same kind of communication schemes as we have
+shown.
+
+Hijek's \fix{spelling} basic fuzzy logic (BL) is very similar to MTL.
+Actually from MTL, BL can be obtained by adding
+$(\phi\otimes(\phi\limp\psi)) \limp (\psi\otimes(\psi\limp\phi))$ (or a
+symmetric axiom).  Thus, we have to find the computational meaning of
+the additional axiom in order to find a lambda calcuus for BL.
 
 % \subsection{Unintended Weakening}
 
