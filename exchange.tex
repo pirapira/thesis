@@ -85,7 +85,7 @@ introducing channels, which are our communication primitives.
 \subsection{Typing Derivations}
 
 On top of Abramsky's \fix{} we add a rule to make
-$(\phi\limp\psi)\otimes(\psi\limp\phi)$ derivable.
+$(\phi\limp\psi)\otimes(\psi\limp\phi)$ derivable\fix{really?}.
 
 The typing rules are in Figure~\ref{fig:exchange:rules}.
  \begin{figure}
@@ -96,19 +96,24 @@ The typing rules are in Figure~\ref{fig:exchange:rules}.
   \UnaryInfC{$\tj{x}{\phi}\tr\tj{x}{\phi}$}
   \DisplayProof
   %
-  \hfill
+  \hfill \fix{add external exchange} \hfill
   % exchange
-  \AxiomC{$\G,\tj{x}{\phi},\tj{y}{\psi},\D\tr\tj{t}{\theta}$}
-  \LL{Exchange}
-  \UnaryInfC{$\G,\tj{y}{\psi},\tj{x}{\phi},\D\tr\tj{t}{\theta}$}
+  \AxiomC{$\hypert\hmid\G,\tj{x}{\phi},\tj{y}{\psi},\D\tr\tj{t}{\theta}$}
+  \LL{IE}
+  \UnaryInfC{$\hypert\hmid\G,\tj{y}{\psi},\tj{x}{\phi},\D\tr\tj{t}{\theta}$}
   \DisplayProof
   %
   \ruleskip
-  % cut XXX is this necessary?
-  \AxiomC{$\G\tr\tj{t}{\phi}$}
-  \AxiomC{$\tj{x}{\phi},\D\tr\tj{u}{\psi}$}
+  \AxiomC{$\hypert$}
+  \AxiomC{$\hypert'$}
+  \LL{merge}
+  \BinaryInfC{$\hypert\hmid\hypert'$}
+  \DisplayProof
+  % cut XXX is this necessary?; yes
+  \hfill
+  \AxiomC{$\hypert\hmid\G\tr\tj{t}{\phi}\hmid\tj{x}{\phi},\D\tr\tj{u}{\psi}$}
   \LL{Cut}
-  \BinaryInfC{$\G,\D\tr\tj{u[t/x]}{\psi}$}
+  \UnaryInfC{$\hypert\hmid\G,\D\tr\tj{u[t/x]}{\psi}$}
   \DisplayProof
   %
   \ruleskip
@@ -120,133 +125,131 @@ The typing rules are in Figure~\ref{fig:exchange:rules}.
   %
   \hfill
   % 1L
-  \AxiomC{$\G\tr\tj{t}{\phi}$}
+  \AxiomC{$\hypert\hmid\G\tr\tj{t}{\phi}$}
   \LL{$\one$L}
-  \UnaryInfC{$\G,\tj{z}{\one}\tr\tj{\letin z \ast t}{\phi}$}
+  \UnaryInfC{$\hypert\hmid\G,\tj{z}{\one}\tr\tj{\letin z \ast t}{\phi}$}
   \DisplayProof
   %
   \ruleskip
   % otimes R
-  \AxiomC{$\G\tr\tj{t}{\phi}$}
-  \AxiomC{$\D\tr\tj{u}{\psi}$}
+  \AxiomC{$\hypert\hmid\G\tr\tj{t}{\phi}\hmid\D\tr\tj{u}{\psi}$}
   \LL{$\otimes$R}
-  \BinaryInfC{$\G,\D\tr\tj{t\otimes u}{\phi\otimes B}$}
+  \UnaryInfC{$\hypert\hmid\G,\D\tr\tj{t\otimes u}{\phi\otimes \psi}$}
   \DisplayProof
   %
   \hfill
   % sync
-  \AxiomC{$\G,\tj{x}{\phi\limp\psi},\tj{y}{\psi\limp\phi}\tr\tj{t}{\theta}$}
+  \AxiomC{$\hypert\hmid\G\tr\tj{t}{\phi}\hmid \D\tr\tj{u}{\psi}$}
   \LL{sync}
-  \UnaryInfC{$\G\tr\tj{\lpair{t[\comodL/x],u[\comodR/y]}}{\theta\otimes\tau}$}
+  \UnaryInfC{$\hypert\hmid
+  \G\tr\tj{ct}{\psi}\hmid \D\tr\tj{\co cu}{\phi}$}
   \DisplayProof
   %
   \ruleskip
   % otimes L
-  \AxiomC{$\G,\tj{x}{\phi},\tj{y}{\psi}\tr\tj{t}{\theta}$}
+  \AxiomC{$\hypert\hmid\G,\tj{x}{\phi},\tj{y}{\psi}\tr\tj{t}{\theta}$}
   \LL{$\otimes$L}
-  \UnaryInfC{$\G,\tj{z}{\phi\otimes\psi}\tr\tj{\letin{z}{x\otimes
+  \UnaryInfC{$\hypert\hmid\G,\tj{z}{\phi\otimes\psi}\tr\tj{\letin{z}{x\otimes
   y}{t}}{\theta}$}
   \DisplayProof
   %
   \ruleskip
   % limp R
-  \AxiomC{$\G,\tj{x}{\phi}\tr\tj{t}{\psi}$}
+  \AxiomC{$\hypert\hmid\G,\tj{x}{\phi}\tr\tj{t}{\psi}$}
   \LL{$\limp$R}
-  \UnaryInfC{$\G\tr\tj{\lambda x.t}{\phi\limp \psi}$}
+  \UnaryInfC{$\hypert\hmid\G\tr\tj{\lambda x.t}{\phi\limp \psi}$}
   \DisplayProof
   %
   \hfill
   % limp L
-  \AxiomC{$\G\tr\tj{t}{\phi}$}
-  \AxiomC{$\tj{x}{\psi},\D\tr\tj{u}{\theta}$}
+  \AxiomC{$\hypert\hmid\G\tr\tj{t}{\phi}\hmid\tj{x}{\psi},\D\tr\tj{u}{\theta}$}
   \LL{$\limp$L}
-  \BinaryInfC{$\G,\tj{f}{\phi\limp\psi},\D\tr \tj{u[(ft)/x]}{\theta}$}
+  \UnaryInfC{$\hypert\hmid\G,\tj{f}{\phi\limp\psi},\D\tr \tj{u[(ft)/x]}{\theta}$}
   \DisplayProof
   %
   \ruleskip
   % andR
-  \AxiomC{$\G\tr\tj{t}{\phi}$}
-  \AxiomC{$\G\tr\tj{u}{\psi}$}
+  \AxiomC{$\hypert\hmid\G\tr\tj{t}{\phi}\hmid\G\tr\tj{u}{\psi}$}
   \LL{$\with$R}
-  \BinaryInfC{$\G\tr\tj{\lpair{t,u}}{\phi\with\psi}$}
+  \UnaryInfC{$\hypert\hmid\G\tr\tj{\lpair{t,u}}{\phi\with\psi}$}
   \DisplayProof
   %
   \ruleskip
   % andL0
-  \AxiomC{$\G,\tj{x}{\phi}\tr\tj{t}{\theta}$}
+  \AxiomC{$\hypert\hmid\G,\tj{x}{\phi}\tr\tj{t}{\theta}$}
   \LL{$\with$L$_0$}
-  \UnaryInfC{$\G,\tj{z}{\phi\with\psi}\tr\tj{\letin{z}{\lpair{x,\_}}{t}}{\theta}$}
+  \UnaryInfC{$\hypert\hmid\G,\tj{z}{\phi\with\psi}\tr\tj{\letin{z}{\lpair{x,\_}}{t}}{\theta}$}
   \DisplayProof
   %
-  \hfill
+  \ruleskip
   % andL1
-  \AxiomC{$\G,\tj{y}{\psi}\tr\tj{t}{\theta}$}
+  \AxiomC{$\hypert\hmid\G,\tj{y}{\psi}\tr\tj{t}{\theta}$}
   \LL{$\with$L$_1$}
-  \UnaryInfC{$\G,\tj{z}{\phi\with\psi}\tr\tj{\letin{z}{\lpair{\_,y}}{t}}{\theta}$}
+  \UnaryInfC{$\hypert\hmid\G,\tj{z}{\phi\with\psi}\tr\tj{\letin{z}{\lpair{\_,y}}{t}}{\theta}$}
   \DisplayProof
   %
   \ruleskip
   % oplus R0
-  \AxiomC{$\G\tr\tj{t}{\phi}$}
+  \AxiomC{$\hypert\hmid\G\tr\tj{t}{\phi}$}
   \LL{$\oplus$R$_0$}
-  \UnaryInfC{$\G\tr\tj{\inl{t}}{\phi\oplus\psi}$}
+  \UnaryInfC{$\hypert\hmid\G\tr\tj{\inl{t}}{\phi\oplus\psi}$}
   \DisplayProof
   %
   \hfill
   % oplus R1
-  \AxiomC{$\G\tr\tj{u}{\psi}$}
+  \AxiomC{$\hypert\hmid\G\tr\tj{u}{\psi}$}
   \LL{$\oplus$R$_1$}
-  \UnaryInfC{$\G\tr\tj{\inr{u}}{\phi\oplus\psi}$}
+  \UnaryInfC{$\hypert\hmid\G\tr\tj{\inr{u}}{\phi\oplus\psi}$}
   \DisplayProof
   %
   \ruleskip
   % oplus L
-  \AxiomC{$\G,\tj{x}{\phi}\tr\tj{u}{\theta}$}
-  \AxiomC{$\G,\tj{y}{\psi}\tr\tj{v}{\theta}$}
+  \AxiomC{$\hypert \hmid \G,\tj{x}{\phi}\tr\tj{u}{\theta}\hmid
+  \G,\tj{y}{\psi}\tr\tj{v}{\theta}$}
   \LL{$\oplus$L}
-  \BinaryInfC{$\G,\tj{z}{\phi\oplus\psi}\tr\tj{\mat{z}{x}{u}{y}{v}}{\theta}$}
+  \UnaryInfC{$\hypert\hmid\G,\tj{z}{\phi\oplus\psi}\tr\tj{\mat{z}{x}{u}{y}{v}}{\theta}$}
   \DisplayProof
   %
   \ruleskip
   % !R
-  \AxiomC{$!\G\tr\tj{t}{\phi}$}
+  \AxiomC{$\hypert\hmid!\G\tr\tj{t}{\phi}$}
   \LL{$!$R}
-  \UnaryInfC{$!\G\tr\tj{!t}{!\phi}$}
+  \UnaryInfC{$\hypert\hmid!\G\tr\tj{!t}{!\phi}$}
   \DisplayProof
   %
   \ruleskip
   % dereliction
-  \AxiomC{$\G,\tj{x}{\phi}\tr\tj{t}{\psi}$}
+  \AxiomC{$\hypert\hmid\G,\tj{x}{\phi}\tr\tj{t}{\psi}$}
   \LL{Dereliction}
-  \UnaryInfC{$\G,\tj{z}{!\phi}\tr\tj{\letin{z}{!x}{t}}{\psi}$}
+  \UnaryInfC{$\hypert\hmid\G,\tj{z}{!\phi}\tr\tj{\letin{z}{!x}{t}}{\psi}$}
   \DisplayProof
   %
   \ruleskip
   % contraction
-  \AxiomC{$\G,\tj{x}{!\phi},\tj{y}{!\phi}\tr\tj{t}{\psi}$}
+  \AxiomC{$\hypert\hmid\G,\tj{x}{!\phi},\tj{y}{!\phi}\tr\tj{t}{\psi}$}
   \LL{Contraction}
-  \UnaryInfC{$\G,\tj{z}{!\phi}\tr\tj{\letin{z}{x@y}{t}}{\psi}$}
+  \UnaryInfC{$\hypert\hmid\G,\tj{z}{!\phi}\tr\tj{\letin{z}{x@y}{t}}{\psi}$}
   \DisplayProof
   %
   \ruleskip
   % weakening
-  \AxiomC{$\G\tr\tj{t}{\psi}$}
+  \AxiomC{$\hypert\hmid\G\tr\tj{t}{\psi}$}
   \LL{Weakening}
-  \UnaryInfC{$\G,\tj{z}{!\phi}\tr\tj{\letin{z}{\_}{t}}{\psi}$}
+  \UnaryInfC{$\hypert\hmid\G,\tj{z}{!\phi}\tr\tj{\letin{z}{\_}{t}}{\psi}$}
   \DisplayProof
   %
   \ruleskip
   % forall R
-  \AxiomC{$\G\tr\tj{t}{\phi}$}
+  \AxiomC{$\hypert\hmid\G\tr\tj{t}{\phi}$}
   \LL{$\forall$R}
-  \UnaryInfC{$\G\tr\tj{t}{\forall X.\phi}$}
+  \UnaryInfC{$\hypert\hmid\G\tr\tj{t}{\forall X.\phi}$}
   \DisplayProof (No $X$ appears in $\G$)
   %
   \ruleskip
   % forall L
-  \AxiomC{$\G,\tj{x}{\phi[\psi/X]}\tr\tj{t}{\phi}$}
+  \AxiomC{$\hypert\hmid\G,\tj{x}{\phi[\psi/X]}\tr\tj{t}{\phi}$}
   \LL{$\forall$L}
-  \UnaryInfC{$\G,\tj{x}{\forall X.\phi}\tr\tj{t}{\phi}$}
+  \UnaryInfC{$\hypert\hmid\G,\tj{x}{\forall X.\phi}\tr\tj{t}{\phi}$}
   \DisplayProof
   %
   \ruleskip
