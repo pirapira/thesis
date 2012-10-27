@@ -796,7 +796,7 @@ we can construct a hyperterm $(\m{M_i})_{0\le i \le n}$.
 The hyperterm $(\m{M_i})_{0\le i \le n}$ is typeable when the
 aforementioned hypersequent is typeable for some $\G_i$'s and $\m{\phi_i}$'s.
 
-A \textit{store}\index{store} maps a location to a pure term or $\epsilon$,
+A \textit{store}\index{store} maps a location to a pure closed term or $\epsilon$,
 where a \textit{pure term}\index{pure term|see{term}}\index{term!pure} is a term
 without $\comod c c$ or $\reader c$.
 For a store~$S$, the updated store $S[c\mapsto x]$ maps $c$ to
@@ -868,14 +868,15 @@ The formal definition of the reductions follows.
  \begin{itemize}
   \item $\conf{[c\mapsto \epsilon]}{\imapsto{(\comodR)M}} \wreduce
 	\conf{[c\mapsto M]}{\imapsto{\reader d}}
-	$ where $M$ is a pure term
+	$ where $M$ is a pure closed term
   \item $\conf{[c\mapsto N]}{\imapsto{(\comodR) M}} \wreduce
-	\conf{[c\mapsto	N]}{\imapsto{\reader d}}$ where $M$ is a pure term
+	\conf{[c\mapsto	N]}{\imapsto{\reader d}}$ where $M$ is a pure
+	closed term.
  \end{itemize}
 \end{definition}
 In the first clause of this definition of write reductions, we require
-$M$ to be a pure
-term because a store can only contain pure terms.
+$M$ to be a pure closed
+term because a store can only contain pure closed terms.
 We require the same condition in the second clause as well because
 otherwise, whether a configuration admits a write reduction or not
 would depend on the contents of the store, which would make the
@@ -994,84 +995,85 @@ $\mathcal{D}$ with $\mathcal{C}\reduce \mathcal{D}$.
 A term~$M$ is \textit{normal}\index{normal} when the configuration $\conf{}{M}$ is
 normal (the choice of $\lstore$ is irrelevant).
 
-\begin{example}
- Here is an example of reductions.  We take the term shown in
- Figure~\ref{fig:typed2}.
+\begin{example}[Reductions]
+ We take the term shown in
+ Figure~\ref{fig:typed2} and replace $x$ with $v$ and $y$ with $w$ where
+ $v$ and $w$ are pure closed terms.
  Below, an underlined subterm is a redex.  A redex is a subterm that
  pattern-matches a reduction rule.
  \begin{align*}
   &\left(\{\}, \{
-  0\mapsto\cotuple{\lpair{\underline{(\comodL)x},x},x},
-  1\mapsto\cotuple{\lpair{           (\comodR)y ,y},y}
+  0\mapsto\cotuple{\lpair{\underline{(\comodL)v},v},v},
+  1\mapsto\cotuple{\lpair{           (\comodR)w ,w},w}
   \right)
   \\   \wreduce &
-  \left( \{d\mapsto x\},
+  \left( \{d\mapsto v\},
   \{
-  0\mapsto \cotuple{{\lpair{\underline{\reader c},  x}}, x},
-  1\mapsto \cotuple{           \lpair{(\comodR)y,y},y}
+  0\mapsto \cotuple{{\lpair{\underline{\reader c},  v}}, v},
+  1\mapsto \cotuple{           \lpair{(\comodR)w,w},w}
   \}
   \right)
   \\ \rreduce &
-  \left( \{d\mapsto x\},
+  \left( \{d\mapsto v\},
   \{
-  0\mapsto \cotuple{\underline{\lpair{\abort,  x}}, x},
-  1\mapsto \cotuple{           \lpair{(\comodR)y,y},y}
+  0\mapsto \cotuple{\underline{\lpair{\abort,  v}}, v},
+  1\mapsto \cotuple{           \lpair{(\comodR)w,w},w}
   \}
   \right)
   \\
   \areduce &
   \left(
-  \{d\mapsto x\},
+  \{d\mapsto v\},
   \{
-  0\mapsto\underline{\cotuple{\abort,x}},
-  1\mapsto{\cotuple{\lpair{(\comodL)y,y},y}}
+  0\mapsto\underline{\cotuple{\abort,v}},
+  1\mapsto{\cotuple{\lpair{(\comodL)w,w},w}}
   \}
   \right)
   \\
   \areduce &
-  \left(\{d\mapsto x\},
+  \left(\{d\mapsto v\},
   \{
-  0\mapsto\linr{x},
-  1\mapsto\cotuple{\lpair{\underline{(\comodR)y},y},y}
+  0\mapsto\linr{v},
+  1\mapsto\cotuple{\lpair{\underline{(\comodR)w},w},w}
   \}
   \right)
   \\
   \wreduce &
   \left(
-  \{c\mapsto y, d\mapsto x\}
+  \{c\mapsto w, d\mapsto v\}
   ,
   \{
-  0\mapsto \linr{x},
-  1\mapsto \cotuple{\lpair{\underline{\reader d}, y}, y}
+  0\mapsto \linr{v},
+  1\mapsto \cotuple{\lpair{\underline{\reader d}, w}, w}
   \}
   \right)
   \\
   \rreduce &
   \left(
-  \{c\mapsto y, d\mapsto x\}
+  \{c\mapsto w, d\mapsto v\}
   ,
   \{
-  0\mapsto \linr{x},
-  1\mapsto \underline{\cotuple{\lpair{x,y},y}}
+  0\mapsto \linr{v},
+  1\mapsto \underline{\cotuple{\lpair{v,w},w}}
   \}
   \right)
   \\
   \areduce &
   \left(
-  \{c\mapsto y, d\mapsto x\}
+  \{c\mapsto w, d\mapsto v\}
   ,
   \{
-  0\mapsto \linr{x},
-  1\mapsto \linr{\lpair{x,y}}
+  0\mapsto \linr{v},
+  1\mapsto \linr{\lpair{v,w}}
   \}
   \right)
  \end{align*}
- The overall effect is the transfer of variable~$x$ from process~0 to
- process~1.  In the beginning, $x$ only appeared in the process~0's
+ The overall effect is the transfer of term~$v$ from process~0 to
+ process~1.  In the beginning, $v$ only appeared in the process~0's
  local term but not in process~1's local term.  In the end, the
- variable~$x$ appears in both processes' local terms.
+ term~$v$ appears in both processes' local terms.
  From the first line to the second line,
- process~0's communication term succeeds in writing variable~$x$ to the
+ process~0's communication term succeeds in writing term~$v$ to the
  store under the location~$d$.
  From the second line to the third line, process~0 fails to read from
  location~$c$ so that a reader construct is turned into an $\abort$.
@@ -1092,7 +1094,7 @@ normal (the choice of $\lstore$ is irrelevant).
  In this case, the reader construct in process~1's local term does not
  yield $\abort$ but a previous content of the store.
  From the seventh line to the last line,
- the right side component of $\cotuple{\lpair{x,y},y}$ is thrown away:
+ the right side component of $\cotuple{\lpair{v,w},w}$ is thrown away:
  we chose to throw away the right hand side component when both sides
  contain no $\abort$.  When we view the concurrent construction
  $\cotuple{t,t}$, this asymmetry is strange, but it plays a significant
