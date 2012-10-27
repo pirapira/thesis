@@ -46,6 +46,8 @@ another and then exchange information.
 
 \subsection{Terms and Free Variables}
 
+\fix{channels, involution}
+
 Following Abramsky \fix{cite}, we defne patterns binding sets of
 variables:
 \begin{itemize}
@@ -261,15 +263,102 @@ The typing rules are in Figure~\ref{fig:exchange:rules}.
 
 \subsection{Evaluation relation}
 
-For a set $T$ of terms and two terms $t,u$,
-the expression $t \eval u @ T$ stands for
-the relation $t$ evaluates to $u$ within $T$.
-The additional $T$ is used for determining terms to which $ct$ reduces.
+The set of canonical forms remains the same as Abramsky's
+system~\fix{cite}:
+\[
+ \lpair{t,u}\qquad !t\qquad \ast\qquad c\otimes d\qquad \lambda
+ x.t\qquad \inl{v}\qquad\inr{w}
+\]
+where $v$ and $w$ are canonical forms.
 
-The definition is inductive\fix{?}
+$\mathcal E$ stands for a sequence of evaluation relations.
+Most rules are the same as Abramsky's \fix{cite}.
+We add the semantics for channels.
+The definition is inductive in Figure~\ref{fig:eval}.
+
+\newcommand{\hypere}{\mathcal{E}}
+
+ \begin{figure}
+  \centering
+  \AxiomC{}
+  \UnaryInfC{$\ast\eval\ast$}
+  \DisplayProof
+  \hfill
+  \AxiomC{$\hypere\hmid t\eval \ast \hmid u\eval v$}
+  \UnaryInfC{$\hypere\hmid \letin t \ast u\eval v$}
+  \DisplayProof
+  \hfill
+  \AxiomC{$\hypere\hmid t\eval v\hmid u\eval w$}
+  \UnaryInfC{$\hypere\hmid t\otimes u\eval v\otimes w$}
+  \DisplayProof
+  \ruleskip
+  \AxiomC{$\hypere\hmid t\eval v\otimes d\hmid u[v/x,w/y]\eval v'$}
+  \UnaryInfC{$\hypere\hmid \letin t {x\otimes y} u \eval v'$}
+  \DisplayProof
+  \hfill
+  \AxiomC{}
+  \UnaryInfC{$\lambda x.t\eval \lambda x.t$}
+  \DisplayProof
+  \ruleskip
+  \AxiomC{$\hypere\hmid t\eval \lambda x.t'\hmid u\eval v\hmid
+  t'[v/x]\eval w$}
+  \UnaryInfC{$\hypere\hmid tu\eval w$}
+  \DisplayProof
+  \hfill
+  \AxiomC{$\hypere\hmid t\eval v\hmid u\eval w$}
+  \UnaryInfC{$\hypere\hmid ct\eval w\hmid \co cu\eval v$}
+  \DisplayProof
+  \ruleskip
+  \AxiomC{}
+  \UnaryInfC{$\lpair{t,u}\eval\lpair{t,u}$}
+  \DisplayProof
+  \hfill
+  \AxiomC{$\hypere\hmid t\eval \lpair{t_0,t_1}\hmid t_0\eval v\hmid
+  u[v/x]\eval w$}
+  \UnaryInfC{$\letin t {\lpair{x,\_}}{u}\eval w$}
+  \DisplayProof
+  \ruleskip
+  \AxiomC{$\hypere\hmid t\eval\lpair{t_0,t_1}\eval t_1\eval v\hmid
+  u[v/y]\eval w$}
+  \UnaryInfC{$\hypere\hmid\letin t{\lpair{\_,y}}u\eval w$}
+  \DisplayProof
+  \ruleskip
+  \AxiomC{$\hypere\hmid t\eval v$}
+  \UnaryInfC{$\hypere\hmid \inl{t}\eval \inl{v}$}
+  \DisplayProof
+  \hfill
+  \AxiomC{$\hypere\hmid u\eval w$}
+  \UnaryInfC{$\hypere \hmid \inr{u}\eval \inr{w}$}
+  \DisplayProof
+  \ruleskip
+  \AxiomC{$\hypere\hmid t\eval \inl{v}\hmid u[v/x]\eval w$}
+  \UnaryInfC{$\hypere\hmid \mat t x u y {u'}\eval w$}
+  \DisplayProof
+  \ruleskip
+  \AxiomC{$\hypere\hmid t\eval \inr{v}\hmid u'[v/y]\eval w$}
+  \UnaryInfC{$\hypere\hmid \mat t x u y {u'}\eval w$}
+  \DisplayProof
+  \ruleskip
+  \AxiomC{}
+  \UnaryInfC{$\hypere\hmid !t\eval !t$}
+  \DisplayProof
+  \hfill
+  \AxiomC{$\hypere\hmid t\eval !s\hmid s\eval v\hmid u[v/x]\eval w$}
+  \UnaryInfC{$\hypere \hmid \letin t {!x} u\eval w$}
+  \DisplayProof
+  \ruleskip
+  \AxiomC{$\hypere\hmid t\eval !s\hmid u\eval v$}
+  \UnaryInfC{$\hypere \hmid \letin t {\_} u\eval v$}
+  \DisplayProof
+  \hfill
+  \AxiomC{$\hypere\hmid t\eval !s\hmid u[!s/x,!s/y]\eval v$}
+  \UnaryInfC{$\letin t {x@y} u\eval v$}
+  \DisplayProof
+  \caption{The definition of evaluation relation.}
+  \label{fig:eval}
+ \end{figure}
 
 \section{Determinacy and Confluence}
-
 
 
 \section{Conclusion}
