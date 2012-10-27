@@ -3,6 +3,30 @@
 
 \subsection{Summary}
 
+After studying $(\phi\limp\psi)\oplus (\psi\limp\phi)$,
+it is natural to change the additive disjunction $\oplus$ into
+multiplicative conjunction $\otimes$ and see what happens%
+\footnote{Takeuti Izumi asked what about conjunctions.}.
+A natural way to add $(\phi\limp\psi)\otimes(\psi\limp\phi)$ as an axiom
+is adding a pair of primitives $\lpair{c,\co c}$ so that
+$\cdots ct \cdots \co c u \cdots$ reduces to
+$\cdots u  \cdots t \cdots$: in words,
+$c$ outputs $\co c$'s input and vice versa.
+However, there is one problem: what happens to $\co c(c t)$?
+In this case, we do not know the output of $c$ because we only have an
+equality between $\co c$'s input and $c$'s output.
+Fortunately, 
+
+
+
+axiom
+
+usual exchange
+
+nested
+
+nested more complicated
+
 The previous chapters treated the computational interpretations of
 disjunctive formulae like $(\phi\imp\psi)\lor(\psi\imp\phi)$ or
 $(\phi\limp\psi)\oplus(\psi\limp\phi)$.  In this chapter, we try
@@ -19,3 +43,202 @@ multiplicative linear
 logic.  In essence, the axiom allows two processes to wait for one
 another and then exchange information.
 
+\section{Definitions}
+
+\subsection{Terms and Free Variables}
+
+\subsection{Typing Derivations}
+
+On top of Abramsky's \fix{} we add a rule to make
+$(\phi\limp\psi)\otimes(\psi\limp\phi)$ derivable.
+
+The typing rules are in Figure~\ref{fig:exchange:rules}.
+ \begin{figure}
+  \centering
+  % axiom
+  \AxiomC{}
+  \LL{Ax}
+  \UnaryInfC{$\tj{x}{\phi}\tr\tj{x}{\phi}$}
+  \DisplayProof
+  %
+  \ruleskip
+  % exchange
+  \AxiomC{$\G,\tj{x}{\phi},\tj{y}{\psi},\D\tr\tj{t}{\theta}$}
+  \LL{Exchange}
+  \UnaryInfC{$\G,\tj{y}{\psi},\tj{x}{\phi},\D\tr\tj{t}{\theta}$}
+  \DisplayProof
+  %
+  \ruleskip
+  % cut XXX is this necessary?
+  \AxiomC{$\G\tr\tj{t}{\phi}$}
+  \AxiomC{$\tj{x}{\phi},\D\tr\tj{u}{\psi}$}
+  \LL{Cut}
+  \BinaryInfC{$\G,\D\tr\tj{u[t/x]}{\psi}$}
+  \DisplayProof
+  %
+  \ruleskip
+  % 1R
+  \AxiomC{}
+  \LL{$\one$R}
+  \UnaryInfC{$\tr\tj{\ast}{\one}$}
+  \DisplayProof
+  %
+  \ruleskip
+  % 1L
+  \AxiomC{$\G\tr\tj{t}{\phi}$}
+  \LL{$\one$L}
+  \UnaryInfC{$\G,\tj{z}{\one}\tr\tj{\letin z \ast t}{\phi}$}
+  \DisplayProof
+  %
+  \ruleskip
+  % otimes R
+  \AxiomC{$\G\tr\tj{t}{\phi}$}
+  \AxiomC{$\D\tr\tj{u}{\psi}$}
+  \LL{$\otimes$R}
+  \BinaryInfC{$\G,\D\tr\tj{t\otimes u}{\phi\otimes B}$}
+  \DisplayProof
+  %
+  \hfill
+  % sync
+  \AxiomC{$\G,\tj{x}{\phi\limp\psi}\tr\tj{t}{\theta}$}
+  \AxiomC{$\D,\tj{y}{\psi\limp\phi}\tr\tj{u}{\tau}$}
+  \LL{sync}
+  \BinaryInfC{$\G,\D\tr\tj{\lpair{t[\comodL/x],u[\comodR/y]}}{\theta\otimes\tau}$}
+  \DisplayProof
+  %
+  \ruleskip
+  % otimes L
+  \AxiomC{$\G,\tj{x}{\phi},\tj{y}{\psi}\tr\tj{t}{\theta}$}
+  \LL{$\otimes$L}
+  \UnaryInfC{$\G,\tj{z}{\phi\otimes\psi}\tr\tj{\letin{z}{x\otimes
+  y}{t}}{\theta}$}
+  \DisplayProof
+  %
+  \ruleskip
+  % limp R
+  \AxiomC{$\G,\tj{x}{\phi}\tr\tj{t}{\psi}$}
+  \LL{$\limp$R}
+  \UnaryInfC{$\G\tr\tj{\lambda x.t}{\phi\limp \psi}$}
+  \DisplayProof
+  %
+  \hfill
+  % limp L
+  \AxiomC{$\G\tr\tj{t}{\phi}$}
+  \AxiomC{$\tj{x}{\psi},\D\tr\tj{u}{\theta}$}
+  \LL{$\limp$L}
+  \BinaryInfC{$\G,\tj{f}{\phi\limp\psi},\D\tr \tj{u[(ft)/x]}{\theta}$}
+  \DisplayProof
+  %
+  \ruleskip
+  % andR
+  \AxiomC{$\G\tr\tj{t}{\phi}$}
+  \AxiomC{$\G\tr\tj{u}{\psi}$}
+  \LL{$\with$R}
+  \BinaryInfC{$\G\tr\tj{\lpair{t,u}}{\phi\with\psi}$}
+  \DisplayProof
+  %
+  \ruleskip
+  % andL0
+  \AxiomC{$\G,\tj{x}{\phi}\tr\tj{t}{\theta}$}
+  \LL{$\with$L$_0$}
+  \UnaryInfC{$\G,\tj{z}{\phi\with\psi}\tr\tj{\letin{z}{\lpair{x,\_}}{t}}{\theta}$}
+  \DisplayProof
+  %
+  \hfill
+  % andL1
+  \AxiomC{$\G,\tj{y}{\psi}\tr\tj{t}{\theta}$}
+  \LL{$\with$L$_1$}
+  \UnaryInfC{$\G,\tj{z}{\phi\with\psi}\tr\tj{\letin{z}{\lpair{\_,y}}{t}}{\theta}$}
+  \DisplayProof
+  %
+  \ruleskip
+  % oplus R0
+  \AxiomC{$\G\tr\tj{t}{\phi}$}
+  \LL{$\oplus$R$_0$}
+  \UnaryInfC{$\G\tr\tj{\inl{t}}{\phi\oplus\psi}$}
+  \DisplayProof
+  %
+  \hfill
+  % oplus R1
+  \AxiomC{$\G\tr\tj{u}{\psi}$}
+  \LL{$\oplus$R$_1$}
+  \UnaryInfC{$\G\tr\tj{\inr{u}}{\phi\oplus\psi}$}
+  \DisplayProof
+  %
+  \ruleskip
+  % oplus L
+  \AxiomC{$\G,\tj{x}{\phi}\tr\tj{u}{\theta}$}
+  \AxiomC{$\G,\tj{y}{\psi}\tr\tj{v}{\theta}$}
+  \LL{$\oplus$L}
+  \BinaryInfC{$\G,\tj{z}{\phi\oplus\psi}\tr\tj{\mat{z}{x}{u}{y}{v}}{\theta}$}
+  \DisplayProof
+  %
+  \ruleskip
+  % !R
+  \AxiomC{$!\G\tr\tj{t}{\phi}$}
+  \LL{$!$R}
+  \UnaryInfC{$!\G\tr\tj{!t}{!\phi}$}
+  \DisplayProof
+  %
+  \ruleskip
+  % dereliction
+  \AxiomC{$\G,\tj{x}{\phi}\tr\tj{t}{\psi}$}
+  \LL{Dereliction}
+  \UnaryInfC{$\G,\tj{z}{!\phi}\tr\tj{\letin{z}{!x}{t}}{\psi}$}
+  \DisplayProof
+  %
+  \ruleskip
+  % contraction
+  \AxiomC{$\G,\tj{x}{!\phi},\tj{y}{!\phi}\tr\tj{t}{\psi}$}
+  \LL{Contraction}
+  \UnaryInfC{$\G,\tj{z}{!\phi}\tr\tj{\letin{z}{x@y}{t}}{\psi}$}
+  \DisplayProof
+  %
+  \ruleskip
+  % weakening
+  \AxiomC{$\G\tr\tj{t}{\psi}$}
+  \LL{Weakening}
+  \UnaryInfC{$\G,\tj{z}{!\phi}\tr\tj{\letin{z}{\_}{t}}{\psi}$}
+  \DisplayProof
+  %
+  \ruleskip
+  % forall R
+  \AxiomC{$\G\tr\tj{t}{\phi}$}
+  \LL{$\forall$R}
+  \UnaryInfC{$\G\tr\tj{t}{\forall X.\phi}$}
+  \DisplayProof (No $X$ appears in $\G$)
+  %
+  \ruleskip
+  % forall L
+  \AxiomC{$\G,\tj{x}{\phi[\psi/X]}\tr\tj{t}{\phi}$}
+  \LL{$\forall$L}
+  \UnaryInfC{$\G,\tj{x}{\forall X.\phi}\tr\tj{t}{\phi}$}
+  \DisplayProof
+  %
+  \ruleskip
+  %
+  \caption{Most rules are taken from Abramsky\fix{}.
+  The sync rule is original.}
+  \label{fig:exchange:rules}
+ \end{figure}
+
+\subsection{Evaluation relation}
+
+We have more canonical forms than
+In addition to Abramsky's
+\[
+\]
+we also have $c$ as a canonical form.
+ 
+\section{Determinacy and Confluence}
+
+
+
+\section{Conclusion}
+
+
+\section{Discussion}
+
+It is tempting to add modalities to types so that the
+modalities show agents and then study the relationship with the
+multiparty session types \fix{cite}.
