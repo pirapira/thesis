@@ -15,9 +15,8 @@ $c$ outputs $\co c$'s input and vice versa.
 However, there is one problem: what happens to $\co c(c t)$?
 In this case, we do not know the output of $c$ because we only have an
 equality between $\co c$'s input and $c$'s output.
-Fortunately, 
-
-
+Fortunately, we just want to know the output of $\co c$, which is the
+input of $c$, that is, $t$.
 
 axiom
 
@@ -47,6 +46,42 @@ another and then exchange information.
 
 \subsection{Terms and Free Variables}
 
+Following Abramsky \fix{cite}, we defne patterns binding sets of
+variables:
+\begin{itemize}
+ \item $\ast$ and $\_$ are patterns binding $\emptyset$,
+ \item $\lpair{x,\_}$, $\lpair{\_,x}$ and $!x$ are patterns binding
+       $\{x\}$,
+ \item $x\otimes y$ and $x@y$ are patterns binding $\{x,y\}$.
+\end{itemize}
+Using patterns, we define a term $t$ with free variables~$S$ inductively:
+\begin{itemize}
+ \item a variable $x$ is a term with free variables $\{x\}$,
+ \item $\ast$ is a term with free variables $\emptyset$,
+ \item if $t$ is a term with free variables~$X$, $u$ is a term with
+       free variables~$Y$ and $X$ and $Y$ are disjoint, $t\otimes u$ and
+       $tu$ are terms with free variables $X\cup Y$,
+ \item if $t$ and $u$ are terms with free variables $X$, then
+       $\lpair{t,u}$ is a term with free variables~$X$,
+ \item if $t$ is a term with free variables~$X$, then
+       $\inl x, \inr t$ and $!t$ are terms with free variables~$X$
+ \item if $t$ is a term with free variables $X\cup \{x\}$ and $x$ is not
+       in $X$, then $\lambda x.t$ is a term with free variables~$X$,
+ \item if $t$ is a term with free variables~$X$, $p$ is a pattern
+       binding $Y$, $u$ is a term with free variables $Y\cup Z$ and
+       $X\cap Z = Y\cap Z = \emptyset$, then,
+       $\letin t p u$ is a term with free variables $X\cup Z$,
+ \item if $t$ is a term with free variables $X$,
+       $u$ is a term with free variables $Z\cup \{x\}$,
+       $v$ is a term with free variables $Z\cup \{y\}$,
+       $x,y\notin Z$ and $X\cap Z = \emptyset$,
+       $\mat t x u y v$ is a term with free variables $X\cup Z$, and
+ \item channels are terms with free variables~$\emptyset$.
+\end{itemize}
+Note that a term with free variables $X$ is not a term with free
+variables $Y$ when $X\neq Y$.  Only the last clause is original,
+introducing channels, which are our communication primitives.
+
 \subsection{Typing Derivations}
 
 On top of Abramsky's \fix{} we add a rule to make
@@ -61,7 +96,7 @@ The typing rules are in Figure~\ref{fig:exchange:rules}.
   \UnaryInfC{$\tj{x}{\phi}\tr\tj{x}{\phi}$}
   \DisplayProof
   %
-  \ruleskip
+  \hfill
   % exchange
   \AxiomC{$\G,\tj{x}{\phi},\tj{y}{\psi},\D\tr\tj{t}{\theta}$}
   \LL{Exchange}
@@ -83,7 +118,7 @@ The typing rules are in Figure~\ref{fig:exchange:rules}.
   \UnaryInfC{$\tr\tj{\ast}{\one}$}
   \DisplayProof
   %
-  \ruleskip
+  \hfill
   % 1L
   \AxiomC{$\G\tr\tj{t}{\phi}$}
   \LL{$\one$L}
@@ -100,10 +135,9 @@ The typing rules are in Figure~\ref{fig:exchange:rules}.
   %
   \hfill
   % sync
-  \AxiomC{$\G,\tj{x}{\phi\limp\psi}\tr\tj{t}{\theta}$}
-  \AxiomC{$\D,\tj{y}{\psi\limp\phi}\tr\tj{u}{\tau}$}
+  \AxiomC{$\G,\tj{x}{\phi\limp\psi},\tj{y}{\psi\limp\phi}\tr\tj{t}{\theta}$}
   \LL{sync}
-  \BinaryInfC{$\G,\D\tr\tj{\lpair{t[\comodL/x],u[\comodR/y]}}{\theta\otimes\tau}$}
+  \UnaryInfC{$\G\tr\tj{\lpair{t[\comodL/x],u[\comodR/y]}}{\theta\otimes\tau}$}
   \DisplayProof
   %
   \ruleskip
@@ -224,12 +258,13 @@ The typing rules are in Figure~\ref{fig:exchange:rules}.
 
 \subsection{Evaluation relation}
 
-We have more canonical forms than
-In addition to Abramsky's
-\[
-\]
-we also have $c$ as a canonical form.
- 
+For a set $T$ of terms and two terms $t,u$,
+the expression $t \eval u @ T$ stands for
+the relation $t$ evaluates to $u$ within $T$.
+The additional $T$ is used for determining terms to which $ct$ reduces.
+
+The definition is inductive\fix{?}
+
 \section{Determinacy and Confluence}
 
 
