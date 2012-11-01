@@ -12,43 +12,40 @@ is adding a pair of primitives $\lpair{c,\co c}$ so that
 $\cdots ct \cdots \co c u \cdots$ reduces to
 $\cdots u  \cdots t \cdots$: in words,
 $c$ outputs $\co c$'s input and vice versa.
-However, there is one problem: what happens to $\co c(c t)$?
+We can obtain the send-receive communication when we specialize the
+axiom as $(\phi\limp \one)\otimes(\one\limp\phi)$.  The left hand side
+$\tj{c}{\phi\limp\one}$ is the sending primitive and
+the right hand side $\tj{\co c}{\one \limp\phi}$ is the receiving
+primitive.
+
+When we want to use these primitives anywhere in lambda terms,
+there is one problem: what happens to $\co c(c t)$?
 In this case, we do not know the output of $c$ because we only have an
 equality between $\co c$'s input and $c$'s output.
 Fortunately, we just want to know the output of $\co c$, which is the
 input of $c$, that is, $t$.
-
-axiom
-
-usual exchange
-
-nested
-
-nested more complicated
-
-The previous chapters treated the computational interpretations of
-disjunctive formulae like $(\phi\imp\psi)\lor(\psi\imp\phi)$ or
-$(\phi\limp\psi)\oplus(\psi\limp\phi)$.  In this chapter, we try
-replacing these disjunctions with conjunctions.
-In the former case, the change renders the logic inconsistent.
-If we add the axiom $(\phi\imp\psi)\land(\psi\imp\phi)$ to the
-intuitionistic propositional logic,
-we can prove any formula.  However in the lattar case, the change does
-not make the system meaningless.
-In this chapter, we treat
-the axioms of the form $(\phi\limp\psi)\otimes(\psi\limp\phi)$
-on top of IMLL2, the second order formulation of intuitionistic
-multiplicative linear
-logic.  In essence, the axiom allows two processes to wait for one
-another and then exchange information.
+In a more complicated case $\co c(\co d(c (d t)))$,
+we can reason the output of $\co c$ as the input of $c$ as the output of
+$d$ as the input of $\co d$ as the output of $c$ as the input of $\co c$
+as the output of $\co d$ as the input of $d$, which is $t$.
+\fix{how does it generalize?}
 
 \section{Definitions}
 
+\subsection{Types}
+For a set $S$, we define $\phi\in\form(S)$ by BNF:
+\[
+ \phi::=s\mid \one \mid X \mid \phi\otimes\phi\mid \phi\limp\phi\mid
+ \phi\oplus\phi\mid \phi\with\phi\mid !\phi\mid \forall X.\phi
+\]
+where $s$ is in $S$ and $X$ is a propositional variable.
+The propositional variable in the last clause is binding.
+A type is an element of $\form(\emptyset)$.
+
 \subsection{Terms and Free Variables}
 
-\fix{channels, involution}
-
-Following Abramsky \fix{cite}, we defne patterns binding sets of
+Following Abramsky~\citep{abramsky1993computational}, we defne patterns
+binding sets of
 variables:
 \begin{itemize}
  \item $\ast$ and $\_$ are patterns binding $\emptyset$,
@@ -56,38 +53,55 @@ variables:
        $\{x\}$,
  \item $x\otimes y$ and $x@y$ are patterns binding $\{x,y\}$.
 \end{itemize}
-Using patterns, we define a term $t$ with free variables~$S$ inductively:
+Using patterns, we define a term $t$ with free variables~$S$.
+We assume countably infinitely many \textit{channels}\index{channel}
+with involution
+satisfying $\co c\neq c$ and $\co{\co c} = c$.
 \begin{itemize}
  \item a variable $x$ is a term with free variables $\{x\}$,
- \item $\ast$ is a term with free variables $\emptyset$,
- \item if $t$ is a term with free variables~$X$, $u$ is a term with
-       free variables~$Y$ and $X$ and $Y$ are disjoint, $t\otimes u$ and
-       $tu$ are terms with free variables $X\cup Y$,
- \item if $t$ and $u$ are terms with free variables $X$, then
-       $\lpair{t,u}$ is a term with free variables~$X$,
- \item if $t$ is a term with free variables~$X$, then
-       $\inl x, \inr t$ and $!t$ are terms with free variables~$X$
- \item if $t$ is a term with free variables $X\cup \{x\}$ and $x$ is not
-       in $X$, then $\lambda x.t$ is a term with free variables~$X$,
- \item if $t$ is a term with free variables~$X$, $p$ is a pattern
-       binding $Y$, $u$ is a term with free variables $Y\cup Z$ and
-       $X\cap Z = Y\cap Z = \emptyset$, then,
-       $\letin t p u$ is a term with free variables $X\cup Z$,
- \item if $t$ is a term with free variables $X$,
-       $u$ is a term with free variables $Z\cup \{x\}$,
-       $v$ is a term with free variables $Z\cup \{y\}$,
-       $x,y\notin Z$ and $X\cap Z = \emptyset$,
-       $\mat t x u y v$ is a term with free variables $X\cup Z$, and
+ \item if $t$ is a term with free variables~$S$, $u$ is a term with
+       free variables~$S'$ and $S$ and $S'$ are disjoint, $t\otimes u$ and
+       $tu$ are terms with free variables $S\cup S'$,
+ \item if $t$ and $u$ are terms with free variables $S$, then
+       $\lpair{t,u}$ is a term with free variables~$S$,
+ \item if $t$ is a term with free variables~$S$, then
+       $\inl x, \inr t$ and $!t$ are terms with free variables~$S$
+ \item if $t$ is a term with free variables $S\cup \{x\}$ and $x$ is not
+       in $S$, then $\lambda x.t$ is a term with free variables~$S$,
+ \item if $t$ is a term with free variables~$S$, $p$ is a pattern
+       binding $S'$, $u$ is a term with free variables $S'\cup S''$ and
+       $S\cap S'' = S'\cap S'' = \emptyset$, then,
+       $\letin t p u$ is a term with free variables $S\cup S''$,
+ \item if $t$ is a term with free variables $S$,
+       $u$ is a term with free variables $S''\cup \{x\}$,
+       $v$ is a term with free variables $S''\cup \{y\}$,
+       $x,y\notin S''$ and $S\cap S'' = \emptyset$,
+       $\mat t x u y v$ is a term with free variables $S\cup S''$, and
  \item channels are terms with free variables~$\emptyset$.
 \end{itemize}
-Note that a term with free variables $X$ is not a term with free
-variables $Y$ when $X\neq Y$.  Only the last clause is original,
+Note that a term with free variables $S$ is not a term with free
+variables $S'$ when $S\neq S'$.  Only the last clause is original,
 introducing channels, which are our communication primitives.
 
 \subsection{Typing Derivations}
 
-On top of Abramsky's \fix{} we add a rule to make
-$(\phi\limp\psi)\otimes(\psi\limp\phi)$ derivable\fix{really?}.
+On top of Abramsky's~\citep{abramsky1993computational} we add a rule to
+make $(\phi\limp\psi)\otimes(\psi\limp\phi)$ derivable.
+
+A hypersequent is inductively defined as
+\begin{align*}
+ \hypert ::=\, &\G\tr\tj{t}{\phi}
+ \mid\, (\hypert\hmid \hypert)
+ \mid\, \lpair{\hypert,\hypert}^n
+\end{align*}
+where $n$ is a natural number and $\G$ is a context. \fix{define context}
+The last clause is used to implement the so-called additive box.
+\fix{add citation for additive box}
+\fix{definition of terms contains natural number?}
+Differently from the previous chapters,
+here, the hypersequent $\G\tr\phi\hmid \D\tr\psi$ is interpreted as the
+conjunction of components:
+$(\bigotimes\G\limp\phi)\otimes (\bigotimes\D\limp\psi)$.
 
 The typing rules are in Figure~\ref{fig:exchange:rules}.
  \begin{figure}
@@ -98,14 +112,7 @@ The typing rules are in Figure~\ref{fig:exchange:rules}.
   \UnaryInfC{$\tj{x}{\phi}\tr\tj{x}{\phi}$}
   \DisplayProof
   %
-  \hfill \fix{add external exchange} \hfill
-  % exchange
-  \AxiomC{$\hypert\hmid\G,\tj{x}{\phi},\tj{y}{\psi},\D\tr\tj{t}{\theta}$}
-  \LL{IE}
-  \UnaryInfC{$\hypert\hmid\G,\tj{y}{\psi},\tj{x}{\phi},\D\tr\tj{t}{\theta}$}
-  \DisplayProof
-  %
-  \ruleskip
+  \hfill
   \AxiomC{$\hypert$}
   \AxiomC{$\hypert'$}
   \LL{merge}
@@ -117,6 +124,19 @@ The typing rules are in Figure~\ref{fig:exchange:rules}.
   \LL{Cut}
   \UnaryInfC{$\hypert\hmid\G,\D\tr\tj{u[t/x]}{\psi}$}
   \DisplayProof
+  \ruleskip
+  % exchange
+  \AxiomC{$\hypert\hmid\G,\tj{x}{\phi},\tj{y}{\psi},\D\tr\tj{t}{\theta}$}
+  \LL{IE}
+  \UnaryInfC{$\hypert\hmid\G,\tj{y}{\psi},\tj{x}{\phi},\D\tr\tj{t}{\theta}$}
+  \DisplayProof
+  %
+  \hfill
+  \AxiomC{$\hypert\hmid \G \tr\tj t\phi \hmid \D \tr\tj u\psi\hmid \hypert'$}
+  \LL{EE}
+  \UnaryInfC{$\hypert\hmid \D \tr\tj u\psi \hmid \G \tr\tj t\phi \hmid \hypert'$}
+  \DisplayProof
+  \ruleskip
   %
   \ruleskip
   % 1R
@@ -129,7 +149,7 @@ The typing rules are in Figure~\ref{fig:exchange:rules}.
   % 1L
   \AxiomC{$\hypert\hmid\G\tr\tj{t}{\phi}$}
   \LL{$\one$L}
-  \UnaryInfC{$\hypert\hmid\G,\tj{z}{\one}\tr\tj{\letin z \ast t}{\phi}$}
+  \UnaryInfC{$\hypert\hmid\G,\tj{z}{\one}\tr\tj{t}{\phi}$}
   \DisplayProof
   %
   \ruleskip
@@ -171,10 +191,15 @@ The typing rules are in Figure~\ref{fig:exchange:rules}.
   %
   \ruleskip
   % andR
-  \AxiomC{$\hypert\hmid\G\tr\tj{t}{\phi}\hmid\G\tr\tj{u}{\psi}$}
+  \AxiomC{$\hypert_0\hmid\G\tr\tj{t}{\phi}$}
+  \AxiomC{$\hypert_1\hmid\G\tr\tj{u}{\psi}$}
   \LL{$\with$R}
-  \UnaryInfC{$\hypert\hmid\G\tr\tj{\lpair{t,u}}{\phi\with\psi}$}
-  \DisplayProof
+  \BinaryInfC{$\lpair{\hypert_0,\hypert_1}_n
+  \hmid\G\tr\tj{\lpair{t,u}_n}{\phi\with\psi}$}
+  \DisplayProof \\
+  where $\hypert_0$ and $\hypert_1$ are of the same type \fix{define}
+  and $n$ is a natural number such that no $\lpair{\_,\_}_n$ appears
+  in the branches.
   %
   \ruleskip
   % andL0
@@ -214,10 +239,11 @@ The typing rules are in Figure~\ref{fig:exchange:rules}.
   %
   \ruleskip
   % !R
-  \AxiomC{$\hypert\hmid!\G\tr\tj{t}{\phi}$}
+  \AxiomC{$!\hypert\hmid!\G\tr\tj{t}{\phi}$}
   \LL{$!$R}
-  \UnaryInfC{$\hypert\hmid!\G\tr\tj{!t}{!\phi}$}
+  \UnaryInfC{$!\hypert\hmid!\G\tr\tj{!t}{!\phi}$}
   \DisplayProof
+  where $!\hypert$ contains only components typed $!\D\tr !\psi$.
   %
   \ruleskip
   % dereliction
@@ -245,9 +271,9 @@ The typing rules are in Figure~\ref{fig:exchange:rules}.
   \AxiomC{$\hypert\hmid\G\tr\tj{t}{\phi}$}
   \LL{$\forall$R}
   \UnaryInfC{$\hypert\hmid\G\tr\tj{t}{\forall X.\phi}$}
-  \DisplayProof (No $X$ appears in $\G$)
+  \DisplayProof (No free $X$ appears in $\G$ or $\hypert$)
   %
-  \ruleskip
+  \hfill
   % forall L
   \AxiomC{$\hypert\hmid\G,\tj{x}{\phi[\psi/X]}\tr\tj{t}{\phi}$}
   \LL{$\forall$L}
@@ -256,27 +282,70 @@ The typing rules are in Figure~\ref{fig:exchange:rules}.
   %
   \ruleskip
   %
-  \caption{Most rules are taken from Abramsky\fix{}.
+  \caption{Most rules are taken from Abramsky~\citep{abramsky1993computational}.
   The sync rule is original.}
   \label{fig:exchange:rules}
  \end{figure}
+For example,
+the formula $(\phi\limp\psi)\otimes(\psi\limp\phi)$ is realized by
+the following derivation.
+ \begin{center}
+  \AxiomC{}
+  \UnaryInfC{$\tj{x}{\phi}\tr\tj{x}{\phi}$}
+  \AxiomC{}
+  \UnaryInfC{$\tj{y}{\psi}\tr\tj{y}{\psi}$}
+  \BinaryInfC{$\tj{x}{\phi}\tr\tj{x}{\phi} \hmid
+  \tj{y}{\psi}\tr\tj{y}{\psi}$}
+  \UnaryInfC{$ \tj{x}{\phi}\tr\tj{cx}{\psi} \hmid \tj{y}{\psi}
+  \tr\tj{\co c y}{\phi}$}
+  \UnaryInfC{$ \tr\tj{\lambda x.cx}{\phi\limp\psi} \hmid \tj{y}{\psi}
+  \tr\tj{\co c y}{\phi}$}
+  \UnaryInfC{$ \tr\tj{\lambda x.cx}{\phi\limp\psi} \hmid
+  \tr\tj{\lambda y.\co c y}{\phi\limp\phi}$}
+  \UnaryInfC{$ \tr\tj{{(\lambda x.cx) \otimes (\lambda y.\co c
+  y)}}{(\phi\limp\psi)\otimes(\phi\limp\phi)}$}
+  \DisplayProof
+ \end{center}
+Another example shows how we can type the term $\co c(c x)$.
+ \begin{center}
+\AxiomC{$\tj{x}{\phi}\tr\tj{x}{\phi}$}
+\AxiomC{$\tj{y}{\psi}\tr\tj{y}{\psi}$}
+\BinaryInfC{$\tj{x}{\phi}\tr\tj{x}{\phi} \hmid
+\tj{y}{\psi}\tr\tj{y}{\psi} $}
+\UnaryInfC{
+$\tj{x}{\phi}\tr\tj{cx}{\psi} \hmid
+\tj{y}{\psi}\tr\tj{\co cy}{\phi} $
+}
+\LL{(Cut)}
+\UnaryInfC{
+$\tj{x}{\phi}\tr\tj{\co c(cx)}{\phi}$
+}
+\DisplayProof
+ \end{center}
 
-\subsection{Evaluation relation}
+\subsection{Evaluation Relation}
 
 The set of canonical forms remains the same as Abramsky's
-system~\fix{cite}:
+system~\citep{abramsky1993computational}:
 \[
- \lpair{t,u}\qquad !t\qquad \ast\qquad c\otimes d\qquad \lambda
+ \lpair{t,u}\qquad !t\qquad \ast\qquad v\otimes w\qquad \lambda
  x.t\qquad \inl{v}\qquad\inr{w}
 \]
 where $v$ and $w$ are canonical forms.
 
+An evaluation hypersequent $\hypere$ is defined by the following
+grammar:
+\[
+ \hypere ::= t\eval t\mid (\hypere\hmid \hypere)\mid
+ \tuple{\hypert_0,\hypert_1}_n\eval \vec t \mid
+ \tuple{\hypert_0,\hypert_1}_n\eval \tuple{\hypert_0,\hypert_1}_n
+\]
+where the size of $\hypert_0,\hypert_1$ and $\vec t$ have to be the same.
+
 $\mathcal E$ stands for a sequence of evaluation relations.
-Most rules are the same as Abramsky's \fix{cite}.
+Most rules are the same as Abramsky's~\citep{abramsky1993computational}.
 We add the semantics for channels.
 The definition is inductive in Figure~\ref{fig:eval}.
-
-\newcommand{\hypere}{\mathcal{E}}
 
  \begin{figure}
   \centering
@@ -296,6 +365,11 @@ The definition is inductive in Figure~\ref{fig:eval}.
   \UnaryInfC{$\hypere\hmid \letin t {x\otimes y} u \eval v'$}
   \DisplayProof
   \hfill
+  \AxiomC{$\hypere$}
+  \AxiomC{$\hypere'$}
+  \BinaryInfC{$\hypere\hmid \hypere'$}
+  \DisplayProof
+  \hfill
   \AxiomC{}
   \UnaryInfC{$\lambda x.t\eval \lambda x.t$}
   \DisplayProof
@@ -310,17 +384,30 @@ The definition is inductive in Figure~\ref{fig:eval}.
   \DisplayProof
   \ruleskip
   \AxiomC{}
-  \UnaryInfC{$\lpair{t,u}\eval\lpair{t,u}$}
-  \DisplayProof
-  \hfill
-  \AxiomC{$\hypere\hmid t\eval \lpair{t_0,t_1}\hmid t_0\eval v\hmid
-  u[v/x]\eval w$}
-  \UnaryInfC{$\letin t {\lpair{x,\_}}{u}\eval w$}
+  \UnaryInfC{$\lpair{\hypert_0,\hypert_1}_n\eval
+  \lpair{\hypert_0,\hypert_1}_n
+  \hmid
+  \lpair{t, u}_n\eval
+  \lpair{t, u}_n$}
   \DisplayProof
   \ruleskip
-  \AxiomC{$\hypere\hmid t\eval\lpair{t_0,t_1}\eval t_1\eval v\hmid
-  u[v/y]\eval w$}
-  \UnaryInfC{$\hypere\hmid\letin t{\lpair{\_,y}}u\eval w$}
+  \AxiomC{$\hypere\hmid \lpair{\hypert_0,\hypert_1}_n \eval
+  \lpair{\hypert_0,\hypert_1}_n
+  \hmid t\eval\lpair{t_0,t_1}_n\hmid \hypert_0\eval \vec{o_0}\hmid t_0\eval v_0
+  \hmid  u[v_0/x]\eval w$}
+  \UnaryInfC{$\hypere \hmid
+  \lpair{\hypert_0,\hypert_1}_n \eval \vec{o_0} \hmid
+  \letin t {\lpair{x,\_}} u\eval w$}
+  \DisplayProof
+  \fix{define the vect abbreviation}
+  \ruleskip
+  \AxiomC{$\hypere\hmid \lpair{\hypert_0,\hypert_1}_n \eval
+  \lpair{\hypert_0,\hypert_1}_n
+  \hmid t\eval\lpair{t_0,t_1}_n\hmid \hypert_1\eval \vec{o_1}\hmid t_1\eval v_1
+  \hmid  u[v_1/y]\eval w$}
+  \UnaryInfC{$\hypere \hmid
+  \lpair{\hypert_0,\hypert_1}_n \eval \vec{o_1} \hmid
+  \letin t {\lpair{\_,y}} u\eval w$}
   \DisplayProof
   \ruleskip
   \AxiomC{$\hypere\hmid t\eval v$}
@@ -354,12 +441,566 @@ The definition is inductive in Figure~\ref{fig:eval}.
   \AxiomC{$\hypere\hmid t\eval !s\hmid u[!s/x,!s/y]\eval v$}
   \UnaryInfC{$\letin t {x@y} u\eval v$}
   \DisplayProof
+  \ruleskip
+  \AxiomC{$\hypere\hmid t\eval v\hmid u[v/x]\eval w$}
+  \LL{eval-subst}
+  \UnaryInfC{$ \hypere\hmid u[t/x] \eval w $}
+  \DisplayProof
   \caption{The definition of evaluation relation.}
   \label{fig:eval}
  \end{figure}
 
-\section{Determinacy and Confluence}
+\section{Convergence}
 
+Convergence states that if
+$\tr\tj t \phi$ is derivable,
+there exists a canonical form~$v$ so that $t\eval v$ is derivable.
+Since the proof of convergence is inductive over
+the typing derivations, we have to generalize the statement.
+
+For that we first assign a set of closed terms to each type.
+\newcommand{\terms}{\mathcal{T}}
+\fix{use of $v$ is ambiguious...?}
+We denote by $\terms$ the set of closed terms.
+Given $\sem{X}_0\in 2^\terms$ for each propositional variable~$X$,
+we define $\sem{\cdot}\colon \form{2^\terms}\rightarrow \form{2^\terms}$
+as follows:
+\begin{align*}
+ \sem{\mathcal X} &= \mathcal X\\
+ \sem{X} &= \sem{X}_0\\
+ \sem{\one} &= \{t\in \terms \mid t\eval \ast\} \\
+ \sem{\phi\otimes \psi}&= \{t\in\terms \mid t\eval v\otimes w,\quad
+ v\in\sem{\phi},\quad w\in \sem{\psi}\}\\
+ \sem{\phi\limp\psi}&= \{t\in\terms \mid t\eval \lambda x.v,\quad
+ \forall u\in\sem{\phi}.(tu\in\sem{\psi})\}\\
+ \sem{\phi\with\psi}&= \{t\in\terms \mid t\eval\lpair{u,v},\quad
+ u\in\sem{\phi}, v\in\sem{\psi}\}\\
+ \sem{\phi\oplus\psi}&= \{t\in\terms\mid (t\eval \inl{v}, v\in
+ \sem{\phi})\text{ or }(t\eval\inr{w}, w \in \sem{\psi})\}\\
+ \sem{!\phi}&= \{t\in\terms \mid t\eval !u, \quad u\in\sem{\phi}\}\\
+ \sem{\forall X.\phi}&= \bigcap\{\sem{\phi[\mathcal X/X]}\mid \psi\in
+ 2^\terms\}\enspace.
+\end{align*}
+
+For a context~$\G = \tj{x_0}{\phi_0},\ldots,\tj{x_n}{\phi_n}$,
+$\semo{\G}$ denotes the set of sequences $u_0,\ldots,u_n$ of closed terms
+such that each $u_i$ is in $\sem{\phi_i}$.
+
+ \begin{proposition}[General Convergence]
+  \label{thm:generalconvergence}
+  If
+  $\G_0\tr\tj{t_0}{\phi_0}\hmid\cdots\hmid \G_n\tr\tj{t_n}{\phi_0}$
+  is derivable,
+  for any $(\vec{u^i}) \in \semo{\G_i}$ for ${0\le i \le n}$,
+  there exist canonical forms $(v_i\in\semo{\phi_i})_{0\le i\le n}$ so
+  that $t_0[\vec{u^0}/ \G_0]\eval v_0\hmid\cdots\hmid
+  t_n[\vec{u^n}/\G_n]\eval v_n$ is derivable.
+ \end{proposition}
+  \begin{proof}
+   By induction on the type derivation.
+   \begin{description}
+    \item[($\limp$L)] The derivation ends as
+	  \begin{center}
+	   \AxiomC{$\hypert\hmid \G\tr\tj{t}{\phi}\hmid \tj{x}{\psi},
+	   \D\tr\tj{u}{\theta}$}
+	   \UnaryInfC{$\hypert\hmid
+	   \G,\tj{f}{\phi\limp\psi},\D\tr\tj{u[(ft)/x]}{\theta}$}
+	   \DisplayProof\enspace.
+	  \end{center}
+	 Take any $O\in\semo{\hypert}$, $\vec g\in\semo{\G}$, $\vec
+	 d\in\semo{\D}$ and $v\in\semo{\phi\limp\psi}$.
+	 By induction hypothesis,
+	 \[
+	  \hypert\eval \vec{w'}\hmid t[\vec g/\G]\eval
+	   w_0\hmid u[w/x][\vec d/\D]\eval w
+	 \]
+	 is derivable for any $w \in \semo{\psi}$.
+	 Since $w_0$ is in $\semo{\phi}$ and $v$ is in
+	 $\semo{\phi\limp\psi}$,
+	 $fw_0$ is in $\psi$.
+	 Thus,
+	 \[
+	 \hypert\eval\vec{w'}\hmid t[\vec g/\G]\eval w_0\hmid
+	 u[(fw_0)/x][\vec d/\D]\eval w_1
+	 \]
+	 is derivable.
+	 The last term $u[(fw_0)/x][\vec d/\D]$ is identical to
+	 $u[fy/x][w_0/y][\vec d/\D]$.
+	 Thus, by rule eval-subst in Figure~\ref{fig:eval},
+	 \[
+	  \hypert\eval\vec{w'}\hmid u[fy/x][t/y][\vec d/\D]\eval w_1
+	 \]
+	 is derivable.
+    \item[(Cut)] Essentically the same as and simpler than ($\limp$L).
+    \item[(Sync)]
+	 The derivation ends as
+	 \AxiomC{$\hypert\hmid \G\tr\tj{t}{\phi}\hmid \D\tr\tj{u}{\psi}$}
+	 \UnaryInfC{$\hypert\hmid \G\tr\tj{ct}{\psi}\hmid \D\tr\tj{\co
+	 cu}{\phi}$}
+	 \DisplayProof\enspace.
+	 Take any $O\in\semo{\hypert}$, $\vec g\in \semo{\G}$ and $\vec
+	 d\in\semo{\D}$.
+	 By induction hypothesis, the hyper evaluation
+	 \[
+	  O\eval \vec{v'}\hmid t[\vec g/\G] \eval v\hmid u[\vec
+	 d/\D]\eval w
+	 \]
+	 is derivable.
+	 Thus,
+	 \[
+	  O\eval \vec{v'}\hmid (ct)[\vec g/\G] \eval w\hmid (\co cu)[\vec
+	 d/\D]\eval v
+	 \]
+	 is also derivable.
+    \item[(Contraction)]
+	 The derivation ends as
+	  \begin{center}
+	   \AxiomC{$\hypert\hmid\G,\tj{x}{!\phi},\tj{y}{!\phi}\tr\tj{t}{\psi}$}
+	   \UnaryInfC{$\hypert\hmid \G,\tj{z}{!\phi}\tr\tj{\letin z
+	   {x@y} t}{\psi}$}
+	   \DisplayProof
+	  \end{center}
+	 Take any $O\in\semo{\hypert}$, $\vec{g}\in\semo{\G}$ and
+	 $u\in\semo{!\phi}$.
+	 Since $u$ is in $\semo{!\phi}$, there exists a term $u'$ in
+	 $\semo{\phi}$
+	 where $u\eval !u'$.
+	 Moreover, by induction hypothesis,
+	 \[
+	  \hypert\eval\vec{o}\hmid t[\vec g/\G][!u'/x][!u'/y]\eval t'
+	 \]
+	 is derivable for some $\vec{o}$ and $t'\in\semo{\psi}$.
+	 By merge,
+	 \[
+	  \hypert\eval\vec{o}\hmid t[\vec g/\G][!u'/x][!u'/y]\eval
+	 t'\hmid u\eval !u'
+	 \]
+	 is derivable and then
+	 \[
+	  \hypert\eval\vec{o}\hmid
+	 (\letin{z}{x@y}{t})[\vec g/\G][!u'/z]\eval t'
+	 \]
+	 is also derivable.
+    \item[($\forall$R)]
+	 Since the induction hypothesis holds regardless of $|X|_0$.
+    \item[Other rules]
+	 Other cases are easier.
+   \end{description}
+   \fix{complete}
+  \end{proof}
+
+   \begin{corollary}[Consistency of \fix{name of logic}]
+    $\tr\tj{t}{\forall X.X}$ is not derivable for any term~$t$.
+   \end{corollary}
+    \begin{proof}
+     Assume $\tr\tj{t}{\forall X.X}$ is derivable.
+     Then, by \thref{thm:generalconvergence},
+     $t\eval t'$ is derivable for some $t'$ in $\semo{\forall X.X}$.
+     However, $\semo{\forall X.X}$ is empty.
+    \end{proof}
+
+    \section{Sessions and Processes}
+    \subsection{Session Types as Abbreviations}
+
+    As abbreviation, we introduce session types.
+    Instead of the standard notation $!\phi.\psi$, we use
+    $\sendtype{\phi}{\psi}$ in order to avoid the confusion with
+    $!\phi$.
+    For symmetry, we use $\recvtype{\phi}\psi$ instead of $?\phi.\psi$.
+    The definitions and the descriptions are modification from
+    \citet{wadler2012propositions}.
+    \begin{align*}
+     \sendtype\phi\psi&\equiv \phi\limp\psi &\text{output value of type $\phi$ then behave as $\psi$} \\
+     \recvtype\phi\psi&\equiv \phi\otimes\psi &\text{input value of type $\phi$ then behave as $\psi$}\\
+     \oplus\{l_i\colon \phi_i\}_{i\in I} &\equiv {\phi_0}\with
+     \cdots \with {\phi_n}, \quad I = \{0,\ldots,n\} & \text{select from behaviours
+     $\phi_i$ with label $l_i$}\\
+     \with\{l_i\colon \phi_i\}_{i\in I} &\equiv {\phi_0}\oplus
+     \cdots \oplus {\phi_n}, \quad I = \{0,\ldots,n\}& \text{offer choice of
+     behaviours $\phi_i$ with label $l_i$}
+     \\
+     \terminate &\equiv \one &\text{terminator}
+    \end{align*}
+    where $I$ is a finite downward-closed set of natural numbers like
+    $\{0,1,2,3\}$.
+
+
+    The grammar
+    \[
+     \phi,\psi ::= \terminate\mid X \mid \sendtype\phi\psi \mid
+     \recvtype\phi\psi
+     \mid \oplus\{l_i\colon\phi_i\}_{i\in I}
+     \mid \with\{l_i\colon\phi_i\}_{i\in I}
+     \mid !\phi
+    \]
+    covers all types.
+
+    A linear type ($\phi^\ell$ possibly with subscript) is generated by
+    this grammar:
+    \[
+     \phi^\ell ::= \terminate\mid
+     \sendtype{\psi}{\phi^\ell} \mid
+     \recvtype{\psi}{\phi^\ell}
+     \mid \oplus\{l_i\colon\phi^\ell_i\}_{i\in I}
+     \mid \with\{l_i\colon\phi^\ell_i\}_{i\in I}
+    \]
+
+    We define duals of linear types.
+    Again the definition is almost the
+    same as \citet{wadler2012propositions}'s except that $\terminate$ is
+    self-dual.
+    \begin{align*}
+     \overline{\sendtype\psi{\phi^\ell}}&= \,\recvtype\psi{\overline{\phi^\ell}}\\
+     \overline{\recvtype\psi{\phi^\ell}}&= \,\sendtype\psi{\overline{\phi^\ell}}\\
+     \overline{\oplus\{l_i\colon \phi^\ell_i\}_{i\in I}} &=
+     \with\{l_i\colon \overline{\phi^\ell_i}\}_{i\in I} \\
+     \overline{\with\{l_i\colon \phi^\ell_i\}_{i\in I}} &=
+     \oplus\{l_i\colon \overline{\phi^\ell_i}\}_{i\in I} \\
+     \overline{\terminate} &= \terminate\enspace.
+    \end{align*}
+    \fix{see other literature as well for the definition of session
+    types}
+
+    \subsection{Processes as Abbreviations}
+
+    We define the sending and receiving as abbreviations:
+    \begin{align*}
+     \sendterm x u t &\equiv t[(xu) /x] &\text{send $u$ through channel
+     $x$ and then use $x$ in $t$} \\
+     \recvterm x y t &\equiv \letin x {\tuple{y,x}} t & \text{receive
+     $y$ through channel $x$ and use $x$ and $y$ in $t$.}
+    \end{align*}
+
+    \subsubsection{Typing Process Abbreviations}
+    The session type abbreviation and the processes abbreviation are
+    consistent as the next proposition shows.
+     \begin{proposition}
+      These rules are admissible.\\
+      \AxiomC{$\hypert\hmid\tj{y}{\psi}, \tj{x}{\chi}\tr\tj{t}{\phi}$}
+      \UnaryInfC{$\hypert\hmid\tj{x}{\recvtype\psi\chi}\tr\tj{\recvterm x y
+      t}{\phi}$}
+      \DisplayProof
+      \hfill
+      \AxiomC{$\hypert\hmid \G,\tj{x}{\chi}\tr\tj{t}{\phi}\hmid \D\tr\tj{u}\psi$}
+      \UnaryInfC{$\hypert\hmid \G,\D,\tj{x}{\sendtype
+      \psi\chi}\tr\tj{\sendterm x u t}{\phi}$}
+      \DisplayProof
+     \end{proposition}
+     Before entering the proof, we note that the types of $x$ change in
+     the rules.  This reflects the intuition of session types: the
+     session type of a channel changes after some communication occurs
+     through the channel.
+      \begin{proof}
+       Without abbreviations, the first rule is actually one of the
+       original rules:
+	\begin{center}
+	 \AxiomC{$\hypert\hmid\tj{y}{\psi}, \tj{x}{\chi}\tr\tj{t}{\phi}$}
+	 \UnaryInfC{$\hypert\hmid\tj{x}{\psi\otimes\chi}\tr\tj{\letin x
+	 {y\otimes x} t}{\phi}$}
+	 \DisplayProof\enspace.
+	\end{center}
+       Without abbreviations, the second rule is also one of the
+       original rules:
+	\begin{center}
+	 \AxiomC{$\hypert\hmid \G,\tj{x}{\chi}\tr\tj{t}{\phi}\hmid \D\tr\tj{u}\psi$}
+	 \UnaryInfC{$\hypert\hmid \G,\D,\tj{x}{
+      \psi\limp\chi}\tr\tj{t[(xu)/x]}{\phi}$}
+	 \DisplayProof\enspace.
+	\end{center}
+      \end{proof}
+
+
+    \subsection{Implementing Complex Channels}
+    We introduced primitives $\lpair{c,\co c}$ implementing
+    $(\one\limp\phi)\otimes(\phi\limp\one)$.
+    These can be seen as channels of session types
+    $\recvtype\phi\terminate$ and $\sendtype\phi\terminate$.
+    Indeed, $\recvtype\phi\terminate$ is $\phi\otimes\one$ (which is
+    coerceable to $\one\limp\phi$) and $\sendtype\phi\terminate$ is
+    $\phi\limp \one$.
+    We can generalize this phenomenon to the more complicated session
+    types.
+     \begin{theorem}[Session Realizers]
+      For any linear type~$\phi^\ell$\kern -2pt, the hypersequent
+      $\tr\tj{t}{\phi^\ell}\hmid \tr\tj{u}{\overline{\phi^\ell}}$
+      is derivable for some terms $t$ and $u$.
+     \end{theorem}
+      \begin{proof}
+       Induction on $S$.
+       \begin{description}
+	\item[(end)] \AxiomC{} \UnaryInfC{$\tr\tj\ast\one$}
+	     \AxiomC{} \UnaryInfC{$\tr\tj\ast\one$}
+	     \BinaryInfC{$\tr\tj\ast\one\hmid\tr\tj\ast\one$}
+	     \DisplayProof is what we seek.
+	\item[($\sendtype{\psi}{\phi^\ell}$)]
+	     By induction hypothesis,
+	     $\tr\tj{t'}{\phi^\ell}\hmid \tr \tj{u'}{\overline{\phi^\ell}}$ is
+	     derivable.  Using this, we can make the following
+	     derivation:
+	      \begin{center}
+	      \AxiomC{}
+	       \UnaryInfC{$\tj{x}{\psi}\tr\tj{x}{\psi}$}
+	       \AxiomC{$\tr\tj{t'}{\phi^\ell}\hmid \tr
+	       \tj{u'}{\overline{\phi^\ell}}$}
+	       \BinaryInfC{$\tj{x}{\psi}\tr\tj{x}{\psi}\hmid
+	       \tr\tj{t'}{\phi^\ell}\hmid \tr
+	       \tj{u'}{\overline{\phi^\ell}}$}
+	       \UnaryInfC{$\tj{x}{\psi}\tr\tj{cx}{\phi^\ell}\hmid
+	       \tr\tj{(\co ct')\otimes u'}{\psi\otimes \overline{\phi^\ell}}$}
+	       \UnaryInfC{$\tr\tj{\lambda x.cx}{\psi\limp\phi^\ell}\hmid
+	       \tr\tj{(\co ct')\otimes u'}{\psi\otimes \overline{\phi^\ell}}$}
+	       \DisplayProof\enspace.
+	      \end{center}
+	\item[($\recvtype\psi\phi$)]
+	     Symmetric to above.
+	\item[($\oplus\{l_i\colon \phi_i\}$)]
+	     By induction hypothesis,
+	     for each $i\in I$, we have
+	     \[
+	      \tr\tj{t_i}{{\phi_i}}\hmid \tr\tj{u_i}{{\overline{\phi_i}}}
+	     \]
+	     derived.  Hence derivable is
+	     \[
+	      \tr\tj{t_i}{{\phi_i}}\hmid \tr\tj{i(u_i)}{\oplus_{j\in
+	     I}
+	     {\overline{\phi_j}}}\enspace.
+	     \]
+	     Combining $|I|$ such derivations, we can derive
+	     \[
+	     \tr\tj{\tuple{t_i}_{i\in I}^n}{\with_{i\in I}{\phi_i}}
+	     \hmid
+	     \tuple{\tr\tj{i(u_i)}{\oplus_{j\in
+	     I}{\overline{\phi_j}}}}_{i\in I}^n
+	     \]
+	     for a fresh natural number~$n$.
+	     \fix{define and explain about this form of hypersequents}
+	\item[($\with\{l_i\colon \phi_i\}$)]
+	     Symmetric to above.
+       \end{description}
+      \end{proof}
+      We call the pair $t,u$ the session realizers of $\phi^\ell$ and
+      denote them by $\leftside{\phi^\ell}, \rightside{\phi^\ell}$.
+      If have two terms that uses free variables of type $\phi^\ell$ and
+      $\overline{\phi^\ell}$,
+      we can replace those free variables by session realizers.
+       \begin{corollary}
+	If
+	$\hypert_0\hmid \G,\tj{x}{\phi^\ell}\tr\tj{t}{\psi}$ and
+	$\hypert_1\hmid \D,\tj{y}{\overline{\phi^\ell}}\tr\tj{u}{\theta}$
+	are derivable,
+	\[
+	\hypert_0\hmid \G\tr\tj{t[\leftside{\phi^\ell}/ x]}{\psi}
+	\hmid \hypert_1\hmid \D\tr\tj{u[\rightside{\phi^\ell}/ y]}{\theta}
+	\]
+	is also derivable.
+       \end{corollary}
+	\begin{example}
+	 Using the session realizers, we can implement the following
+	 pair of terms performing higher order communication.
+	 \[
+	 \tr
+	 \tj{
+	 \sendterm x {\leftside{\sendtype{\one \oplus \one}\terminate}}
+	 {\recvterm {\rightside{\sendtype{\one\oplus\one}\terminate}} z
+	 z}}
+	 {\one\oplus\one}
+	 \hmid
+	 \tj{
+	 \recvterm x w {\sendterm w {\inl \ast} \ast}}
+	 {\one}
+	 \]
+	 The left term sends a channel and the right term receives the
+	 channel.  Then the right term uses the channel to send one bit
+	 information to the left term.
+
+	 Without abbreviations, the above derivation is actually
+	 \fix{fill}.
+	 We can derive their canonical forms as follows.
+	 \fix{fill}.
+	\end{example}
+
+
+      \subsubsection{Evaluation of Processes}
+
+      The intention of defining $\sendterm x u {t_0}$ and $\recvterm y z {t_1}$
+      is mimicking communication in process calculi.
+      When we substitute $x$ and $y$ with session type realizers,
+      these terms actually make communication.
+       \begin{theorem}
+	Let $t_0$ be a term containing $x$ and $t_1$ a term containing
+	$y$ and $z$ as free variables.
+	If this evaluation hypersequent
+	\[
+	\letin {\leftside{\phi^\ell}\otimes \rightside{\phi^\ell}}
+	{x\otimes y}{(t_0\otimes t_1[u'/z])}\eval v\otimes w\hmid u\eval u'
+	\]
+	is derivable, so is
+	\[
+	 \letin{\leftside{\sendtype{\psi}{\phi^\ell}}\otimes
+	\rightside{\sendtype{\psi}{\phi^\ell}}}{x\otimes y}{
+	\left((\sendterm x u {t_0})\otimes (\recvterm y z {t_1})\right)}
+	\eval v\otimes w
+	\enspace .
+	\]
+       \end{theorem}
+	\begin{proof}
+	 The assumption is only achievable through a derivation ending
+	 in:
+	  \begin{center}
+	   \AxiomC{$\vdots$}
+	   \UnaryInfC{$\leftside{\phi^\ell}\eval L\hmid
+	   \rightside{\phi^\ell}\eval R\hmid t_0[L/x]\eval v\hmid
+	   t_1[u'/z][R/y]\eval w\hmid u\eval u'$}
+	   \doubleLine
+	   \UnaryInfC{$\leftside{\phi^\ell}\otimes\rightside{\phi^\ell}\eval
+	   L\otimes R\hmid (t_0\otimes t_1[u'/z])[L/x][R/y]\eval
+	   v\otimes w\hmid u\eval u'$}
+	   \UnaryInfC{
+	   $\letin{\leftside{\phi^\ell\otimes
+	   \rightside{\phi^\ell}}}{x\otimes y}{t_0\otimes
+	   t_1[u'/z]}\eval v\otimes w\hmid u\eval u'$
+	   }
+	   \DisplayProof\enspace .
+	  \end{center}
+	 We can restart from the topmost shown step.
+	  \begin{center}
+	   \AxiomC{}
+	   \UnaryInfC{
+	   \footnotesize
+	   $\lambda x.cx\eval \lambda x.cx$}
+	   \AxiomC{\footnotesize
+	   $\leftside{\phi^\ell}\eval L\hmid
+	   \rightside{\phi^\ell}\eval R\hmid t_0[L/x]\eval v\hmid
+	   t_1[u'/z][R/y]\eval w\hmid u\eval u'$}
+	   \UnaryInfC{\footnotesize
+	   $cu\eval L\hmid\co c(\leftside{\phi^\ell})\eval u'\hmid
+	   \rightside{\phi^\ell}\eval R\hmid t_0[L/x]\eval v\hmid
+	   t_1[u'/z][R/y]\eval w$}
+	   \BinaryInfC{$(\lambda x.cx)u\eval L\hmid\co
+	   c(\leftside{\phi^\ell})\eval u'\hmid
+	   \rightside{\phi^\ell}\eval R\hmid t_0[L/x]\eval v\hmid
+	   t_1[u'/z][R/y]\eval w$}
+	   \UnaryInfC{$
+	   t_0[(\lambda x.cx)u/x]\eval v
+	   \hmid\co
+	   c(\leftside{\phi^\ell})\eval u'\hmid
+	   \rightside{\phi^\ell}\eval R\hmid
+	   t_1[u'/z][R/y]\eval w$
+	   }
+	   \UnaryInfC{$
+	   t_0[(\lambda x.cx)u/x]\eval v
+	   \hmid
+	   \co
+	   c(\leftside{\phi^\ell}) \otimes \rightside{\phi^\ell}
+	   \eval u' \otimes R \hmid
+	   t_1[u'/z][R/y]\eval w$
+	   }
+	   \UnaryInfC{$
+	   t_0[(\lambda x.cx)u/x]\eval v
+	   \hmid \letin{\co
+	   c(\leftside{\phi^\ell})\otimes
+	   \rightside{\phi^\ell}}{z\otimes y}{t_1}\eval w$
+	   }
+	   \UnaryInfC{$
+	   t_0[(\lambda x.cx)u/x] \otimes \left(\letin{\co
+	   c(\leftside{\phi^\ell})\otimes
+	   \rightside{\phi^\ell}}{z\otimes y}{t_1}\right)
+	   \eval
+	   v \otimes w
+	   $}
+	   \UnaryInfC{$
+	   \letin{(\lambda x.cx)\otimes \co
+	   c(\leftside{\phi^\ell})\otimes
+	   \rightside{\phi^\ell}}{x\otimes y}{
+	   t_0[xu/x] \otimes \left(\letin{y}{z\otimes y}{t_1}\right)}
+	   \eval
+	   v \otimes w
+	   $}
+	   \DisplayProof
+	  \end{center}
+	 The conclusion is identical to our goal up to abbreviations.
+	\end{proof}
+
+  \subsection{Copycatting}
+  \begin{theorem}
+   For any linear type~$\phi^\ell$,
+   we can derive
+   $\tj{x}{\phi^\ell},\tj{y}{\overline{\phi^\ell}}\tr
+   \tj{t}{\one}$
+   for some term~$t$.
+  \end{theorem}
+  \begin{proof}
+   By induction on $\phi^\ell$.
+   \begin{description}
+    \item[($\terminate$)]
+	 Since $\overline{\terminate} =\terminate$, the derivation
+	  \begin{center}
+	   \AxiomC{}
+	   \UnaryInfC{$\tr\tj{\ast}\one$}
+	   \UnaryInfC{$\tj{y}{\terminate}\tr\tj{\ast}\one$}
+	   \UnaryInfC{$\tj{x}{\terminate},\tj{y}{\terminate}\tr\tj{\ast}\one$}
+	   \DisplayProof
+	  \end{center}
+	 suffices.
+    \item[($\sendtype\psi{\phi^\ell}$)]
+	 Using the induction hypothesis (IH.), we obtain a derivation:
+	  \begin{center}
+	   \AxiomC{$\vdots$ (IH.)}
+	   \UnaryInfC{$\tj{x}{\phi^\ell},\tj{y}{\overline{\phi^\ell}}\tr\tj{t}{\one}$}
+	   \AxiomC{}
+	   \UnaryInfC{$\tj{z}{\psi}\tr\tj{z}{\psi}$}
+	   \BinaryInfC{$\tj{x}{\sendtype{\psi}{\phi^\ell}},\tj{y}{\overline{\phi^\ell}},\tj{z}{\psi}\tr\tj{\sendterm
+	   x z t}{\one}$}
+	   \UnaryInfC{$\tj{x}{\sendtype{\psi}{\phi^\ell}}\tr\tj{y}{\recvtype
+	  \psi {\overline{\phi^\ell}}}\tr\tj{\recvterm y z {\sendterm x
+	   z t}}{\one}$}
+	   \DisplayProof
+	  \end{center}
+    \item[($\recvtype\psi{\phi^\ell}$)]
+	 Symmetric to above.
+    \item[($\oplus\{l_i\colon\phi^\ell_i\}$)]
+	 \fix{fill}
+    \item[($\with\{l_i\colon\phi^\ell_i\}$)]
+	 Symmetric to above.
+   \end{description}
+  \end{proof}
+
+
+    \fix{translate the reductions}
+
+% \section{Toward Determinacy}
+
+% Determinancy states that if $t\eval v$ and $t\eval w$ are derivable,
+% then, $v$ and $w$ are identical.
+% Since the proof of dterminacy goes inductively over evaluation
+% derivations\fix{define
+% evaluation derivations},
+% we have to generalize the statement.
+%  \begin{proposition}[General Determinacy]
+%   If
+%   $t_0\eval v_0\hmid \cdots \hmid t_n\eval v_n$ and
+%   $t_0\eval w_0\hmid \cdots \hmid t_n\eval w_n$ are
+%   derivable,
+%   then each $v_i$ is identical to $w_i$.
+%  \end{proposition}
+%   \begin{proof}
+%    By induction on the length of the first derivation.
+%    \fix{complete}
+%   \end{proof}
+
+\fix{sending and receiving as macros,  what you can do with $x:!\phi.S?$ }
+
+\section{Proof Nets}
+
+\fix{talk about proof nets}
+
+\section{Related Work}
+
+\subsection{Wadler}
+
+\subsection{Pfenning}
+
+\subsection{Beffara}
 
 \section{Conclusion}
 
@@ -369,3 +1010,5 @@ The definition is inductive in Figure~\ref{fig:eval}.
 It is tempting to add modalities to types so that the
 modalities show agents and then study the relationship with the
 multiparty session types \fix{cite}.
+
+\fix{give rationale for giving up determinacy.. channel inside lambda}

@@ -190,6 +190,25 @@ contributions.
 We implemented the lambda calculus on top of
 Glasgow Haskell Compiler.
 
+
+\fix{turn this into a table, linear or intuitionistic, conjunction or disjunction}
+The previous chapters treated the computational interpretations of
+disjunctive formulae like $(\phi\imp\psi)\lor(\psi\imp\phi)$ or
+$(\phi\limp\psi)\oplus(\psi\limp\phi)$.  In this chapter, we try
+replacing these disjunctions with conjunctions.
+In the former case, the change renders the logic inconsistent.
+If we add the axiom $(\phi\imp\psi)\land(\psi\imp\phi)$ to the
+intuitionistic propositional logic,
+we can prove any formula.  However in the lattar case, the change does
+not make the system meaningless.
+In this chapter, we treat
+the axioms of the form $(\phi\limp\psi)\otimes(\psi\limp\phi)$
+on top of IMLL2, the second order formulation of intuitionistic
+multiplicative linear
+logic.  In essence, the axiom allows two processes to wait for one
+another and then exchange information.
+
+
 % \section{An Introduction for Computer Scientists}
 
 % \section{An Introduction for Proof Theorists}
