@@ -8,7 +8,7 @@ it is natural to change the additive disjunction $\oplus$ into
 multiplicative conjunction $\otimes$ and see what happens%
 \footnote{Takeuti Izumi asked what about conjunctions.}.
 A natural way to add $(\phi\limp\psi)\otimes(\psi\limp\phi)$ as an axiom
-is adding a pair of primitives $\lpair{c,\co c}$ so that
+is adding a pair of primitives $c,\co c$ so that
 $\cdots ct \cdots \co c u \cdots$ reduces to
 $\cdots u  \cdots t \cdots$: in words,
 $c$ outputs $\co c$'s input and vice versa.
@@ -38,15 +38,15 @@ For a set $S$, we define $\phi\in\form(S)$ by BNF:
  \phi::=s\mid \one \mid X \mid \phi\otimes\phi\mid \phi\limp\phi\mid
  \phi\oplus\phi\mid \phi\with\phi\mid !\phi\mid \forall X.\phi
 \]
-where $s$ is in $S$ and $X$ is a propositional variable.
+where $s$ is an element of $S$ and $X$ is a propositional variable.
 The propositional variable in the last clause is binding.
-A type is an element of $\form(\emptyset)$.
+A \textit{type}\index{type} is an element of $\form(\emptyset)$.
 
 \subsection{Terms and Free Variables}
 
-Following Abramsky~\citep{abramsky1993computational}, we defne patterns
-binding sets of
-variables:
+Following Abramsky's linear lambda calculus
+LF~\citep{abramsky1993computational}, we first defne patterns
+binding sets of variables:
 \begin{itemize}
  \item $\ast$ and $\_$ are patterns binding $\emptyset$,
  \item $\lpair{x,\_}$, $\lpair{\_,x}$ and $!x$ are patterns binding
@@ -87,7 +87,9 @@ introducing channels, which are our communication primitives.
 
 On top of Abramsky's~\citep{abramsky1993computational} we add a rule to
 make $(\phi\limp\psi)\otimes(\psi\limp\phi)$ derivable.
-
+A context~$\G$ is a possibly empty sequence of variables associated with
+types where the same variable appears at most once.
+\fix{give an example}
 A hypersequent is inductively defined as
 \begin{align*}
  \hypert ::=\, &\G\tr\tj{t}{\phi}
@@ -342,26 +344,29 @@ grammar:
 \]
 where the size of $\hypert_0,\hypert_1$ and $\vec t$ have to be the same.
 
-$\mathcal E$ stands for a sequence of evaluation relations.
+Now we define evaluation as a set of evaluation hypersequents.
 Most rules are the same as Abramsky's~\citep{abramsky1993computational}.
 We add the semantics for channels.
-The definition is inductive in Figure~\ref{fig:eval}.
 
  \begin{figure}
   \centering
+  % ast
   \AxiomC{}
   \UnaryInfC{$\ast\eval\ast$}
   \DisplayProof
   \hfill
+  % ast elim
   \AxiomC{$\hypere\hmid t\eval \ast \hmid u\eval v$}
-  \UnaryInfC{$\hypere\hmid \letin t \ast u\eval v$}
+  \UnaryInfC{$\hypere\hmid u\eval v$}
   \DisplayProof
   \hfill
+  % otimes
   \AxiomC{$\hypere\hmid t\eval v\hmid u\eval w$}
   \UnaryInfC{$\hypere\hmid t\otimes u\eval v\otimes w$}
   \DisplayProof
   \ruleskip
-  \AxiomC{$\hypere\hmid t\eval v\otimes d\hmid u[v/x,w/y]\eval v'$}
+  % otimes elim
+  \AxiomC{$\hypere\hmid t\eval v\otimes w\hmid u[v/x,w/y]\eval v'$}
   \UnaryInfC{$\hypere\hmid \letin t {x\otimes y} u \eval v'$}
   \DisplayProof
   \hfill
@@ -399,7 +404,6 @@ The definition is inductive in Figure~\ref{fig:eval}.
   \lpair{\hypert_0,\hypert_1}_n \eval \vec{o_0} \hmid
   \letin t {\lpair{x,\_}} u\eval w$}
   \DisplayProof
-  \fix{define the vect abbreviation}
   \ruleskip
   \AxiomC{$\hypere\hmid \lpair{\hypert_0,\hypert_1}_n \eval
   \lpair{\hypert_0,\hypert_1}_n
@@ -427,7 +431,7 @@ The definition is inductive in Figure~\ref{fig:eval}.
   \DisplayProof
   \ruleskip
   \AxiomC{}
-  \UnaryInfC{$\hypere\hmid !t\eval !t$}
+  \UnaryInfC{$!t\eval !t$}
   \DisplayProof
   \hfill
   \AxiomC{$\hypere\hmid t\eval !s\hmid s\eval v\hmid u[v/x]\eval w$}
@@ -446,9 +450,25 @@ The definition is inductive in Figure~\ref{fig:eval}.
   \LL{eval-subst}
   \UnaryInfC{$ \hypere\hmid u[t/x] \eval w $}
   \DisplayProof
+  \ruleskip
+  % let expansion
+  % \AxiomC
+  % {$\hypere\hmid t[\letin u p {(u_0 \otimes u_1)}/x] \eval w$}
+  % \UnaryInfC
+  % {$\hypere\hmid t[(\letin u p {u_0})\otimes u_1/x] \eval w$}
+  % \DisplayProof \\
+  % if $u_1$ does not have free variables bound by $p$.
+  % \ruleskip
+  % \AxiomC
+  % {$\hypere\hmid t[\letin u p {(u_0 \otimes u_1)}/x] \eval w$}
+  % \UnaryInfC
+  % {$\hypere\hmid t[u_0\otimes (\letin u p {u_1})/x] \eval w$}
+  % \DisplayProof \\
+  % if $u_0$ does not have free variables bound by $p$.
   \caption{The definition of evaluation relation.}
   \label{fig:eval}
  \end{figure}
+
 
 \section{Convergence}
 
@@ -473,8 +493,8 @@ as follows:
  v\in\sem{\phi},\quad w\in \sem{\psi}\}\\
  \sem{\phi\limp\psi}&= \{t\in\terms \mid t\eval \lambda x.v,\quad
  \forall u\in\sem{\phi}.(tu\in\sem{\psi})\}\\
- \sem{\phi\with\psi}&= \{t\in\terms \mid t\eval\lpair{u,v},\quad
- u\in\sem{\phi}, v\in\sem{\psi}\}\\
+ \sem{\phi\with\psi}&= \{t\in\terms \mid t\eval\lpair{v,w},\quad
+ v\in\sem{\phi}, w\in\sem{\psi}\}\\
  \sem{\phi\oplus\psi}&= \{t\in\terms\mid (t\eval \inl{v}, v\in
  \sem{\phi})\text{ or }(t\eval\inr{w}, w \in \sem{\psi})\}\\
  \sem{!\phi}&= \{t\in\terms \mid t\eval !u, \quad u\in\sem{\phi}\}\\
@@ -485,6 +505,7 @@ as follows:
 For a context~$\G = \tj{x_0}{\phi_0},\ldots,\tj{x_n}{\phi_n}$,
 $\semo{\G}$ denotes the set of sequences $u_0,\ldots,u_n$ of closed terms
 such that each $u_i$ is in $\sem{\phi_i}$.
+\fix{define semoi hyperterm}
 
  \begin{proposition}[General Convergence]
   \label{thm:generalconvergence}
@@ -589,6 +610,10 @@ such that each $u_i$ is in $\sem{\phi_i}$.
    \fix{complete}
   \end{proof}
 
+   \begin{corollary}[Convergence]
+    \label{convergence}
+   \end{corollary}
+
    \begin{corollary}[Consistency of \fix{name of logic}]
     $\tr\tj{t}{\forall X.X}$ is not derivable for any term~$t$.
    \end{corollary}
@@ -600,15 +625,17 @@ such that each $u_i$ is in $\sem{\phi_i}$.
     \end{proof}
 
     \section{Sessions and Processes}
+
     \subsection{Session Types as Abbreviations}
 
-    As abbreviation, we introduce session types.
+    As abbreviation, we introduce \textit{session
+    types}\index{type!session}\index{session type|see{type}}.
     Instead of the standard notation $!\phi.\psi$, we use
     $\sendtype{\phi}{\psi}$ in order to avoid the confusion with
     $!\phi$.
     For symmetry, we use $\recvtype{\phi}\psi$ instead of $?\phi.\psi$.
     The definitions and the descriptions are modification from
-    \citet{wadler2012propositions}.
+    \citet{wadler2012propositions}'s translations and descriptions.
     \begin{align*}
      \sendtype\phi\psi&\equiv \phi\limp\psi &\text{output value of type $\phi$ then behave as $\psi$} \\
      \recvtype\phi\psi&\equiv \phi\otimes\psi &\text{input value of type $\phi$ then behave as $\psi$}\\
@@ -667,7 +694,7 @@ such that each $u_i$ is in $\sem{\phi_i}$.
     \begin{align*}
      \sendterm x u t &\equiv t[(xu) /x] &\text{send $u$ through channel
      $x$ and then use $x$ in $t$} \\
-     \recvterm x y t &\equiv \letin x {\tuple{y,x}} t & \text{receive
+     \recvterm x y t &\equiv \letin x {y\otimes x} t & \text{receive
      $y$ through channel $x$ and use $x$ and $y$ in $t$.}
     \end{align*}
 
@@ -675,6 +702,7 @@ such that each $u_i$ is in $\sem{\phi_i}$.
     The session type abbreviation and the processes abbreviation are
     consistent as the next proposition shows.
      \begin{proposition}
+      \label{typing_process}
       These rules are admissible.\\
       \AxiomC{$\hypert\hmid\tj{y}{\psi}, \tj{x}{\chi}\tr\tj{t}{\phi}$}
       \UnaryInfC{$\hypert\hmid\tj{x}{\recvtype\psi\chi}\tr\tj{\recvterm x y
@@ -684,6 +712,10 @@ such that each $u_i$ is in $\sem{\phi_i}$.
       \AxiomC{$\hypert\hmid \G,\tj{x}{\chi}\tr\tj{t}{\phi}\hmid \D\tr\tj{u}\psi$}
       \UnaryInfC{$\hypert\hmid \G,\D,\tj{x}{\sendtype
       \psi\chi}\tr\tj{\sendterm x u t}{\phi}$}
+      \DisplayProof
+      \ruleskip
+      \AxiomC{$\hypert\hmid \G\tr\tj{t}{\phi}$}
+      \UnaryInfC{$\hypert\hmid \G,\tj{x}{\terminate}\tr\tj{t}{\phi}$}
       \DisplayProof
      \end{proposition}
      Before entering the proof, we note that the types of $x$ change in
@@ -707,7 +739,51 @@ such that each $u_i$ is in $\sem{\phi_i}$.
       \psi\limp\chi}\tr\tj{t[(xu)/x]}{\phi}$}
 	 \DisplayProof\enspace.
 	\end{center}
+       The third rule is more evidently one of the orignal rules because
+       $\terminate$ is an abbreviation for $\one$.
       \end{proof}
+
+    \begin{example}[Typed processes]
+     \label{ex:typed-processes}
+     Using \thref{typing_process}, we can type processes.
+     Here is one process, which sends a channel $y$ through $x$ and then
+     wait for input in a channel~$y'$.
+      \begin{center}
+       \AxiomC{}
+       \UnaryInfC{$\tj{z}{\two} \tr\tj z \two$}
+       \UnaryInfC{$\tj{z}{\two},\tj{y}{\terminate}\tr\tj z \two$}
+       \UnaryInfC{$\tj{y}{\recvtype\two\terminate}\tr\tj{\recvterm y z z}{\two}$}
+       \UnaryInfC{$\tj{y}{\recvtype\two\terminate},\tj{x}{\terminate}\tr
+       \tj{\recvterm y z z}{\two}$}
+       \AxiomC{}
+       \UnaryInfC{$\tj{y'}{\sendtype{\two}{\terminate}}\tr\tj{y'}{\sendtype\two\terminate}$}
+       \BinaryInfC{$\tj{y}{\recvtype\two\terminate},\tj{x}{\sendtype{\sendtype
+       \two \terminate}\terminate}, \tj{y'}{\sendtype \two
+       \terminate}\tr\tj
+       {\sendterm x y{\recvterm {y'}zz}}\two$}
+       \DisplayProof
+      \end{center}
+     Here is another process that takes an input~$w'$ from channel~$x'$, where
+     the input $w'$ itself is expected to be a channel.
+     After receiving $w'$, the process puts $\inl{\ast}$ in $w'$.
+      \begin{center}
+       \AxiomC{}
+       \UnaryInfC{$\tr\tj\ast\one$}
+       \UnaryInfC{$\tj{w'}\terminate$}
+       \AxiomC{}
+       \UnaryInfC{$\tr\tj\ast\one$}
+       \UnaryInfC{$\tr\tj{\inl{\ast}}{\two}$}
+       \BinaryInfC{$\tj{w'}{\sendtype\two\terminate}\tr\tj{\sendterm{w'}{\inl\ast}\ast}{\one}$}
+       \UnaryInfC{$\tj{w'}{\sendtype\two\terminate},\tj{x'}\terminate\tr\tj{\sendterm{w'}{\inl\ast}\ast}{\one}$}
+       \UnaryInfC{$\tj{x'}{\recvtype{\sendtype\two\terminate}\terminate}\tr\tj{
+       \recvterm{x'}{w'}{\sendterm{w'}{\inl\ast}{\ast}}}\one$}
+       \DisplayProof
+      \end{center}
+     We intend these two processes to communicate when we connect the channels $x$
+     and $x'$.
+     For that, we have to implement complicated channels as in the
+     following subsection.
+    \end{example}
 
 
     \subsection{Implementing Complex Channels}
@@ -780,6 +856,8 @@ such that each $u_i$ is in $\sem{\phi_i}$.
       \end{proof}
       We call the pair $t,u$ the session realizers of $\phi^\ell$ and
       denote them by $\leftside{\phi^\ell}, \rightside{\phi^\ell}$.
+      Moreover, we use $\bothside{\phi^\ell}$ to denote the pair
+      $\leftside{\phi^\ell}\otimes\rightside{\phi^\ell}$.
       If have two terms that uses free variables of type $\phi^\ell$ and
       $\overline{\phi^\ell}$,
       we can replace those free variables by session realizers.
@@ -794,29 +872,25 @@ such that each $u_i$ is in $\sem{\phi_i}$.
 	\]
 	is also derivable.
        \end{corollary}
-	\begin{example}
-	 Using the session realizers, we can implement the following
-	 pair of terms performing higher order communication.
-	 \[
-	 \tr
-	 \tj{
-	 \sendterm x {\leftside{\sendtype{\one \oplus \one}\terminate}}
-	 {\recvterm {\rightside{\sendtype{\one\oplus\one}\terminate}} z
-	 z}}
-	 {\one\oplus\one}
-	 \hmid
-	 \tj{
-	 \recvterm x w {\sendterm w {\inl \ast} \ast}}
-	 {\one}
-	 \]
-	 The left term sends a channel and the right term receives the
-	 channel.  Then the right term uses the channel to send one bit
-	 information to the left term.
-
-	 Without abbreviations, the above derivation is actually
-	 \fix{fill}.
-	 We can derive their canonical forms as follows.
-	 \fix{fill}.
+	\begin{example}[Connecting processes using the session realizers]
+	 Using the session realizers, we can connect the processes typed
+	 in \thref{ex:typed-processes}.  Indeed,
+	 \begin{align*}
+	  \tr &
+	  \mathsf{let}\,{\bothside{\recvtype{\sendtype{\two}\terminate}\terminate}}\,\mathsf
+	  { be }\,{x'\otimes
+	 x}\,\mathsf{ in }\,\\ &{
+	 \left(\letin{\bothside{\sendtype\two\terminate}}{y'\otimes y}{
+	 \sendterm x{y'}{\recvterm y z z}
+	 }
+	 \otimes
+	 \recvterm{x'}{w'}{\sendterm{w'}{\inl\ast}\ast}\right)
+	 }
+	 \colon{(\two)\otimes\one}
+	 \end{align*}
+	 is derivable.
+	 Now we have to check the evaluation of this term.
+	 For that we prepare a theorem.
 	\end{example}
 
 
@@ -826,100 +900,150 @@ such that each $u_i$ is in $\sem{\phi_i}$.
       is mimicking communication in process calculi.
       When we substitute $x$ and $y$ with session type realizers,
       these terms actually make communication.
-       \begin{theorem}
-	Let $t_0$ be a term containing $x$ and $t_1$ a term containing
-	$y$ and $z$ as free variables.
-	If this evaluation hypersequent
-	\[
-	\letin {\leftside{\phi^\ell}\otimes \rightside{\phi^\ell}}
-	{x\otimes y}{(t_0\otimes t_1[u'/z])}\eval v\otimes w\hmid u\eval u'
-	\]
-	is derivable, so is
-	\[
-	 \letin{\leftside{\sendtype{\psi}{\phi^\ell}}\otimes
-	\rightside{\sendtype{\psi}{\phi^\ell}}}{x\otimes y}{
-	\left((\sendterm x u {t_0})\otimes (\recvterm y z {t_1})\right)}
-	\eval v\otimes w
-	\enspace .
-	\]
-       \end{theorem}
-	\begin{proof}
-	 The assumption is only achievable through a derivation ending
-	 in:
-	  \begin{center}
-	   \AxiomC{$\vdots$}
-	   \UnaryInfC{$\leftside{\phi^\ell}\eval L\hmid
-	   \rightside{\phi^\ell}\eval R\hmid t_0[L/x]\eval v\hmid
-	   t_1[u'/z][R/y]\eval w\hmid u\eval u'$}
-	   \doubleLine
-	   \UnaryInfC{$\leftside{\phi^\ell}\otimes\rightside{\phi^\ell}\eval
-	   L\otimes R\hmid (t_0\otimes t_1[u'/z])[L/x][R/y]\eval
-	   v\otimes w\hmid u\eval u'$}
-	   \UnaryInfC{
-	   $\letin{\leftside{\phi^\ell\otimes
-	   \rightside{\phi^\ell}}}{x\otimes y}{t_0\otimes
-	   t_1[u'/z]}\eval v\otimes w\hmid u\eval u'$
-	   }
-	   \DisplayProof\enspace .
-	  \end{center}
-	 We can restart from the topmost shown step.
-	  \begin{center}
-	   \AxiomC{}
-	   \UnaryInfC{
-	   \footnotesize
-	   $\lambda x.cx\eval \lambda x.cx$}
-	   \AxiomC{\footnotesize
-	   $\leftside{\phi^\ell}\eval L\hmid
-	   \rightside{\phi^\ell}\eval R\hmid t_0[L/x]\eval v\hmid
-	   t_1[u'/z][R/y]\eval w\hmid u\eval u'$}
-	   \UnaryInfC{\footnotesize
-	   $cu\eval L\hmid\co c(\leftside{\phi^\ell})\eval u'\hmid
-	   \rightside{\phi^\ell}\eval R\hmid t_0[L/x]\eval v\hmid
-	   t_1[u'/z][R/y]\eval w$}
-	   \BinaryInfC{$(\lambda x.cx)u\eval L\hmid\co
-	   c(\leftside{\phi^\ell})\eval u'\hmid
-	   \rightside{\phi^\ell}\eval R\hmid t_0[L/x]\eval v\hmid
-	   t_1[u'/z][R/y]\eval w$}
-	   \UnaryInfC{$
-	   t_0[(\lambda x.cx)u/x]\eval v
-	   \hmid\co
-	   c(\leftside{\phi^\ell})\eval u'\hmid
-	   \rightside{\phi^\ell}\eval R\hmid
-	   t_1[u'/z][R/y]\eval w$
-	   }
-	   \UnaryInfC{$
-	   t_0[(\lambda x.cx)u/x]\eval v
-	   \hmid
-	   \co
-	   c(\leftside{\phi^\ell}) \otimes \rightside{\phi^\ell}
-	   \eval u' \otimes R \hmid
-	   t_1[u'/z][R/y]\eval w$
-	   }
-	   \UnaryInfC{$
-	   t_0[(\lambda x.cx)u/x]\eval v
-	   \hmid \letin{\co
-	   c(\leftside{\phi^\ell})\otimes
-	   \rightside{\phi^\ell}}{z\otimes y}{t_1}\eval w$
-	   }
-	   \UnaryInfC{$
-	   t_0[(\lambda x.cx)u/x] \otimes \left(\letin{\co
-	   c(\leftside{\phi^\ell})\otimes
-	   \rightside{\phi^\ell}}{z\otimes y}{t_1}\right)
-	   \eval
-	   v \otimes w
-	   $}
-	   \UnaryInfC{$
-	   \letin{(\lambda x.cx)\otimes \co
-	   c(\leftside{\phi^\ell})\otimes
-	   \rightside{\phi^\ell}}{x\otimes y}{
-	   t_0[xu/x] \otimes \left(\letin{y}{z\otimes y}{t_1}\right)}
-	   \eval
-	   v \otimes w
-	   $}
-	   \DisplayProof
-	  \end{center}
-	 The conclusion is identical to our goal up to abbreviations.
-	\end{proof}
+
+  \begin{theorem}
+   \label{processtype}
+   Let $t_0$ be a term containing free variable $x$ and
+   $t_1$ be a term containing free variables
+   $y$ and $z$.
+   The rule
+   \begin{center}
+    \AxiomC{$\hypere\hmid \leftside{\phi^\ell}\eval v'\hmid
+    \rightside{\phi^\ell}\eval w'\hmid t_0[v'/x]\eval v\hmid u\eval
+    u'\hmid
+    t_1[u'/z][w'/y]\eval w$}
+    \UnaryInfC{$
+    \hypere\hmid
+    \leftside{\sendtype\psi{\phi^\ell}}\eval \lambda x.cx
+    \hmid
+    \rightside{\sendtype\psi{\phi^\ell}}\eval u'\otimes w'
+    \hmid
+    (\sendterm x u {t_0})[\lambda x.cx / x]\eval v
+    \hmid
+    (\recvterm y z {t_1})[u'\otimes w'/y] \eval w
+    $}
+    \DisplayProof
+   \end{center}
+   is admissible.  \fix{define admissible somewhere}
+  \end{theorem}
+  \begin{proof} By the derivation in Figure~\ref{fig:processtype}
+    \begin{sidewaysfigure}
+     \centering
+    \AxiomC{}
+    \UnaryInfC{$\lambda x.cx\eval \lambda x.cx$}
+    \AxiomC{}
+    \UnaryInfC{$\lambda x.cx\eval \lambda x.cx$}
+    \AxiomC{}
+    \UnaryInfC{$\hypere\hmid \leftside{\phi^\ell}\eval v'\hmid
+    \rightside{\phi^\ell}\eval w'\hmid t_0[v'/x]\eval v\hmid u\eval
+    u'\hmid
+    t_1[u'/z][w'/y]\eval w$}
+     \doubleLine
+    \UnaryInfC{$\hypere\hmid \leftside{\phi^\ell}\eval v'
+    \hmid
+    \rightside{\phi^\ell}\eval w'\hmid t_0[v'/x]\eval v\hmid u\eval
+    u'\hmid \letin{u'\otimes w'}{z\otimes y}{t_1}\eval w$}
+    \BinaryInfC{
+    $\hypere\hmid \leftside{\phi^\ell}\eval v'
+    \hmid
+    \rightside{\phi^\ell}\eval w'\hmid t_0[v'/x]\eval v\hmid \lambda
+    x.cx\eval \lambda x.cx\hmid u\eval
+    u'\hmid \letin{u'\otimes w'}{z\otimes y}{t_1}\eval w$
+    }
+     \UnaryInfC{
+     $
+     \hypere\hmid \co c(\leftside{\phi^\ell})\eval u'
+    \hmid
+    \rightside{\phi^\ell}\eval w'\hmid t_0[v'/x]\eval v\hmid \lambda
+    x.cx\eval \lambda x.cx\hmid cu\eval
+    v'\hmid \letin{u'\otimes w'}{z\otimes y}{t_1}\eval w
+     $
+     }
+     \UnaryInfC{
+     $
+     \hypere\hmid \co c(\leftside{\phi^\ell})\eval u'
+    \hmid
+    \rightside{\phi^\ell}\eval w'\hmid t_0[v'/x]\eval v\hmid (\lambda
+    x.cx)u\eval v'\hmid \letin{u'\otimes w'}{z\otimes y}{t_1}\eval w
+     $
+     }
+     \UnaryInfC{
+     $
+     \hypere\hmid \co c(\leftside{\phi^\ell})\eval u'
+    \hmid
+    \rightside{\phi^\ell}\eval w'\hmid t_0[(\lambda
+    x.cx)u /x]\eval v\hmid \letin{u'\otimes w'}{z\otimes y}{t_1}\eval w
+     $
+     }
+     \UnaryInfC{
+     $
+     \hypere\hmid
+     \co c(\leftside{\phi^\ell})\otimes \rightside{\phi^\ell} \eval u' \otimes  w'
+     \hmid t_0[(\lambda
+    x.cx)u /x]\eval v\hmid \letin{u'\otimes w'}{z\otimes y}{t_1}\eval w
+     $
+     }
+     \BinaryInfC{$
+     \hypere\hmid \lambda x.cx \eval \lambda x.cx \hmid
+     \co c(\leftside{\phi^\ell})\otimes \rightside{\phi^\ell} \eval u' \otimes  w'
+     \hmid t_0[(\lambda
+    x.cx)u /x]\eval v\hmid \letin{u'\otimes w'}{z\otimes y}{t_1}\eval w
+     $}
+    \DisplayProof
+     \caption{Proof of \thref{processtype}.    The conclusion is identical to our goal up to abbreviations.}
+     \label{fig:processtype}
+    \end{sidewaysfigure}
+  \end{proof}
+
+	 \begin{example}[Evaluation of communicating processes]
+	  \fix{add paragraph}
+	   \begin{center}
+	    \AxiomC{}
+	    \UnaryInfC{$\ast\eval\ast$}
+	    \UnaryInfC{$\inl\ast\eval\inl\ast$}
+	    \AxiomC{}
+	    \UnaryInfC{$\ast\eval\ast$}
+	    \BinaryInfC{$\inl\ast\otimes \ast\eval\inl\ast\otimes\ast$}
+	    \UnaryInfC{
+	    $
+	    \letin{\bothside{\terminate}}{y'\otimes y}
+	    {\inl\ast\otimes \ast}
+	    \eval\inl\ast\otimes\ast
+	    $
+	    }
+	    \UnaryInfC{
+	    $
+	    \letin{\bothside{\sendtype\two\terminate}}{y'\otimes y}
+	    {\recvterm y z z\otimes \sendterm{y'}{\inl\ast}\ast}
+	    \eval\inl\ast\otimes\ast
+	    $
+	    }
+	    \UnaryInfC{
+	    $
+	    \letin{\bothside{\terminate}}{x'\otimes
+	    x}{\letin{\bothside{\sendtype\two\terminate}}{y'\otimes
+	    y}{}}$}
+	    \noLine
+	    \UnaryInfC{$
+	    {\recvterm y z z\otimes \sendterm{y'}{\inl\ast}\ast}
+	    \eval\inl\ast\otimes\ast
+	    $
+	    }
+	    \UnaryInfC{
+	    $
+	    \letin{\bothside{\recvtype{\sendtype{\two}{\terminate}}\terminate}}{x'\otimes
+	    x}{\letin{\bothside{\sendtype\two\terminate}}{y'\otimes
+	    y}{}}$}
+	    \noLine
+	    \UnaryInfC{$
+	    \left(\sendterm x {y'}{\recvterm y z z}\right)\otimes
+	    \left(\recvterm{x'}{w'}{\sendterm{y'}{\inl\ast}\ast}\right)
+	    \eval\inl\ast\otimes\ast
+	    $
+	    }
+	    \DisplayProof
+	   \end{center}
+	 \end{example}
 
   \subsection{Copycatting}
   \begin{theorem}
@@ -964,9 +1088,104 @@ such that each $u_i$ is in $\sem{\phi_i}$.
 	 Symmetric to above.
    \end{description}
   \end{proof}
+ \begin{example}
+  \fix{Give evaluation}
+  Figure~\ref{fig:eval}
+ \end{example}
 
-
-    \fix{translate the reductions}
+  \begin{sidewaysfigure}
+   \centering
+   \AxiomC{}
+   \UnaryInfC{$\leftside\terminate\eval \ast\hmid
+   \rightside\terminate\eval\ast$}
+   \AxiomC{}
+   \UnaryInfC{$\ast\eval\ast$}
+   \UnaryInfC{$\inl\ast\eval\inl\ast$}
+   \AxiomC{}
+   \UnaryInfC{$\ast\eval\ast$}
+   \BinaryInfC{$\inl\ast\eval\inl\ast\hmid\ast\eval\ast$}
+   \BinaryInfC{$
+   \leftside\terminate\eval \ast\hmid
+   \rightside\terminate\eval\ast
+   \hmid
+   \inl\ast\eval\inl\ast\hmid\ast\eval\ast
+   $}
+   \UnaryInfC{$
+   \leftside{\sendtype\two\terminate}\eval \lambda x. cx\hmid
+   \rightside{\sendtype\two\terminate}\eval \inl\ast\otimes \ast \hmid
+   (\sendterm{y'}{\inl\ast}\ast)[\lambda x.cx/y']\eval\ast\hmid
+   (\recvterm y z z)[\inl\ast\otimes\ast / y]\eval\inl\ast
+   $}
+   \AxiomC{}
+   \UnaryInfC{$\leftside\terminate\eval\ast\hmid
+   \rightside\terminate\eval \ast$}
+   \BinaryInfC{$
+   \leftside{\sendtype\two\terminate}\eval \lambda x. cx\hmid
+   \rightside{\sendtype\two\terminate}\eval \inl\ast\otimes \ast \hmid
+   (\sendterm{y'}{\inl\ast}\ast)[\lambda x.cx/y']\eval\ast\hmid
+   (\recvterm y z z)[\inl\ast\otimes\ast / y]\eval\inl\ast
+   \hmid
+   \leftside\terminate\eval\ast\hmid
+   \rightside\terminate\eval \ast
+   $}
+   \UnaryInfC{\small $
+   \leftside{\sendtype\two\terminate}\eval \lambda x. cx\hmid
+   \rightside{\sendtype\two\terminate}\eval \inl\ast\otimes \ast \hmid
+   \leftside{\terminate}\eval\ast\hmid
+   \rightside{\terminate}\eval\ast\hmid
+   (\sendterm{y'}{\inl\ast}\ast)[\lambda x.cx/y']\eval\ast\hmid
+   (\recvterm y z z)[\inl\ast\otimes\ast / y]\eval\inl\ast
+   \hmid
+   \leftside\terminate\eval\ast\hmid
+   \rightside\terminate\eval \ast
+   $}
+   \UnaryInfC{$
+   \rightside{\sendtype\two\terminate}\eval \inl\ast\otimes \ast \hmid
+   \leftside{\recvtype{\sendtype\two\terminate}\terminate}\eval \lambda
+   x.dx\hmid
+   \rightside{\recvtype{\sendtype\two\terminate}\terminate}\eval\lambda
+   x.cx\otimes \ast\hmid
+   $}
+   \noLine
+   \UnaryInfC{$
+   (\recvterm{x'}z{\sendterm{z}{\inl\ast}\ast})[\lambda x.cx\otimes \ast/y']\eval\ast\hmid
+   (\sendterm{x}{\leftside{\sendtype\two\terminate}}{\recvterm y z
+   z})[\lambda x.dx / x][\inl\ast\otimes\ast / y]\eval\inl\ast
+   $}
+   \doubleLine
+   \UnaryInfC{$
+   (\recvterm{x'}{z}{\sendterm z{\inl\ast}{\ast}})
+   [\rightside{\recvtype{\sendtype{\two}{\terminate}}{\terminate}}/x']
+   \eval \ast
+   \hmid
+   (\sendterm{x}{\leftside{\sendtype\two\terminate}}{\recvterm y z z})
+   [\leftside{\recvtype{\sendtype\two\terminate}\terminate}/x]
+   [\rightside{\sendtype\two\terminate}/y]
+   \eval \inl\ast
+   $}
+   \UnaryInfC{$
+   (\recvterm{x'}{z}{\sendterm z{\inl\ast}{\ast}})
+   [\rightside{\recvtype{\sendtype{\two}{\terminate}}{\terminate}}/x']
+   \otimes
+   (\sendterm{x}{\leftside{\sendtype\two\terminate}}{\recvterm y z z})
+   [\leftside{\recvtype{\sendtype\two\terminate}\terminate}/x]
+   [\rightside{\sendtype\two\terminate}/y]
+   \eval \ast\otimes \inl\ast
+   $}
+   \UnaryInfC{$
+   \letin{\bothside{\recvtype{\sendtype{\two}{\terminate}}{\terminate}}}{x'\otimes
+   x}{
+   \letin{\bothside{\sendtype\two\terminate}}{y'\otimes y}{
+   (\recvterm{x'}{z}{\sendterm z{\inl\ast}{\ast}})
+   \otimes
+   (\sendterm{x}{y'}{\recvterm y z z})
+   }
+   }
+   \eval \ast\otimes \inl\ast
+   $}
+   \DisplayProof
+   \caption{An example of evaluation relation.}
+  \end{sidewaysfigure}
 
 % \section{Toward Determinacy}
 
@@ -988,17 +1207,56 @@ such that each $u_i$ is in $\sem{\phi_i}$.
 %    \fix{complete}
 %   \end{proof}
 
-\fix{sending and receiving as macros,  what you can do with $x:!\phi.S?$ }
-
 \section{Proof Nets}
 
 \fix{talk about proof nets}
 
 \section{Related Work}
 
-\subsection{Wadler}
-
 \subsection{Pfenning}
+
+\citet{pfenning2010} provide a type system for a fragment of $\pi$-calculus.
+The type system of \citet{pfenning2010} imposes too strong a descipline
+than necessary to provide deadlock freedom.
+While the escrowing process $P$ is not typeable in their type
+system, where
+\[
+ P = \sendterm x y{\recvterm x a {\recvterm y b {\sendterm x b
+ {\sendterm y a 0}}}}\enspace.
+\]
+The process first emits a channel~$y$ through channel~$x$ and then
+exchanges inputs from $x$ and $y$ into outputs to $y$ and $x$.
+Following the informal description of types in \citep{pfenning2010},
+the process~$P$ should be typeable as
+\[
+ \vdash P::x:(A\limp B)\otimes(B\limp A)\enspace.
+\]
+However, such typing is not possible because $(A\limp B)\otimes (B\limp
+A)$ is not a theorem of \fix{name} (DILL), the logic their type system
+is based on.
+In our type system, the following sequent is derivable
+\begin{align*}
+&
+\tj{x}{\sendtype{\sendtype{B}{\recvtype{A}\terminate}}{\recvtype B
+{\sendtype A \terminate}}}
+\tr\\
+&\tj{
+\letin{\bothside{\sendtype{B}{\recvtype{A}{\terminate}}}}{y'\otimes y}
+{\sendterm x{y'}{\recvterm x a {\recvterm y b {\sendterm x b {\sendterm
+y a {0\{x,y\}}}}}}}
+}{\one}
+\end{align*}
+The resulting sequent indicates that the process is typeable with one
+open channel~$x$ that emits
+a channel to/from which one can send~$B$ and receivie~$A$, receives a
+value of $B$ and
+sends a value of $A$.
+This example shows that our type system is strictly more flexible than
+the type system in \citet{pfenning2010}.
+Moreover, we still ensure deadlock freedom in the sense that all typed
+processes reduce to the canonical form~(\thref{convergence}).
+
+\subsection{Wadler}
 
 \subsection{Beffara}
 

@@ -2,18 +2,26 @@
 
 \subsection{Our Contributions}
 
+We propose hyper-lambda-calculi.
+Instead of lambda-terms in ordinary lambda-calculi,
+we use a finite sequence of lambda-terms called hyper-lambda-terms.
+We give three such examples, the first two model asynchronous waitfree
+communication and
+the other models synchronous send--receive communication.
+We also give an example of hyper-lambda-calculi style programming in Haskell.
+
 \citet{hosoi-ono} declared that they chose to study intermediate
 logics in
 general rather than studying specific intermediate logics.
 Concrete results about specific subjects matter when the results
 contain new phenomena.
 This thesis is intended to contain such a concrete discovery
-about a specific intermediate logic.
+about specific intermediate and substructural logics.
 An intermediate logic is a logic \textit{between} classical and
 intuitionistic logics, where `between' is defined using the
 set-theoretic inclusion of valid logical formulae of each logic.
 
-Our subject is, G\"odel--Dummett logic, is
+Our subject, G\"odel--Dummett logic, is
 a typical intermediate logic logic known from 1950's.
 Our method is the Curry--Howard correspondence, also known from 1940's.
 Our result is characterization of waitfreedom, a concept in the theory

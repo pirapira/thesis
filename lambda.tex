@@ -615,7 +615,7 @@ annotated as in Figure~\ref{fig:typed}.
  \label{termassign}
 \end{figure}
 
- \begin{example}
+ \begin{example}[A typing of a global term.]
 The global term
 $
 \{0\mapsto
@@ -1527,7 +1527,7 @@ a \textit{typed protocol}\index{typed protocol} has:
        assumptions of the form $\tr\tj{\p y}{[i]t(\p y)}$ and
        $\tr\tj{c}{[i]W(c)}$.
 \end{itemize}
- \begin{example}
+ \begin{example}[Exclusive-or protocol.]
   \label{ex:xor-protocol}
   We give a concrete typed protocol for the exclusive-or task
   (Example~\ref{ex:xor}).
@@ -1644,7 +1644,7 @@ When every process is nonfaulty, the schedule is \textit{fair}\index{fair}%
 \footnote{The difference of strong fairness and weak fairness does not
 arise here.  \fix{cite something}
 }.
- \begin{example}
+ \begin{example}[An example of schedules]
   \label{ex:schedules}
   When $\processes$ is a singleton $\{0\}$, there is only one schedule
   $(\{0\},\{0\},\{0\},\ldots)$ where $\ldots$ contains only $\{0\}$'s.
@@ -1677,7 +1677,7 @@ Since all programs are finite, the system snapshot will stay constant
 after first finite steps.  We call that constant system snapshot the
 final system snapshot of an execution.
 
- \begin{example}
+ \begin{example}[An example of a run]
   Let $\processes$ be $\{0,1\}$ and $\Pi$ be the typed protocol given in
   Example~\ref{ex:xor-protocol}.
   let us take $x_0 = \true$ and $x_1 = \false$.
@@ -1820,7 +1820,7 @@ schedule~$\sigma$,
  In that case, the typed input-output problem is
  \textit{waitfreely solvable}\index{waitfreely solvable}.
 
- \begin{example}
+ \begin{example}[An example of a typed protocol solving the exclusive-or task]
   \label{ex:solv}
   In the execution in Table~\ref{table:exec}, we can replace $\true$
   with $\false$ altogether, $\false$ with $\true$ altogether, or perform
@@ -1851,7 +1851,8 @@ schedule~$\sigma$,
   produce whatever output to meet the task.  Since the other process is
   non-faulty, it surely produces an output.
  \end{example}
-  \begin{example}
+  \begin{example}[An example of waitfreely unsolvable typed input-output
+   problem]
    On the other hand, there is no typed protocol that solves
    the exchange problem (Example~\ref{ex:exchange}).
    To see the reason, take any typed protocol.
@@ -1890,7 +1891,7 @@ We show that the ability of the waitfree protocols and \lgd\, are the same.
  % looks like we assume subformula property
 \end{definition}
 
- \begin{example}
+ \begin{example}[A global term solving the exclusive-or problem]
   For the exclusive-or problem (defined in Example~\ref{ex:xor}), there is
   a global term $\{0\mapsto \cotuple{xor((\comodL)x_0,x_0),x_0},
   1\mapsto\cotuple{xor((\comodR)x_1,x_1),x_1}\}$ that solves the
@@ -2097,7 +2098,7 @@ We refer to the last element of $\semoi{\hypert\hmid M}$ as
 $\semoi{\hypert\hmid \overline{M}}$, the second to last element of
 $\semoi{\hypert\hmid M\hmid N}$ as
 $\semoi{\hypert\hmid \overline M\hmid N}$ and so on.
- \begin{example}
+ \begin{example}[Specifying elements of a sequence]
 Suppose $\semoi{\m{M}\hmid \m{N}} = \{0\mapsto \p x, 1\mapsto \p
   y\}\hmid \{0\mapsto \p z\}$.
   Then,
@@ -2315,7 +2316,7 @@ $\semo{M}; ({\p o}_i\leftarrow \pi_i(\semoi{\overline M}(i)))_{i\in\processes}$,
 where $\pi_i$ is obtained by composing $i$~times $\pi_{\mathrm r}$ to
 $\pi_{\mathrm l}$.
 We set $g,d,t_i$ accordingly so that the program is typed.
- \begin{example}
+ \begin{example}[Translation of a typed term into a typed protocol]
   The typing derivation in Figure~\ref{fig:solving} can be translated
   as follows.
   \begin{align*}
