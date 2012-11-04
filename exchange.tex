@@ -28,6 +28,15 @@ In a more complicated case $\co c(\co d(c (d t)))$,
 we can reason the output of $\co c$ as the input of $c$ as the output of
 $d$ as the input of $\co d$ as the output of $c$ as the input of $\co c$
 as the output of $\co d$ as the input of $d$, which is $t$.
+
+We have more questions.
+\begin{itemize}
+ \item How does it generalize over more channels?
+ \item Due to addition of the axiom, is it the case that
+       every type is inhabited?  In other words,
+      is the resulting type system consistent?
+ \item Can we implement process calculi using the aforementioned primitives?
+\end{itemize}
 \fix{how does it generalize?}
 
 \section{Definitions}
@@ -57,6 +66,7 @@ Using patterns, we define a term $t$ with free variables~$S$.
 We assume countably infinitely many \textit{channels}\index{channel}
 with involution
 satisfying $\co c\neq c$ and $\co{\co c} = c$.
+\fix{not good, follow Abramsky}
 \begin{itemize}
  \item a variable $x$ is a term with free variables $\{x\}$,
  \item if $t$ is a term with free variables~$S$, $u$ is a term with
@@ -82,6 +92,13 @@ satisfying $\co c\neq c$ and $\co{\co c} = c$.
 Note that a term with free variables $S$ is not a term with free
 variables $S'$ when $S\neq S'$.  Only the last clause is original,
 introducing channels, which are our communication primitives.
+We introduce an abbreviation
+\[
+ \ign {x,\vec y} t \equiv \letin x \ast {\ign {\vec y} t}
+\]
+inductively for a sequence of variables $\vec y$
+because this form will be used frequently.
+$\mathsf{ign}$ stands for ``ignore''.
 
 \subsection{Typing Derivations}
 
@@ -151,17 +168,17 @@ The typing rules are in Figure~\ref{fig:exchange:rules}.
   % 1L
   \AxiomC{$\hypert\hmid\G\tr\tj{t}{\phi}$}
   \LL{$\one$L}
-  \UnaryInfC{$\hypert\hmid\G,\tj{z}{\one}\tr\tj{t}{\phi}$}
+  \UnaryInfC{$\hypert\hmid\G,\tj{z}{\one}\tr\tj{\ign z t}{\phi}$}
   \DisplayProof
   %
-  \ruleskip
+  \hfill
   % otimes R
   \AxiomC{$\hypert\hmid\G\tr\tj{t}{\phi}\hmid\D\tr\tj{u}{\psi}$}
   \LL{$\otimes$R}
   \UnaryInfC{$\hypert\hmid\G,\D\tr\tj{t\otimes u}{\phi\otimes \psi}$}
   \DisplayProof
   %
-  \hfill
+  \ruleskip
   % sync
   \AxiomC{$\hypert\hmid\G\tr\tj{t}{\phi}\hmid \D\tr\tj{u}{\psi}$}
   \LL{sync}
@@ -169,7 +186,7 @@ The typing rules are in Figure~\ref{fig:exchange:rules}.
   \G\tr\tj{ct}{\psi}\hmid \D\tr\tj{\co cu}{\phi}$}
   \DisplayProof
   %
-  \ruleskip
+  \hfill
   % otimes L
   \AxiomC{$\hypert\hmid\G,\tj{x}{\phi},\tj{y}{\psi}\tr\tj{t}{\theta}$}
   \LL{$\otimes$L}
@@ -690,20 +707,25 @@ such that each $u_i$ is in $\sem{\phi_i}$.
 
     \subsection{Processes as Abbreviations}
 
+    \subsubsection{Process Abrreviations}
     We define the sending and receiving as abbreviations:
     \begin{align*}
      \sendterm x u t &\equiv t[(xu) /x] &\text{send $u$ through channel
      $x$ and then use $x$ in $t$} \\
      \recvterm x y t &\equiv \letin x {y\otimes x} t & \text{receive
-     $y$ through channel $x$ and use $x$ and $y$ in $t$.}
+     $y$ through channel $x$ and use $x$ and $y$ in $t$.} \\
+     0 &\equiv \ast
     \end{align*}
+    For technical reasons, we had to annotate the process~0 with the set
+    of free variables.
 
-    \subsubsection{Typing Process Abbreviations}
+    \subsubsection{Typing Rules for Process Abbreviations}
     The session type abbreviation and the processes abbreviation are
     consistent as the next proposition shows.
      \begin{proposition}
       \label{typing_process}
-      These rules are admissible.\\
+      These rules are admissible.
+       \begin{center}
       \AxiomC{$\hypert\hmid\tj{y}{\psi}, \tj{x}{\chi}\tr\tj{t}{\phi}$}
       \UnaryInfC{$\hypert\hmid\tj{x}{\recvtype\psi\chi}\tr\tj{\recvterm x y
       t}{\phi}$}
@@ -715,8 +737,14 @@ such that each $u_i$ is in $\sem{\phi_i}$.
       \DisplayProof
       \ruleskip
       \AxiomC{$\hypert\hmid \G\tr\tj{t}{\phi}$}
-      \UnaryInfC{$\hypert\hmid \G,\tj{x}{\terminate}\tr\tj{t}{\phi}$}
+      \UnaryInfC{$\hypert\hmid \G,\tj{x}{\terminate}\tr\tj{\ign x 
+      t}{\phi}$}
       \DisplayProof
+	\hfill
+	\AxiomC{}
+	\UnaryInfC{$ \tr\tj 0 \ast $}
+	\DisplayProof
+       \end{center}
      \end{proposition}
      Before entering the proof, we note that the types of $x$ change in
      the rules.  This reflects the intuition of session types: the
@@ -739,28 +767,30 @@ such that each $u_i$ is in $\sem{\phi_i}$.
       \psi\limp\chi}\tr\tj{t[(xu)/x]}{\phi}$}
 	 \DisplayProof\enspace.
 	\end{center}
-       The third rule is more evidently one of the orignal rules because
-       $\terminate$ is an abbreviation for $\one$.
+       The third and the fourth rule are more evidently one of the orignal rules.
       \end{proof}
 
-    \begin{example}[Typed processes]
+    \begin{example}[Typed communicating terms]
      \label{ex:typed-processes}
      Using \thref{typing_process}, we can type processes.
      Here is one process, which sends a channel $y$ through $x$ and then
      wait for input in a channel~$y'$.
       \begin{center}
+       \small
        \AxiomC{}
        \UnaryInfC{$\tj{z}{\two} \tr\tj z \two$}
-       \UnaryInfC{$\tj{z}{\two},\tj{y}{\terminate}\tr\tj z \two$}
-       \UnaryInfC{$\tj{y}{\recvtype\two\terminate}\tr\tj{\recvterm y z z}{\two}$}
-       \UnaryInfC{$\tj{y}{\recvtype\two\terminate},\tj{x}{\terminate}\tr
-       \tj{\recvterm y z z}{\two}$}
+       \UnaryInfC{$\tj{z}{\two},\tj{y}{\terminate}\tr\tj{\ign y z}\two$}
+       \UnaryInfC{$\tj{z}{\two},\tj{x}{\terminate},
+       \tj{y}{\terminate}\tr\tj{\ign {x,y} z}\two$}
+       \UnaryInfC{$\tj{x}{\terminate},\tj{y}{\recvtype\two\terminate}\tr
+       \tj{\recvterm y z
+       {\ign {x,y}  z}}{\two}$}
        \AxiomC{}
        \UnaryInfC{$\tj{y'}{\sendtype{\two}{\terminate}}\tr\tj{y'}{\sendtype\two\terminate}$}
        \BinaryInfC{$\tj{y}{\recvtype\two\terminate},\tj{x}{\sendtype{\sendtype
        \two \terminate}\terminate}, \tj{y'}{\sendtype \two
        \terminate}\tr\tj
-       {\sendterm x y{\recvterm {y'}zz}}\two$}
+       {\sendterm x y{\recvterm {y'}z{\ign {x,y} z}}}\two$}
        \DisplayProof
       \end{center}
      Here is another process that takes an input~$w'$ from channel~$x'$, where
@@ -769,14 +799,15 @@ such that each $u_i$ is in $\sem{\phi_i}$.
       \begin{center}
        \AxiomC{}
        \UnaryInfC{$\tr\tj\ast\one$}
-       \UnaryInfC{$\tj{w'}\terminate$}
+       \UnaryInfC{$\tj{w'}\terminate\tr\tj{\ign{w'}\ast}\one$}
        \AxiomC{}
        \UnaryInfC{$\tr\tj\ast\one$}
        \UnaryInfC{$\tr\tj{\inl{\ast}}{\two}$}
-       \BinaryInfC{$\tj{w'}{\sendtype\two\terminate}\tr\tj{\sendterm{w'}{\inl\ast}\ast}{\one}$}
-       \UnaryInfC{$\tj{w'}{\sendtype\two\terminate},\tj{x'}\terminate\tr\tj{\sendterm{w'}{\inl\ast}\ast}{\one}$}
+       \BinaryInfC{$\tj{w'}{\sendtype\two\terminate}\tr\tj{\sendterm{w'}{\inl\ast}{\ign
+       {w'}\ast}}{\one}$}
+       \UnaryInfC{$\tj{w'}{\sendtype\two\terminate},\tj{x'}\terminate\tr\tj{\ign{x'}{\sendterm{w'}{\inl\ast}{\ign{w'}\ast}}}{\one}$}
        \UnaryInfC{$\tj{x'}{\recvtype{\sendtype\two\terminate}\terminate}\tr\tj{
-       \recvterm{x'}{w'}{\sendterm{w'}{\inl\ast}{\ast}}}\one$}
+       \recvterm{x'}{w'}{\ign{x'}{\sendterm{w'}{\inl\ast}{\ign{w'}\ast}}}}\one$}
        \DisplayProof
       \end{center}
      We intend these two processes to communicate when we connect the channels $x$
@@ -879,13 +910,17 @@ such that each $u_i$ is in $\sem{\phi_i}$.
 	  \tr &
 	  \mathsf{let}\,{\bothside{\recvtype{\sendtype{\two}\terminate}\terminate}}\,\mathsf
 	  { be }\,{x'\otimes
-	 x}\,\mathsf{ in }\,\\ &{
-	 \left(\letin{\bothside{\sendtype\two\terminate}}{y'\otimes y}{
-	 \sendterm x{y'}{\recvterm y z z}
-	 }
+	 x}\,\mathsf{ in }\,\\ &
+	 \mathsf{let}\,{\bothside{\sendtype\two\terminate}}\,\mathsf{be}\,{y'\otimes
+	  y}\,\mathsf{in}\,\\ & {\left(
+	 \sendterm x{y'}{\recvterm y z {\ign{x,y}z}}
+	 \right)}
 	 \otimes
-	 \recvterm{x'}{w'}{\sendterm{w'}{\inl\ast}\ast}\right)
-	 }
+	  \left(
+	 \recvterm{x'}{w'}{\ign{x'}{\sendterm{w'}{\inl\ast}{\ign
+	  {w'}\ast}}}
+	  \right)
+	  \\&
 	 \colon{(\two)\otimes\one}
 	 \end{align*}
 	 is derivable.
@@ -990,7 +1025,8 @@ such that each $u_i$ is in $\sem{\phi_i}$.
     x.cx)u /x]\eval v\hmid \letin{u'\otimes w'}{z\otimes y}{t_1}\eval w
      $}
     \DisplayProof
-     \caption{Proof of \thref{processtype}.    The conclusion is identical to our goal up to abbreviations.}
+     \caption{Proof of \thref{processtype}.    The conclusion is
+     identical to our goal up to abbreviations. }
      \label{fig:processtype}
     \end{sidewaysfigure}
   \end{proof}
@@ -1061,8 +1097,8 @@ such that each $u_i$ is in $\sem{\phi_i}$.
 	  \begin{center}
 	   \AxiomC{}
 	   \UnaryInfC{$\tr\tj{\ast}\one$}
-	   \UnaryInfC{$\tj{y}{\terminate}\tr\tj{\ast}\one$}
-	   \UnaryInfC{$\tj{x}{\terminate},\tj{y}{\terminate}\tr\tj{\ast}\one$}
+	   \UnaryInfC{$\tj{y}{\terminate}\tr\tj{\ign y \ast}\one$}
+	   \UnaryInfC{$\tj{x}{\terminate},\tj{y}{\terminate}\tr\tj{\ign{x,y}\ast}\one$}
 	   \DisplayProof
 	  \end{center}
 	 suffices.
@@ -1243,7 +1279,7 @@ In our type system, the following sequent is derivable
 &\tj{
 \letin{\bothside{\sendtype{B}{\recvtype{A}{\terminate}}}}{y'\otimes y}
 {\sendterm x{y'}{\recvterm x a {\recvterm y b {\sendterm x b {\sendterm
-y a {0\{x,y\}}}}}}}
+y a {\ign{x,y}0}}}}}}
 }{\one}
 \end{align*}
 The resulting sequent indicates that the process is typeable with one
