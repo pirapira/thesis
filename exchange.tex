@@ -45,7 +45,7 @@ We have more questions.
 For a set $S$, we define $\phi\in\form(S)$ by BNF:
 \[
  \phi::=s\mid \one \mid X \mid \phi\otimes\phi\mid \phi\limp\phi\mid
- \phi\oplus\phi\mid \phi\with\phi\mid !\phi\mid \forall X.\phi
+ \phi\oplus\phi\mid \phi\with\phi\mid \bang\phi\mid \forall X.\phi
 \]
 where $s$ is an element of $S$ and $X$ is a propositional variable.
 The propositional variable in the last clause is binding.
@@ -58,7 +58,7 @@ LF~\citep{abramsky1993computational}, we first defne patterns
 binding sets of variables:
 \begin{itemize}
  \item $\ast$ and $\_$ are patterns binding $\emptyset$,
- \item $\lpair{x,\_}$, $\lpair{\_,x}$ and $!x$ are patterns binding
+ \item $\lpair{x,\_}$, $\lpair{\_,x}$ and $\bang x$ are patterns binding
        $\{x\}$,
  \item $x\otimes y$ and $x@y$ are patterns binding $\{x,y\}$.
 \end{itemize}
@@ -75,7 +75,7 @@ satisfying $\co c\neq c$ and $\co{\co c} = c$.
  \item if $t$ and $u$ are terms with free variables $S$, then
        $\lpair{t,u}$ is a term with free variables~$S$,
  \item if $t$ is a term with free variables~$S$, then
-       $\inl x, \inr t$ and $!t$ are terms with free variables~$S$
+       $\inl x, \inr t$ and $\bang t$ are terms with free variables~$S$
  \item if $t$ is a term with free variables $S\cup \{x\}$ and $x$ is not
        in $S$, then $\lambda x.t$ is a term with free variables~$S$,
  \item if $t$ is a term with free variables~$S$, $p$ is a pattern
@@ -258,31 +258,31 @@ The typing rules are in Figure~\ref{fig:exchange:rules}.
   %
   \ruleskip
   % !R
-  \AxiomC{$!\hypert\hmid!\G\tr\tj{t}{\phi}$}
-  \LL{$!$R}
-  \UnaryInfC{$!\hypert\hmid!\G\tr\tj{!t}{!\phi}$}
+  \AxiomC{$\bang\hypert\hmid\bang\G\tr\tj{t}{\phi}$}
+  \LL{$\bang$R}
+  \UnaryInfC{$\bang\hypert\hmid\bang\G\tr\tj{\bang t}{\bang \phi}$}
   \DisplayProof
-  where $!\hypert$ contains only components typed $!\D\tr !\psi$.
+  where $\bang\hypert$ contains only components typed $\bang\D\tr \bang\psi$.
   %
   \ruleskip
   % dereliction
   \AxiomC{$\hypert\hmid\G,\tj{x}{\phi}\tr\tj{t}{\psi}$}
   \LL{Dereliction}
-  \UnaryInfC{$\hypert\hmid\G,\tj{z}{!\phi}\tr\tj{\letin{z}{!x}{t}}{\psi}$}
+  \UnaryInfC{$\hypert\hmid\G,\tj{z}{\bang\phi}\tr\tj{\letin{z}{\bang x}{t}}{\psi}$}
   \DisplayProof
   %
   \ruleskip
   % contraction
-  \AxiomC{$\hypert\hmid\G,\tj{x}{!\phi},\tj{y}{!\phi}\tr\tj{t}{\psi}$}
+  \AxiomC{$\hypert\hmid\G,\tj{x}{\bang\phi},\tj{y}{\bang\phi}\tr\tj{t}{\psi}$}
   \LL{Contraction}
-  \UnaryInfC{$\hypert\hmid\G,\tj{z}{!\phi}\tr\tj{\letin{z}{x@y}{t}}{\psi}$}
+  \UnaryInfC{$\hypert\hmid\G,\tj{z}{\bang\phi}\tr\tj{\letin{z}{x@y}{t}}{\psi}$}
   \DisplayProof
   %
   \ruleskip
   % weakening
   \AxiomC{$\hypert\hmid\G\tr\tj{t}{\psi}$}
   \LL{Weakening}
-  \UnaryInfC{$\hypert\hmid\G,\tj{z}{!\phi}\tr\tj{\letin{z}{\_}{t}}{\psi}$}
+  \UnaryInfC{$\hypert\hmid\G,\tj{z}{\bang\phi}\tr\tj{\letin{z}{\_}{t}}{\psi}$}
   \DisplayProof
   %
   \ruleskip
@@ -347,7 +347,7 @@ $\tj{x}{\phi}\tr\tj{\co c(cx)}{\phi}$
 The set of canonical forms remains the same as Abramsky's
 system~\citep{abramsky1993computational}:
 \[
- \lpair{t,u}\qquad !t\qquad \ast\qquad v\otimes w\qquad \lambda
+ \lpair{t,u}\qquad \bang t\qquad \ast\qquad v\otimes w\qquad \lambda
  x.t\qquad \inl{v}\qquad\inr{w}
 \]
 where $v$ and $w$ are canonical forms.
@@ -448,18 +448,18 @@ We add the semantics for channels.
   \DisplayProof
   \ruleskip
   \AxiomC{}
-  \UnaryInfC{$!t\eval !t$}
+  \UnaryInfC{$\bang t\eval \bang t$}
   \DisplayProof
   \hfill
-  \AxiomC{$\hypere\hmid t\eval !s\hmid s\eval v\hmid u[v/x]\eval w$}
-  \UnaryInfC{$\hypere \hmid \letin t {!x} u\eval w$}
+  \AxiomC{$\hypere\hmid t\eval \bang s\hmid s\eval v\hmid u[v/x]\eval w$}
+  \UnaryInfC{$\hypere \hmid \letin t {\bang x} u\eval w$}
   \DisplayProof
   \ruleskip
-  \AxiomC{$\hypere\hmid t\eval !s\hmid u\eval v$}
+  \AxiomC{$\hypere\hmid t\eval \bang s\hmid u\eval v$}
   \UnaryInfC{$\hypere \hmid \letin t {\_} u\eval v$}
   \DisplayProof
   \hfill
-  \AxiomC{$\hypere\hmid t\eval !s\hmid u[!s/x,!s/y]\eval v$}
+  \AxiomC{$\hypere\hmid t\eval\bang s\hmid u[\bang s/x,\bang s/y]\eval v$}
   \UnaryInfC{$\letin t {x@y} u\eval v$}
   \DisplayProof
   \ruleskip
@@ -514,7 +514,7 @@ as follows:
  v\in\sem{\phi}, w\in\sem{\psi}\}\\
  \sem{\phi\oplus\psi}&= \{t\in\terms\mid (t\eval \inl{v}, v\in
  \sem{\phi})\text{ or }(t\eval\inr{w}, w \in \sem{\psi})\}\\
- \sem{!\phi}&= \{t\in\terms \mid t\eval !u, \quad u\in\sem{\phi}\}\\
+ \sem{\bang \phi}&= \{t\in\terms \mid t\eval \bang u, \quad u\in\sem{\phi}\}\\
  \sem{\forall X.\phi}&= \bigcap\{\sem{\phi[\mathcal X/X]}\mid \psi\in
  2^\terms\}\enspace.
 \end{align*}
@@ -593,30 +593,30 @@ such that each $u_i$ is in $\sem{\phi_i}$.
     \item[(Contraction)]
 	 The derivation ends as
 	  \begin{center}
-	   \AxiomC{$\hypert\hmid\G,\tj{x}{!\phi},\tj{y}{!\phi}\tr\tj{t}{\psi}$}
-	   \UnaryInfC{$\hypert\hmid \G,\tj{z}{!\phi}\tr\tj{\letin z
+	   \AxiomC{$\hypert\hmid\G,\tj{x}{\bang \phi},\tj{y}{\bang \phi}\tr\tj{t}{\psi}$}
+	   \UnaryInfC{$\hypert\hmid \G,\tj{z}{\bang\phi}\tr\tj{\letin z
 	   {x@y} t}{\psi}$}
 	   \DisplayProof
 	  \end{center}
 	 Take any $O\in\semo{\hypert}$, $\vec{g}\in\semo{\G}$ and
-	 $u\in\semo{!\phi}$.
-	 Since $u$ is in $\semo{!\phi}$, there exists a term $u'$ in
+	 $u\in\semo{\bang\phi}$.
+	 Since $u$ is in $\semo{\bang\phi}$, there exists a term $u'$ in
 	 $\semo{\phi}$
-	 where $u\eval !u'$.
+	 where $u\eval \bang u'$.
 	 Moreover, by induction hypothesis,
 	 \[
-	  \hypert\eval\vec{o}\hmid t[\vec g/\G][!u'/x][!u'/y]\eval t'
+	  \hypert\eval\vec{o}\hmid t[\vec g/\G][\bang u'/x][\bang u'/y]\eval t'
 	 \]
 	 is derivable for some $\vec{o}$ and $t'\in\semo{\psi}$.
 	 By merge,
 	 \[
-	  \hypert\eval\vec{o}\hmid t[\vec g/\G][!u'/x][!u'/y]\eval
-	 t'\hmid u\eval !u'
+	  \hypert\eval\vec{o}\hmid t[\vec g/\G][\bang u'/x][\bang u'/y]\eval
+	 t'\hmid u\eval \bang u'
 	 \]
 	 is derivable and then
 	 \[
 	  \hypert\eval\vec{o}\hmid
-	 (\letin{z}{x@y}{t})[\vec g/\G][!u'/z]\eval t'
+	 (\letin{z}{x@y}{t})[\vec g/\G][\bang u'/z]\eval t'
 	 \]
 	 is also derivable.
     \item[($\forall$R)]
@@ -647,9 +647,9 @@ such that each $u_i$ is in $\sem{\phi_i}$.
 
     As abbreviation, we introduce \textit{session
     types}\index{type!session}\index{session type|see{type}}.
-    Instead of the standard notation $!\phi.\psi$, we use
+    Instead of the standard notation $\bang\phi.\psi$, we use
     $\sendtype{\phi}{\psi}$ in order to avoid the confusion with
-    $!\phi$.
+    $\bang\phi$.
     For symmetry, we use $\recvtype{\phi}\psi$ instead of $?\phi.\psi$.
     The definitions and the descriptions are modification from
     \citet{wadler2012propositions}'s translations and descriptions.
@@ -675,7 +675,7 @@ such that each $u_i$ is in $\sem{\phi_i}$.
      \recvtype\phi\psi
      \mid \oplus\{l_i\colon\phi_i\}_{i\in I}
      \mid \with\{l_i\colon\phi_i\}_{i\in I}
-     \mid !\phi
+     \mid \bang\phi
     \]
     covers all types.
 
