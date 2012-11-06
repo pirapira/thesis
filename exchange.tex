@@ -93,29 +93,40 @@ Note that a term with free variables $S$ is not a term with free
 variables $S'$ when $S\neq S'$.  Only the last clause is original,
 introducing channels, which are our communication primitives.
 We introduce an abbreviation
-\[
- \ign {x,\vec y} t \equiv \letin x \ast {\ign {\vec y} t}
-\]
-inductively for a sequence of variables $\vec y$
-because this form will be used frequently.
-$\mathsf{ign}$ stands for ``ignore''.
+\begin{align*}
+ \ign \epsilon t   & \equiv t\\
+ \ign {x,\vec y} t & \equiv \letin x \ast {\ign {\vec y} t}
+\end{align*}
+inductively for a sequence of variables $\vec y$.
+$\epsilon$ stands for the empty sequence.
+The symbol $\mathsf{ign}$ is intended to be pronounced ``ignore''.
 
 \subsection{Typing Derivations}
 
 On top of Abramsky's~\citep{abramsky1993computational} we add a rule to
 make $(\phi\limp\psi)\otimes(\psi\limp\phi)$ derivable.
-A context~$\G$ is a possibly empty sequence of variables associated with
+A \textit{context}\index{context}~$\G$ is a possibly empty sequence of
+variables associated with
 types where the same variable appears at most once.
 \fix{give an example}
-A hypersequent is inductively defined as
+A \textit{hypersequent}\index{hypersequent} is inductively defined as
 \begin{align*}
  \hypert ::=\, &\G\tr\tj{t}{\phi}
  \mid\, (\hypert\hmid \hypert)
- \mid\, \lpair{\hypert,\hypert}^n
 \end{align*}
-where $n$ is a natural number and $\G$ is a context. \fix{define context}
-The last clause is used to implement the so-called additive box.
-\fix{add citation for additive box}
+where $\G$ is a context.
+
+The \textit{type}\index{type!--- of a hypersequent} of a hypersequent is
+defined inductively.
+\begin{align*}
+ \type{(\G\tr\tj{t}\phi)}&= \G\tr\phi \\
+ \type{(\hypert \hmid \hypert')}&= \type(\hypert)\hmid\type{(\hypert')}
+\end{align*}
+The last clause is not natural because we ignore the type of $\hypert'$.
+Actually, later, we will only allow the construction
+$\lpair{\hypert,\hypert'}^n$ for hypersequents satisfying
+$\type(\hypert) = \type(\hypert')$.
+
 \fix{definition of terms contains natural number?}
 Differently from the previous chapters,
 here, the hypersequent $\G\tr\phi\hmid \D\tr\psi$ is interpreted as the
@@ -210,15 +221,11 @@ The typing rules are in Figure~\ref{fig:exchange:rules}.
   %
   \ruleskip
   % andR
-  \AxiomC{$\hypert_0\hmid\G\tr\tj{t}{\phi}$}
-  \AxiomC{$\hypert_1\hmid\G\tr\tj{u}{\psi}$}
+  \AxiomC{$\G\tr\tj{t}{\phi}$}
+  \AxiomC{$\G\tr\tj{u}{\psi}$}
   \LL{$\with$R}
-  \BinaryInfC{$\lpair{\hypert_0,\hypert_1}_n
-  \hmid\G\tr\tj{\lpair{t,u}_n}{\phi\with\psi}$}
+  \BinaryInfC{$\G\tr\tj{\lpair{t,u}_n}{\phi\with\psi}$}
   \DisplayProof \\
-  where $\hypert_0$ and $\hypert_1$ are of the same type \fix{define}
-  and $n$ is a natural number such that no $\lpair{\_,\_}_n$ appears
-  in the branches.
   %
   \ruleskip
   % andL0
@@ -355,16 +362,13 @@ where $v$ and $w$ are canonical forms.
 An evaluation hypersequent $\hypere$ is defined by the following
 grammar:
 \[
- \hypere ::= t\eval t\mid (\hypere\hmid \hypere)\mid
- \tuple{\hypert_0,\hypert_1}_n\eval \vec t \mid
- \tuple{\hypert_0,\hypert_1}_n\eval \tuple{\hypert_0,\hypert_1}_n
+ \hypere ::= t\eval t\mid (\hypere\hmid \hypere)
 \]
-where the size of $\hypert_0,\hypert_1$ and $\vec t$ have to be the same.
 
-Now we define evaluation as a set of evaluation hypersequents.
+Now we define evaluation as a set of evaluation hypersequents
+(Figure~\ref{fig:eval}).
 Most rules are the same as Abramsky's~\citep{abramsky1993computational}.
 We add the semantics for channels.
-
  \begin{figure}
   \centering
   % ast
@@ -406,28 +410,22 @@ We add the semantics for channels.
   \DisplayProof
   \ruleskip
   \AxiomC{}
-  \UnaryInfC{$\lpair{\hypert_0,\hypert_1}_n\eval
-  \lpair{\hypert_0,\hypert_1}_n
-  \hmid
+  \UnaryInfC{$
   \lpair{t, u}_n\eval
   \lpair{t, u}_n$}
   \DisplayProof
   \ruleskip
-  \AxiomC{$\hypere\hmid \lpair{\hypert_0,\hypert_1}_n \eval
-  \lpair{\hypert_0,\hypert_1}_n
-  \hmid t\eval\lpair{t_0,t_1}_n\hmid \hypert_0\eval \vec{o_0}\hmid t_0\eval v_0
+  \AxiomC{$\hypere\hmid
+  t\eval\lpair{t_0,t_1}_n\hmid t_0\eval v_0
   \hmid  u[v_0/x]\eval w$}
   \UnaryInfC{$\hypere \hmid
-  \lpair{\hypert_0,\hypert_1}_n \eval \vec{o_0} \hmid
   \letin t {\lpair{x,\_}} u\eval w$}
   \DisplayProof
   \ruleskip
-  \AxiomC{$\hypere\hmid \lpair{\hypert_0,\hypert_1}_n \eval
-  \lpair{\hypert_0,\hypert_1}_n
-  \hmid t\eval\lpair{t_0,t_1}_n\hmid \hypert_1\eval \vec{o_1}\hmid t_1\eval v_1
+  \AxiomC{$\hypere
+  \hmid t\eval\lpair{t_0,t_1}_n\hmid t_1\eval v_1
   \hmid  u[v_1/y]\eval w$}
   \UnaryInfC{$\hypere \hmid
-  \lpair{\hypert_0,\hypert_1}_n \eval \vec{o_1} \hmid
   \letin t {\lpair{\_,y}} u\eval w$}
   \DisplayProof
   \ruleskip
@@ -482,7 +480,8 @@ We add the semantics for channels.
   % {$\hypere\hmid t[u_0\otimes (\letin u p {u_1})/x] \eval w$}
   % \DisplayProof \\
   % if $u_0$ does not have free variables bound by $p$.
-  \caption{The definition of evaluation relation.}
+  \caption{The definition of evaluation relation.  $\with$R only
+  applicable to singleton hypersequents.}
   \label{fig:eval}
  \end{figure}
 
@@ -619,6 +618,52 @@ such that each $u_i$ is in $\sem{\phi_i}$.
 	 (\letin{z}{x@y}{t})[\vec g/\G][\bang u'/z]\eval t'
 	 \]
 	 is also derivable.
+    \item[($\with$L$_0$)]
+	 The derivation ends in
+	  \begin{center}
+	   \AxiomC{$\hypert\hmid\G,\tj{x}{\phi}\tr\tj{t}{\theta}$}
+	   \UnaryInfC{$\hypert\hmid\G,\tj{z}{\phi\with\psi}\tr\tj{
+	   \letin z {\lpair{x,\_}} t
+	   }{\theta}$}
+	   \DisplayProof
+	  \end{center}
+	 Take any $\vec g\in\semo{\G}$, $s\in\semo{\phi\with\psi}$
+	 and $O\in\semo{\hypert}$
+	 By definition of $s$, $s\eval \lpair{v_0,v_1}$ is derivaboe
+	 for some
+	 $v_0\in\semo{\phi}$ and $v_1\in\semo{\psi}$.
+	 By induction hypothesis,
+	 \[
+	 O\eval \vec{o} \hmid t[\vec g/\G][v_0/x]\eval w
+	 \]
+	 is derivable for some $\vec o$ and $w\in\semo{\theta}$.
+	 Thus,
+	 \[
+	  O\eval \vec o\hmid \letin z {\lpair{x,\_}} t \eval w
+	 \]
+	 is also derivable.
+    \item[($\with$L$_1$)] Symmetric to above.
+    \item[($\with$R)]
+	 The derivation ends as
+	  \begin{center}
+	   \AxiomC{$\G\tr\tj{t}{\phi}$}
+	   \AxiomC{$\G\tr\tj{u}{\psi}$}
+	   \BinaryInfC{$\G\tr\tj{\lpair{t,u}}{\phi\with\psi}$}
+	   \DisplayProof
+	  \end{center}
+	 By induction hypothesis,
+	 $t[\vec g/\G]\eval v$ and
+	 $u[\vec g/\G]\eval w$
+	 are derivable for some
+	 $v\in\semo{\phi}$ and $w\in\semo{\psi}$.
+	 Thus, $t[\vec g/\G]\in\semo{\phi}$ and
+	 $u[\vec g/\G]\in\semo{\psi}$ hold.
+	 We now conclude $\lpair{t,u}[\vec g/\G]$ is in
+	 $\semo{\phi\with\psi}$ because
+	 \[
+	  \lpair{t,u}[\vec g/\G]\eval \lpair{t,u}[\vec g/\G]
+	 \]
+	 is derivable.
     \item[($\forall$R)]
 	 Since the induction hypothesis holds regardless of $|X|_0$.
     \item[Other rules]
@@ -640,6 +685,8 @@ such that each $u_i$ is in $\sem{\phi_i}$.
      $t\eval t'$ is derivable for some $t'$ in $\semo{\forall X.X}$.
      However, $\semo{\forall X.X}$ is empty.
     \end{proof}
+
+    \fix{say something about church-rosser}
 
     \section{Sessions and Processes}
 
@@ -713,11 +760,16 @@ such that each $u_i$ is in $\sem{\phi_i}$.
      \sendterm x u t &\equiv t[(xu) /x] &\text{send $u$ through channel
      $x$ and then use $x$ in $t$} \\
      \recvterm x y t &\equiv \letin x {y\otimes x} t & \text{receive
-     $y$ through channel $x$ and use $x$ and $y$ in $t$.} \\
-     0 &\equiv \ast
+     $y$ through channel $x$ and use $x$ and $y$ in $t$} \\
+     0 &\equiv \ast &\text{do nothing}
     \end{align*}
-    For technical reasons, we had to annotate the process~0 with the set
-    of free variables.
+    We have to be careful about substitution combined with process
+    abbreviations.
+    For example, $(\sendterm x u t)[s/x]$ is not $\sendterm s u t$
+    because the later is not defined.  Following the definition,
+    $(\sendterm x u t)[s/x]$ is actually $(t[xu/x])[s/x] = t[su/x]$.
+    We are going to introduce the name restriction $\nu x.t$ after
+    implementing channels.
 
     \subsubsection{Typing Rules for Process Abbreviations}
     The session type abbreviation and the processes abbreviation are
@@ -737,7 +789,7 @@ such that each $u_i$ is in $\sem{\phi_i}$.
       \DisplayProof
       \ruleskip
       \AxiomC{$\hypert\hmid \G\tr\tj{t}{\phi}$}
-      \UnaryInfC{$\hypert\hmid \G,\tj{x}{\terminate}\tr\tj{\ign x 
+      \UnaryInfC{$\hypert\hmid \G,\tj{x}{\terminate}\tr\tj{\ign x
       t}{\phi}$}
       \DisplayProof
 	\hfill
@@ -817,7 +869,7 @@ such that each $u_i$ is in $\sem{\phi_i}$.
     \end{example}
 
 
-    \subsection{Implementing Complex Channels}
+    \subsection{Implementing Channels}
     We introduced primitives $\lpair{c,\co c}$ implementing
     $(\one\limp\phi)\otimes(\phi\limp\one)$.
     These can be seen as channels of session types
@@ -903,21 +955,39 @@ such that each $u_i$ is in $\sem{\phi_i}$.
 	\]
 	is also derivable.
        \end{corollary}
+
+       We can define name restriction as an abbreviation:
+       \[
+	\nu \tj{x}{\phi^\ell}. t \equiv
+	\letin{\bothside{\phi^\ell}}{x_L\otimes x_R} t\enspace.
+       \]
+
+       Then, in addition to \thref{typing_process},
+       more typing rules are available.
+	\begin{proposition}
+	 The following typing rule is admissible.
+	  \begin{center}
+	   \AxiomC   {$\hypert\hmid
+	   \G,\tj{x}{\phi^\ell},\tj{y}{\overline{\phi^\ell}}\tr\tj t \psi$}
+	   \UnaryInfC{$\hypert\hmid
+	   \G\tr\tj{\nu\tj{x}{\phi^\ell}.t[x_L/x][x_R/y]}{\psi}$}
+	   \DisplayProof
+	  \end{center}
+	\end{proposition}
+
 	\begin{example}[Connecting processes using the session realizers]
 	 Using the session realizers, we can connect the processes typed
 	 in \thref{ex:typed-processes}.  Indeed,
 	 \begin{align*}
 	  \tr &
-	  \mathsf{let}\,{\bothside{\recvtype{\sendtype{\two}\terminate}\terminate}}\,\mathsf
-	  { be }\,{x'\otimes
-	 x}\,\mathsf{ in }\,\\ &
-	 \mathsf{let}\,{\bothside{\sendtype\two\terminate}}\,\mathsf{be}\,{y'\otimes
-	  y}\,\mathsf{in}\,\\ & {\left(
-	 \sendterm x{y'}{\recvterm y z {\ign{x,y}z}}
+	  \nu(\tj{x}{\recvtype{\sendtype{\two}\terminate}\terminate}).
+	  \nu(\tj{y}{\sendtype\two\terminate}).
+	  \\ & {\left(
+	 \sendterm {x_R}{y_L}{\recvterm {y_R} z {\ign{x_R,y_R}z}}
 	 \right)}
 	 \otimes
 	  \left(
-	 \recvterm{x'}{w'}{\ign{x'}{\sendterm{w'}{\inl\ast}{\ign
+	 \recvterm{x_L}{w'}{\ign{x_L}{\sendterm{w'}{\inl\ast}{\ign
 	  {w'}\ast}}}
 	  \right)
 	  \\&
@@ -925,7 +995,7 @@ such that each $u_i$ is in $\sem{\phi_i}$.
 	 \end{align*}
 	 is derivable.
 	 Now we have to check the evaluation of this term.
-	 For that we prepare a theorem.
+	 For that we prepare a lemma.
 	\end{example}
 
 
@@ -936,13 +1006,14 @@ such that each $u_i$ is in $\sem{\phi_i}$.
       When we substitute $x$ and $y$ with session type realizers,
       these terms actually make communication.
 
-  \begin{theorem}
+  \begin{lemma}
    \label{processtype}
    Let $t_0$ be a term containing free variable $x$ and
    $t_1$ be a term containing free variables
    $y$ and $z$.
-   The rule
+   The rule \fix{too much width}
    \begin{center}
+    \footnotesize
     \AxiomC{$\hypere\hmid \leftside{\phi^\ell}\eval v'\hmid
     \rightside{\phi^\ell}\eval w'\hmid t_0[v'/x]\eval v\hmid u\eval
     u'\hmid
@@ -959,8 +1030,9 @@ such that each $u_i$ is in $\sem{\phi_i}$.
     $}
     \DisplayProof
    \end{center}
+   \fix{add symmetric rule}
    is admissible.  \fix{define admissible somewhere}
-  \end{theorem}
+  \end{lemma}
   \begin{proof} By the derivation in Figure~\ref{fig:processtype}
     \begin{sidewaysfigure}
      \centering
@@ -1031,55 +1103,16 @@ such that each $u_i$ is in $\sem{\phi_i}$.
     \end{sidewaysfigure}
   \end{proof}
 
-	 \begin{example}[Evaluation of communicating processes]
-	  \fix{add paragraph}
-	   \begin{center}
-	    \AxiomC{}
-	    \UnaryInfC{$\ast\eval\ast$}
-	    \UnaryInfC{$\inl\ast\eval\inl\ast$}
-	    \AxiomC{}
-	    \UnaryInfC{$\ast\eval\ast$}
-	    \BinaryInfC{$\inl\ast\otimes \ast\eval\inl\ast\otimes\ast$}
-	    \UnaryInfC{
-	    $
-	    \letin{\bothside{\terminate}}{y'\otimes y}
-	    {\inl\ast\otimes \ast}
-	    \eval\inl\ast\otimes\ast
-	    $
-	    }
-	    \UnaryInfC{
-	    $
-	    \letin{\bothside{\sendtype\two\terminate}}{y'\otimes y}
-	    {\recvterm y z z\otimes \sendterm{y'}{\inl\ast}\ast}
-	    \eval\inl\ast\otimes\ast
-	    $
-	    }
-	    \UnaryInfC{
-	    $
-	    \letin{\bothside{\terminate}}{x'\otimes
-	    x}{\letin{\bothside{\sendtype\two\terminate}}{y'\otimes
-	    y}{}}$}
-	    \noLine
-	    \UnaryInfC{$
-	    {\recvterm y z z\otimes \sendterm{y'}{\inl\ast}\ast}
-	    \eval\inl\ast\otimes\ast
-	    $
-	    }
-	    \UnaryInfC{
-	    $
-	    \letin{\bothside{\recvtype{\sendtype{\two}{\terminate}}\terminate}}{x'\otimes
-	    x}{\letin{\bothside{\sendtype\two\terminate}}{y'\otimes
-	    y}{}}$}
-	    \noLine
-	    \UnaryInfC{$
-	    \left(\sendterm x {y'}{\recvterm y z z}\right)\otimes
-	    \left(\recvterm{x'}{w'}{\sendterm{y'}{\inl\ast}\ast}\right)
-	    \eval\inl\ast\otimes\ast
-	    $
-	    }
-	    \DisplayProof
-	   \end{center}
-	 \end{example}
+  \begin{example}[Evaluation of communicating processes]
+   \fix{from report pad}
+   \begin{center}
+    \AxiomC{}
+    \UnaryInfC{$\nu(\tj{x}{\sendtype{\one\oplus\one}{\terminate}}).
+    \left(\sendterm{x_L}{\inl\ast}{\ign{x_L}\ast}\right)\otimes
+    \left(\recvterm{x_R}{z}{\ign {x_R}z}\right)\eval \ast\otimes\inl\ast$}
+    \DisplayProof
+   \end{center}
+  \end{example}
 
   \subsection{Copycatting}
   \begin{theorem}
