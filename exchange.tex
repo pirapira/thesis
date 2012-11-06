@@ -521,7 +521,14 @@ as follows:
 For a context~$\G = \tj{x_0}{\phi_0},\ldots,\tj{x_n}{\phi_n}$,
 $\semo{\G}$ denotes the set of sequences $u_0,\ldots,u_n$ of closed terms
 such that each $u_i$ is in $\sem{\phi_i}$.
-\fix{define semoi hyperterm}
+For a sequent $\G\tr\tj{t}{\phi}$, $\semo{\G\tr\tj{t}{\phi}}$ denotes
+the set consisting of terms $t[\vec g/G]$ for some $\vec g\in\semo{\G}$.
+For a hypersequent with terms $\hypert$,
+$\semo\hypert$ is defined in a componentwise way:
+$\semo{\hypert\hmid\G\tr\tj t\phi}$ contains any $\hmid$-delimited
+sequence of terms
+$\vec O \hmid u$ such that $\vec O\in\semo{\hypert}$ and
+$u\in\semo{\G\tr\tj t\phi}$.
 
  \begin{proposition}[General Convergence]
   \label{thm:generalconvergence}
