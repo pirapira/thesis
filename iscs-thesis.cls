@@ -475,7 +475,7 @@
   \let \footnote \thanks
   \null\vskip-100\p@\@plus1fill\null
   \centering\isttitlesize
-    {\ist@hookcr\MakeUppercase{\@etitle}}\par
+    {\ist@hookcr{\@etitle}}\par
     {\@jtitle}\par
     \vskip 20\p@
     by\par

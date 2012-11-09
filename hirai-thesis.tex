@@ -12,6 +12,10 @@
 \usepackage{dsfont}
 \usepackage{cmll}
 
+
+% \usepackage{tikz}
+% \usepackage{tikz-cd}
+
 \makeindex
 
 %% from http://yav.purely-functional.net/haskell_latex.html
@@ -32,6 +36,7 @@
 %%% from haskell symposium submitted paper
 \usepackage{graphicx}
 \usepackage{amssymb,amsmath}
+\usepackage{amscd}
 
 \usepackage[amsmath,standard,thref,thmmarks]{ntheorem}
 %\usepackage{showlabels}
@@ -39,7 +44,7 @@
 % \doublespacing
 
 \input{macros.tex}
-\etitle{Hyper-Lambda-Calculi}
+\etitle{Hyper-Lambda Calculi}
 \jtitle{ハイパーラムダ計算}
 \eauthor{Yoichi Hirai}
 \jauthor{平井洋一}
@@ -74,11 +79,10 @@
 \input{exchange.tex}
 \input{lambda.tex}
 % \input{seqcon.tex}
-\appendix
-
 \input{pole.tex}
 \input{haskell.tex}
 
+\appendix
 
 \bibliographystyle{plainnat}
 \bibliography{hirai-thesis}

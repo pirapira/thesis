@@ -1,5 +1,46 @@
-\chapter{The Logic of Information Exchange}
+\chapter{A Hyper-Lambda-Calculus for Sychronous Communication}
 \label{ch:exchange}
+
+\subsection{Motivation}
+
+We propose a way to unify ML-style programming languages \fix{cite} and
+$\pi$-calculus \fix{cite}, which are two of Robin Milner's achievements.
+``Well-typed expressions do not go wrong,'' said \citet{milner1978}.
+However, when communication is involved, how to maintain the principle
+is not yet settled.
+For example, Haskell, which is a ML-style programming language,
+allows different threads to communicate using
+putMVar and getMVar commands.
+However, if programmers make mistakes, these commands can
+causes deadlock in execution time even the program passes the type checking.
+This is because the type system of Haskell allows programmers to
+use only one of $\phi$ and $(\phi\imp \one)$.
+We can try to provide a pair of putMVar and corresponding getMVar,
+but we have no way to enforce the programmers to use both of them once
+each.
+Fundamentally, this is because the type system of Haskell
+is based on intuitionistic logic, which allows throwing away proofs.
+
+As a remedy, we invent a typed lambda calculus where
+the user is forced to use both of sending and receiving primitives.
+For that we use the tecunique of linear types:
+linear types can specify a portion of program to be used
+just once.
+
+
+One promising approach is session types.
+Not based on logic.  Complicated, hard to reason about, one paper
+contained errors.
+
+We show that it is still possible to build
+a type system which is based on a logic.
+Wadler and Pfenning did that, but our type system allows more.
+
+From the standard intuitionistic linear logic,
+the only change is addin an axiom
+$(\phi\limp\psi)\oplus(\psi\limp\phi)$.
+Here, we can express $\pi$-calculus stype processes as macros.
+In other words,
 
 \subsection{Summary}
 
@@ -95,9 +136,9 @@ introducing channels, which are our communication primitives.
 We introduce an abbreviation
 \begin{align*}
  \ign \epsilon t   & \equiv t\\
- \ign {x,\vec y} t & \equiv \letin x \ast {\ign {\vec y} t}
+ \ign {s_0,\vec s} t & \equiv \letin {s_0} \ast {\ign {\vec s} t}
 \end{align*}
-inductively for a sequence of variables $\vec y$.
+inductively for a sequence of terms~$\vec s$.
 $\epsilon$ stands for the empty sequence.
 The symbol $\mathsf{ign}$ is intended to be pronounced ``ignore''.
 
@@ -190,9 +231,9 @@ The typing rules are in Figure~\ref{fig:exchange:rules}.
   \DisplayProof
   %
   \ruleskip
-  % sync
+  % Sync
   \AxiomC{$\hypert\hmid\G\tr\tj{t}{\phi}\hmid \D\tr\tj{u}{\psi}$}
-  \LL{sync}
+  \LL{Sync}
   \UnaryInfC{$\hypert\hmid
   \G\tr\tj{ct}{\psi}\hmid \D\tr\tj{\co cu}{\phi}$}
   \DisplayProof
@@ -309,7 +350,7 @@ The typing rules are in Figure~\ref{fig:exchange:rules}.
   \ruleskip
   %
   \caption{Most rules are taken from Abramsky~\citep{abramsky1993computational}.
-  The sync rule is original.}
+  The Sync rule is original.}
   \label{fig:exchange:rules}
  \end{figure}
 For example,
@@ -378,7 +419,7 @@ We add the semantics for channels.
   \hfill
   % ast elim
   \AxiomC{$\hypere\hmid t\eval \ast \hmid u\eval v$}
-  \UnaryInfC{$\hypere\hmid u\eval v$}
+  \UnaryInfC{$\hypere\hmid \ign t u\eval v$}
   \DisplayProof
   \hfill
   % otimes
@@ -411,8 +452,12 @@ We add the semantics for channels.
   \ruleskip
   \AxiomC{}
   \UnaryInfC{$
-  \lpair{t, u}_n\eval
-  \lpair{t, u}_n$}
+  \lpair{t, u}\eval
+  \lpair{t, u}$}
+  \DisplayProof
+  \hfill
+  \AxiomC{$\hypere\hmid t\eval v\hmid s\eval w\hmid \hypere'$}
+  \UnaryInfC{$\hypere\hmid s\eval w\hmid t\eval v\hmid \hypere'$}
   \DisplayProof
   \ruleskip
   \AxiomC{$\hypere\hmid
@@ -485,6 +530,22 @@ We add the semantics for channels.
   \label{fig:eval}
  \end{figure}
 
+\begin{example}
+ The rule subst-eval in Figure~\ref{fig:eval} is not in Abramsky's
+ LF~\citep{abramsky1993computational}.  However, it is necessary to give
+ the following evaluation.
+  \begin{center}
+   \AxiomC{}
+   \UnaryInfC{$\ast\eval\ast$}
+   \AxiomC{$t\eval v$}
+   \BinaryInfC{$\ast\eval\ast\hmid t\eval v$}
+   \UnaryInfC{$c\ast\eval\ast\hmid \co ct\eval v$}
+   \LL{subst-eval}
+   \UnaryInfC{$c(\co c t)\eval v$}
+   \DisplayProof
+  \end{center}
+ 
+\end{example}
 
 \section{Convergence}
 
@@ -498,29 +559,29 @@ For that we first assign a set of closed terms to each type.
 \newcommand{\terms}{\mathcal{T}}
 \fix{use of $v$ is ambiguious...?}
 We denote by $\terms$ the set of closed terms.
-Given $\sem{X}_0\in 2^\terms$ for each propositional variable~$X$,
-we define $\sem{\cdot}\colon \form{2^\terms}\rightarrow \form{2^\terms}$
+Given $\semo{X}_0\in 2^\terms$ for each propositional variable~$X$,
+we define $\semo{\cdot}\colon \form{2^\terms}\rightarrow \form{2^\terms}$
 as follows:
 \begin{align*}
- \sem{\mathcal X} &= \mathcal X\\
- \sem{X} &= \sem{X}_0\\
- \sem{\one} &= \{t\in \terms \mid t\eval \ast\} \\
- \sem{\phi\otimes \psi}&= \{t\in\terms \mid t\eval v\otimes w,\quad
- v\in\sem{\phi},\quad w\in \sem{\psi}\}\\
- \sem{\phi\limp\psi}&= \{t\in\terms \mid t\eval \lambda x.v,\quad
- \forall u\in\sem{\phi}.(tu\in\sem{\psi})\}\\
- \sem{\phi\with\psi}&= \{t\in\terms \mid t\eval\lpair{v,w},\quad
- v\in\sem{\phi}, w\in\sem{\psi}\}\\
- \sem{\phi\oplus\psi}&= \{t\in\terms\mid (t\eval \inl{v}, v\in
- \sem{\phi})\text{ or }(t\eval\inr{w}, w \in \sem{\psi})\}\\
- \sem{\bang \phi}&= \{t\in\terms \mid t\eval \bang u, \quad u\in\sem{\phi}\}\\
- \sem{\forall X.\phi}&= \bigcap\{\sem{\phi[\mathcal X/X]}\mid \psi\in
+ \semo{\mathcal X} &= \mathcal X\\
+ \semo{X} &= \semo{X}_0\\
+ \semo{\one} &= \{t\in \terms \mid t\eval \ast\} \\
+ \semo{\phi\otimes \psi}&= \{t\in\terms \mid t\eval v\otimes w,\quad
+ v\in\semo{\phi},\quad w\in \semo{\psi}\}\\
+ \semo{\phi\limp\psi}&= \{t\in\terms \mid t\eval \lambda x.v,\quad
+ \forall u\in\semo{\phi}.(tu\in\semo{\psi})\}\\
+ \semo{\phi\with\psi}&= \{t\in\terms \mid t\eval\lpair{v,w},\quad
+ v\in\semo{\phi}, w\in\semo{\psi}\}\\
+ \semo{\phi\oplus\psi}&= \{t\in\terms\mid (t\eval \inl{v}, v\in
+ \semo{\phi})\text{ or }(t\eval\inr{w}, w \in \semo{\psi})\}\\
+ \semo{\bang \phi}&= \{t\in\terms \mid t\eval \bang u, \quad u\in\semo{\phi}\}\\
+ \semo{\forall X.\phi}&= \bigcap\{\semo{\phi[\mathcal X/X]}\mid \psi\in
  2^\terms\}\enspace.
 \end{align*}
 
 For a context~$\G = \tj{x_0}{\phi_0},\ldots,\tj{x_n}{\phi_n}$,
 $\semo{\G}$ denotes the set of sequences $u_0,\ldots,u_n$ of closed terms
-such that each $u_i$ is in $\sem{\phi_i}$.
+such that each $u_i$ is in $\semo{\phi_i}$.
 For a sequent $\G\tr\tj{t}{\phi}$, $\semo{\G\tr\tj{t}{\phi}}$ denotes
 the set consisting of terms $t[\vec g/G]$ for some $\vec g\in\semo{\G}$.
 For a hypersequent with terms $\hypert$,
@@ -543,38 +604,41 @@ $u\in\semo{\G\tr\tj t\phi}$.
   \begin{proof}
    By induction on the type derivation.
    \begin{description}
+    \item[(IE)]
+	 Since terms in $\semo{\phi}$ or $\semo{\psi}$ do not contain
+	 free variables.
     \item[($\limp$L)] The derivation ends as
-	  \begin{center}
-	   \AxiomC{$\hypert\hmid \G\tr\tj{t}{\phi}\hmid \tj{x}{\psi},
-	   \D\tr\tj{u}{\theta}$}
-	   \UnaryInfC{$\hypert\hmid
-	   \G,\tj{f}{\phi\limp\psi},\D\tr\tj{u[(ft)/x]}{\theta}$}
-	   \DisplayProof\enspace.
-	  \end{center}
-	 Take any $O\in\semo{\hypert}$, $\vec g\in\semo{\G}$, $\vec
-	 d\in\semo{\D}$ and $v\in\semo{\phi\limp\psi}$.
-	 By induction hypothesis,
-	 \[
-	  \hypert\eval \vec{w'}\hmid t[\vec g/\G]\eval
-	   w_0\hmid u[w/x][\vec d/\D]\eval w
-	 \]
-	 is derivable for any $w \in \semo{\psi}$.
-	 Since $w_0$ is in $\semo{\phi}$ and $v$ is in
-	 $\semo{\phi\limp\psi}$,
-	 $fw_0$ is in $\psi$.
-	 Thus,
-	 \[
-	 \hypert\eval\vec{w'}\hmid t[\vec g/\G]\eval w_0\hmid
-	 u[(fw_0)/x][\vec d/\D]\eval w_1
-	 \]
-	 is derivable.
-	 The last term $u[(fw_0)/x][\vec d/\D]$ is identical to
-	 $u[fy/x][w_0/y][\vec d/\D]$.
-	 Thus, by rule eval-subst in Figure~\ref{fig:eval},
-	 \[
-	  \hypert\eval\vec{w'}\hmid u[fy/x][t/y][\vec d/\D]\eval w_1
-	 \]
-	 is derivable.
+    \begin{center}
+     \AxiomC{$\hypert\hmid \G\tr\tj{t}{\phi}\hmid \tj{x}{\psi},
+     \D\tr\tj{u}{\theta}$}
+     \UnaryInfC{$\hypert\hmid
+     \G,\tj{f}{\phi\limp\psi},\D\tr\tj{u[(ft)/x]}{\theta}$}
+     \DisplayProof\enspace.
+    \end{center}
+    Take any $O\in\semo{\hypert}$, $\vec g\in\semo{\G}$, $\vec
+    d\in\semo{\D}$ and $v\in\semo{\phi\limp\psi}$.
+    By induction hypothesis,
+    \[
+    \hypert\eval \vec{w'}\hmid t[\vec g/\G]\eval
+    w_0\hmid u[w/x][\vec d/\D]\eval w
+    \]
+    is derivable for any $w \in \semo{\psi}$.
+    Since $w_0$ is in $\semo{\phi}$ and $v$ is in
+    $\semo{\phi\limp\psi}$,
+    $fw_0$ is in $\psi$.
+    Thus,
+    \[
+    \hypert\eval\vec{w'}\hmid t[\vec g/\G]\eval w_0\hmid
+    u[(fw_0)/x][\vec d/\D]\eval w_1
+    \]
+    is derivable.
+    The last term $u[(fw_0)/x][\vec d/\D]$ is identical to
+    $u[fy/x][w_0/y][\vec d/\D]$.
+    Thus, by rule eval-subst in Figure~\ref{fig:eval},
+    \[
+    \hypert\eval\vec{w'}\hmid u[fy/x][t/y][\vec d/\D]\eval w_1
+    \]
+    is derivable.
     \item[(Cut)] Essentically the same as and simpler than ($\limp$L).
     \item[(Sync)]
 	 The derivation ends as
@@ -586,24 +650,80 @@ $u\in\semo{\G\tr\tj t\phi}$.
 	 d\in\semo{\D}$.
 	 By induction hypothesis, the hyper evaluation
 	 \[
-	  O\eval \vec{v'}\hmid t[\vec g/\G] \eval v\hmid u[\vec
+	 O\eval \vec{v'}\hmid t[\vec g/\G] \eval v\hmid u[\vec
 	 d/\D]\eval w
 	 \]
 	 is derivable.
 	 Thus,
 	 \[
-	  O\eval \vec{v'}\hmid (ct)[\vec g/\G] \eval w\hmid (\co cu)[\vec
+	 O\eval \vec{v'}\hmid (ct)[\vec g/\G] \eval w\hmid (\co cu)[\vec
 	 d/\D]\eval v
 	 \]
 	 is also derivable.
-    \item[(Contraction)]
+    \item[($\otimes$L)]
 	 The derivation ends as
 	  \begin{center}
-	   \AxiomC{$\hypert\hmid\G,\tj{x}{\bang \phi},\tj{y}{\bang \phi}\tr\tj{t}{\psi}$}
-	   \UnaryInfC{$\hypert\hmid \G,\tj{z}{\bang\phi}\tr\tj{\letin z
-	   {x@y} t}{\psi}$}
+	   \AxiomC{$\hypert\hmid\G,\tj{x}{\phi},\tj{y}{\psi}\tr\tj{t}\theta$}
+	   \UnaryInfC{$\hypert\hmid\G,\tj{z}{\phi\otimes
+	   \psi}\tr\tj{\letin z {x\otimes y} t}{\theta}$}
 	   \DisplayProof
 	  \end{center}
+	 Take any $v\in \semo{\phi\otimes\psi}$, $\vec g\in \semo{\G}$
+	 and $\vec O\in\semo{\hypert}$.
+	 By definition of $\semo{\phi\otimes\psi}$,
+	 $v\eval v_0\otimes v_1$ is derivable for some
+	 $v_0\in\semo{\phi}$
+	 and $v_1\in\semo{\psi}$.
+	 By induction hypothesis,
+	 \[
+	  \vec{O}\eval\vec{o}\hmid t[\vec g/\G][v_0/x][v_1/y]\eval w
+	 \]
+	 is derivable for some $\vec o$ and $w\in\semo{\theta}$.
+	 Since
+	 \[
+	  \vec O\eval \vec o\hmid v\eval v_0\otimes v_1\hmid
+	 t[\vec g/\G][v_0/x][v_1/y]\eval w
+	 \]
+	 is derivable, so is
+	 \[
+	  \vec O\eval \vec o \hmid (\letin z {x\otimes y} t)[\vec
+	 g/\G][v/z] \eval w\enspace.
+	 \]
+    \item[(Dereliction)]
+	 The derivation ends as
+	  \begin{center}
+	   \AxiomC{$\hypert\hmid\G,\tj{x}{\phi}\tr\tj{t}{\psi}$}
+	   \UnaryInfC{$\hypert\hmid\G,\tj{z}{\bang\phi}\tr\tj{\letin z
+	   {\bang x} t}\psi$}
+	   \DisplayProof\enspace.
+	  \end{center}
+	 Take any $u\in\semo{\bang\phi}$, $\vec g\in\semo\G$ and $\vec
+	 O\in\semo\hypert$.
+	 By definition of $\semo{\bang\phi}$,
+	 $u\eval\bang v$ is derivable for some $v\in\semo{\phi}$.
+	 By induction hypothesis, 
+	 \[
+	 \vec O\eval \vec o\hmid t[v/x][\vec g/\G]\eval w
+	 \]
+	 is derivable for some $\vec o$ and $w\in\semo{\psi}$.
+	 Since
+	 \[
+	  \vec O\eval \vec o\hmid u\eval \bang v\hmid t[v/x][\vec
+	 g/\G]\eval w
+	 \]
+	 is derivable, so is
+	 \[
+	  \vec O\eval \vec o \hmid
+	 (\letin z {\bang x} t)[\vec g/\G][u/z] \eval w\enspace.
+	 \]
+    \item[(Contraction)]
+	 The derivation ends as
+	 \begin{center}
+	  \AxiomC{$\hypert\hmid\G,\tj{x}{\bang \phi},\tj{y}{\bang \phi}\tr\tj{t}{\psi}$}
+	  \UnaryInfC{$\hypert\hmid \G,\tj{z}{\bang\phi}\tr\tj{\letin z
+	  {x@y} t}{\psi}$}
+	  \DisplayProof
+	 \end{center}
 	 Take any $O\in\semo{\hypert}$, $\vec{g}\in\semo{\G}$ and
 	 $u\in\semo{\bang\phi}$.
 	 Since $u$ is in $\semo{\bang\phi}$, there exists a term $u'$ in
@@ -611,29 +731,29 @@ $u\in\semo{\G\tr\tj t\phi}$.
 	 where $u\eval \bang u'$.
 	 Moreover, by induction hypothesis,
 	 \[
-	  \hypert\eval\vec{o}\hmid t[\vec g/\G][\bang u'/x][\bang u'/y]\eval t'
+	 \hypert\eval\vec{o}\hmid t[\vec g/\G][\bang u'/x][\bang u'/y]\eval t'
 	 \]
 	 is derivable for some $\vec{o}$ and $t'\in\semo{\psi}$.
 	 By merge,
 	 \[
-	  \hypert\eval\vec{o}\hmid t[\vec g/\G][\bang u'/x][\bang u'/y]\eval
+	 \hypert\eval\vec{o}\hmid t[\vec g/\G][\bang u'/x][\bang u'/y]\eval
 	 t'\hmid u\eval \bang u'
 	 \]
 	 is derivable and then
 	 \[
-	  \hypert\eval\vec{o}\hmid
+	 \hypert\eval\vec{o}\hmid
 	 (\letin{z}{x@y}{t})[\vec g/\G][\bang u'/z]\eval t'
 	 \]
 	 is also derivable.
     \item[($\with$L$_0$)]
 	 The derivation ends in
-	  \begin{center}
-	   \AxiomC{$\hypert\hmid\G,\tj{x}{\phi}\tr\tj{t}{\theta}$}
-	   \UnaryInfC{$\hypert\hmid\G,\tj{z}{\phi\with\psi}\tr\tj{
-	   \letin z {\lpair{x,\_}} t
-	   }{\theta}$}
-	   \DisplayProof
-	  \end{center}
+	 \begin{center}
+	  \AxiomC{$\hypert\hmid\G,\tj{x}{\phi}\tr\tj{t}{\theta}$}
+	  \UnaryInfC{$\hypert\hmid\G,\tj{z}{\phi\with\psi}\tr\tj{
+	  \letin z {\lpair{x,\_}} t
+	  }{\theta}$}
+	  \DisplayProof
+	 \end{center}
 	 Take any $\vec g\in\semo{\G}$, $s\in\semo{\phi\with\psi}$
 	 and $O\in\semo{\hypert}$
 	 By definition of $s$, $s\eval \lpair{v_0,v_1}$ is derivaboe
@@ -646,18 +766,18 @@ $u\in\semo{\G\tr\tj t\phi}$.
 	 is derivable for some $\vec o$ and $w\in\semo{\theta}$.
 	 Thus,
 	 \[
-	  O\eval \vec o\hmid \letin z {\lpair{x,\_}} t \eval w
+	 O\eval \vec o\hmid \letin z {\lpair{x,\_}} t \eval w
 	 \]
 	 is also derivable.
     \item[($\with$L$_1$)] Symmetric to above.
     \item[($\with$R)]
 	 The derivation ends as
-	  \begin{center}
-	   \AxiomC{$\G\tr\tj{t}{\phi}$}
-	   \AxiomC{$\G\tr\tj{u}{\psi}$}
-	   \BinaryInfC{$\G\tr\tj{\lpair{t,u}}{\phi\with\psi}$}
-	   \DisplayProof
-	  \end{center}
+	 \begin{center}
+	  \AxiomC{$\G\tr\tj{t}{\phi}$}
+	  \AxiomC{$\G\tr\tj{u}{\psi}$}
+	  \BinaryInfC{$\G\tr\tj{\lpair{t,u}}{\phi\with\psi}$}
+	  \DisplayProof
+	 \end{center}
 	 By induction hypothesis,
 	 $t[\vec g/\G]\eval v$ and
 	 $u[\vec g/\G]\eval w$
@@ -668,15 +788,14 @@ $u\in\semo{\G\tr\tj t\phi}$.
 	 We now conclude $\lpair{t,u}[\vec g/\G]$ is in
 	 $\semo{\phi\with\psi}$ because
 	 \[
-	  \lpair{t,u}[\vec g/\G]\eval \lpair{t,u}[\vec g/\G]
+	 \lpair{t,u}[\vec g/\G]\eval \lpair{t,u}[\vec g/\G]
 	 \]
 	 is derivable.
     \item[($\forall$R)]
-	 Since the induction hypothesis holds regardless of $|X|_0$.
+	 Since the induction hypothesis holds regardless of $\semo{X}_0$.
     \item[Other rules]
-	 Other cases are easier.
+	 Other cases are immediate.
    \end{description}
-   \fix{complete}
   \end{proof}
 
    \begin{corollary}[Convergence]
@@ -694,6 +813,15 @@ $u\in\semo{\G\tr\tj t\phi}$.
     \end{proof}
 
     \fix{say something about church-rosser}
+
+    \begin{theorem}
+     If $t\eval v$ and $t\eval w$ are derivable,
+     there exists $w'$ so that
+     $v\eval w'$ and $w\eval w'$ are derivable.
+    \end{theorem}
+    \begin{proof}
+     \fix{prove}
+    \end{proof}
 
     \section{Sessions and Processes}
 
@@ -801,7 +929,7 @@ $u\in\semo{\G\tr\tj t\phi}$.
       \DisplayProof
 	\hfill
 	\AxiomC{}
-	\UnaryInfC{$ \tr\tj 0 \ast $}
+	\UnaryInfC{$ \tr\tj 0 \one $}
 	\DisplayProof
        \end{center}
      \end{proposition}
@@ -972,6 +1100,7 @@ $u\in\semo{\G\tr\tj t\phi}$.
        Then, in addition to \thref{typing_process},
        more typing rules are available.
 	\begin{proposition}
+	 \label{typing_connection}
 	 The following typing rule is admissible.
 	  \begin{center}
 	   \AxiomC   {$\hypert\hmid
@@ -1013,32 +1142,39 @@ $u\in\semo{\G\tr\tj t\phi}$.
       When we substitute $x$ and $y$ with session type realizers,
       these terms actually make communication.
 
+      A rule\\
+      \AxiomC{$\hypere$}
+      \UnaryInfC{$\hypere'$}
+      \DisplayProof\\
+      is \textit{admissible}\index{admissible}
+      iff $\hypere'$ is derivable whenever $\hypere$ is.
+
   \begin{lemma}
    \label{processtype}
    Let $t_0$ be a term containing free variable $x$ and
    $t_1$ be a term containing free variables
    $y$ and $z$.
-   The rule \fix{too much width}
+   The rule
    \begin{center}
-    \footnotesize
     \AxiomC{$\hypere\hmid \leftside{\phi^\ell}\eval v'\hmid
     \rightside{\phi^\ell}\eval w'\hmid t_0[v'/x]\eval v\hmid u\eval
     u'\hmid
     t_1[u'/z][w'/y]\eval w$}
-    \UnaryInfC{$
-    \hypere\hmid
+    \UnaryInfC{
+    $\hypere\hmid
     \leftside{\sendtype\psi{\phi^\ell}}\eval \lambda x.cx
     \hmid
     \rightside{\sendtype\psi{\phi^\ell}}\eval u'\otimes w'
-    \hmid
+    \hmid $}
+    \noLine
+    \UnaryInfC{$
     (\sendterm x u {t_0})[\lambda x.cx / x]\eval v
     \hmid
     (\recvterm y z {t_1})[u'\otimes w'/y] \eval w
     $}
     \DisplayProof
    \end{center}
-   \fix{add symmetric rule}
-   is admissible.  \fix{define admissible somewhere}
+   is admissible.\fix{define admissible somewhere}
   \end{lemma}
   \begin{proof} By the derivation in Figure~\ref{fig:processtype}
     \begin{sidewaysfigure}
@@ -1111,14 +1247,55 @@ $u\in\semo{\G\tr\tj t\phi}$.
   \end{proof}
 
   \begin{example}[Evaluation of communicating processes]
-   \fix{from report pad}
+   Here is an example of evaluation.
    \begin{center}
     \AxiomC{}
+    \UnaryInfC{$\leftside{\terminate}\eval \ast\hmid
+    \rightside{\terminate}\eval \ast$}
+    \AxiomC{}
+    \UnaryInfC{$\ast\eval\ast$}
+    \UnaryInfC{$\inl\ast\eval\inl\ast$}
+    \AxiomC{}
+    \UnaryInfC{$\ast\eval\ast$}
+    \BinaryInfC{$\inl\ast\eval\inl\ast \hmid \ast\eval\ast$}
+    \AxiomC{}
+    \UnaryInfC{$\ast\eval\ast$}
+    \UnaryInfC{$\inl\ast\eval\inl\ast$}
+    \TrinaryInfC{$\leftside{\terminate}\eval \ast\hmid
+    \rightside{\terminate}\eval \ast
+    \hmid
+    \inl\ast\eval\inl\ast \hmid \ast\eval\ast
+    \hmid
+    \inl\ast\eval\inl\ast
+    $}
+    \LL{$\diamondsuit$}
+    \UnaryInfC{$\leftside{\sendtype\two\terminate}\eval \lambda x.cx\hmid
+    \rightside{\sendtype \two\terminate}\eval \inl\ast\otimes\ast\hmid
+    $}
+    \noLine
+    \UnaryInfC{\small
+    $
+    (\sendterm{x_L}{\inl\ast}{\ign {x_L}\ast})[\lambda x.cx/x_L]\eval
+    \ast
+    \hmid
+    (\recvterm{x_R}z{\ign {x_R} z})[\inl\ast\otimes\ast/x_R]\eval\inl\ast
+    $
+    }
+    \UnaryInfC{$\bothside{\sendtype\two\terminate}\eval
+    \lambda x.cx\otimes (\inl\ast\otimes \ast) \hmid$}
+    \noLine
+    \UnaryInfC{\small $
+    (\sendterm{x_L}{\inl\ast}{\ign {x_L}\ast})[\lambda x.cx/x_L]
+    \otimes
+    (\recvterm{x_R}z{\ign {x_R} z})[\inl\ast\otimes\ast/x_R]
+    \eval \ast \otimes \inl\ast
+    $}
     \UnaryInfC{$\nu(\tj{x}{\sendtype{\one\oplus\one}{\terminate}}).
     \left(\sendterm{x_L}{\inl\ast}{\ign{x_L}\ast}\right)\otimes
     \left(\recvterm{x_R}{z}{\ign {x_R}z}\right)\eval \ast\otimes\inl\ast$}
     \DisplayProof
    \end{center}
+   The step $\diamondsuit$ uses \thref{processtype}.
   \end{example}
 
   \subsection{Copycatting}
@@ -1283,6 +1460,60 @@ $u\in\semo{\G\tr\tj t\phi}$.
 %    \fix{complete}
 %   \end{proof}
 
+\subsection{Dummy Deadlocks and Real Deadlocks}
+
+Using \thref{typing_process} and \thref{typing_connection},
+we can build the following type derivation.
+ \begin{center}
+  \AxiomC{}
+  \UnaryInfC{$\tr\tj 0\one$}
+  \UnaryInfC{$\tj{x_R}{\terminate}\tr\tj{\ign {x_R} 0}{\one}$}
+  \UnaryInfC{$\tj{x_L}{\terminate},\tj{x_R}{\terminate}
+  \tr\tj{\ign{x_L,x_R}{0}}{\one}
+  $}
+  \AxiomC{}
+  \UnaryInfC{$\tj{y}\two\tr\tj y \two$}
+  \BinaryInfC{$\tj{y}\two,\tj{x_L}{\terminate},
+  \tj{x_R}{\sendtype\two\terminate}\tr
+  \tj{\sendterm{x_R}{y}{\ign{x_L,x_R}{0}}}{\one}$}
+  \UnaryInfC{
+  $\tj{x_L}{\recvtype\two\terminate},\tj{x_R}{\sendtype \two \terminate}
+  \tr\tj
+  {\recvterm {x_L}{y}{\sendterm{x_R}{y}{\ign {x_L,x_R} 0}}}\one$
+  }
+  \UnaryInfC{
+  $\tr\tj{\nu\tj{x}{\recvtype\two\terminate}.
+  \recvterm {x_L}{y}{\sendterm{x_R}{y}{\ign {x_L,x_R} 0}}}{\one}$
+  }
+  \DisplayProof
+ \end{center}
+However, the typed process
+\[
+ \nu x.x(y).\recvterm x y 0
+\]
+ is deadlocked in the traditional semantics of
+process calculi because the process waits for a value from $x$ before
+sending a value to $x$.
+However, we can give an evaluation to this process.
+
+The situation is essentially similar to $c(\co c)t$.
+When we want the output of channel $c$, we can look at $\co c$'s input,
+which is $t$.  However, when we want the output of $\co c$, we have to
+look at the input of $c$, which is again the output of $\co c$.  Thus we
+can never know the output of $\co c$.
+Similarly, for the process above, we never know what value is passed
+along channel~$x$, but we can still evaluate the while process.
+We call this situation \textit{dummy deadlocks}\index{deadlock!dummy}.
+
+On the other hand,
+the same trick cannot be used for the following process.
+\[
+ \nu(x\colon \sendtype{\two}\terminate).
+ \recvterm{x_R}y{\letin y {y_0@y_1}{\sendterm{x_L}{y_0}{y_1}}}\enspace.
+\]
+This is an example of real deadlocks.
+Indeed, this process is not typable.
+
 \section{Proof Nets}
 
 \fix{talk about proof nets}
@@ -1317,9 +1548,9 @@ In our type system, the following sequent is derivable
 {\sendtype A \terminate}}}
 \tr\\
 &\tj{
-\letin{\bothside{\sendtype{B}{\recvtype{A}{\terminate}}}}{y'\otimes y}
-{\sendterm x{y'}{\recvterm x a {\recvterm y b {\sendterm x b {\sendterm
-y a {\ign{x,y}0}}}}}}
+\nu(\tj{y}{\sendtype B{\recvtype A \terminate}}).
+{\sendterm x{y_L}{\recvterm x a {\recvterm {y_R} b {\sendterm x b {\sendterm
+{y_R} a {\ign{x,y}0}}}}}}
 }{\one}
 \end{align*}
 The resulting sequent indicates that the process is typeable with one
@@ -1332,12 +1563,187 @@ the type system in \citet{pfenning2010}.
 Moreover, we still ensure deadlock freedom in the sense that all typed
 processes reduce to the canonical form~(\thref{convergence}).
 
+The most complicated example in \citet{pfenning2010} is the following
+one, which can be typed and evaluated in our framework as well.
+
+ \begin{example}[Drink server example from \citet{pfenning2010}]
+  \begin{align*}
+   ServerProto &= (N\limp I \limp (N\otimes \one))\with (N\limp( I
+  \otimes \one)) \\
+   &= (\sendtype N {\sendtype { I} {\recvtype N \terminate}}) \with
+   (\sendtype N {\recvtype { I} \one})
+  \end{align*}
+  $N$ stands for the type of strings and $I$ stands for the type of
+  integers, but following \citet{pfenning2010}, we identify both $N$ and
+  $I$ with $\one$.
+  Here is the prototype of the server, that serves one client and
+  terminates.\\
+  \[
+   Serv = \lpair{\recvterm s {pn} {\recvterm s {cn} {\sendterm s {rc}
+  {\ign {pn, cn, s} 0}}}
+  ,\quad
+  \recvterm s {pn} {\sendterm s {pr} {\ign{s,pn} 0}}
+  }
+  \]
+  We can derive a sequent $\tj{s}{\overline{SP}}\tr\tj{Serv}\one$.
+  \fix{how}
+
+  Using this, we can also implement a server that can replicate itself
+  and serve many clients.  Below, $SP$ abbreviates $ServerProto$.
+  \begin{center}
+   \AxiomC{$\tj{s}{\overline{SP}}\tr\tj {Serv}{\one}$}
+   \AxiomC{}
+   \UnaryInfC{$\tj{x}{SP}\tr\tj{x}{SP}$}
+   \UnaryInfC{$\tj{z}\one,\tj{x}{SP}\tr\tj{\ign z x}{SP}$}
+   \BinaryInfC{$\tj{s}{\overline{SP}},\tj{x}{SP}\tr\tj{\ign{Serv}x}{SP}$}
+   \UnaryInfC{$\tr\tj{\nu(\tj{s}{SP}).\ign{Serv[s_R/s]}{s_L}}{SP}$}
+   \UnaryInfC{$\tr\bang\tj{\nu(\tj{s}{SP}).\ign{Serv[s_R/s]}{s_L}}{\bang
+   SP}$}
+   \DisplayProof
+  \end{center}
+
+
+  Here is one client:
+  \begin{center}
+   \AxiomC{}
+   \UnaryInfC{$\tr\tj{0}\one$}
+   \UnaryInfC{$\tj{s}{\terminate}\tr\tj{\ign s 0}\one$}
+   \UnaryInfC{$\tj{s}{\terminate},
+   \tj{pr}{I}\tr\tj{\ign{pr,s} 0}\one$}
+   \UnaryInfC{
+   $ \tj{s}{\recvtype {I} {\terminate}} \tr\tj{
+   \recvterm s {pr} {\ign{pr,s} 0}
+   }{\one}$
+   }
+   \AxiomC{}
+   \UnaryInfC{$ \tr\tj{tea}{N} $}
+   \BinaryInfC{
+   $ \tj{s}{\sendtype N {\recvtype {I} \terminate}} \tr\tj{
+   \sendterm s {tea}
+   {\recvterm s {pr} {\ign{pr,s} 0}}
+   }{\one}$
+   }
+   \UnaryInfC{
+   $ \tj{s}{ServerProto} \tr\tj{
+   \letin s {\lpair{\_, s}} {
+   \sendterm s {tea}
+   {\recvterm s {pr} {\ign{pr,s} 0}}}
+   }{\one}$
+   }
+   \DisplayProof
+  \end{center}
+  We abbreviate the process as $QClnt_s$.
+  In words, the client first chooses the server's second protocol, which
+  is price quoting, and asks the price of the tea, receives the price
+  and terminates.
+
+  Here is another client.
+  \begin{center}
+   \AxiomC{}
+   \UnaryInfC{$ \tr\tj{0}\one $}
+   \UnaryInfC{$ \tj{s}{\terminate}\tr\tj{\ign s 0}\one$}
+   \UnaryInfC{$ \tj{s}{\terminate},\tj{rc}{N}\tr\tj{
+   {\ign {rc,s} 0}}\one$}
+   \UnaryInfC{$ \tj{s}{\recvtype{N}\terminate}\tr
+   \tj
+   {\recvterm{s}{rc}{\ign {rc,s} 0}}
+   {\one}$}
+   \AxiomC{}
+   \UnaryInfC{$\tr\tj{pin}{I}$}
+   \BinaryInfC{$ \tj{s}{\sendtype{I}{\recvtype{N}\terminate}}\tr
+   \tj
+   {\sendterm{s}{pin}{\recvterm{s}{rc}{\ign {rc,s} 0}}}
+   {\one}$}
+   \UnaryInfC{$ \tj{s}{\sendtype{N}{\sendtype{I}{\recvtype{N}\terminate}}}\tr
+   \tj
+   {\sendterm{s}{cof}{\sendterm{s}{pin}{\recvterm{s}{rc}{\ign {rc,s} 0}}}}
+   {\one}$}
+   \UnaryInfC{$ \tj{s}{ServerProto}\tr
+   \tj
+   {\letin s {\lpair{s,\_}}
+   {\sendterm{s}{cof}{\sendterm{s}{pin}{\recvterm{s}{rc}{\ign {rc,s} 0}}}}}
+   {\one}$}
+   \DisplayProof
+  \end{center}
+  We abbreviate the process as $BClnt_s$.
+
+  We can combine the server with two clients.
+   \begin{center}
+    \AxiomC{$\tj{s}{SP}\tr\tj{QClint_s}{\one}$}
+    \AxiomC{$\tj{s'}{SP}\tr\tj{BClient_{s'}}{\one}$}
+    \BinaryInfC{$\tj{s}{SP},\tj{s'}{SP}\tr
+    \tj{{QClint_s}\otimes{BClient_{s'}}}{\one\otimes\one}$}
+    \UnaryInfC{$\tj{s}{!SP},\tj{s'}{!SP}\tr
+    \tj{\letin{s}{!s}{\letin{s'}{!s'}
+    {{QClint_s}\otimes{BClient_{s'}}}}}{\one\otimes\one}$}
+    \UnaryInfC{$\tj{s}{!SP}\tr
+    \tj{\letin{s}{s@s'}{
+    \letin{s}{!s}{\letin{s'}{!s'}
+    {{QClint_s}\otimes{BClient_{s'}}}}}}{\one\otimes\one}$}
+    \UnaryInfC{$\tr
+    \tj{\letin{!Serv}{s@s'}{
+    \letin{s}{!s}{\letin{s'}{!s'}
+    {{QClint_s}\otimes{BClient_{s'}}}}}}{\one\otimes\one}$}
+    \DisplayProof
+   \end{center}
+
+  Here is an evaluation of the combined system of the server and the two
+  clients.
+ \end{example}
+
 \subsection{Wadler}
+
+\citet{wadler2012propositions} gave a type system for a process
+calculus based on classical linear logic.
+Although the setting is classical, the idea is more or less the same as
+\citet{pfenning2010}.
+Wadler's type system cannot type the escrowing process above.
+Worse, \citet{wadler2012propositions} does not recognize this
+\[
+ \sendterm x y{\recvterm x a {\recvterm y b {\sendterm x b {\sendterm y
+ a 0}}}}
+\]
+as a process at all.
+His grammar requires the output construction to be used in the form
+\[
+ \sendterm x y {(P\mid Q)}
+\]
+where $x$ is bound in $Q$ but not in $P$ and $y$ is bound in $P$ but not
+in $Q$.
+Of course, there is a way to escape the above restriction by making $P$
+and $Q$ communicate, but that option is prohibited by the typing rules.
 
 \subsection{Beffara}
 
-\section{Conclusion}
-
+\subsection{Categorical Considerations}
+One might want to ask whether we can model the logic with
+a symmetric monoidal closed category~\citep{blute2004category}
+  with identified isomorphisms
+$\sigma_{ABCD}\colon (A\limp B)\otimes (C\limp D)\rightarrow (A\limp D) \otimes
+ (C\limp B)$, with naturality conditions.
+ Before considering equality among morphisms,
+ we know there is a non-trivial example.
+  \begin{example}[A symmetric monoidal closed category with swaps]
+   The preorder formed by objects as integers and morphisms as the usual
+   order among integers~$\le$
+   forms a symmetric monoidal closed category with swaps
+   when we interpret $\otimes$ as addition,
+   $m \limp n$ as $n-m$.
+  \end{example}
+A straightforward reading of evaluation rules gives somewhat complicated
+equiality conditions for morphisms.
+The condition says the following diagram commutes:
+\[
+   \begin{CD}
+    (A\limp B)\otimes (C\limp D) @>{d_{ABCD}}>> (A\otimes C)\limp(B\otimes D)\\
+    @VV{\sigma_{ABCD}}V @VV{id\limp s_{B,D}}V\\
+    (A\limp D)\otimes (C\limp B) @>{d_{ADCB}}>> (A\otimes C)\limp (D\otimes B)
+   \end{CD}
+\]
+where $d_{ABCD}$ is induced by adjunction between $\otimes$ and $\limp$
+ from a morphism
+ $((A\limp B)\otimes (C\limp D))\otimes (A\otimes C)\rightarrow
+ (B\otimes D)$, which is provided by symmetric monoidal closed properties.
 
 \section{Discussion}
 
@@ -1346,3 +1752,12 @@ modalities show agents and then study the relationship with the
 multiparty session types \fix{cite}.
 
 \fix{give rationale for giving up determinacy.. channel inside lambda}
+
+\fix{cite Dale Miller and say MALL with fixed points will be convenient
+not as a logic programming paradigm but as typed lambda calculus.}
+
+\section{Conclusion}
+
+
+
+

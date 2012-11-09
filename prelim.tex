@@ -32,18 +32,24 @@
   \fix{are these notations ever used?}
   We use BNF (Backus Naur Form) for giving inductive definitions for sets
   of sequents of symbols.
-  For example, when we say we define formulae~$\phi$ by BNF:
+ \begin{example}[BNF]
+  When we say we define formulae~$\phi$ by BNF:
   \[
    \phi::= \bot \mid p\mid (\phi\imp\phi)
   \]
   where $p$ is a propositional variable, we actually define a set $\Phi$
-  of formulae which is the smallest set such that
+  which is the smallest set such that
   \begin{itemize}
    \item $\bot$ is in $\Phi$
    \item each propositional variable is in $\Phi$ and
    \item if $\phi$ and $\psi$ are in $\Phi$, then $(\phi\imp\psi)$ is in $\Phi$.
   \end{itemize}
   and then we declare that we call elements of $\Phi$ formulae.
+ \end{example}
+
+ We take binary operators of the symbol $\imp$ or $\limp$,
+ to be right associative.  For example, $\phi\limp\psi\limp\theta$
+ is interpreted as $\phi\limp(\psi\limp\theta)$.
 
 \section{History}
 
@@ -295,7 +301,9 @@ In short, in some of those settings, $(p\otimes q)\limp p$ is
 not a theorem because we are not allowed to throw away $q$.
 
 In the final sentence, \citet{godelprop} states what is known as
-disjunction property today: ``\fix{quote}''.
+disjunction property today: ``besides, the following holds with full
+generality: a formula of the form $A\lor B$ can only be provable in $H$
+if either $A$ or $B$ is provable in $H$'', where $H$ is Heyting's calculus.
 According to this statement, it is obvious that Dummett's axiom
 $(p\supset q) \lor (q\supset p)$ is not provable.
 
@@ -561,6 +569,10 @@ precise statements for the correspondence appear in
 \citet[9E]{curry1974combinatory}, a section titled ``analogies with
 propositional algebra.''
 \fix{cite the statements}
+
+ Henceforth, we do not give deduction system of a logic and
+ typing rules for a typed lambda calculi separately because
+ the former can be obtained from the lattar by this correspondence.
 
 There, Curry notes the correspondence is not isomorphism\fix{or, in
 sorenzen's book ???}  We take a finer approach.
