@@ -350,7 +350,8 @@ The typing rules are in Figure~\ref{fig:exchange:rules}.
   \ruleskip
   %
   \caption{Most rules are taken from Abramsky~\citep{abramsky1993computational}.
-  The Sync rule is original.}
+  The Sync rule is original.   $\with$R only
+  applicable to singleton hypersequents.}
   \label{fig:exchange:rules}
  \end{figure}
 For example,
@@ -410,128 +411,180 @@ Now we define evaluation as a set of evaluation hypersequents
 (Figure~\ref{fig:eval}).
 Most rules are the same as Abramsky's~\citep{abramsky1993computational}.
 We add the semantics for channels.
+
+For some reasons, we have to evaluate the subterm~$s$ in $\lambda
+x.t[s/y]$ if $s$ is closed while Abramsky never evaluated
+anything inside lambda.
+In order to keep track of that, we annotate the $\eval$ relation with
+involved free variables~$S$.
+
  \begin{figure}
   \centering
   % ast
   \AxiomC{}
-  \UnaryInfC{$\ast\eval\ast$}
+  \UnaryInfC{$\ast\eval_\emptyset \ast$}
+  \DisplayProof
+  \hfill
+  \AxiomC{}
+  \UnaryInfC{$x\eval_{\{x\}} x$}
   \DisplayProof
   \hfill
   % ast elim
-  \AxiomC{$\hypere\hmid t\eval \ast \hmid u\eval v$}
-  \UnaryInfC{$\hypere\hmid \ign t u\eval v$}
+  \AxiomC{$\hypere\hmid t\eval_\emptyset \ast \hmid u\eval_S v$}
+  \UnaryInfC{$\hypere\hmid \ign t u\eval_S v$}
   \DisplayProof
   \hfill
   % otimes
-  \AxiomC{$\hypere\hmid t\eval v\hmid u\eval w$}
-  \UnaryInfC{$\hypere\hmid t\otimes u\eval v\otimes w$}
+  \AxiomC{$\hypere\hmid t\eval_S v\hmid u\eval_{S'} w$}
+  \UnaryInfC{$\hypere\hmid t\otimes u\eval_{S\sqcup S'} v\otimes w$}
   \DisplayProof
   \ruleskip
   % otimes elim
-  \AxiomC{$\hypere\hmid t\eval v\otimes w\hmid u[v/x,w/y]\eval v'$}
-  \UnaryInfC{$\hypere\hmid \letin t {x\otimes y} u \eval v'$}
+  \AxiomC{$\hypere\hmid t\eval_\emptyset v\otimes w\hmid u[v/x,w/y]\eval_{S} v'$}
+  \UnaryInfC{$\hypere\hmid \letin t {x\otimes y} u \eval_{S} v'$}
   \DisplayProof
-  \hfill
+  \ruleskip
+  \AxiomC{$\hypere\hmid t\eval_S v\hmid u\eval_{S'\sqcup\{x,y\}} w$}
+  \UnaryInfC{$\hypere\hmid \letin t {x\otimes y} u \eval_{S\sqcup S'} \letin v
+  {x\otimes y} w$}
+  \DisplayProof if $S$ is not empty
+  \ruleskip
   \AxiomC{$\hypere$}
   \AxiomC{$\hypere'$}
   \BinaryInfC{$\hypere\hmid \hypere'$}
   \DisplayProof
   \hfill
-  \AxiomC{}
-  \UnaryInfC{$\lambda x.t\eval \lambda x.t$}
-  \DisplayProof
-  \ruleskip
-  \AxiomC{$\hypere\hmid t\eval \lambda x.t'\hmid u\eval v\hmid
-  t'[v/x]\eval w$}
-  \UnaryInfC{$\hypere\hmid tu\eval w$}
+  \AxiomC{$\hypere\hmid t\eval_{S\sqcup \{x\}} v$}
+  \UnaryInfC{$\hypere\hmid \lambda x.t\eval_{S} \lambda x.v$}
   \DisplayProof
   \hfill
-  \AxiomC{$\hypere\hmid t\eval v\hmid u\eval w$}
-  \UnaryInfC{$\hypere\hmid ct\eval w\hmid \co cu\eval v$}
+  \AxiomC{$\hypere\hmid t\eval_\emptyset \lambda x.t'\hmid u\eval_\emptyset v\hmid
+  t'[v/x]\eval_{S} w$}
+  \UnaryInfC{$\hypere\hmid tu\eval_{S} w$}
   \DisplayProof
   \ruleskip
-  \AxiomC{}
-  \UnaryInfC{$
-  \lpair{t, u}\eval
-  \lpair{t, u}$}
-  \DisplayProof
+  \AxiomC{$\hypere\hmid t\eval_S t'\hmid u\eval_{S'} u'$}
+  \UnaryInfC{$\hypere\hmid tu\eval_{S\sqcup S'} t'u'$}
+  \DisplayProof when $S\sqcup S'$ is nonempty
   \hfill
-  \AxiomC{$\hypere\hmid t\eval v\hmid s\eval w\hmid \hypere'$}
-  \UnaryInfC{$\hypere\hmid s\eval w\hmid t\eval v\hmid \hypere'$}
+  \AxiomC{$\hypere\hmid t\eval_{\emptyset} v\hmid u\eval_{\emptyset} w$}
+  \UnaryInfC{$\hypere\hmid ct\eval_{\emptyset} w\hmid \co cu\eval_{\emptyset} v$}
+  \DisplayProof
+  \ruleskip
+  \AxiomC{$t\eval_S t'$}
+  \AxiomC{$u\eval_{S'} u'$}
+  \BinaryInfC{$
+  \lpair{t, u}\eval_{S\sqcup S'}
+  \lpair{t', u'}$}
+  \DisplayProof when $S\sqcup S'$ is not empty
+  \hfill
+  \AxiomC{   $\hypere\hmid t\eval_S t'\hmid s\eval_{S'} s'\hmid \hypere'$}
+  \UnaryInfC{$\hypere\hmid s\eval_{S'} s'\hmid t\eval_S t'\hmid \hypere'$}
   \DisplayProof
   \ruleskip
   \AxiomC{$\hypere\hmid
-  t\eval\lpair{t_0,t_1}_n\hmid t_0\eval v_0
-  \hmid  u[v_0/x]\eval w$}
+  t\eval_\emptyset\lpair{t_0,t_1}\hmid t_0\eval_\emptyset v_0
+  \hmid  u[v_0/x]\eval_S w$}
   \UnaryInfC{$\hypere \hmid
-  \letin t {\lpair{x,\_}} u\eval w$}
+  \letin t {\lpair{x,\_}} u\eval_S w$}
   \DisplayProof
   \ruleskip
   \AxiomC{$\hypere
-  \hmid t\eval\lpair{t_0,t_1}_n\hmid t_1\eval v_1
-  \hmid  u[v_1/y]\eval w$}
+  \hmid t\eval_S t'
+  \hmid  u\eval_{S'\sqcup \{x\}} u'$}
   \UnaryInfC{$\hypere \hmid
-  \letin t {\lpair{\_,y}} u\eval w$}
+  \letin t {\lpair{x,\_}} u\eval_{S\sqcup S'}
+  \letin {t'} {\lpair{x,\_}} {u'}
+  $}
+  \DisplayProof when $S\sqcup S'$ is not empty
+  \ruleskip
+  \AxiomC{$\hypere
+  \hmid t\eval_\emptyset\lpair{t_0,t_1}\hmid t_1\eval_\emptyset v_1
+  \hmid  u[v_1/y]\eval_S w$}
+  \UnaryInfC{$\hypere \hmid
+  \letin t {\lpair{\_,y}} u\eval_S w$}
   \DisplayProof
   \ruleskip
-  \AxiomC{$\hypere\hmid t\eval v$}
-  \UnaryInfC{$\hypere\hmid \inl{t}\eval \inl{v}$}
+  \AxiomC{$\hypere
+  \hmid t\eval_S t'
+  \hmid  u\eval_{S'\sqcup \{y\}} u'$}
+  \UnaryInfC{$\hypere \hmid
+  \letin t {\lpair{\_,y}} u\eval_{S\sqcup S'}
+  \letin {t'} {\lpair{\_,y}} {u'}
+  $}
+  \DisplayProof
+  \ruleskip
+  \AxiomC{$\hypere\hmid t\eval_S v$}
+  \UnaryInfC{$\hypere\hmid \inl{t}\eval_S \inl{v}$}
   \DisplayProof
   \hfill
-  \AxiomC{$\hypere\hmid u\eval w$}
-  \UnaryInfC{$\hypere \hmid \inr{u}\eval \inr{w}$}
+  \AxiomC{$\hypere\hmid u\eval_S w$}
+  \UnaryInfC{$\hypere \hmid \inr{u}\eval_S \inr{w}$}
   \DisplayProof
   \ruleskip
-  \AxiomC{$\hypere\hmid t\eval \inl{v}\hmid u[v/x]\eval w$}
-  \UnaryInfC{$\hypere\hmid \mat t x u y {u'}\eval w$}
-  \DisplayProof
-  \ruleskip
-  \AxiomC{$\hypere\hmid t\eval \inr{v}\hmid u'[v/y]\eval w$}
-  \UnaryInfC{$\hypere\hmid \mat t x u y {u'}\eval w$}
-  \DisplayProof
-  \ruleskip
-  \AxiomC{}
-  \UnaryInfC{$\bang t\eval \bang t$}
+  \AxiomC{$\hypere\hmid t\eval_\emptyset \inl{v}\hmid u[v/x]\eval_S w$}
+  \UnaryInfC{$\hypere\hmid \mat t x u y {u'}\eval_S w$}
   \DisplayProof
   \hfill
-  \AxiomC{$\hypere\hmid t\eval \bang s\hmid s\eval v\hmid u[v/x]\eval w$}
-  \UnaryInfC{$\hypere \hmid \letin t {\bang x} u\eval w$}
+  \AxiomC{$\hypere\hmid t\eval_\emptyset \inr{v}\hmid u'[v/y]\eval_S w$}
+  \UnaryInfC{$\hypere\hmid \mat t x u y {u'}\eval_S w$}
   \DisplayProof
   \ruleskip
-  \AxiomC{$\hypere\hmid t\eval \bang s\hmid u\eval v$}
-  \UnaryInfC{$\hypere \hmid \letin t {\_} u\eval v$}
+  \AxiomC{$\hypere\hmid t\eval_S t'\hmid u\eval_{S'\sqcup \{x\}} u'$}
+  \AxiomC{$\hypere\hmid t\eval_S t'\hmid s\eval_{S'\sqcup \{y\}} s'$}
+  \BinaryInfC{$\hypere\hmid \mat t x u y s\eval_{S\sqcup S'} \mat {t'} x {u'} y {s'}$}
+  \DisplayProof when $S$ is nonempty
+  \ruleskip
+  \AxiomC{$t\eval_S t'$}
+  \UnaryInfC{$\bang t\eval_S \bang t'$}
   \DisplayProof
   \hfill
-  \AxiomC{$\hypere\hmid t\eval\bang s\hmid u[\bang s/x,\bang s/y]\eval v$}
-  \UnaryInfC{$\letin t {x@y} u\eval v$}
+  \AxiomC{$\hypere\hmid t\eval_\emptyset \bang v\hmid u[v/x]\eval_S w$}
+  \UnaryInfC{$\hypere \hmid \letin t {\bang x} u\eval_S w$}
+  \DisplayProof
+  \hfill
+  \AxiomC{$\hypere\hmid t\eval_\emptyset \bang s\hmid u\eval_S v$}
+  \UnaryInfC{$\hypere \hmid \letin t {\_} u\eval_S v$}
   \DisplayProof
   \ruleskip
-  \AxiomC{$\hypere\hmid t\eval v\hmid u[v/x]\eval w$}
-  \LL{eval-subst}
-  \UnaryInfC{$ \hypere\hmid u[t/x] \eval w $}
+  \AxiomC{$\hypere\hmid t\eval_\emptyset \bang s\hmid u[\bang s/x,\bang
+  s/y]\eval_S v$}
+  \UnaryInfC{$\letin t {x@y} u\eval_S v$}
   \DisplayProof
+  \hfill
+  \AxiomC{$\hypere\hmid t\eval_S t'\hmid u\eval_{BV{p}} u'$}
+  \UnaryInfC{$\letin t p u\eval_{S\sqcup S'} \letin {t'} p {u'}$}
+  \DisplayProof \\
+  \fix{define BV}
   \ruleskip
-  % let expansion
-  % \AxiomC
-  % {$\hypere\hmid t[\letin u p {(u_0 \otimes u_1)}/x] \eval w$}
-  % \UnaryInfC
-  % {$\hypere\hmid t[(\letin u p {u_0})\otimes u_1/x] \eval w$}
-  % \DisplayProof \\
-  % if $u_1$ does not have free variables bound by $p$.
-  % \ruleskip
-  % \AxiomC
-  % {$\hypere\hmid t[\letin u p {(u_0 \otimes u_1)}/x] \eval w$}
-  % \UnaryInfC
-  % {$\hypere\hmid t[u_0\otimes (\letin u p {u_1})/x] \eval w$}
-  % \DisplayProof \\
-  % if $u_0$ does not have free variables bound by $p$.
-  \caption{The definition of evaluation relation.  $\with$R only
-  applicable to singleton hypersequents.}
+  \AxiomC{$\hypere\hmid t[w/x]\eval_\emptyset w\hmid u\eval_S v$}
+  \UnaryInfC{$\hypere\hmid ct[\co c u/x]\eval_S v$}
+  \DisplayProof
+
+  \caption{The definition of evaluation relation.
+  $\hypere$ is possibly empty evaluation hypersequence.
+  The subscripts~$\bullet$ of $\eval_\bullet$ is introduced for keeping
+  determinacy while
+  having eval-subst rule (\thref{eval-subst}) admissible.
+  The whole system is based on Abramsky's LF
+  \citep{abramsky1993computational}, but differently from it,
+  we evaluate closed subterms even when they are in the scope of $\lambda$.
+  }
   \label{fig:eval}
  \end{figure}
 
+ \begin{lemma}
+   \label{eval-subst}
+  \AxiomC{$\hypere\hmid t\eval_\emptyset v\hmid u[v/x]\eval_S w$}
+  \LL{eval-subst}
+  \UnaryInfC{$ \hypere\hmid u[t/x] \eval_S w $}
+  \DisplayProof
+   is admissible.
+ \end{lemma}
+
 \begin{example}
- The rule subst-eval in Figure~\ref{fig:eval} is not in Abramsky's
+ \label{inner-something}
+ The rule eval-subst in \thref{eval-subst} is not in Abramsky's
  LF~\citep{abramsky1993computational}.  However, it is necessary to give
  the following evaluation.
   \begin{center}
@@ -540,11 +593,10 @@ We add the semantics for channels.
    \AxiomC{$t\eval v$}
    \BinaryInfC{$\ast\eval\ast\hmid t\eval v$}
    \UnaryInfC{$c\ast\eval\ast\hmid \co ct\eval v$}
-   \LL{subst-eval}
-   \UnaryInfC{$c(\co c t)\eval v$}
+   \LL{eval-subst}
+   \UnaryInfC{$\co c(c t)\eval v$}
    \DisplayProof
   \end{center}
- 
 \end{example}
 
 \section{Convergence}
@@ -560,7 +612,7 @@ For that we first assign a set of closed terms to each type.
 \fix{use of $v$ is ambiguious...?}
 We denote by $\terms$ the set of closed terms.
 Given $\semo{X}_0\in 2^\terms$ for each propositional variable~$X$,
-we define $\semo{\cdot}\colon \form{2^\terms}\rightarrow \form{2^\terms}$
+we define $\semo{\cdot}\colon \form{2^\terms}\rightarrow {2^\terms}$
 as follows:
 \begin{align*}
  \semo{\mathcal X} &= \mathcal X\\
@@ -594,15 +646,15 @@ $u\in\semo{\G\tr\tj t\phi}$.
  \begin{proposition}[General Convergence]
   \label{thm:generalconvergence}
   If
-  $\G_0\tr\tj{t_0}{\phi_0}\hmid\cdots\hmid \G_n\tr\tj{t_n}{\phi_0}$
+  $\G_0\tr\tj{t_0}{\phi_0}\hmid\cdots\hmid \G_n\tr\tj{t_n}{\phi_n}$
   is derivable,
   for any $(\vec{u^i}) \in \semo{\G_i}$ for ${0\le i \le n}$,
   there exist canonical forms $(v_i\in\semo{\phi_i})_{0\le i\le n}$ so
-  that $t_0[\vec{u^0}/ \G_0]\eval v_0\hmid\cdots\hmid
-  t_n[\vec{u^n}/\G_n]\eval v_n$ is derivable.
+  that $t_0[\vec{u^0}/ \G_0]\eval_\emptyset v_0\hmid\cdots\hmid
+  t_n[\vec{u^n}/\G_n]\eval_\emptyset v_n$ is derivable.
  \end{proposition}
   \begin{proof}
-   By induction on the type derivation.
+   By induction on the type derivation.  We use $\eval$ for $\eval_\emptyset$.
    \begin{description}
     \item[(IE)]
 	 Since terms in $\semo{\phi}$ or $\semo{\psi}$ do not contain
@@ -625,16 +677,16 @@ $u\in\semo{\G\tr\tj t\phi}$.
     is derivable for any $w \in \semo{\psi}$.
     Since $w_0$ is in $\semo{\phi}$ and $v$ is in
     $\semo{\phi\limp\psi}$,
-    $fw_0$ is in $\psi$.
+    $fw_0$ is in $\semo\psi$.
     Thus,
     \[
     \hypert\eval\vec{w'}\hmid t[\vec g/\G]\eval w_0\hmid
-    u[(fw_0)/x][\vec d/\D]\eval w_1
+    u[(vw_0)/x][\vec d/\D]\eval w_1
     \]
     is derivable.
-    The last term $u[(fw_0)/x][\vec d/\D]$ is identical to
-    $u[fy/x][w_0/y][\vec d/\D]$.
-    Thus, by rule eval-subst in Figure~\ref{fig:eval},
+    The last term $u[(vw_0)/x][\vec d/\D]$ is identical to
+    $u[vy/x][w_0/y][\vec d/\D]$.
+    Thus, by rule subst-eval in \thref{eval-subst},
     \[
     \hypert\eval\vec{w'}\hmid u[fy/x][t/y][\vec d/\D]\eval w_1
     \]
@@ -812,16 +864,14 @@ $u\in\semo{\G\tr\tj t\phi}$.
      However, $\semo{\forall X.X}$ is empty.
     \end{proof}
 
-    \fix{say something about church-rosser}
+     \begin{proposition}
+      \fix{state determinacy}
+     \end{proposition}
 
-    \begin{theorem}
-     If $t\eval v$ and $t\eval w$ are derivable,
-     there exists $w'$ so that
-     $v\eval w'$ and $w\eval w'$ are derivable.
-    \end{theorem}
-    \begin{proof}
-     \fix{prove}
-    \end{proof}
+    \begin{corollary}
+     If $t\eval_\emptyset v$ and $t\eval_\emptyset w$ are derivable,
+     $v$ and $w$ are the same.
+    \end{corollary}
 
     \section{Sessions and Processes}
 
@@ -1174,7 +1224,7 @@ $u\in\semo{\G\tr\tj t\phi}$.
     $}
     \DisplayProof
    \end{center}
-   is admissible.\fix{define admissible somewhere}
+   is admissible.
   \end{lemma}
   \begin{proof} By the derivation in Figure~\ref{fig:processtype}
     \begin{sidewaysfigure}
@@ -1496,7 +1546,7 @@ process calculi because the process waits for a value from $x$ before
 sending a value to $x$.
 However, we can give an evaluation to this process.
 
-The situation is essentially similar to $c(\co c)t$.
+The situation is essentially similar to $\co c(c)t$ (\thref{inner-something}).
 When we want the output of channel $c$, we can look at $\co c$'s input,
 which is $t$.  However, when we want the output of $\co c$, we have to
 look at the input of $c$, which is again the output of $\co c$.  Thus we
