@@ -1,4 +1,4 @@
-\chapter{A Hyper-Lambda-Calculus for Sychronous Communication}
+\chapter{A Hyper-Lambda-Calculus for Synchronous Communication}
 \label{ch:exchange}
 
 \subsection{Motivation}
@@ -30,7 +30,7 @@ linear types can specify a portion of program to be used
 just once.
 
 One promising approach is session types.
-Sesison types aims at typing channels and processes in $\pi$-calculus so
+Session types aims at typing channels and processes in $\pi$-calculus so
 that the process execution is deterministic and not ending in deadlock.
 In general session type systems are not based on well-known logic.
 
@@ -94,7 +94,7 @@ A \textit{type}\index{type} is an element of $\form(\emptyset)$.
 \subsection{Terms and Free Variables}
 
 Following Abramsky's linear lambda calculus
-LF~\citep{abramsky1993computational}, we first defne patterns
+LF~\citep{abramsky1993computational}, we first define patterns
 binding sets of variables:
 \begin{itemize}
  \item $\ast$ and $\_$ are patterns binding $\emptyset$,
@@ -722,7 +722,7 @@ such that each $u_i$ is in $\semo{\phi_i}$.
 For a sequent $\G\tr\tj{t}{\phi}$, $\semo{\G\tr\tj{t}{\phi}}$ denotes
 the set consisting of terms $t[\vec g/G]$ for some $\vec g\in\semo{\G}$.
 For a hypersequent with terms $\hypert$,
-$\semo\hypert$ is defined in a componentwise way:
+$\semo\hypert$ is defined in a component-wise way:
 $\semo{\hypert\hmid\G\tr\tj t\phi}$ contains any $\hmid$-delimited
 sequence of terms
 $\vec O \hmid u$ such that $\vec O\in\semo{\hypert}$ and
@@ -776,7 +776,7 @@ $u\in\semo{\G\tr\tj t\phi}$.
     \hypert\eval\vec{w'}\hmid u[fy/x][t/y][\vec d/\D]\eval w_1
     \]
     is derivable.
-    \item[(Cut)] Essentically the same as and simpler than ($\limp$L).
+    \item[(Cut)] Essentially the same as and simpler than ($\limp$L).
     \item[(Sync)]
 	 The derivation ends as
 	 \AxiomC{$\hypert\hmid \G\tr\tj{t}{\phi}\hmid \D\tr\tj{u}{\psi}$}
@@ -893,7 +893,7 @@ $u\in\semo{\G\tr\tj t\phi}$.
 	 \end{center}
 	 Take any $\vec g\in\semo{\G}$, $s\in\semo{\phi\with\psi}$
 	 and $O\in\semo{\hypert}$
-	 By definition of $s$, $s\eval \lpair{v_0,v_1}$ is derivaboe
+	 By definition of $s$, $s\eval \lpair{v_0,v_1}$ is derivable
 	 for some
 	 $v_0\in\semo{\phi}$ and $v_1\in\semo{\psi}$.
 	 By induction hypothesis,
@@ -1063,11 +1063,11 @@ $u\in\semo{\G\tr\tj t\phi}$.
      \recvtype\phi\psi&\equiv \phi\otimes\psi &\text{type of a channel
      for inputting value of type $\phi$ then behave as $\psi$}\\
      \oplus\{l_i\colon \phi_i\}_{i\in I} &\equiv {\phi_0}\with
-     \cdots \with {\phi_n}, \quad I = \{0,\ldots,n\} & \text{select from behaviours
+     \cdots \with {\phi_n}, \quad I = \{0,\ldots,n\} & \text{select from behaviors
      $\phi_i$ with label $l_i$}\\
      \with\{l_i\colon \phi_i\}_{i\in I} &\equiv {\phi_0}\oplus
      \cdots \oplus {\phi_n}, \quad I = \{0,\ldots,n\}& \text{offer choice of
-     behaviours $\phi_i$ with label $l_i$}
+     behaviors $\phi_i$ with label $l_i$}
      \\
      \terminate &\equiv \one &\text{terminator}
     \end{align*}
@@ -1113,7 +1113,7 @@ $u\in\semo{\G\tr\tj t\phi}$.
 
     \subsection{Processes as Abbreviations}
 
-    \subsubsection{Process Abrreviations}
+    \subsubsection{Process Abbreviations}
     We define the sending and receiving as abbreviations:
     \begin{align*}
      \sendterm x u t &\equiv t[(xu) /x] &\text{send $u$ through channel
@@ -1178,7 +1178,7 @@ $u\in\semo{\G\tr\tj t\phi}$.
       \psi\limp\chi}\tr\tj{t[(xu)/x]}{\phi}$}
 	 \DisplayProof\enspace.
 	\end{center}
-       The third and the fourth rule are more evidently one of the orignal rules.
+       The third and the fourth rule are more evidently one of the original rules.
       \end{proof}
 
     \begin{example}[Typed communicating terms]
@@ -1785,7 +1785,7 @@ For example,
 \fix{define essential net structure, add unit}
 
 \fix{state correctness}
-Lamarche exibits a common technique of decomposing a net structure from
+Lamarche exhibits a common technique of decomposing a net structure from
 the bottom.
 
 \fix{who} chose to reduce the problem to sequents of special forms
@@ -1916,9 +1916,9 @@ the full intuitionistic logic following
 \subsection{Pfenning}
 
 \citet{pfenning2010} provide a type system for a fragment of $\pi$-calculus.
-The type system of \citet{pfenning2010} imposes too strong a descipline
+The type system of \citet{pfenning2010} imposes too strong a discipline
 than necessary to provide deadlock freedom.
-While the escrowing process $P$ is not typeable in their type
+While the escrowing process $P$ is not typable in their type
 system, where
 \[
  P = \sendterm x y{\recvterm x a {\recvterm y b {\sendterm x b
@@ -1927,7 +1927,7 @@ system, where
 The process first emits a channel~$y$ through channel~$x$ and then
 exchanges inputs from $x$ and $y$ into outputs to $y$ and $x$.
 Following the informal description of types in \citep{pfenning2010},
-the process~$P$ should be typeable as
+the process~$P$ should be typable as
 \[
  \vdash P::x:(A\limp B)\otimes(B\limp A)\enspace.
 \]
@@ -1946,9 +1946,9 @@ In our type system, the following sequent is derivable
 {y_R} a {\ign{x,y}0}}}}}}
 }{\one}
 \end{align*}
-The resulting sequent indicates that the process is typeable with one
+The resulting sequent indicates that the process is typable with one
 open channel~$x$ that emits
-a channel to/from which one can send~$B$ and receivie~$A$, receives a
+a channel to/from which one can send~$B$ and receive~$A$, receives a
 value of $B$ and
 sends a value of $A$.
 This example shows that our type system is strictly more flexible than
@@ -2063,20 +2063,20 @@ one, which can be typed and evaluated in our framework as well.
   We can combine the server with two clients.
    \begin{center}
     \AxiomC{$\tj{s}{SP}\tr\tj{QClint_s}{\one}$}
-    \AxiomC{$\tj{s'}{SP}\tr\tj{BClient_{s'}}{\one}$}
+    \AxiomC{$\tj{s'}{SP}\tr\tj{BClint_{s'}}{\one}$}
     \BinaryInfC{$\tj{s}{SP},\tj{s'}{SP}\tr
-    \tj{{QClint_s}\otimes{BClient_{s'}}}{\one\otimes\one}$}
+    \tj{{QClint_s}\otimes{BClint_{s'}}}{\one\otimes\one}$}
     \UnaryInfC{$\tj{s}{!SP},\tj{s'}{!SP}\tr
     \tj{\letin{s}{!s}{\letin{s'}{!s'}
-    {{QClint_s}\otimes{BClient_{s'}}}}}{\one\otimes\one}$}
+    {{QClint_s}\otimes{BClint_{s'}}}}}{\one\otimes\one}$}
     \UnaryInfC{$\tj{s}{!SP}\tr
     \tj{\letin{s}{s@s'}{
     \letin{s}{!s}{\letin{s'}{!s'}
-    {{QClint_s}\otimes{BClient_{s'}}}}}}{\one\otimes\one}$}
+    {{QClint_s}\otimes{BClint_{s'}}}}}}{\one\otimes\one}$}
     \UnaryInfC{$\tr
     \tj{\letin{!Serv}{s@s'}{
     \letin{s}{!s}{\letin{s'}{!s'}
-    {{QClint_s}\otimes{BClient_{s'}}}}}}{\one\otimes\one}$}
+    {{QClint_s}\otimes{BClint_{s'}}}}}}{\one\otimes\one}$}
     \DisplayProof
    \end{center}
 
@@ -2124,7 +2124,7 @@ $\sigma_{ABCD}\colon (A\limp B)\otimes (C\limp D)\rightarrow (A\limp D) \otimes
    $m \limp n$ as $n-m$.
   \end{example}
 A straightforward reading of evaluation rules gives somewhat complicated
-equiality conditions for morphisms.
+equality conditions for morphisms.
 The condition says the following diagram commutes:
 \[
    \begin{CD}
