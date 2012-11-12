@@ -21,33 +21,32 @@ each.
 Fundamentally, this is because the type system of Haskell
 is based on intuitionistic logic, which allows throwing away proofs.
 
+\fix{mention join calculus here or in related work}
+
 As a remedy, we invent a typed lambda calculus where
 the user is forced to use both of sending and receiving primitives.
-For that we use the tecunique of linear types:
+For that we use the technique of linear types:
 linear types can specify a portion of program to be used
 just once.
 
-
 One promising approach is session types.
-Not based on logic.  Complicated, hard to reason about, one paper
-contained errors.
+Sesison types aims at typing channels and processes in $\pi$-calculus so
+that the process execution is deterministic and not ending in deadlock.
+In general session type systems are not based on well-known logic.
 
 We show that it is still possible to build
 a type system which is based on a logic.
 Wadler and Pfenning did that, but our type system allows more.
 
 From the standard intuitionistic linear logic,
-the only change is addin an axiom
+the only change is adding an axiom
 $(\phi\limp\psi)\oplus(\psi\limp\phi)$.
-Here, we can express $\pi$-calculus stype processes as macros.
-In other words,
+Here, we can express $\pi$-calculus-like processes as macros.
 
-\subsection{Summary}
-
-After studying $(\phi\limp\psi)\oplus (\psi\limp\phi)$,
-it is natural to change the additive disjunction $\oplus$ into
-multiplicative conjunction $\otimes$ and see what happens%
-\footnote{Takeuti Izumi asked what about conjunctions.}.
+However, our initial motivation was just studying the axiom
+$(\phi\limp\psi)\otimes(\psi\limp\phi)$%
+\footnote{Takeuti Izumi asked about conjunctions
+after the author talked about $(\phi\limp\psi)\oplus (\psi\limp\phi)$.}.
 A natural way to add $(\phi\limp\psi)\otimes(\psi\limp\phi)$ as an axiom
 is adding a pair of primitives $c,\co c$ so that
 $\cdots ct \cdots \co c u \cdots$ reduces to
@@ -103,6 +102,7 @@ binding sets of variables:
        $\{x\}$,
  \item $x\otimes y$ and $x@y$ are patterns binding $\{x,y\}$.
 \end{itemize}
+We write $BV(p)$ for the set of bound variables of pattern~$p$.
 Using patterns, we define a term $t$ with free variables~$S$.
 We assume countably infinitely many \textit{channels}\index{channel}
 with involution
@@ -169,7 +169,7 @@ $\lpair{\hypert,\hypert'}^n$ for hypersequents satisfying
 $\type(\hypert) = \type(\hypert')$.
 
 \fix{definition of terms contains natural number?}
-Differently from the previous chapters,
+Differently from the previous works \fix{cite},
 here, the hypersequent $\G\tr\phi\hmid \D\tr\psi$ is interpreted as the
 conjunction of components:
 $(\bigotimes\G\limp\phi)\otimes (\bigotimes\D\limp\psi)$.
@@ -394,7 +394,7 @@ $\tj{x}{\phi}\tr\tj{\co c(cx)}{\phi}$
 \subsection{Evaluation Relation}
 
 The set of canonical forms remains the same as Abramsky's
-system~\citep{abramsky1993computational}:
+LF~\citep{abramsky1993computational}:
 \[
  \lpair{t,u}\qquad \bang t\qquad \ast\qquad v\otimes w\qquad \lambda
  x.t\qquad \inl{v}\qquad\inr{w}
@@ -409,7 +409,8 @@ grammar:
 
 Now we define evaluation as a set of evaluation hypersequents
 (Figure~\ref{fig:eval}).
-Most rules are the same as Abramsky's~\citep{abramsky1993computational}.
+Most rules are similar to those of Abramsky's
+LF~\citep{abramsky1993computational}.
 We add the semantics for channels.
 
 For some reasons, we have to evaluate the subterm~$s$ in $\lambda
@@ -417,6 +418,11 @@ x.t[s/y]$ if $s$ is closed while Abramsky never evaluated
 anything inside lambda.
 In order to keep track of that, we annotate the $\eval$ relation with
 involved free variables~$S$.
+
+ \begin{proposition}
+  If evaluation hypersequent $\hypere\hmid t\eval_S v$
+  is derivable, $S$ is identical to the set of free variables of $t$.
+ \end{proposition}
 
  \begin{figure}
   \centering
@@ -439,14 +445,19 @@ involved free variables~$S$.
   \UnaryInfC{$\hypere\hmid t\otimes u\eval_{S\sqcup S'} v\otimes w$}
   \DisplayProof
   \ruleskip
+  % ign_not yet
+  \AxiomC{$\hypere\hmid t\eval_S t'\hmid u\eval_{S'} u'$}
+  \UnaryInfC{$\hypere\hmid \ign t u \eval_{S\sqcup S'} \ign{t'}{u'}$}
+  \DisplayProof
+  \hfill
   % otimes elim
   \AxiomC{$\hypere\hmid t\eval_\emptyset v\otimes w\hmid u[v/x,w/y]\eval_{S} v'$}
   \UnaryInfC{$\hypere\hmid \letin t {x\otimes y} u \eval_{S} v'$}
   \DisplayProof
   \ruleskip
-  \AxiomC{$\hypere\hmid t\eval_S v\hmid u\eval_{S'\sqcup\{x,y\}} w$}
-  \UnaryInfC{$\hypere\hmid \letin t {x\otimes y} u \eval_{S\sqcup S'} \letin v
-  {x\otimes y} w$}
+  \AxiomC{$\hypere\hmid t\eval_S {t'}\hmid u\eval_{S'\sqcup\{x,y\}} {u'}$}
+  \UnaryInfC{$\hypere\hmid \letin t {x\otimes y} u \eval_{S\sqcup S'} \letin {t'}
+  {x\otimes y} {u'}$}
   \DisplayProof if $S$ is not empty
   \ruleskip
   \AxiomC{$\hypere$}
@@ -454,8 +465,8 @@ involved free variables~$S$.
   \BinaryInfC{$\hypere\hmid \hypere'$}
   \DisplayProof
   \hfill
-  \AxiomC{$\hypere\hmid t\eval_{S\sqcup \{x\}} v$}
-  \UnaryInfC{$\hypere\hmid \lambda x.t\eval_{S} \lambda x.v$}
+  \AxiomC{$\hypere\hmid t\eval_{S\sqcup \{x\}} t'$}
+  \UnaryInfC{$\hypere\hmid \lambda x.t\eval_{S} \lambda x.t'$}
   \DisplayProof
   \hfill
   \AxiomC{$\hypere\hmid t\eval_\emptyset \lambda x.t'\hmid u\eval_\emptyset v\hmid
@@ -474,19 +485,21 @@ involved free variables~$S$.
   \AxiomC{$t\eval_S t'$}
   \AxiomC{$u\eval_{S'} u'$}
   \BinaryInfC{$
-  \lpair{t, u}\eval_{S\sqcup S'}
-  \lpair{t', u'}$}
+  \hypere\hmid\lpair{t, u}\eval_{S\sqcup S'}
+  \hypere\hmid\lpair{t', u'}$}
   \DisplayProof when $S\sqcup S'$ is not empty
   \hfill
-  \AxiomC{   $\hypere\hmid t\eval_S t'\hmid s\eval_{S'} s'\hmid \hypere'$}
+  \AxiomC{   $\hypere\hmid t\eval_S t'\hmid s\eval_{S'} s'\hmid
+  \hypere'$}
+  \LL{ex}
   \UnaryInfC{$\hypere\hmid s\eval_{S'} s'\hmid t\eval_S t'\hmid \hypere'$}
   \DisplayProof
   \ruleskip
   \AxiomC{$\hypere\hmid
   t\eval_\emptyset\lpair{t_0,t_1}\hmid t_0\eval_\emptyset v_0
-  \hmid  u[v_0/x]\eval_S w$}
+  \hmid  u[v_0/x]\eval_\emptyset w$}
   \UnaryInfC{$\hypere \hmid
-  \letin t {\lpair{x,\_}} u\eval_S w$}
+  \letin t {\lpair{x,\_}} u\eval_\emptyset w$}
   \DisplayProof
   \ruleskip
   \AxiomC{$\hypere
@@ -500,9 +513,9 @@ involved free variables~$S$.
   \ruleskip
   \AxiomC{$\hypere
   \hmid t\eval_\emptyset\lpair{t_0,t_1}\hmid t_1\eval_\emptyset v_1
-  \hmid  u[v_1/y]\eval_S w$}
+  \hmid  u[v_1/y]\eval_\emptyset w$}
   \UnaryInfC{$\hypere \hmid
-  \letin t {\lpair{\_,y}} u\eval_S w$}
+  \letin t {\lpair{\_,y}} u\eval_\emptyset w$}
   \DisplayProof
   \ruleskip
   \AxiomC{$\hypere
@@ -513,7 +526,9 @@ involved free variables~$S$.
   \letin {t'} {\lpair{\_,y}} {u'}
   $}
   \DisplayProof
+  when $S\sqcup S'$ is not empty
   \ruleskip
+    % additive or intro
   \AxiomC{$\hypere\hmid t\eval_S v$}
   \UnaryInfC{$\hypere\hmid \inl{t}\eval_S \inl{v}$}
   \DisplayProof
@@ -522,25 +537,26 @@ involved free variables~$S$.
   \UnaryInfC{$\hypere \hmid \inr{u}\eval_S \inr{w}$}
   \DisplayProof
   \ruleskip
-  \AxiomC{$\hypere\hmid t\eval_\emptyset \inl{v}\hmid u[v/x]\eval_S w$}
-  \UnaryInfC{$\hypere\hmid \mat t x u y {u'}\eval_S w$}
+  % additive or elim
+  \AxiomC{$\hypere\hmid t\eval_\emptyset \inl{v}\hmid u[v/x]\eval_\emptyset w$}
+  \UnaryInfC{$\hypere\hmid \mat t x u y {u'}\eval_\emptyset w$}
   \DisplayProof
   \hfill
-  \AxiomC{$\hypere\hmid t\eval_\emptyset \inr{v}\hmid u'[v/y]\eval_S w$}
-  \UnaryInfC{$\hypere\hmid \mat t x u y {u'}\eval_S w$}
+  \AxiomC{$\hypere\hmid t\eval_\emptyset \inr{v}\hmid u'[v/y]\eval_\emptyset w$}
+  \UnaryInfC{$\hypere\hmid \mat t x u y {u'}\eval_\emptyset w$}
   \DisplayProof
   \ruleskip
   \AxiomC{$\hypere\hmid t\eval_S t'\hmid u\eval_{S'\sqcup \{x\}} u'$}
   \AxiomC{$\hypere\hmid t\eval_S t'\hmid s\eval_{S'\sqcup \{y\}} s'$}
   \BinaryInfC{$\hypere\hmid \mat t x u y s\eval_{S\sqcup S'} \mat {t'} x {u'} y {s'}$}
-  \DisplayProof when $S$ is nonempty
+  \DisplayProof \\ when $S$ is nonempty
   \ruleskip
   \AxiomC{$t\eval_S t'$}
   \UnaryInfC{$\bang t\eval_S \bang t'$}
   \DisplayProof
   \hfill
-  \AxiomC{$\hypere\hmid t\eval_\emptyset \bang v\hmid u[v/x]\eval_S w$}
-  \UnaryInfC{$\hypere \hmid \letin t {\bang x} u\eval_S w$}
+  \AxiomC{$\hypere\hmid t\eval_\emptyset \bang v\hmid u[v/x]\eval_\emptyset w$}
+  \UnaryInfC{$\hypere \hmid \letin t {\bang x} u\eval_\emptyset w$}
   \DisplayProof
   \hfill
   \AxiomC{$\hypere\hmid t\eval_\emptyset \bang s\hmid u\eval_S v$}
@@ -549,15 +565,16 @@ involved free variables~$S$.
   \ruleskip
   \AxiomC{$\hypere\hmid t\eval_\emptyset \bang s\hmid u[\bang s/x,\bang
   s/y]\eval_S v$}
-  \UnaryInfC{$\letin t {x@y} u\eval_S v$}
+  \UnaryInfC{$\hypere\hmid\letin t {x@y} u\eval_S v$}
   \DisplayProof
   \hfill
-  \AxiomC{$\hypere\hmid t\eval_S t'\hmid u\eval_{BV{p}} u'$}
-  \UnaryInfC{$\letin t p u\eval_{S\sqcup S'} \letin {t'} p {u'}$}
+  \AxiomC{$\hypere\hmid t\eval_S t'\hmid u\eval_{BV(p)} u'$}
+  \UnaryInfC{$\hypere\hmid\letin t p u\eval_{S\sqcup S'} \letin {t'} p {u'}$}
   \DisplayProof \\
   \fix{define BV}
   \ruleskip
   \AxiomC{$\hypere\hmid t[w/x]\eval_\emptyset w\hmid u\eval_S v$}
+  \LL{nested-channel}
   \UnaryInfC{$\hypere\hmid ct[\co c u/x]\eval_S v$}
   \DisplayProof
 
@@ -573,14 +590,82 @@ involved free variables~$S$.
   \label{fig:eval}
  \end{figure}
 
+ \fix{add a proposition saying we can move a rule application upwards
+ relative to a component
+ unless it is a sync rule with that component}
+ \fix{this is why the rule sync is named after synchronization}
+
  \begin{lemma}
    \label{eval-subst}
-  \AxiomC{$\hypere\hmid t\eval_\emptyset v\hmid u[v/x]\eval_S w$}
+  \AxiomC{$\hypere\hmid t\eval_\emptyset v\hmid u[v/x]\eval_\emptyset w$}
   \LL{eval-subst}
-  \UnaryInfC{$ \hypere\hmid u[t/x] \eval_S w $}
+  \UnaryInfC{$ \hypere\hmid u[t/x] \eval_\emptyset w $}
   \DisplayProof
    is admissible.
  \end{lemma}
+ \begin{proof}
+  By induction on the height of derivation, but we classify the
+  situation by the form of $u$.
+  \begin{description}
+   \item[($u$ is $x$)]
+	Since $\hypere\hmid t\eval_\emptyset v\hmid v\eval_\emptyset w$
+	is derivable, $w$ must be identical to $v$.
+	Also, since canonical form~$v$ does not contain channels,
+	$\hypere\hmid t\eval_\emptyset v$ is derivable and so is
+	$\hypere\hmid t\eval_\emptyset w$.
+   \item[($u$ is $cu'$)]
+	$\hypere\hmid t\eval v\hmid cu'[v/x]\eval w$ \fix{annotate eval}
+	is derivable.  If the last rule touches components in $\hypere$,
+	our statement follows from the induction hypothesis.
+	If the last rule touches $t$ but $t$ is not $\co c t'$, then
+	we can still use the induction hypothesis\fix{why?}.
+	Otherwise, when the last rule introduces the channel pair $c,\co c$,
+	there are three possibilities for how the pair
+	$c, \co c$ is introduced.
+	\begin{description}
+	 \item[(with $\hypere$)]
+	       \begin{center}
+		\AxiomC{$\hypere\hmid s\eval w\hmid t\eval v\hmid
+		u'[v/x]\eval w'$}
+		\UnaryInfC{$\hypere \hmid \co c s\eval w'\hmid t\eval v
+		\hmid cu'[v/x]\eval w$}
+		\DisplayProof
+	       \end{center}
+	      By induction hypothesis,
+	       \begin{center}
+		$\hypere\hmid s\eval w\hmid u'[t/x]\eval w'$
+	       \end{center}
+	      is derivable so is
+	       \begin{center}
+		$\hypere\hmid \co c s\eval w'\hmid cu'[t/x]\eval w$\enspace.
+	       \end{center}
+	 \item[(with $t$)]
+	       \begin{center}
+		\AxiomC{$\hypere\hmid t'\eval w\hmid u'[v/x]\eval v$}
+		\UnaryInfC{$\hypere \hmid \co ct'\eval v\hmid
+		cu'[v/x]\eval w$}
+		\DisplayProof
+	       \end{center}
+	      By nested-channel, $\hypere\hmid cu'[\co c t'/x]\eval v$
+	      is derivable.
+	 \item[(with $u'$)]
+	       \begin{center}
+		\AxiomC{$\hypere\hmid t\eval v\hmid
+		u''[w'/y]\eval_\emptyset w'\hmid u'''[v/x]\eval w$}
+		\UnaryInfC{$\hypere\hmid t\eval v\hmid cu''[\co
+		cu'''[v/x]/y]\eval w$}
+		\DisplayProof
+	       \end{center}
+	      By induction hypothesis,
+	      $\hypere\hmid u''[w'/y]\eval_\emptyset w'\hmid
+	      u'''[t/x]\eval w$
+	      is derivable and so is
+	      $\hypere\hmid cu''[\co cu'''[t/x]/y]\eval w$.
+	      \fix{annotate eval}
+	\end{description}
+   \item[other] \fix{fill}
+  \end{description}
+ \end{proof}
 
 \begin{example}
  \label{inner-something}
@@ -852,6 +937,8 @@ $u\in\semo{\G\tr\tj t\phi}$.
 
    \begin{corollary}[Convergence]
     \label{convergence}
+    If $\tr\tj{t}{\phi}$ is derivable,
+    $t\eval_{\emptyset} v$ is derivable for some canonical form~$v$.
    \end{corollary}
 
    \begin{corollary}[Consistency of \fix{name of logic}]
@@ -864,9 +951,94 @@ $u\in\semo{\G\tr\tj t\phi}$.
      However, $\semo{\forall X.X}$ is empty.
     \end{proof}
 
-     \begin{proposition}
-      \fix{state determinacy}
-     \end{proposition}
+    \subsection{Determinacy}
+
+    A sequence of terms $(t_i)_{0\le i \le n}$ is well-formed iff both
+    of these conditions are met:
+    \begin{itemize}
+     \item if a channel~$c$ appears in any of $t_i$,
+	   each of $c$ and $\bar c$ appears only once in $(t_i)_{0\le i
+	   \le n}$,
+     \item if any $t_i$ contains a subterm of the form $ct[\bar cu/x]$,
+	   then, $t$ contains no channels.
+    \end{itemize}
+    The first condition is natural while the second is rather
+    cumbersome so that we hope to remove the second condition in the
+    future.
+
+    \begin{proposition}
+     \label{remove-local}
+     If $\hypere\hmid \hypere'$ is derivable and $\hypere'$ does not contain
+     containing any channels, $\hypere$ and $\hypere'$ are separately derivable.
+    \end{proposition}
+    \begin{proof}
+     \fix{prove}
+    \end{proof}
+
+    \begin{proposition}
+     For a well-formed sequence of terms
+     $(t_i)_{0\le i\le n}$,
+     there exist a unique (if any) sequence of terms $(v_i)_{0\le i \le
+     n}$ and a unique (if any) sequence of sets of variables
+     $(S_i)_{0\le i \le n}$ such that
+     \[
+     t_0\eval_{S_0} v_0\hmid \cdots \hmid t_n\eval_{S_n} v_n
+     \]
+     is derivable.
+    \end{proposition}
+    \begin{proof}
+     First, by induction on evaluation derivation,
+     $S_i$ must be identical to the set of free variables in $t_i$.
+     Second, all rules of evaluation relation derivations except
+     nested-channel and ex (in Figure~\ref{fig:eval})
+     have distinct conclusions so that
+     the conclusion can determine the last rule
+     applied up to the choice of the last-generated component.
+     Now we have three things to consider.
+     \begin{enumerate}
+      \item ex rule can be disregarded if we consider
+	    a hypersequent as a finite set of components rather than
+	    a finite sequence of components,
+      \item In the nested-channel rule application,
+	    we cannot immediately determine $w$:
+	     \begin{center}
+  \AxiomC{$\hypere\hmid t[w/x]\eval_\emptyset w\hmid u\eval_S v$}
+  \LL{nested-channel}
+  \UnaryInfC{$\hypere\hmid ct[\co c u/x]\eval_S v$}
+  \DisplayProof
+	     \end{center}
+	    because $w$ is contained in both sides of $\eval$.
+	    However, by well-formedness, $t$ does not contain channels.
+	    Thus, by \thref{remove-local}, a simpler evaluation
+	    hypersequent $\hypere
+	    \hmid u\eval_S v$ is derivable so that we can determine $v$
+	    from induction hypothesis.
+      \item From bottom to up, we can choose components in different
+	    orders.
+	    For example, we have different derivations for the same
+	    conclusion as
+	     \begin{center}
+	      \AxiomC{$v\eval v\hmid \inr w\eval \inr w$}
+	      \UnaryInfC{$\inl v\eval \inl v\hmid \inr w\eval \inr w$}
+	      \DisplayProof
+	     \end{center}
+	    and
+	     \begin{center}
+	      \AxiomC{$\inl v\eval \inl v\hmid w\eval w$}
+	      \UnaryInfC{$\inl v\eval \inl v \hmid \inr w\eval \inr w$}
+	      \DisplayProof\enspace.
+	     \end{center}
+	    However, such choices are locally confluent because
+	    the only rule touching more than two components
+	    in the conclusion is
+	     \begin{center}
+	      \AxiomC{$\hypere\hmid t\eval_{\emptyset} v\hmid u\eval_{\emptyset} w$}
+	      \UnaryInfC{$\hypere\hmid ct\eval_{\emptyset} w\hmid \co cu\eval_{\emptyset} v$}
+	      \DisplayProof
+	     \end{center}
+	    but neither $c$ or $\co c$ appears in $\hypere$ due to well-formedness.
+     \end{enumerate}
+    \end{proof}
 
     \begin{corollary}
      If $t\eval_\emptyset v$ and $t\eval_\emptyset w$ are derivable,
@@ -877,7 +1049,7 @@ $u\in\semo{\G\tr\tj t\phi}$.
 
     \subsection{Session Types as Abbreviations}
 
-    As abbreviation, we introduce \textit{session
+    As an abbreviation, we introduce \textit{session
     types}\index{type!session}\index{session type|see{type}}.
     Instead of the standard notation $\bang\phi.\psi$, we use
     $\sendtype{\phi}{\psi}$ in order to avoid the confusion with
@@ -886,8 +1058,10 @@ $u\in\semo{\G\tr\tj t\phi}$.
     The definitions and the descriptions are modification from
     \citet{wadler2012propositions}'s translations and descriptions.
     \begin{align*}
-     \sendtype\phi\psi&\equiv \phi\limp\psi &\text{output value of type $\phi$ then behave as $\psi$} \\
-     \recvtype\phi\psi&\equiv \phi\otimes\psi &\text{input value of type $\phi$ then behave as $\psi$}\\
+     \sendtype\phi\psi&\equiv \phi\limp\psi &\text{type of a channel for
+     outputting value of type $\phi$ then behave as $\psi$} \\
+     \recvtype\phi\psi&\equiv \phi\otimes\psi &\text{type of a channel
+     for inputting value of type $\phi$ then behave as $\psi$}\\
      \oplus\{l_i\colon \phi_i\}_{i\in I} &\equiv {\phi_0}\with
      \cdots \with {\phi_n}, \quad I = \{0,\ldots,n\} & \text{select from behaviours
      $\phi_i$ with label $l_i$}\\
@@ -1514,6 +1688,7 @@ $u\in\semo{\G\tr\tj t\phi}$.
 
 Using \thref{typing_process} and \thref{typing_connection},
 we can build the following type derivation.
+\fix{use the translation and use the correct something}
  \begin{center}
   \AxiomC{}
   \UnaryInfC{$\tr\tj 0\one$}
@@ -1566,7 +1741,175 @@ Indeed, this process is not typable.
 
 \section{Proof Nets}
 
-\fix{talk about proof nets}
+Proof nets are
+graphical representation of proofs.
+\fix{Girard, etc etc}
+
+Since the Amida axiom $(\phi\limp\psi)\otimes(\psi\limp\phi)$
+does not contain additives ($\with,\oplus$) or exponential ($!$),
+we can focus on the multiplicative connectives.
+The fragment is called IMLL (intuitionistic multiplicative fragment of
+linear logic).  We also use the unit $\one$ for technical reasons.
+We first describe the IMLL proof nets and their properties.
+Then we add Amida links and see it characterizes the Amida logic.
+
+The Amida links are named after the Amida lottery,
+a traditional way to generate permutations on a set%
+\footnote{The Amida lottery has been known in Japan since \fix{?}}.
+
+\subsection{IMLL Essential Nets}
+
+We can translate a pair $\tuple{\phi,p}$ of
+a polarity $p\in\{+,-\}$ and an IMLL formula~$\phi$ into
+a polarized MLL formula as follow (from \fix{cite Ong and Lamarche}).
+\begin{align*}
+ \imtrans{X}^+ = X^+      \qquad & \imtrans{X}^- = X^- \\
+ \imtrans{\phi\limp\psi}^+ = \imtrans{\phi}^-\parr^+\imtrans{\psi}^+
+ \qquad & \imtrans{\phi\limp\psi}^- = \imtrans{\phi}^+ \otimes^-
+ \imtrans{\psi}^- \\
+ \imtrans{\phi\otimes\psi}^+ = \imtrans{\phi}^+\otimes^+\imtrans{\psi}^+
+ \qquad & \imtrans{\phi\otimes\psi}^- =
+ \imtrans{\phi}^- \parr^- \imtrans{\psi}^-\enspace.
+\end{align*}
+
+For example,
+\begin{align*}
+   &\imtrans{(X\limp Y)\otimes (Y\limp X)}^+ \\
+ =\, &\imtrans{X\limp Y}^+ \otimes^+ \imtrans{Y\limp X}^+ \\
+ =\, &\left(\imtrans{X}^- \parr^+ \imtrans{Y}^+ \right) \otimes^+
+    \left(\imtrans{Y}^- \parr^+ \imtrans{X}^+ \right) \\
+ =\, &\left({X}^- \parr^+ {Y}^+ \right) \otimes^+
+    \left({Y}^- \parr^+ {X}^+ \right)
+\end{align*}
+
+\fix{define essential net structure, add unit}
+
+\fix{state correctness}
+Lamarche exibits a common technique of decomposing a net structure from
+the bottom.
+
+\fix{who} chose to reduce the problem to sequents of special forms
+called regular.
+
+\subsection{Amida Nets}
+
+ \begin{definition}[Amida nets]
+For a hypersequent~$\hyper$,
+\textit{Amida nets}\index{Amida nets} of $\hyper$ are inductively
+  defined as
+\begin{itemize}
+ \item an essential net of $\hyper$ is an Amida net of $\hyper$
+ \item for an Amida net of $\hyper$ with two different $+$~edges,
+	\begin{center}
+	 % twoedges
+	 \includegraphics[scale=0.4]{twoedges.eps}
+	\end{center}
+       replacing these with
+	\begin{center}
+	 \includegraphics[scale=0.4]{twoedges_amida.eps}
+	\end{center}
+       yields an Amida net of $\hyper$,
+       where the above component has two paths $e_{0d} e_a e_{1u}$
+       and $e_{1d} e_a e_{0u}$.
+ \item for an Amida net of $\hyper$ with a $+$~edge,
+	\begin{center}
+	 \includegraphics[scale=0.4]{oneedge.eps}
+	\end{center}
+       replacing these with
+	\begin{center}
+	 \includegraphics[scale=0.4]{oneedge_amida.eps}
+	\end{center}
+       yields an Amida net of $\hyper$,
+       where the above component has
+       one finite path $e_de_ae_u$
+       and one infinite path $\cdots e_m e_a e_m e_a \cdots$.
+\end{itemize}
+ \end{definition}
+
+The Amida edge between two edges
+ \begin{center}
+\includegraphics[scale=0.4]{twoedges_amida_without_label.eps}
+ \end{center}
+is the same as a pair of crossing edges
+ \begin{center}
+\includegraphics[scale=0.4]{crossing.eps}
+ \end{center}
+in terms of reachability between endpoints.
+The difference is the induced sequent at the bottom.
+Although Amida edges cross the paths,
+they do not transmit labelings as seen in the next example.
+
+ \begin{example}
+  The Amida net for the Amida axiom.
+ \end{example}
+
+\subsection{Correctness}
+
+\fix{define some words below}
+
+We can translate a sequent calculus proof into a correct Amida net.
+
+Inverse, from a correct Amida net, first we move the Amida edges upwards
+until they are just below axiom edges.
+
+The moves are as follows.
+ \begin{center}
+\includegraphics[scale=0.4]{tensor-move.eps}
+\\
+\includegraphics[scale=0.4]{parr-move.eps}
+ \end{center}
+These translations have two properties.
+\begin{enumerate}
+ \item When the original is a correct Amida net, the translation is also
+       a correct Amida net.
+ \item When the translation corresponds to a hypersequent derivation,
+       the original does.
+\end{enumerate}
+For checking the first condition, it is enough to follow the paths.
+The second condition is immediate for the $\otimes^+$ translation, but
+not immediate for the $\parr^+$ translation.  The second condition on
+the $\otimes^+$ translation can be validated by the following Amida
+logic derivation.
+\begin{center}
+ \AxiomC{$\G,\psi\tr\phi \hmid \D\tr\chi$}
+ \AxiomC{}
+ \UnaryInfC{$\tr\one$}
+ \AxiomC{}
+ \UnaryInfC{$\psi\tr\psi$}
+ \BinaryInfC{$\tr \psi\hmid \psi\tr\one$}
+ \BinaryInfC{$\G\tr\phi\hmid \D\tr\chi\hmid \psi\tr\one$}
+ \UnaryInfC{$ \G\tr\phi\hmid \D,\psi\tr\chi\otimes \one $}
+ \AxiomC{}
+ \UnaryInfC{$\chi\tr\chi$}
+ \UnaryInfC{$\chi,\one\tr\chi$}
+ \UnaryInfC{$\chi\otimes \one \tr\chi$}
+ \BinaryInfC{$\G\tr\phi\hmid \D,\psi\tr\chi$}
+ \DisplayProof
+\end{center}
+
+Then the whole Amida net is decomposed vertically into three layers.
+At the top, there is a layer with only Axiom edges.
+In the middle, there is a layer with only vertical edges and Amida
+edges.
+At the bottom, there is a layer which contains only ordinary
+essential net nodes.
+
+Since the middle layer is an Amida lottery, it defines a permutation.
+That permutation can be expressed as a product of transpositions, so
+that
+the original Amida lottery is equivalent to a loop-less Amida lottery.
+A loop-less Amida lottery is an encoding of a hypersequent derivation
+that consists of only Sync rules.
+
+After we encode the top and the middle layer, encoding the bottom layer
+is the same as \fix{Lamarche's theorem which}
+
+
+We expect that it is possible to add Amida edges to
+the full intuitionistic logic following
+\citet{groote1999}
+\fix{cite de groote / cite Lamarche}
+
 
 \section{Related Work}
 

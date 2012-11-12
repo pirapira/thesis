@@ -440,8 +440,6 @@ rules for $\wedge$
  \[
   \fix{fill} \fix{fill} \fix{fill}
  \].
-
-
 In later chapters, we will use natural deduction for presenting logics.
 
 \subsubsection{Prawitz}
@@ -784,6 +782,43 @@ Girard invented the linear logic~\citep{girard1987}.  It is a logic
 without weakening or contraction.  There are two conjunctions
 (multiplicative and additive) and two
 disjunctions (again multiplicative and additive).
+
+In the sqeuent calculus for intuitionistic propositional logic,
+the $\wedge$-right rule can be formulated in either way:
+ \begin{center}
+  \AxiomC{$\G\tr\phi$}
+  \AxiomC{$\D\tr\psi$}
+  \BinaryInfC{$\G,\D\tr\phi\land\psi$}
+  \DisplayProof
+  \hfill
+  \AxiomC{$\G\tr\phi$}
+  \AxiomC{$\G\tr\psi$}
+  \BinaryInfC{$\G\tr\phi\land\psi$}
+  \DisplayProof
+ \end{center}
+ Using one of these rule, the other can be defined as a macro
+ (an abbreviation for a longer construction)
+ because, from bottom to top, we can copy
+ (\textit{contraction}\index{contraction}) or remove
+ (\textit{weakening}\index{weakening}) formulae in contexts.
+ However if we do not allow such structural rules,
+ the two different formulations characterize different conjunctions.
+ The left one is called \textit{multiplicative}\index{multiplicative}
+ conjunction and the right one is called
+ \textit{additive}\index{additive}
+ conjunction.
+ \begin{center}
+  \AxiomC{$\G\tr\phi$}
+  \AxiomC{$\D\tr\psi$}
+  \BinaryInfC{$\G,\D\tr\phi\otimes\psi$}
+  \DisplayProof
+  \hfill
+  \AxiomC{$\G\tr\phi$}
+  \AxiomC{$\G\tr\psi$}
+  \BinaryInfC{$\G\tr\phi\with\psi$}
+  \DisplayProof
+ \end{center}
+
 Depending on the formulation, there can be two
 implications \fix{cite Troelstra}.
 The multiplicative and additive operators differ in
@@ -798,6 +833,10 @@ interpretations for the intuitionistic linear logic and the classical linear log
 
 
 \subsubsection{Monoidal t-norm logic}
+
+The linear version of G\"odel--Dummett logic is called the monoidal
+t-norm logic (MTL), which validates an axiom
+$(\phi\limp\psi)\oplus(\psi\limp\phi)$.
 
 \citet{Esteva2001271} considered monoidal t-norm logic (MTL) for
 \fix{what reason}
@@ -885,8 +924,7 @@ In terms of algebraic semantics, the axiom is sound and complete for
 requiring that the truth values are linearly ordered.
 In terms of computation, what is it?
 
-Each chapter can be read independently, but the most important one is
-the next chapter.
+Each chapter can be read independently.
 
 \subsection{\fix{chapter two}}
 \subsection{\fix{chapter three}}
