@@ -1,6 +1,8 @@
 \chapter{A Hyper-Lambda-Calculus for Synchronous Communication}
 \label{ch:exchange}
 
+\fix{mention amida logic}
+
 \subsection{Motivation}
 
 We propose a way to unify ML-style programming languages \fix{cite} and
@@ -10,7 +12,7 @@ However, when communication is involved, how to maintain the principle
 is not yet settled.
 For example, Haskell, which is a ML-style programming language,
 allows different threads to communicate using
-putMVar and getMVar commands.
+\texttt{putMVar} and \texttt{getMVar} commands.
 However, if programmers make mistakes, these commands can
 causes deadlock in execution time even the program passes the type checking.
 This is because the type system of Haskell allows programmers to
@@ -82,6 +84,16 @@ After following these practical questions,
 we proceed to developing a proof net structure for the logic.
 It turns out that the the ``Amida lottery,'' which is a traditional
 Japanese way of making arbitrary permutations, provides the answer.
+
+Japanese schoolchildren use ``Amida lotteries''
+for assigning seats, jobs, teams and so on to classmates.
+
+\fix{add}
+
+The diagram defines a permutation.
+From a top end, one can find the counterpart by following the vertical
+line, but one has to cross the bridge whenever one finds one and then
+after crossing the bridge, one has to go down the vertical line.
 
 
 \section{Definitions}
@@ -418,16 +430,23 @@ Most rules are similar to those of Abramsky's
 LF~\citep{abramsky1993computational}.
 We add the semantics for channels.
 
-For some reasons, we have to evaluate the subterm~$s$ in $\lambda
+For the sake of \thref{eval-subst} (which will be used for
+\thref{thm:generalconvergence}), we have to evaluate the subterm~$s$ in
+$\lambda
 x.t[s/y]$ if $s$ is closed while Abramsky never evaluated
 anything inside lambda.
 In order to keep track of that, we annotate the $\eval$ relation with
 involved free variables~$S$.
+We decided to evaluate every closed subterms even they are in the
+body~$M$ of a lambda abstraction $\lambda x.M$.
 
  \begin{proposition}
   If evaluation hypersequent $\hypere\hmid t\eval_S v$
   is derivable, $S$ is identical to the set of free variables of $t$.
  \end{proposition}
+ \begin{proof}
+  Inductively on the evaluation derivations.
+ \end{proof}
 
  \begin{figure}
   \centering
@@ -475,8 +494,8 @@ involved free variables~$S$.
   \DisplayProof
   \hfill
   \AxiomC{$\hypere\hmid t\eval_\emptyset \lambda x.t'\hmid u\eval_\emptyset v\hmid
-  t'[v/x]\eval_{S} w$}
-  \UnaryInfC{$\hypere\hmid tu\eval_{S} w$}
+  t'[v/x]\eval_{\emptyset} w$}
+  \UnaryInfC{$\hypere\hmid tu\eval_{\emptyset} w$}
   \DisplayProof
   \ruleskip
   \AxiomC{$\hypere\hmid t\eval_S t'\hmid u\eval_{S'} u'$}
@@ -576,7 +595,6 @@ involved free variables~$S$.
   \AxiomC{$\hypere\hmid t\eval_S t'\hmid u\eval_{BV(p)} u'$}
   \UnaryInfC{$\hypere\hmid\letin t p u\eval_{S\sqcup S'} \letin {t'} p {u'}$}
   \DisplayProof \\
-  \fix{define BV}
   \ruleskip
   \AxiomC{$\hypere\hmid t[w/x]\eval_\emptyset w\hmid u\eval_S v$}
   \LL{nested-channel}
@@ -600,14 +618,14 @@ involved free variables~$S$.
  unless it is a sync rule with that component}
  \fix{this is why the rule sync is named after synchronization}
 
- \begin{lemma}
+ \begin{proposition}
    \label{eval-subst}
   \AxiomC{$\hypere\hmid t\eval_\emptyset v\hmid u[v/x]\eval_\emptyset w$}
   \LL{eval-subst}
   \UnaryInfC{$ \hypere\hmid u[t/x] \eval_\emptyset w $}
   \DisplayProof
    is admissible.
- \end{lemma}
+ \end{proposition}
  \begin{proof}
   By induction on the height of derivation, but we classify the
   situation by the form of $u$.
@@ -619,56 +637,62 @@ involved free variables~$S$.
 	$\hypere\hmid t\eval_\emptyset v$ is derivable and so is
 	$\hypere\hmid t\eval_\emptyset w$.
    \item[($u$ is $cu'$)]
-	$\hypere\hmid t\eval v\hmid cu'[v/x]\eval w$ \fix{annotate eval}
+	$\hypere\hmid t\eval_\emptyset v\hmid cu'[v/x]\eval_\emptyset w$
 	is derivable.  If the last rule touches components in $\hypere$,
 	our statement follows from the induction hypothesis.
-	If the last rule touches $t$ but $t$ is not $\co c t'$, then
-	we can still use the induction hypothesis\fix{why?}.
+	If the last rule touches $t$ but $t$ is not of the form $\co c t'$, then
+	we can move the rule upwards\fix{why?}.
 	Otherwise, when the last rule introduces the channel pair $c,\co c$,
 	there are three possibilities for how the pair
 	$c, \co c$ is introduced.
 	\begin{description}
 	 \item[(with $\hypere$)]
 	       \begin{center}
-		\AxiomC{$\hypere\hmid s\eval w\hmid t\eval v\hmid
-		u'[v/x]\eval w'$}
-		\UnaryInfC{$\hypere \hmid \co c s\eval w'\hmid t\eval v
-		\hmid cu'[v/x]\eval w$}
+		\AxiomC{$\hypere\hmid s\eval_\emptyset w\hmid t\eval_\emptyset v\hmid
+		u'[v/x]\eval_\emptyset w'$}
+		\UnaryInfC{$\hypere \hmid \co c s\eval_\emptyset w'\hmid t\eval_\emptyset v
+		\hmid cu'[v/x]\eval_\emptyset w$}
 		\DisplayProof
 	       \end{center}
 	      By induction hypothesis,
 	       \begin{center}
 		$\hypere\hmid s\eval w\hmid u'[t/x]\eval w'$
 	       \end{center}
-	      is derivable so is
+	      is derivable. So is
 	       \begin{center}
-		$\hypere\hmid \co c s\eval w'\hmid cu'[t/x]\eval w$\enspace.
+		$\hypere\hmid \co c s\eval_\emptyset w'\hmid cu'[t/x]\eval_\emptyset w$\enspace.
 	       \end{center}
 	 \item[(with $t$)]
 	       \begin{center}
-		\AxiomC{$\hypere\hmid t'\eval w\hmid u'[v/x]\eval v$}
-		\UnaryInfC{$\hypere \hmid \co ct'\eval v\hmid
-		cu'[v/x]\eval w$}
+		\AxiomC{$\hypere\hmid t'\eval_\emptyset w\hmid u'[v/x]\eval_\emptyset v$}
+		\UnaryInfC{$\hypere \hmid \co ct'\eval_\emptyset v\hmid
+		cu'[v/x]\eval_\emptyset w$}
 		\DisplayProof
 	       \end{center}
-	      By nested-channel, $\hypere\hmid cu'[\co c t'/x]\eval v$
+	      By nested-channel, $\hypere\hmid cu'[\co c t'/x]\eval_\emptyset v$
 	      is derivable.
 	 \item[(with $u'$)]
 	       \begin{center}
-		\AxiomC{$\hypere\hmid t\eval v\hmid
-		u''[w'/y]\eval_\emptyset w'\hmid u'''[v/x]\eval w$}
-		\UnaryInfC{$\hypere\hmid t\eval v\hmid cu''[\co
-		cu'''[v/x]/y]\eval w$}
+		\AxiomC{$\hypere\hmid t\eval_\emptyset v\hmid
+		u''[w'/y]\eval_\emptyset w'\hmid u'''[v/x]\eval_\emptyset w$}
+		\UnaryInfC{$\hypere\hmid t\eval_\emptyset v\hmid cu''[\co
+		cu'''[v/x]/y]\eval_\emptyset w$}
 		\DisplayProof
 	       \end{center}
 	      By induction hypothesis,
 	      $\hypere\hmid u''[w'/y]\eval_\emptyset w'\hmid
-	      u'''[t/x]\eval w$
+	      u'''[t/x]\eval_\emptyset w$
 	      is derivable and so is
-	      $\hypere\hmid cu''[\co cu'''[t/x]/y]\eval w$.
-	      \fix{annotate eval}
+	      $\hypere\hmid cu''[\co cu'''[t/x]/y]\eval_\emptyset w$.
 	\end{description}
-   \item[other] \fix{fill}
+   \item[($u$ is of other forms)]
+	We modify the derivation so that
+	$t\eval_\emptyset v\hmid u[v/x]$ stays in the same branch.
+	For that we move any rule touching $t\eval_\emptyset v$ upwards
+	\fix{how}
+	and any branching rules upward.
+	Delaying those rules upwards allows us to decompose the term~$u$
+	until it becomes a single free variable~$x$.
   \end{description}
  \end{proof}
 
@@ -679,12 +703,12 @@ involved free variables~$S$.
  the following evaluation.
   \begin{center}
    \AxiomC{}
-   \UnaryInfC{$\ast\eval\ast$}
-   \AxiomC{$t\eval v$}
-   \BinaryInfC{$\ast\eval\ast\hmid t\eval v$}
-   \UnaryInfC{$c\ast\eval\ast\hmid \co ct\eval v$}
+   \UnaryInfC{$\ast\eval_\emptyset\ast$}
+   \AxiomC{$t\eval_\emptyset v$}
+   \BinaryInfC{$\ast\eval_\emptyset\ast\hmid t\eval_\emptyset v$}
+   \UnaryInfC{$c\ast\eval v\hmid \co ct\eval\ast$}
    \LL{eval-subst}
-   \UnaryInfC{$\co c(c t)\eval v$}
+   \UnaryInfC{$c(\co c t)\eval v$}
    \DisplayProof
   \end{center}
 \end{example}
@@ -693,16 +717,17 @@ involved free variables~$S$.
 
 Convergence states that if
 $\tr\tj t \phi$ is derivable,
-there exists a canonical form~$v$ so that $t\eval v$ is derivable.
+there exists a canonical form~$v$ so that $t\eval_\emptyset v$ is derivable.
 Since the proof of convergence is inductive over
-the typing derivations, we have to generalize the statement.
+the typing derivations, we have to generalize the statement for
+hypersequents with multiple compontents.
 
 For that we first assign a set of closed terms to each type.
 \newcommand{\terms}{\mathcal{T}}
 \fix{use of $v$ is ambiguious...?}
 We denote by $\terms$ the set of closed terms.
 Given $\semo{X}_0\in 2^\terms$ for each propositional variable~$X$,
-we define $\semo{\cdot}\colon \form{2^\terms}\rightarrow {2^\terms}$
+we define $\semo{\cdot}\colon \form{(2^\terms)}\rightarrow {2^\terms}$
 as follows:
 \begin{align*}
  \semo{\mathcal X} &= \mathcal X\\
@@ -722,13 +747,15 @@ as follows:
 \end{align*}
 
 For a context~$\G = \tj{x_0}{\phi_0},\ldots,\tj{x_n}{\phi_n}$,
-$\semo{\G}$ denotes the set of sequences $u_0,\ldots,u_n$ of closed terms
+the notation~$\semo{\G}$ denotes the set of sequences $u_0,\ldots,u_n$
+of closed terms
 such that each $u_i$ is in $\semo{\phi_i}$.
 For a sequent $\G\tr\tj{t}{\phi}$, $\semo{\G\tr\tj{t}{\phi}}$ denotes
 the set consisting of terms $t[\vec g/G]$ for some $\vec g\in\semo{\G}$.
 For a hypersequent with terms $\hypert$,
 $\semo\hypert$ is defined in a component-wise way:
-$\semo{\hypert\hmid\G\tr\tj t\phi}$ contains any $\hmid$-delimited
+$\semo{\hypert\hmid\G\tr\tj t\phi}$ contains any {\kern
+-6pt}$\hmid${\kern -6pt}-delimited
 sequence of terms
 $\vec O \hmid u$ such that $\vec O\in\semo{\hypert}$ and
 $u\in\semo{\G\tr\tj t\phi}$.
@@ -757,11 +784,11 @@ $u\in\semo{\G\tr\tj t\phi}$.
      \G,\tj{f}{\phi\limp\psi},\D\tr\tj{u[(ft)/x]}{\theta}$}
      \DisplayProof\enspace.
     \end{center}
-    Take any $O\in\semo{\hypert}$, $\vec g\in\semo{\G}$, $\vec
+    Take any $\vec O\in\semo{\hypert}$, $\vec g\in\semo{\G}$, $\vec
     d\in\semo{\D}$ and $v\in\semo{\phi\limp\psi}$.
     By induction hypothesis,
     \[
-    \hypert\eval \vec{w'}\hmid t[\vec g/\G]\eval
+    \vec O\eval \vec{w'}\hmid t[\vec g/\G]\eval
     w_0\hmid u[w/x][\vec d/\D]\eval w
     \]
     is derivable for any $w \in \semo{\psi}$.
@@ -770,15 +797,15 @@ $u\in\semo{\G\tr\tj t\phi}$.
     $fw_0$ is in $\semo\psi$.
     Thus,
     \[
-    \hypert\eval\vec{w'}\hmid t[\vec g/\G]\eval w_0\hmid
+    \vec O\eval\vec{w'}\hmid t[\vec g/\G]\eval w_0\hmid
     u[(vw_0)/x][\vec d/\D]\eval w_1
     \]
     is derivable.
     The last term $u[(vw_0)/x][\vec d/\D]$ is identical to
     $u[vy/x][w_0/y][\vec d/\D]$.
-    Thus, by rule subst-eval in \thref{eval-subst},
+    Thus, by subst-eval in \thref{eval-subst},
     \[
-    \hypert\eval\vec{w'}\hmid u[fy/x][t/y][\vec d/\D]\eval w_1
+    \vec O\eval\vec{w'}\hmid u[fy/x][t/y][\vec d/\D]\eval w_1
     \]
     is derivable.
     \item[(Cut)] Essentially the same as and simpler than ($\limp$L).
@@ -788,17 +815,17 @@ $u\in\semo{\G\tr\tj t\phi}$.
 	 \UnaryInfC{$\hypert\hmid \G\tr\tj{ct}{\psi}\hmid \D\tr\tj{\co
 	 cu}{\phi}$}
 	 \DisplayProof\enspace.
-	 Take any $O\in\semo{\hypert}$, $\vec g\in \semo{\G}$ and $\vec
+	 Take any $\vec O\in\semo{\hypert}$, $\vec g\in \semo{\G}$ and $\vec
 	 d\in\semo{\D}$.
 	 By induction hypothesis, the hyper evaluation
 	 \[
-	 O\eval \vec{v'}\hmid t[\vec g/\G] \eval v\hmid u[\vec
+	 \vec O\eval \vec{v'}\hmid t[\vec g/\G] \eval v\hmid u[\vec
 	 d/\D]\eval w
 	 \]
 	 is derivable.
 	 Thus,
 	 \[
-	 O\eval \vec{v'}\hmid (ct)[\vec g/\G] \eval w\hmid (\co cu)[\vec
+	 \vec O\eval \vec{v'}\hmid (ct)[\vec g/\G] \eval w\hmid (\co cu)[\vec
 	 d/\D]\eval v
 	 \]
 	 is also derivable.
@@ -939,6 +966,11 @@ $u\in\semo{\G\tr\tj t\phi}$.
 	 Other cases are immediate.
    \end{description}
   \end{proof}
+  In this proof, only $\eval_\emptyset$ occured.  This is because the
+  $\eval_S$ relation for general $S$ is defined in order to reduce all
+  closed subterms.  That property is already exploited in
+  \thref{eval-subst}.
+  This is why we see only $\eval_\emptyset$ in this proof.
 
    \begin{corollary}[Convergence]
     \label{convergence}
@@ -946,7 +978,8 @@ $u\in\semo{\G\tr\tj t\phi}$.
     $t\eval_{\emptyset} v$ is derivable for some canonical form~$v$.
    \end{corollary}
 
-   \begin{corollary}[Consistency of \fix{name of logic}]
+   \fix{put Amida in many places}
+   \begin{corollary}[Consistency of Amida logic]
     $\tr\tj{t}{\forall X.X}$ is not derivable for any term~$t$.
    \end{corollary}
     \begin{proof}
@@ -958,7 +991,8 @@ $u\in\semo{\G\tr\tj t\phi}$.
 
     \subsection{Determinacy}
 
-    A sequence of terms $(t_i)_{0\le i \le n}$ is well-formed iff both
+    A sequence of terms $(t_i)_{0\le i \le n}$ is
+    \textit{well-formed}\index{well-formed!--- sequence of terms} iff both
     of these conditions are met:
     \begin{itemize}
      \item if a channel~$c$ appears in any of $t_i$,
@@ -977,17 +1011,17 @@ $u\in\semo{\G\tr\tj t\phi}$.
      containing any channels, $\hypere$ and $\hypere'$ are separately derivable.
     \end{proposition}
     \begin{proof}
-     \fix{prove}
+     By induction on the height of derivations.
     \end{proof}
 
     \begin{proposition}
      For a well-formed sequence of terms
      $(t_i)_{0\le i\le n}$,
-     there exist a unique (if any) sequence of terms $(v_i)_{0\le i \le
+     there exist a unique (if any) sequence of terms $(u_i)_{0\le i \le
      n}$ and a unique (if any) sequence of sets of variables
      $(S_i)_{0\le i \le n}$ such that
      \[
-     t_0\eval_{S_0} v_0\hmid \cdots \hmid t_n\eval_{S_n} v_n
+     t_0\eval_{S_0} u_0\hmid \cdots \hmid t_n\eval_{S_n} u_n
      \]
      is derivable.
     \end{proposition}
@@ -1012,11 +1046,13 @@ $u\in\semo{\G\tr\tj t\phi}$.
   \UnaryInfC{$\hypere\hmid ct[\co c u/x]\eval_S v$}
   \DisplayProof
 	     \end{center}
-	    because $w$ is contained in both sides of $\eval$.
+	    because $w$ is contained in both sides of $\eval_\emptyset$.
 	    However, by well-formedness, $t$ does not contain channels.
 	    Thus, by \thref{remove-local}, a simpler evaluation
 	    hypersequent $\hypere
-	    \hmid u\eval_S v$ is derivable so that we can determine $v$
+	    \hmid u\eval_S v$ is derivable within the same height
+	    \fix{add this same-height condition in some} so
+	    that we can determine $v$
 	    from induction hypothesis.
       \item From bottom to up, we can choose components in different
 	    orders.
@@ -1046,8 +1082,9 @@ $u\in\semo{\G\tr\tj t\phi}$.
     \end{proof}
 
     \begin{corollary}
-     If $t\eval_\emptyset v$ and $t\eval_\emptyset w$ are derivable,
-     $v$ and $w$ are the same.
+     If $t\eval_\emptyset v$ and $t\eval_\emptyset w$ are derivable
+     and singleton sequence $(t)$ is well-formed, then
+     $v$ and $w$ are the same canonical forms.
     \end{corollary}
 
     \section{Sessions and Processes}
@@ -1056,6 +1093,8 @@ $u\in\semo{\G\tr\tj t\phi}$.
 
     As an abbreviation, we introduce \textit{session
     types}\index{type!session}\index{session type|see{type}}.
+    Session types~\cite{honda-session} can specify a communication
+    protocol over a channel.
     Instead of the standard notation $\bang\phi.\psi$, we use
     $\sendtype{\phi}{\psi}$ in order to avoid the confusion with
     $\bang\phi$.
@@ -1063,10 +1102,10 @@ $u\in\semo{\G\tr\tj t\phi}$.
     The definitions and the descriptions are modification from
     \citet{wadler2012propositions}'s translations and descriptions.
     \begin{align*}
-     \sendtype\phi\psi&\equiv \phi\limp\psi &\text{type of a channel for
+     \sendtype\phi\psi&\equiv \phi\limp\psi &\text{
      outputting value of type $\phi$ then behave as $\psi$} \\
-     \recvtype\phi\psi&\equiv \phi\otimes\psi &\text{type of a channel
-     for inputting value of type $\phi$ then behave as $\psi$}\\
+     \recvtype\phi\psi&\equiv \phi\otimes\psi &\text{inputting value of
+     type $\phi$ then behave as $\psi$}\\
      \oplus\{l_i\colon \phi_i\}_{i\in I} &\equiv {\phi_0}\with
      \cdots \with {\phi_n}, \quad I = \{0,\ldots,n\} & \text{select from behaviors
      $\phi_i$ with label $l_i$}\\
@@ -1078,7 +1117,9 @@ $u\in\semo{\G\tr\tj t\phi}$.
     \end{align*}
     where $I$ is a finite downward-closed set of natural numbers like
     $\{0,1,2,3\}$.
-
+    As \citet{wadler2012propositions} notes, the encoding looks
+    opposite, but as \citet{wadler2012propositions} explains, we are
+    typing channels instead of processes.
 
     The grammar
     \[
