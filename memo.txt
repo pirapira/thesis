@@ -31,3 +31,12 @@ Typed Staged FutureThe key insights are treating remote execution as a form of s
 
 Truth theoryにおけるintermediate logicの使い方とかも，どうせだから記載しようぜ．
 つまり，そのたの使いみちというやつだな．
+
+
+Tue Nov 13 10:25:01 2012
+
+スライド、さいしょのページは、
+2 x 2 の表にしよう。
+論理、 計算
+証明 ラムダ
+ハイパー証明 ハイパーラムダ

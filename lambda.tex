@@ -877,6 +877,14 @@ The formal definition of the reductions follows.
 In the first clause of this definition of write reductions, we require
 $M$ to be a pure closed
 term because a store can only contain pure closed terms.
+We require this because our aim is to model asynchronous communication.
+If we allow stores to contain terms with free variables,
+the term $(\lambda x. (\comodL x)) M$ can store $x$ in the store and
+another process can read $x$ from the store.
+If $(\lambda x.\cdots)M$ reduces after that,
+then, $x$ becomes $M$ suddenly in the other process.
+We want to avoid this phenomenon because it is synchronous.
+
 We require the same condition in the second clause as well because
 otherwise, whether a configuration admits a write reduction or not
 would depend on the contents of the store, which would make the
@@ -2796,7 +2804,11 @@ did not define reduction.
 Ferm\"uller~\cite{parallel} gives a game semantics for G\"odel--Dummett
 logic, which is based on Lorenzen game~\cite{curryhoward} and essentially
 proof searching bottom-to-up.
-
+Of course, there is a possibility of employing waitfree communication
+for proof searching. Indeed, Ferm\"uller's dialogue game is
+sometimes forked and proceeds concurrently.
+However, \fix{say something}
+ 
 Among numerous typed programming languages with parallelism,
 to our knowledge, none exhibits
 the connection of G\"odel--Dummett logic and waitfreedom.

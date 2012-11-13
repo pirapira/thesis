@@ -60,7 +60,7 @@
 			<integer>0</integer>
 			<key>Points</key>
 			<array>
-				<string>{276.56738078319387, 55.768534914674788}</string>
+				<string>{273.67274585269814, 54.943250605447673}</string>
 				<string>{83, 204.5}</string>
 			</array>
 			<key>Style</key>
@@ -702,8 +702,8 @@ Abramsky}</string>
 			<integer>2</integer>
 			<key>Points</key>
 			<array>
-				<string>{287.52000000074526, 284.5}</string>
-				<string>{300.48000000457785, 320.5}</string>
+				<string>{287.52000000001976, 284.5}</string>
+				<string>{300.48000000012132, 320.5}</string>
 			</array>
 			<key>Style</key>
 			<dict>
@@ -1153,8 +1153,8 @@ Abramsky}</string>
 			<integer>2</integer>
 			<key>Points</key>
 			<array>
-				<string>{281.69999999999999, 50}</string>
-				<string>{243, 93}</string>
+				<string>{279.6875, 50}</string>
+				<string>{231, 91}</string>
 				<string>{188.7903242788399, 145}</string>
 				<string>{131.685149207184, 270.5}</string>
 			</array>
@@ -1233,8 +1233,8 @@ Abramsky}</string>
 			<integer>2</integer>
 			<key>Points</key>
 			<array>
-				<string>{293.79090909090894, 93}</string>
-				<string>{327.70909090908987, 134}</string>
+				<string>{293.79090909090911, 93}</string>
+				<string>{327.70909090909089, 134}</string>
 			</array>
 			<key>Style</key>
 			<dict>
@@ -1381,8 +1381,8 @@ Abramsky}</string>
 			<integer>2</integer>
 			<key>Points</key>
 			<array>
-				<string>{338.77058823526659, 225.5}</string>
-				<string>{360.22941176456635, 254}</string>
+				<string>{338.77058823529302, 225.5}</string>
+				<string>{360.22941176470044, 254}</string>
 			</array>
 			<key>Style</key>
 			<dict>
@@ -1418,8 +1418,8 @@ Abramsky}</string>
 			<integer>2</integer>
 			<key>Points</key>
 			<array>
-				<string>{361.0583751184742, 268}</string>
-				<string>{307.44162488153637, 352.4999885559082}</string>
+				<string>{361.05837511847346, 268}</string>
+				<string>{307.44162488152659, 352.4999885559082}</string>
 			</array>
 			<key>Style</key>
 			<dict>
@@ -1455,8 +1455,8 @@ Abramsky}</string>
 			<integer>2</integer>
 			<key>Points</key>
 			<array>
-				<string>{358.5, 264.34782608695673}</string>
-				<string>{229.5, 326.04347826087326}</string>
+				<string>{358.5, 264.3478260869565}</string>
+				<string>{229.5, 326.04347826086956}</string>
 			</array>
 			<key>Style</key>
 			<dict>
@@ -1529,8 +1529,8 @@ Abramsky}</string>
 			<integer>2</integer>
 			<key>Points</key>
 			<array>
-				<string>{296.07865346928691, 366.4999885559082}</string>
-				<string>{265.92134655567634, 397}</string>
+				<string>{296.07865346549693, 366.4999885559082}</string>
+				<string>{265.92134653537289, 397}</string>
 			</array>
 			<key>Style</key>
 			<dict>
@@ -1566,8 +1566,8 @@ Abramsky}</string>
 			<integer>2</integer>
 			<key>Points</key>
 			<array>
-				<string>{133, 280.32857142857029}</string>
-				<string>{204.86363636366784, 325.5}</string>
+				<string>{133, 280.32857142857142}</string>
+				<string>{204.8636363636366, 325.5}</string>
 			</array>
 			<key>Style</key>
 			<dict>
@@ -1603,8 +1603,8 @@ Abramsky}</string>
 			<integer>2</integer>
 			<key>Points</key>
 			<array>
-				<string>{131.8278688524596, 284.5}</string>
-				<string>{168.67213114754796, 362}</string>
+				<string>{131.82786885245901, 284.5}</string>
+				<string>{168.67213114754102, 362}</string>
 			</array>
 			<key>Style</key>
 			<dict>
@@ -1640,8 +1640,8 @@ Abramsky}</string>
 			<integer>2</integer>
 			<key>Points</key>
 			<array>
-				<string>{188, 375.4367816118305}</string>
-				<string>{248.5, 399.77586208156453}</string>
+				<string>{188, 375.43678160927692}</string>
+				<string>{248.5, 399.77586206935518}</string>
 			</array>
 			<key>Style</key>
 			<dict>
@@ -1677,8 +1677,8 @@ Abramsky}</string>
 			<integer>2</integer>
 			<key>Points</key>
 			<array>
-				<string>{220.20979020979428, 339.5}</string>
-				<string>{254.7902097902473, 397}</string>
+				<string>{220.20979020979024, 339.5}</string>
+				<string>{254.79020979021024, 397}</string>
 			</array>
 			<key>Style</key>
 			<dict>
@@ -1714,8 +1714,8 @@ Abramsky}</string>
 			<integer>2</integer>
 			<key>Points</key>
 			<array>
-				<string>{192.42353074782335, 281.5}</string>
-				<string>{293.07646925206046, 352.4999885559082}</string>
+				<string>{192.42353074783284, 281.5}</string>
+				<string>{293.07646925216625, 352.4999885559082}</string>
 			</array>
 			<key>Style</key>
 			<dict>
@@ -1752,7 +1752,7 @@ Abramsky}</string>
 			<key>Points</key>
 			<array>
 				<string>{181.72222222222223, 281.5}</string>
-				<string>{172.77777777777783, 362}</string>
+				<string>{172.77777777777777, 362}</string>
 			</array>
 			<key>Style</key>
 			<dict>
@@ -1788,8 +1788,8 @@ Abramsky}</string>
 			<integer>2</integer>
 			<key>Points</key>
 			<array>
-				<string>{187.87681166238409, 248}</string>
-				<string>{183.92029008944533, 267.5}</string>
+				<string>{187.87681159944222, 248}</string>
+				<string>{183.9202898730826, 267.5}</string>
 			</array>
 			<key>Style</key>
 			<dict>
@@ -1825,8 +1825,8 @@ Abramsky}</string>
 			<integer>2</integer>
 			<key>Points</key>
 			<array>
-				<string>{201.02564105419626, 209}</string>
-				<string>{192.47435908501052, 232}</string>
+				<string>{201.02564102754272, 209}</string>
+				<string>{192.47435898172807, 232}</string>
 			</array>
 			<key>Style</key>
 			<dict>
@@ -1901,8 +1901,8 @@ Abramsky}</string>
 			<integer>2</integer>
 			<key>Points</key>
 			<array>
-				<string>{231, 148.89473684210532}</string>
-				<string>{224, 158.10526315789483}</string>
+				<string>{231, 148.89473684210529}</string>
+				<string>{224, 158.10526315789477}</string>
 			</array>
 			<key>Style</key>
 			<dict>
@@ -3095,7 +3095,7 @@ Abramsky}</string>
 	<key>MasterSheets</key>
 	<array/>
 	<key>ModificationDate</key>
-	<string>2012-11-08 09:14:49 +0000</string>
+	<string>2012-11-13 11:04:02 +0000</string>
 	<key>Modifier</key>
 	<string>Yoichi Hirai</string>
 	<key>NotesVisible</key>
@@ -3137,6 +3137,16 @@ Abramsky}</string>
 		<array>
 			<string>int</string>
 			<string>0</string>
+		</array>
+		<key>NSPrinter</key>
+		<array>
+			<string>coded</string>
+			<string>BAtzdHJlYW10eXBlZIHoA4QBQISEhAlOU1ByaW50ZXIAhIQITlNPYmplY3QAhZKEhIQITlNTdHJpbmcBlIQBKxxSSUNPSCBJUFNpTyBTUCBDODIwIFtGRUQwMEFdhoY=</string>
+		</array>
+		<key>NSPrinterName</key>
+		<array>
+			<string>string</string>
+			<string>RICOH IPSiO SP C820 [FED00A]</string>
 		</array>
 		<key>NSRightMargin</key>
 		<array>
@@ -3195,7 +3205,7 @@ Abramsky}</string>
 		<key>SidebarWidth</key>
 		<integer>120</integer>
 		<key>VisibleRegion</key>
-		<string>{{-76, 0}, {728.5, 399}}</string>
+		<string>{{-72, 27.5}, {721.5, 399}}</string>
 		<key>Zoom</key>
 		<real>2</real>
 		<key>ZoomValues</key>

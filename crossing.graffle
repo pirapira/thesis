@@ -69,6 +69,8 @@
 				<dict>
 					<key>HeadArrow</key>
 					<string>FilledArrow</string>
+					<key>HeadScale</key>
+					<real>2.0000002384185791</real>
 					<key>Legacy</key>
 					<true/>
 					<key>LineType</key>
@@ -96,6 +98,8 @@
 				<dict>
 					<key>HeadArrow</key>
 					<string>FilledArrow</string>
+					<key>HeadScale</key>
+					<real>2.0000002384185791</real>
 					<key>Legacy</key>
 					<true/>
 					<key>LineType</key>
@@ -153,7 +157,7 @@
 	<key>MasterSheets</key>
 	<array/>
 	<key>ModificationDate</key>
-	<string>2012-11-12 04:52:20 +0000</string>
+	<string>2012-11-12 11:46:34 +0000</string>
 	<key>Modifier</key>
 	<string>Yoichi Hirai</string>
 	<key>NotesVisible</key>

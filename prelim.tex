@@ -1,12 +1,12 @@
  \section{Preliminaries}
 
-  We use ``iff'' as an abbreviation for ``if and only if.''
- We use set-theoretic concepts such as sets, relations and functions.
- For a set~$X$, $\powerset X$ denotes the powerset of $X$.
+  We use ``iff\index{iff}'' as an abbreviation for ``if and only if.''
+  We use set-theoretic concepts such as sets, relations and functions.
+  For a set~$X$, $\powerset X$ denotes the powerset of $X$.
    $X\setminus Y$ denotes the subset of $X$ that consists of those
    elements of $X$ that are not elements of $Y$.
    Everywhere, we consider countably infinite set of logical formulae.
-   A logic is a set of logical formulae, thus, there are at most
+   A logic\index{logic} is a set of logical formulae, thus, there are at most
    $\powerset{\mathbb N}$ different logics once the set of logical
    formulae is fixed.
    Likewise, we consider at most countably many proofs and lambda terms.
@@ -64,9 +64,11 @@ logics.  Nothing in this section originates from the current author.
 \subsection{Birth of Formal Logic}
 
 Implication is an important concept.
-One treatment of implications called the material implication.
+One treatment of implications called the material
+implication\index{implication!material}.
 The material implication can be traced back at least to
-Frege's \textit{Begriffsschrift}~\citep{frege} in 1879.  There, in the
+Frege's \textit{Begriffsschrift}~\citep{frege} in 1879.\index{Frege}
+There, in the
 section called ``conditionality,''
 he begins by establishing four cases~\citep[p.~13]{frege}:
 \begin{enumerate}
@@ -89,7 +91,8 @@ It was Russell who called this implication the material implication,
 according to~\citet{sep-conditionals}.
 After his notation, we still use $\vdash$ for judgements in our formal systems.
 
-It is worth noting that Frege used the notation for implication to define conjunction and
+It is worth noting that Frege used the notation for implication to
+define conjunction and
 disjunction in the formal system, not the other way around.  Even in
 today's treatments of
 like algebraic semantics or categorical semantics, implication is
@@ -99,20 +102,23 @@ can be defined using implication.
 
 \subsection{Intuitionistic Propositional Logic}
 
-The intuitionistic propositional logic is a logic, that is, a set of
+The intuitionistic propositional logic\index{logic!intuitionistic
+propositional}\index{intuitionistic propositional logic|see{logic}} is a logic, that is, a set of
 logical formulae.
-Although the name ``intuitionistic'' comes from Brouwer's intuitionism,
+Although the name ``intuitionistic'' comes from Brouwer's
+intuitionism\index{intuitionism},
 the original claims of intuitionism are unrelated to this thesis.
-Brouwer was skeptical about the value of formalization of
+Brouwer\index{Brouwer} was skeptical about the value of formalization of
 mathematics and considered the studies of formal axiomatized logic as
-``mathematics of the second and third order''
+``mathematics of the second and third order''%
 ~\citep[p.~10]{stigt1998}.
 Nontheless, Brouwer approved publication of his student Arend Heyting's
 work on defining a set of logical formulae as the intuitionistic
 propositional logic.
 
 \subsubsection{Heyting}
-In 1930, Heyting~\cite{heyting1930} developed a deduction system for the
+In 1930, Heyting~\cite{heyting1930}\index{Heyting} developed a deduction
+system for the
 intuitionistic propositional logic.  The presentation is similar to
 the contemporary one except some notational differences.  The
 logical connectives are the same $\{\wedge,\vee,\supset,\neg\}$ as today, the
@@ -127,7 +133,7 @@ around outer connectives (e.g. $b\supset \kern -3pt\cdot \kern 2pt  a
 inner), but we use parentheses here.
 These formulae are axioms\footnote{The axioms with numberings are taken
 from \citet{heyting1930}.}, i.e. assumed to be
-``correct formulae''~\cite{heyting1930}:
+``correct formulae''~\cite{heyting1930}\index{formula!correct}:
  \begin{quotation}\noindent
 \begin{description}
  \item[2.1.] $a\supset (a\land a)$
@@ -220,8 +226,8 @@ whole numbers and 0'').  Although Heyting used natural numbers here, he
 already obtained an equivalent notion of what is called Heyting algebra
 today.
 
-That is why we can refute Dummett's
-axiom $(a\supset b)\lor (b\supset a)$ in the same method.
+That is why we can refute Dummett's axiom $(a\supset b)\lor (b\supset
+a)$\index{axiom!Dummett's} in the same method.
 Indeed, according to these tables below, when we assign 1 to $a$ and 2
 to $b$, $(a\supset b)\lor (b\supset a)$ obtains 4, which is not 0.
 Since all correct formulae receive 0, $(a\imp b)\lor (b\imp a)$ is not a
@@ -261,13 +267,15 @@ correct formula.
  \end{center}
 
 \subsubsection{G\"odel}
-In 1932, G\"odel published a short note~\cite{godelprop} on intuitionistic propositional
+In 1932, G\"odel published a short note~\cite{godelprop} on
+intuitionistic propositional
 logic, where he proved two theorems: that the intuitionistic propositional logic
 cannot be seen as a many-valued logic and that
 there are infinitely many propositional logics between the
 intuitionistic propositional logic and the ``ordinary'' (in today's
 terminology, classical) propositional logic.  The second result is the
-first contribution to the realm of intermediate logics (as
+first contribution to the realm of intermediate
+logics\index{logic!intermediate} (as
 Troelstra~\cite[p.~223]{goedelcollected} put it).
 For distinguishing those intermediate logics and the intuitionistic
 propositional logic, he uses a formula~$F_n$ for each positive natural
@@ -301,7 +309,8 @@ In short, in some of those settings, $(p\otimes q)\limp p$ is
 not a theorem because we are not allowed to throw away $q$.
 
 In the final sentence, \citet{godelprop} states what is known as
-disjunction property today: ``besides, the following holds with full
+disjunction property\index{disjunction property} today: ``besides, the
+following holds with full
 generality: a formula of the form $A\lor B$ can only be provable in $H$
 if either $A$ or $B$ is provable in $H$'', where $H$ is Heyting's calculus.
 According to this statement, it is obvious that Dummett's axiom
@@ -381,11 +390,15 @@ The former explanation of implications is justified in classical propositional l
 The latter view is most naturally materialized in the situation of
 intuitionistic propositional logic.  The last century saw their
 generalization called intermediate logics~\citep{umezawa} (or superintuitionistic
-logics), of which a typical example is called G\"odel--Dummett logic.
+logics\index{logic!superintuitionistic}), of which a typical example is
+called G\"odel--Dummett logic.
 In this thesis we investigate the Curry--Howard isomorphism for
-G\"odel--Dummett logic.  The G\"odel--Dummett logic validates formulas
+G\"odel--Dummett logic.  The G\"odel--Dummett
+logic\index{logic!G\"odel--Dummett} validates formulas
 of the form $(\phi\imp\psi)\lor(\psi\imp\phi)$, which is known as
-Dummett's axiom.  We add a construct to the simply typed lambda calculus
+Dummett's axiom\index{axiom!Dummett's}\index{Dummett's
+axiom|see{axiom}}.  We add a construct to the simply typed lambda
+calculus
 that witnesses Dummett's axiom.
 After the intermediate logics, the generalization went further to
 substructural
@@ -400,7 +413,7 @@ substructural logics albeit it has quantification over propositional variables.
 
 \subsection{Natural Deduction and Sequent Calculus}
 
-\subsubsection{Gentzen}
+\subsubsection{Gentzen}\index{Gentzen}
 
 The deduction system of \citet{heyting1930} characterizes what is still
 called intuitionistic propositional logic today. However, Heyting's
@@ -409,8 +422,8 @@ mention a larger, more complicated formulae sometimes.  Actually there
 are alternative formulations of intuitionistic (and classical)
 propositional logic by \citet{gentzen} where we only have to
 mention subformulae of the formula being proven.
-The alternative proof systems are called natural deduciton and sequent
-calculus.
+The alternative proof systems are called natural deduciton\index{natural
+deduction} and sequent calculus\index{sequent calculus}.
 
 In contrast to the sytem of \citet{heyting1930} where a proof yields a
 finite set of ``correct formulae'', a proof in natural deduction and
@@ -498,7 +511,8 @@ derivation~\citep[p.~36]{prawitz1965} can be reduced
 
 \subsection{Curry--Howard Isomorphism}
 
-The Curry--Howard isomorphism is originally a correspondence between
+The Curry--Howard isomorphism\index{Curry--Howard isomorphism}
+ is originally a correspondence between
 intuitionistic propositional logic proofs and typed lambda terms, but
 the technical term has obtained a more general meaning containing
 correspondence between proofs and programs in general.
@@ -515,7 +529,7 @@ According to \citep{curryhoward}, the first explicit statement of the
 correspondence appears
 in the retiring presidential address to the Association for Symbolic
 Logic titled ``the combinatory foundations of mathematical
-logic''~\cite{curry1942}.
+logic''~\cite{curry1942}\index{Curry}.
 The footnote~28 of \citep{curry1942} reads:
  \begin{quote}
   Note the similarity of the postulates for $F$ and those for $P$.  If
@@ -581,12 +595,9 @@ sorenzen's book ???}  We take a finer approach.
 the untyped lambda calculus.
 \fix{survey ML like languages}
 
-However, none has employed Dummett's axiom as a type for a language feature.
-
-
+However, none has employed Dummett's axiom as a type for a language primitive.
 
 \subsection{G\"odel--Dummett Logic}
-
 \subsubsection{Dummett}
 Dummett~\cite{dummett59} considers a semantics on $\{0,1,2,\ldots,\omega\}$ where
 $\wedge$ is interpreted as maximum, $\vee$ as minimum, $\bot$ as $\omega$
@@ -778,19 +789,18 @@ calculus for the BCK logic.
 
 \subsubsection{Linear and Affine Logics}
 
-Girard invented the linear logic~\citep{girard1987}.  It is a logic
-without weakening or contraction.  There are two conjunctions
-(multiplicative and additive) and two
-disjunctions (again multiplicative and additive).
-
-In the sqeuent calculus for intuitionistic propositional logic,
-the $\wedge$-right rule can be formulated in either way:
+Girard invented the linear
+logic~\citep{girard1987}\index{logic!linear}\index{linear
+logic|see{logic}}.
+To explain this logic, let us present two formulations of
+the $\wedge$-right rule in the sequent calculus of intuitionistic
+propositional logic:
  \begin{center}
   \AxiomC{$\G\tr\phi$}
   \AxiomC{$\D\tr\psi$}
   \BinaryInfC{$\G,\D\tr\phi\land\psi$}
   \DisplayProof
-  \hfill
+  \hskip 3cm
   \AxiomC{$\G\tr\phi$}
   \AxiomC{$\G\tr\psi$}
   \BinaryInfC{$\G\tr\phi\land\psi$}
@@ -812,25 +822,34 @@ the $\wedge$-right rule can be formulated in either way:
   \AxiomC{$\D\tr\psi$}
   \BinaryInfC{$\G,\D\tr\phi\otimes\psi$}
   \DisplayProof
-  \hfill
+  \hskip 3cm
   \AxiomC{$\G\tr\phi$}
   \AxiomC{$\G\tr\psi$}
   \BinaryInfC{$\G\tr\phi\with\psi$}
   \DisplayProof
  \end{center}
 
-Depending on the formulation, there can be two
-implications \fix{cite Troelstra}.
-The multiplicative and additive operators differ in
-the treatment of contexts in the branching rules.
-\fix{elaborate}
+ In general, a binary operator is called multiplicative (resp.~additive)
+ when the right rule in sequent calculus (or introduction rule in
+ natural deduction) for the operator splits the context (resp. copies
+ the whole context in all branches). \fix{introduce ``context''
+ somewhere before this}
+ The example above shows how the additive and multiplicative
+ conjunctions are different.
+ The words multiplicative and addtive are originally adjectives but
+ we sometimes use them as nouns: ``multiplicatives'' for the
+ multiplicative operators and ``additives'' for the additive operators.
 
-In the intuitionistic linear logic, the right side of a sequent can only
-contain at most one formula.
+ % Depending on the formulation, there can be two
+ % implications \fix{cite Troelstra}.
 
-Abramsky~\citep{abramsky1993computational} gave computational
-interpretations for the intuitionistic linear logic and the classical linear logic.
-
+ In the intuitionistic linear logic, the right side of a sequent can only
+ contain at most one formula.  In this thesis we are in this
+ setting.
+ Abramsky~\citep{abramsky1993computational} gave computational
+ interpretations for the intuitionistic linear logic and the classical
+ linear logic.  Since we will extend his linear lambda calculus in
+ Chapter~\ref{ch:exchange}, we are going to elaborate on this there.
 
 \subsubsection{Monoidal t-norm logic}
 
@@ -841,34 +860,39 @@ $(\phi\limp\psi)\oplus(\psi\limp\phi)$.
 \citet{Esteva2001271} considered monoidal t-norm logic (MTL) for
 \fix{what reason}
 
+In Chpater~\ref{ch:exchange}, we study a similar axiom
+$(\phi\limp\psi)\otimes(\psi\limp\phi)$.
+For comparison, we develop a hyper-lambda calculus for MTL in
+Appendix~\ref{ch:pole}.
 
-\subsection{Parametricity}
 
-\subsubsection{Tait's Method}
+% \subsection{Parametricity}
 
-Reynold
+% \subsubsection{Tait's Method}
 
-Logical Relation
+% Reynold
 
-Steps Index
+% Logical Relation
 
-\subsubsection{Classical Realizability}
+% Steps Index
 
-Krivine
+% \subsubsection{Classical Realizability}
 
-Curien
+% Krivine
 
-\subsubsection{Summary}
+% Curien
 
-Omitted
+% \subsubsection{Summary}
 
-focusng
+% Omitted
 
-sara negri and von plato
+% focusng
 
-expansion to modal logics
+% sara negri and von plato
 
-tradition of game semantics
+% expansion to modal logics
+
+% tradition of game semantics
 
 \section{Significance of Our Contributions}
 

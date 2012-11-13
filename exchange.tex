@@ -29,7 +29,7 @@ For that we use the technique of linear types:
 linear types can specify a portion of program to be used
 just once.
 
-One promising approach is session types.
+One promising approach is using session types~\citep{honda-session}.
 Session types aims at typing channels and processes in $\pi$-calculus so
 that the process execution is deterministic and not ending in deadlock.
 In general session type systems are not based on well-known logic.
@@ -77,7 +77,12 @@ We have more questions.
       is the resulting type system consistent?
  \item Can we implement process calculi using the aforementioned primitives?
 \end{itemize}
-\fix{how does it generalize?}
+
+After following these practical questions,
+we proceed to developing a proof net structure for the logic.
+It turns out that the the ``Amida lottery,'' which is a traditional
+Japanese way of making arbitrary permutations, provides the answer.
+
 
 \section{Definitions}
 
@@ -1741,8 +1746,12 @@ Indeed, this process is not typable.
 
 \section{Proof Nets}
 
-Proof nets are
-graphical representation of proofs.
+Proof nets are graphical representation of proofs.
+Some different sequent calculus proofs are translated into the same
+proof net because the original proofs are only different in cosmetic
+ways (like which rule to apply first and exchanges of elements in a
+sequent).
+
 \fix{Girard, etc etc}
 
 Since the Amida axiom $(\phi\limp\psi)\otimes(\psi\limp\phi)$
@@ -1759,10 +1768,19 @@ a traditional way to generate permutations on a set%
 
 \subsection{IMLL Essential Nets}
 
-We can translate a pair $\tuple{\phi,p}$ of
+This subsection reviews known results. The exposition here is strongly
+influenced by \citet{murawski2003}.
+
+We can translate a pair $\phi, p$ of
 a polarity $p\in\{+,-\}$ and an IMLL formula~$\phi$ into
-a polarized MLL formula as follow (from \fix{cite Ong and Lamarche}).
+a \textit{polarized MLL formula}\index{formula!polarized
+MLL}\index{polarized MLL formula|see{formula}}
+as follows
+(from \fix{cite Ong and Lamarche}).
+We omit the definition of polarized MLL formulae because all grammar is
+exposed in the translation below.
 \begin{align*}
+ \imtrans{\one}^+ = \one^+ \qquad & \imtrans{\one}^- = \zero^- \\
  \imtrans{X}^+ = X^+      \qquad & \imtrans{X}^- = X^- \\
  \imtrans{\phi\limp\psi}^+ = \imtrans{\phi}^-\parr^+\imtrans{\psi}^+
  \qquad & \imtrans{\phi\limp\psi}^- = \imtrans{\phi}^+ \otimes^-
@@ -1772,7 +1790,7 @@ a polarized MLL formula as follow (from \fix{cite Ong and Lamarche}).
  \imtrans{\phi}^- \parr^- \imtrans{\psi}^-\enspace.
 \end{align*}
 
-For example,
+For example, the Amida axiom can be translated into a polarized MLL formula.
 \begin{align*}
    &\imtrans{(X\limp Y)\otimes (Y\limp X)}^+ \\
  =\, &\imtrans{X\limp Y}^+ \otimes^+ \imtrans{Y\limp X}^+ \\
@@ -1782,14 +1800,75 @@ For example,
     \left({Y}^- \parr^+ {X}^+ \right)
 \end{align*}
 
-\fix{define essential net structure, add unit}
+Any polarized MLL formula can be translated further into
+a finite rooted tree with these branches and polarized atomic formulae
+($X^-, X^+, \one^+,\zero^-$) at the leaves.
+ \begin{center}
+  \includegraphics[scale=0.4]{rules-original.eps}
+ \end{center}
+For brevity, we sometimes write only the top connectives of labelling
+formulae.
+In that case, these branching nodes are denoted like this.
+ \begin{center} %rules
+  \includegraphics[scale=0.4]{rules.eps}
+ \end{center}
+We call arrows with upward (resp. downward) signs
+\textit{up-edges}\index{up-edge}
+(resp. \textit{down-edges}\index{down-edge}).
+The dashed child of a $\parr^+$ node~$p$ is the node which the dashed
+line from $p$ reaches.
+The branching nodes labelled by $\parr^+, \parr^-, \otimes^+$ and
+$\otimes^-$ are called \textit{operator nodes}.
 
-\fix{state correctness}
-Lamarche exhibits a common technique of decomposing a net structure from
-the bottom.
+When we add axiom edges, $\zero$-branches (shown below)
+and some other operator nodes (shown above)
+we obtain an
+essential net of $\phi$.
+Due to the arbitrarity of choosing axioms and $0^-$-branches,
+there are more than one essential nets for a formula%
+\footnote{\citet{murawski2003} restricts the class of formulae to linearly balanced
+formulae so that the essential net is uniquely determined.}.
+ \begin{center}
+  \includegraphics[scale=0.4]{axiom-cut.eps}
+ \end{center}
 
-\fix{who} chose to reduce the problem to sequents of special forms
-called regular.
+ \begin{example}[An essential net of the Amida axiom] \label{essential-amida}
+  Here is one of the essential nets of
+  the Amida axiom $(X^-\parr^+Y^+)\otimes^+(Y^-\parr^+ Y^+)$.
+  \fix{add}
+ \end{example}
+
+\begin{enumerate}
+ \item Any leaf labelled with $X^+$ (resp. $Y^-$) is connected to a
+       unique leaf labelled with $X^-$ (resp. $Y^+$).
+       Any leaf labelled with $0^-$ is connected to an up-edge
+       ($\one^+$ does not have to be connected to anything.)
+ \item The directed graph formed by up-edge, down-edge, axiom edges and
+       0-branches is acyclic.
+ \item \label{conditionL}
+       for every $\parr^+$-node~$p$, every path from the root that reaches
+       $p$'s dashed child also passes through $p$.
+\end{enumerate}
+The essential net in Example~\ref{essential-amida} is not correct for
+condition~\ref{conditionL}.
+
+ \begin{theorem}[\citet{lamarche2008,murawski2003}]
+  An IMLL formula~$\phi$ is provable iff there exists a correct essential net
+  of $\phi$.
+ \end{theorem}
+ \begin{proof}
+  \citet{lamarche2008} uses a common technique of decomposing an
+  essential net from the bottom.
+  \citet{murawski2003} chose to reduce the problem to sequents of special forms
+  called regular.
+ \end{proof}
+
+ Actually, Lamarche also considers the cut rule\footnote{As well as
+ additive operators and exponentials.} in essential nets, thus
+ we can use the following generalized axioms (as macros) and cuts:
+ \begin{center}
+  \includegraphics[scale=0.4]{general-axiom-cut.eps}\enspace.
+ \end{center}
 
 \subsection{Amida Nets}
 
@@ -1826,7 +1905,9 @@ For a hypersequent~$\hyper$,
 \end{itemize}
  \end{definition}
 
-The Amida edge between two edges
+\fix{define correct Amida nets after defining correct essential nets}
+
+ The Amida edge between two edges
  \begin{center}
 \includegraphics[scale=0.4]{twoedges_amida_without_label.eps}
  \end{center}
@@ -1834,60 +1915,76 @@ is the same as a pair of crossing edges
  \begin{center}
 \includegraphics[scale=0.4]{crossing.eps}
  \end{center}
-in terms of reachability between endpoints.
+in terms of reachability between endpoints\footnote{Differently from
+braids, we do not distinguish which edge goes over the other.}.
 The difference is the induced sequent at the bottom.
 Although Amida edges cross the paths,
 they do not transmit labelings as seen in the next example.
-
  \begin{example}
-  The Amida net for the Amida axiom.
+  The Amida net for the Amida axiom $(X\limp Y)\otimes(Y\limp X)$.
+   \begin{center}
+    \includegraphics[scale=0.4]{amida-axiom.eps}
+   \end{center}
+  In terms of the set of paths, the above Amida net is equivalent to the
+  following essential net for $(X\limp X)\otimes (Y\limp Y)$.
+   \begin{center}
+    \includegraphics[scale=0.4]{amida-axiom-cross.eps}
+   \end{center}
  \end{example}
 
-\subsection{Correctness}
+\subsection{Soundness and Completeness of Amida nets}
 
 \fix{define some words below}
 
-We can translate a sequent calculus proof into a correct Amida net.
+ \begin{proposition}[Completeness]
+  If a hypersequent $\hyper$ is derivable,
+  there is a correct Amida net for $\hyper$.
+ \end{proposition}
+ \begin{proposition}
+  Inductively on the derivation of $\hyper$,
+  we can translate a sequent calculus proof into a correct Amida net.
+ \end{proposition}
 
+ Soundness is more complicated.
 Inverse, from a correct Amida net, first we move the Amida edges upwards
 until they are just below axiom edges.
 
-The moves are as follows.
+The translation moves are as follows.
  \begin{center}
 \includegraphics[scale=0.4]{tensor-move.eps}
 \\
-\includegraphics[scale=0.4]{parr-move.eps}
+\includegraphics[scale=0.35]{parr-move.eps}
  \end{center}
 These translations have two properties.
 \begin{enumerate}
- \item When the original is a correct Amida net, the translation is also
-       a correct Amida net.
- \item When the translation corresponds to a hypersequent derivation,
-       the original does.
+ \item When the original (substituted to a larger picture)
+       is a correct Amida net, the translation (substituted to the same
+       larger picture) is also a correct Amida net.
+ \item The endpoints of the translation corresponds to the endpoints of
+       the original, and the corresponding endpoints have the same label
+       (up to logical equivalence in IMLL).  In case of $\otimes$
+       translation, $\phi$ and
+       $\phi\otimes \one$ are logically equivalent because $\one$ is the
+       unit of $\otimes$.
+       In case of $\parr$ translation, $\phi$ and $0\parr \phi$ are
+       logically equivalent because $0$ is the unit of $\parr$.
 \end{enumerate}
-For checking the first condition, it is enough to follow the paths.
-The second condition is immediate for the $\otimes^+$ translation, but
-not immediate for the $\parr^+$ translation.  The second condition on
-the $\otimes^+$ translation can be validated by the following Amida
-logic derivation.
-\begin{center}
- \AxiomC{$\G,\psi\tr\phi \hmid \D\tr\chi$}
- \AxiomC{}
- \UnaryInfC{$\tr\one$}
- \AxiomC{}
- \UnaryInfC{$\psi\tr\psi$}
- \BinaryInfC{$\tr \psi\hmid \psi\tr\one$}
- \BinaryInfC{$\G\tr\phi\hmid \D\tr\chi\hmid \psi\tr\one$}
- \UnaryInfC{$ \G\tr\phi\hmid \D,\psi\tr\chi\otimes \one $}
- \AxiomC{}
- \UnaryInfC{$\chi\tr\chi$}
- \UnaryInfC{$\chi,\one\tr\chi$}
- \UnaryInfC{$\chi\otimes \one \tr\chi$}
- \BinaryInfC{$\G\tr\phi\hmid \D,\psi\tr\chi$}
- \DisplayProof
-\end{center}
+For checking the first condition, it is enough to follow the paths
+(crossing all Amida edges).
+For the second condition, it is enough to follow the vertical edges
+except the Amida edges.
 
-Then the whole Amida net is decomposed vertically into three layers.
+The $\otimes$ move introduces Amida edges only above the branching rules.
+Although the $\parr$ move introduces an Amida edge below a
+branching rule, that branching rule is of $\otimes$ nature.
+Also, the $\parr$ move introduces an Amida edge below $\psi$-axiom link,
+which is actually a macro.  So we have to continue applying the
+translation moves in the macro.  However, Since $\psi$ is a strictly
+smaller subformula of $\psi\parr\chi$, this does not cause infinite
+recursion.
+
+Then, by these translation moves,
+the whole Amida net is decomposed vertically into three layers.
 At the top, there is a layer with only Axiom edges.
 In the middle, there is a layer with only vertical edges and Amida
 edges.
@@ -2108,6 +2205,69 @@ and $Q$ communicate, but that option is prohibited by the typing rules.
 
 \subsection{Beffara}
 
+\subsection{Giunti and Vasconcelos}
+
+\citet{giunti2010} gives a type system for the pi calculus, which is
+extremely similar to our type system.
+They say ``the goale of this work is to equip types with a contsructor
+able to denote the two ends of a same
+channel.''~\citep[Introduction]{giunti2010}
+One of their typing rules
+ \begin{center}
+  \AxiomC{$\G,x\colon(S,\overline S)\tr P$}
+  \UnaryInfC{$\G\tr(\nu x)P$}
+  \DisplayProof
+ \end{center}
+ is similar to a rule in \thref{typing_connection}
+ \begin{center}
+  \AxiomC   {$\hypert\hmid
+  \G,\tj{x}{\phi^\ell},\tj{y}{\overline{\phi^\ell}}\tr\tj t \psi$}
+  \UnaryInfC{$\hypert\hmid
+  \G\tr\tj{\nu\tj{x}{\phi^\ell}.t[x_L/x][x_R/y]}{\psi}$}
+  \DisplayProof\enspace.
+ \end{center}
+ Usually, the Curry--Howard correspondence is followed from logical world
+ to the programming world: for an alraedy known logic, a new lambda
+ calculus is invented (e.g.~\fix{lambda mu kakutani kimura pfenning alex
+ sympson so on}).  However, in our case, it seems that we have just
+ found a logic called Amida logic that corresponds to an already known
+ typing descipline invented by \citet{giunti2010}.
+ It will be worthwhile to compare their system with our type system.
+
+ \subsection{Double Binder}
+ Our $\nu x$ notation binds two variables $x_L$ and $x_R$.
+ This is similar to the double binder $\nu x_L x_R$ appearing in
+ \citet{gay2010}.
+
+ \subsection{Logic Programming}
+
+ There are at least two ways to interpret logics computationally.
+ One is proof reduction, which is represented by $\lambda$-calculi.
+ The other is proof searching.  What is the meaning of Amida axiom in
+ the proof searching approach?
+
+ Let us cite an example from \citet[A.2]{kobayashi-yonezawa}:
+ \begin{quote}
+  Consumption of a message $m$ by a process $m\limp B$ is represented by
+  the following deduction:
+  \[
+   (m\otimes(m\limp B)\otimes C)\limp (B\otimes C)
+  \]
+  where $C$ can be considered as other processes and messages, or an environment.
+ \end{quote}
+ In existence of Amida axiom,
+ the inverse
+ \[
+  (B\otimes C)\limp (m\otimes (m\limp B))\otimes C
+ \]
+ is derivable.
+ This suggests that the Amida axiom states that some
+ computation is reversible.  We are not sure whether this is very
+ useful within the realm of reversible computation \fix{cite some
+ denmark people}.
+
+\section{Discussion}
+
 \subsection{Categorical Considerations}
 One might want to ask whether we can model the logic with
 a symmetric monoidal closed category~\citep{blute2004category}
@@ -2123,6 +2283,14 @@ $\sigma_{ABCD}\colon (A\limp B)\otimes (C\limp D)\rightarrow (A\limp D) \otimes
    when we interpret $\otimes$ as addition,
    $m \limp n$ as $n-m$.
   \end{example}
+  On the other hand,
+  if we take another formulation requiring natural isomorphisms
+  $\mathcal C(C,A)\times\mathcal C(D,B) \cong \mathcal C(D,A)\times
+  \mathcal C{(C,B)}$,
+  only singletons can be preorder models because $\tuple{id_A,id_B}$ is
+  mapped to $\tuple{f,g}$ where $f\colon A\rightarrow B$ and $g\colon
+  B\rightarrow A$ for any two objects $A$ and $B$.
+
 A straightforward reading of evaluation rules gives somewhat complicated
 equality conditions for morphisms.
 The condition says the following diagram commutes:
@@ -2136,21 +2304,55 @@ The condition says the following diagram commutes:
 where $d_{ABCD}$ is induced by adjunction between $\otimes$ and $\limp$
  from a morphism
  $((A\limp B)\otimes (C\limp D))\otimes (A\otimes C)\rightarrow
- (B\otimes D)$, which is provided by symmetric monoidal closed properties.
+ (B\otimes D)$, which is provided by symmetric monoidal closed
+ properties.
 
-\section{Discussion}
+ \subsection{Logical Considerations}
 
-It is tempting to add modalities to types so that the
+ When we add
+ the intuitionistic version of Amida axiom
+ $(\phi\imp\psi)\land(\psi\imp\phi)$ to the intuitionistic propositional
+ logic,
+ the logic becomes inconsistent.
+ Actually,
+ if we have weakening, we can derive $(\phi\land \psi)\imp \phi$ so that
+ we can throw away half of the Amida axiom
+ $(\phi\imp\psi)\land(\psi\imp\phi)$ to obtain $\phi\imp\psi$ for any
+ $\phi$ and $\psi$.  Thus we can conclude that Amida axiom is
+ inconsistent with weakening.
+
+ On the other hand, from the operational perspective, we expect Amida
+ axiom to be consistent with contraction.
+ We reckon that relevant Amida logic can be studied, but
+ it is a mystery whether such a logic is philosophically relevant.
+
+\subsection{Multiparty, recursions, \ldots}
+We expect it straightforward to add recursions in our type system.
+As a guidance we can take Dale Miller's $\mu$MALL~\fix{cite}.
+
+Our operational semantics is different from the standard session
+calculus.  Since our operational semantics seems more liberal,
+if we limit it, we do not lose type safety.  However, if we do not
+choose a suitable class of reductions, the reduction can be
+nondeterministic.
+The reconcilation of lienarity and pi-calculus style operational
+semantics has already been considered by
+\citet{kobayashi-pierce-turner} so we expect their work to be a
+guidance toward finding a more traditional operational semantics.
+
+It is tempting to add modalities showing agents to types so that the
 modalities show agents and then study the relationship with the
 multiparty session types \fix{cite}.
-
-\fix{give rationale for giving up determinacy.. channel inside lambda}
-
-\fix{cite Dale Miller and say MALL with fixed points will be convenient
-not as a logic programming paradigm but as typed lambda calculus.}
+For that, intuitionistic epistemic logic~\citet{hirailpar,hiraimaster}
+will be useful.
 
 \section{Conclusion}
 
-
-
-
+We found Amida logic, which can be characterized by Amida axiom
+$(\phi\limp\psi)\otimes(\psi\limp\phi)$ on top of intuitionistic
+linear logic.
+The logic has an application for encoding process calculi and session type
+system.
+As a technique, we first used conjunctive hypersequents,
+where components in a hypersequent are interpreted conjunctively rather
+than disjunctively.

@@ -164,12 +164,16 @@
 				<dict>
 					<key>HeadArrow</key>
 					<string>FilledCenterBall</string>
+					<key>HeadScale</key>
+					<real>2.0000002384185791</real>
 					<key>Legacy</key>
 					<true/>
 					<key>LineType</key>
 					<integer>1</integer>
 					<key>TailArrow</key>
 					<string>FilledCenterBall</string>
+					<key>TailScale</key>
+					<real>2.0000002384185791</real>
 				</dict>
 			</dict>
 			<key>Tail</key>
@@ -226,12 +230,16 @@
 				<dict>
 					<key>HeadArrow</key>
 					<string>FilledArrow</string>
+					<key>HeadScale</key>
+					<real>2.0000002384185791</real>
 					<key>Legacy</key>
 					<true/>
 					<key>LineType</key>
 					<integer>1</integer>
 					<key>TailArrow</key>
 					<string>0</string>
+					<key>TailScale</key>
+					<real>2.0000002384185791</real>
 				</dict>
 			</dict>
 		</dict>
@@ -281,12 +289,16 @@
 				<dict>
 					<key>HeadArrow</key>
 					<string>FilledArrow</string>
+					<key>HeadScale</key>
+					<real>2.0000002384185791</real>
 					<key>Legacy</key>
 					<true/>
 					<key>LineType</key>
 					<integer>1</integer>
 					<key>TailArrow</key>
 					<string>0</string>
+					<key>TailScale</key>
+					<real>2.0000002384185791</real>
 				</dict>
 			</dict>
 		</dict>
@@ -4999,7 +5011,7 @@
 	<key>MasterSheets</key>
 	<array/>
 	<key>ModificationDate</key>
-	<string>2012-11-12 04:15:01 +0000</string>
+	<string>2012-11-12 11:50:10 +0000</string>
 	<key>Modifier</key>
 	<string>Yoichi Hirai</string>
 	<key>NotesVisible</key>

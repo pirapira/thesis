@@ -46,7 +46,7 @@
 	<key>Creator</key>
 	<string>Yoichi Hirai</string>
 	<key>DisplayScale</key>
-	<string>1 0/72 in = 1 0/72 in</string>
+	<string>1 0/72 in = 1.0000 in</string>
 	<key>GraphDocumentVersion</key>
 	<integer>8</integer>
 	<key>GraphicsList</key>
@@ -97,6 +97,8 @@
 				<dict>
 					<key>HeadArrow</key>
 					<string>FilledArrow</string>
+					<key>HeadScale</key>
+					<real>2.0000002384185791</real>
 					<key>Legacy</key>
 					<true/>
 					<key>LineType</key>
@@ -152,6 +154,8 @@
 				<dict>
 					<key>HeadArrow</key>
 					<string>FilledArrow</string>
+					<key>HeadScale</key>
+					<real>2.0000002384185791</real>
 					<key>Legacy</key>
 					<true/>
 					<key>LineType</key>
@@ -1749,7 +1753,7 @@
 	<key>MasterSheets</key>
 	<array/>
 	<key>ModificationDate</key>
-	<string>2012-11-12 04:07:52 +0000</string>
+	<string>2012-11-12 11:50:39 +0000</string>
 	<key>Modifier</key>
 	<string>Yoichi Hirai</string>
 	<key>NotesVisible</key>
