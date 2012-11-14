@@ -1,51 +1,51 @@
 \chapter{A Hyper-Lambda-Calculus for Synchronous Communication}
 \label{ch:exchange}
 
-\fix{mention amida logic}
+\section{Introduction}
 
-\subsection{Motivation}
-
-We propose a way to unify ML-style programming languages \fix{cite} and
-$\pi$-calculus \fix{cite}, which are two of Robin Milner's achievements.
+We propose a way to unify ML-style programming
+languages~\citep{milner1997definition, marlow2010haskell} and
+$\pi$-calculus~\citep{milner1999communicating}, which are two of Robin
+Milner's achievements.
 ``Well-typed expressions do not go wrong,'' said \citet{milner1978}.
 However, when communication is involved, how to maintain the principle
 is not yet settled.
-For example, Haskell, which is a ML-style programming language,
-allows different threads to communicate using
-\texttt{putMVar} and \texttt{getMVar} commands.
+For example, Haskell, which is an ML-style programming language,
+allows different threads to communicate using an MVar \texttt{mv} of
+type \texttt{MVar
+a}, with commands
+\texttt{putMVar mv} of type \texttt{a -> IO ()} and \texttt{takeMVar mv}
+of type \texttt{IO
+a}\footnote{The arrow \texttt{->} shows implication $\imp$ and the tuple
+() shows the unit type $\one$}.
+The former command consumes an argument of type~\texttt{a} and
+the argument appears from the latar command.
 However, if programmers make mistakes, these commands can
-causes deadlock in execution time even the program passes the type checking.
+cause a deadlock in execution time even if the program passes the type
+checking.
 This is because the type system of Haskell allows programmers to
-use only one of $\phi$ and $(\phi\imp \one)$.
-We can try to provide a pair of putMVar and corresponding getMVar,
-but we have no way to enforce the programmers to use both of them once
-each.
+use only one of $(\phi\imp \one)$ and $\phi$.
 Fundamentally, this is because the type system of Haskell
 is based on intuitionistic logic, which allows throwing away proofs.
 
-\fix{mention join calculus here or in related work}
-
 As a remedy, we invent a typed lambda calculus where
-the user is forced to use both of sending and receiving primitives.
+the user is forced to use both of sending and receiving primitives each once.
 For that we use the technique of linear types:
 linear types can specify a portion of program to be used
 just once.
 
-One promising approach is using session types~\citep{honda-session}.
-Session types aims at typing channels and processes in $\pi$-calculus so
-that the process execution is deterministic and not ending in deadlock.
-In general session type systems are not based on well-known logic.
-
 We show that it is still possible to build
 a type system which is based on a logic.
-Wadler and Pfenning did that, but our type system allows more.
+Wadler and Pfenning did that, but our type system can type processes
+which Wadler
+and Pfenning's system cannot.
 
 From the standard intuitionistic linear logic,
-the only change is adding an axiom
-$(\phi\limp\psi)\oplus(\psi\limp\phi)$.
-Here, we can express $\pi$-calculus-like processes as macros.
-
-However, our initial motivation was just studying the axiom
+the only change is adding Amida axiom\index{axiom!Amida}\index{Amida axiom|see{axiom}}
+$(\phi\limp\psi)\otimes(\psi\limp\phi)$.
+We call the resulting logic Amida logic.
+In Amida logic, we can express $\pi$-calculus-like processes as macros.
+To be honest, our initial motivation was just studying the axiom
 $(\phi\limp\psi)\otimes(\psi\limp\phi)$%
 \footnote{Takeuti Izumi asked about conjunctions
 after the author talked about $(\phi\limp\psi)\oplus (\psi\limp\phi)$.}.
@@ -73,11 +73,13 @@ as the output of $\co d$ as the input of $d$, which is $t$.
 
 We have more questions.
 \begin{itemize}
- \item How does it generalize over more channels?
  \item Due to addition of the axiom, is it the case that
        every type is inhabited?  In other words,
-      is the resulting type system consistent?
- \item Can we implement process calculi using the aforementioned primitives?
+      is the resulting type system consistent (Sect.~\ref{sec:convergence})?
+ \item How does it generalize over channels having more complicated
+       protocols (Sect.~\ref{sec:session-process})?
+ \item Can we implement process calculi using the aforementioned
+       primitives (Sect.~\ref{sec:session-process})?
 \end{itemize}
 
 After following these practical questions,
@@ -85,7 +87,7 @@ we proceed to developing a proof net structure for the logic.
 It turns out that the the ``Amida lottery,'' which is a traditional
 Japanese way of making arbitrary permutations, provides the answer.
 
-Japanese schoolchildren use ``Amida lotteries''
+Japanese schoolchildren use \textit{Amida lotteries}\index{Amida lotteries}
 for assigning seats, jobs, teams and so on to classmates.
 
 \fix{add}
@@ -107,6 +109,7 @@ For a set $S$, we define $\phi\in\form(S)$ by BNF:
 where $s$ is an element of $S$ and $X$ is a propositional variable.
 The propositional variable in the last clause is binding.
 A \textit{type}\index{type} is an element of $\form(\emptyset)$.
+A \textit{formula}\index{formula} is a type.
 
 \subsection{Terms and Free Variables}
 
@@ -124,7 +127,6 @@ Using patterns, we define a term $t$ with free variables~$S$.
 We assume countably infinitely many \textit{channels}\index{channel}
 with involution
 satisfying $\co c\neq c$ and $\co{\co c} = c$.
-\fix{not good, follow Abramsky}
 \begin{itemize}
  \item a variable $x$ is a term with free variables $\{x\}$,
  \item if $t$ is a term with free variables~$S$, $u$ is a term with
@@ -161,32 +163,27 @@ The symbol $\mathsf{ign}$ is intended to be pronounced ``ignore''.
 
 \subsection{Typing Derivations}
 
-On top of Abramsky's~\citep{abramsky1993computational} we add a rule to
-make $(\phi\limp\psi)\otimes(\psi\limp\phi)$ derivable.
+On top of Abramsky's linear lambda calculus
+LF~\citep{abramsky1993computational}\index{LF}, we add a rule to
+make $(\phi\limp\psi)\otimes(\psi\limp\phi)$ inhabited. \fix{define
+inhabited somewhere}
 A \textit{context}\index{context}~$\G$ is a possibly empty sequence of
 variables associated with
 types where the same variable appears at most once.
-\fix{give an example}
+A context $\tj{x}{X}, \tj{y}{Y}$ is allowed, but $\tj{x}{X}, \tj{x}{Y}$
+and $\tj{x}{X},\tj{x}{X}$ are not contexts.
 A \textit{hypersequent}\index{hypersequent} is inductively defined as
 \begin{align*}
  \hypert ::=\, &\G\tr\tj{t}{\phi}
  \mid\, (\hypert\hmid \hypert)
 \end{align*}
 where $\G$ is a context.
+In this chapter, we interpret the components conjunctively.
+We name this technique the \textit{conjunctive
+hypersequent}\index{hypersequent!conjunctive}.
 
-The \textit{type}\index{type!--- of a hypersequent} of a hypersequent is
-defined inductively.
-\begin{align*}
- \type{(\G\tr\tj{t}\phi)}&= \G\tr\phi \\
- \type{(\hypert \hmid \hypert')}&= \type(\hypert)\hmid\type{(\hypert')}
-\end{align*}
-The last clause is not natural because we ignore the type of $\hypert'$.
-Actually, later, we will only allow the construction
-$\lpair{\hypert,\hypert'}^n$ for hypersequents satisfying
-$\type(\hypert) = \type(\hypert')$.
-
-\fix{definition of terms contains natural number?}
-Differently from the previous works \fix{cite},
+Differently from the previous
+papers~\citep{avron91,Baaz01122003,avrontableau,avron96},
 here, the hypersequent $\G\tr\phi\hmid \D\tr\psi$ is interpreted as the
 conjunction of components:
 $(\bigotimes\G\limp\phi)\otimes (\bigotimes\D\limp\psi)$.
@@ -282,7 +279,7 @@ The typing rules are in Figure~\ref{fig:exchange:rules}.
   \AxiomC{$\G\tr\tj{t}{\phi}$}
   \AxiomC{$\G\tr\tj{u}{\psi}$}
   \LL{$\with$R}
-  \BinaryInfC{$\G\tr\tj{\lpair{t,u}_n}{\phi\with\psi}$}
+  \BinaryInfC{$\G\tr\tj{\lpair{t,u}}{\phi\with\psi}$}
   \DisplayProof \\
   %
   \ruleskip
@@ -421,8 +418,9 @@ where $v$ and $w$ are canonical forms.
 An evaluation hypersequent $\hypere$ is defined by the following
 grammar:
 \[
- \hypere ::= t\eval t\mid (\hypere\hmid \hypere)
+ \hypere ::= t\eval_S t\mid (\hypere\hmid \hypere)
 \]
+where $S$ is a finite set of variables.
 
 Now we define evaluation as a set of evaluation hypersequents
 (Figure~\ref{fig:eval}).
@@ -431,14 +429,16 @@ LF~\citep{abramsky1993computational}.
 We add the semantics for channels.
 
 For the sake of \thref{eval-subst} (which will be used for
-\thref{thm:generalconvergence}), we have to evaluate the subterm~$s$ in
+\thref{thm:generalconvergence} and then consistency), we have to
+evaluate a closed subterm~$s$ in
 $\lambda
-x.t[s/y]$ if $s$ is closed while Abramsky never evaluated
+x.t[s/y]$ while Abramsky never evaluated
 anything inside lambda.
+We decided to evaluate every closed subterms even they are in the
+body~$M$ of a lambda abstraction $\lambda x.M$
+because channels can appear in the body of lambda-abstraction.
 In order to keep track of that, we annotate the $\eval$ relation with
 involved free variables~$S$.
-We decided to evaluate every closed subterms even they are in the
-body~$M$ of a lambda abstraction $\lambda x.M$.
 
  \begin{proposition}
   If evaluation hypersequent $\hypere\hmid t\eval_S v$
@@ -447,6 +447,18 @@ body~$M$ of a lambda abstraction $\lambda x.M$.
  \begin{proof}
   Inductively on the evaluation derivations.
  \end{proof}
+
+ The components in the hypersequent represent concurrently running
+ processes.
+ Thus, the evaluation derivation can be reordered in the following
+ manner.
+ We call this move moving $R$ upwards.
+  \begin{proposition}
+   \fix{state}
+  \end{proposition}
+  \begin{proof}
+   \fix{prove}
+  \end{proof}
 
  \begin{figure}
   \centering
@@ -687,10 +699,10 @@ body~$M$ of a lambda abstraction $\lambda x.M$.
 	\end{description}
    \item[($u$ is of other forms)]
 	We modify the derivation so that
-	$t\eval_\emptyset v\hmid u[v/x]$ stays in the same branch.
+	$t\eval_\emptyset v\hmid u[v/x]$ stays in the same hypersequent.
 	For that we move any rule touching $t\eval_\emptyset v$ upwards
-	\fix{how}
-	and any branching rules upward.
+	by \thref{upwards}
+	and any merge rule occurence upward.
 	Delaying those rules upwards allows us to decompose the term~$u$
 	until it becomes a single free variable~$x$.
   \end{description}
@@ -706,14 +718,15 @@ body~$M$ of a lambda abstraction $\lambda x.M$.
    \UnaryInfC{$\ast\eval_\emptyset\ast$}
    \AxiomC{$t\eval_\emptyset v$}
    \BinaryInfC{$\ast\eval_\emptyset\ast\hmid t\eval_\emptyset v$}
-   \UnaryInfC{$c\ast\eval v\hmid \co ct\eval\ast$}
+   \UnaryInfC{$c\ast\eval_\emptyset v\hmid \co ct\eval_\emptyset\ast$}
    \LL{eval-subst}
-   \UnaryInfC{$c(\co c t)\eval v$}
+   \UnaryInfC{$c(\co c t)\eval_\emptyset v$}
    \DisplayProof
   \end{center}
 \end{example}
 
 \section{Convergence}
+\label{sec:convergence}
 
 Convergence states that if
 $\tr\tj t \phi$ is derivable,
@@ -724,7 +737,6 @@ hypersequents with multiple compontents.
 
 For that we first assign a set of closed terms to each type.
 \newcommand{\terms}{\mathcal{T}}
-\fix{use of $v$ is ambiguious...?}
 We denote by $\terms$ the set of closed terms.
 Given $\semo{X}_0\in 2^\terms$ for each propositional variable~$X$,
 we define $\semo{\cdot}\colon \form{(2^\terms)}\rightarrow {2^\terms}$
@@ -732,16 +744,17 @@ as follows:
 \begin{align*}
  \semo{\mathcal X} &= \mathcal X\\
  \semo{X} &= \semo{X}_0\\
- \semo{\one} &= \{t\in \terms \mid t\eval \ast\} \\
- \semo{\phi\otimes \psi}&= \{t\in\terms \mid t\eval v\otimes w,\quad
+ \semo{\one} &= \{t\in \terms \mid t\eval_\emptyset \ast\} \\
+ \semo{\phi\otimes \psi}&= \{t\in\terms \mid t\eval_\emptyset v\otimes w,\quad
  v\in\semo{\phi},\quad w\in \semo{\psi}\}\\
- \semo{\phi\limp\psi}&= \{t\in\terms \mid t\eval \lambda x.v,\quad
+ \semo{\phi\limp\psi}&= \{t\in\terms \mid t\eval_\emptyset \lambda x.v,\quad
  \forall u\in\semo{\phi}.(tu\in\semo{\psi})\}\\
- \semo{\phi\with\psi}&= \{t\in\terms \mid t\eval\lpair{v,w},\quad
+ \semo{\phi\with\psi}&= \{t\in\terms \mid t\eval_\emptyset\lpair{v,w},\quad
  v\in\semo{\phi}, w\in\semo{\psi}\}\\
- \semo{\phi\oplus\psi}&= \{t\in\terms\mid (t\eval \inl{v}, v\in
- \semo{\phi})\text{ or }(t\eval\inr{w}, w \in \semo{\psi})\}\\
- \semo{\bang \phi}&= \{t\in\terms \mid t\eval \bang u, \quad u\in\semo{\phi}\}\\
+ \semo{\phi\oplus\psi}&= \{t\in\terms\mid (t\eval_\emptyset \inl{v}, v\in
+ \semo{\phi})\text{ or }(t\eval_\emptyset\inr{w}, w \in \semo{\psi})\}\\
+ \semo{\bang \phi}&= \{t\in\terms \mid t\eval_\emptyset \bang u, \quad
+ u\in\semo{\phi}\}\\
  \semo{\forall X.\phi}&= \bigcap\{\semo{\phi[\mathcal X/X]}\mid \psi\in
  2^\terms\}\enspace.
 \end{align*}
@@ -771,10 +784,11 @@ $u\in\semo{\G\tr\tj t\phi}$.
   t_n[\vec{u^n}/\G_n]\eval_\emptyset v_n$ is derivable.
  \end{proposition}
   \begin{proof}
-   By induction on the type derivation.  We use $\eval$ for $\eval_\emptyset$.
+   By induction on the type derivation.  In this proof we use $\eval$
+   for $\eval_\emptyset$.
    \begin{description}
     \item[(IE)]
-	 Since terms in $\semo{\phi}$ or $\semo{\psi}$ do not contain
+	 Since terms in $\semo{\phi}$ and $\semo{\psi}$ do not contain
 	 free variables.
     \item[($\limp$L)] The derivation ends as
     \begin{center}
@@ -978,14 +992,13 @@ $u\in\semo{\G\tr\tj t\phi}$.
     $t\eval_{\emptyset} v$ is derivable for some canonical form~$v$.
    \end{corollary}
 
-   \fix{put Amida in many places}
    \begin{corollary}[Consistency of Amida logic]
     $\tr\tj{t}{\forall X.X}$ is not derivable for any term~$t$.
    \end{corollary}
     \begin{proof}
      Assume $\tr\tj{t}{\forall X.X}$ is derivable.
      Then, by \thref{thm:generalconvergence},
-     $t\eval t'$ is derivable for some $t'$ in $\semo{\forall X.X}$.
+     $t\eval_\emptyset t'$ is derivable for some $t'$ in $\semo{\forall X.X}$.
      However, $\semo{\forall X.X}$ is empty.
     \end{proof}
 
@@ -1007,8 +1020,10 @@ $u\in\semo{\G\tr\tj t\phi}$.
 
     \begin{proposition}
      \label{remove-local}
-     If $\hypere\hmid \hypere'$ is derivable and $\hypere'$ does not contain
-     containing any channels, $\hypere$ and $\hypere'$ are separately derivable.
+     If $\hypere\hmid \hypere'$ has a derivation of height~$h$ and
+     $\hypere'$ does not contain
+     containing any channels, $\hypere$ and $\hypere'$ are separately
+     derivable within height~$h$ or less.
     \end{proposition}
     \begin{proof}
      By induction on the height of derivations.
@@ -1035,9 +1050,9 @@ $u\in\semo{\G\tr\tj t\phi}$.
      applied up to the choice of the last-generated component.
      Now we have three things to consider.
      \begin{enumerate}
-      \item ex rule can be disregarded if we consider
+      \item The ex rule can be disregarded if we consider
 	    a hypersequent as a finite set of components rather than
-	    a finite sequence of components,
+	    a finite sequence of components.
       \item In the nested-channel rule application,
 	    we cannot immediately determine $w$:
 	     \begin{center}
@@ -1051,8 +1066,7 @@ $u\in\semo{\G\tr\tj t\phi}$.
 	    Thus, by \thref{remove-local}, a simpler evaluation
 	    hypersequent $\hypere
 	    \hmid u\eval_S v$ is derivable within the same height
-	    \fix{add this same-height condition in some} so
-	    that we can determine $v$
+	    so that we can determine $v$
 	    from induction hypothesis.
       \item From bottom to up, we can choose components in different
 	    orders.
@@ -1088,6 +1102,12 @@ $u\in\semo{\G\tr\tj t\phi}$.
     \end{corollary}
 
     \section{Sessions and Processes}
+    \label{sec:session-process}
+
+    In order to see the usefulness of the communication primitive
+    $c\otimes \co c$,
+    we try implementing a process calculi and a session type system on
+    the primitive.
 
     \subsection{Session Types as Abbreviations}
 
@@ -1103,9 +1123,9 @@ $u\in\semo{\G\tr\tj t\phi}$.
     \citet{wadler2012propositions}'s translations and descriptions.
     \begin{align*}
      \sendtype\phi\psi&\equiv \phi\limp\psi &\text{
-     outputting value of type $\phi$ then behave as $\psi$} \\
-     \recvtype\phi\psi&\equiv \phi\otimes\psi &\text{inputting value of
-     type $\phi$ then behave as $\psi$}\\
+     output value of $\phi$ then behave as $\psi$} \\
+     \recvtype\phi\psi&\equiv \phi\otimes\psi &\text{input value of
+     $\phi$ then behave as $\psi$}\\
      \oplus\{l_i\colon \phi_i\}_{i\in I} &\equiv {\phi_0}\with
      \cdots \with {\phi_n}, \quad I = \{0,\ldots,n\} & \text{select from behaviors
      $\phi_i$ with label $l_i$}\\
@@ -1154,12 +1174,9 @@ $u\in\semo{\G\tr\tj t\phi}$.
      \oplus\{l_i\colon \overline{\phi^\ell_i}\}_{i\in I} \\
      \overline{\terminate} &= \terminate\enspace.
     \end{align*}
-    \fix{see other literature as well for the definition of session
-    types}
 
     \subsection{Processes as Abbreviations}
 
-    \subsubsection{Process Abbreviations}
     We define the sending and receiving as abbreviations:
     \begin{align*}
      \sendterm x u t &\equiv t[(xu) /x] &\text{send $u$ through channel
@@ -1176,9 +1193,9 @@ $u\in\semo{\G\tr\tj t\phi}$.
     We are going to introduce the name restriction $\nu x.t$ after
     implementing channels.
 
-    \subsubsection{Typing Rules for Process Abbreviations}
-    The session type abbreviation and the processes abbreviation are
-    consistent as the next proposition shows.
+    \subsection{Process Typing Rules as Abbreviations}
+    The session type abbreviation and the processes abbreviation allow
+    us to use he typing rules in the next proposition.
      \begin{proposition}
       \label{typing_process}
       These rules are admissible.
@@ -1792,6 +1809,11 @@ Some different sequent calculus proofs are translated into the same
 proof net because the original proofs are only different in cosmetic
 ways (like which rule to apply first and exchanges of elements in a
 sequent).
+The succinct representation comes with the cost of specifying
+the correctness condition for such graphical structures.
+There has been intensive study on proof nets,
+which started with~\citet{girard1987} and \citet{danos-regnier}.
+
 
 \fix{Girard, etc etc}
 
@@ -1809,7 +1831,12 @@ a traditional way to generate permutations on a set%
 
 \subsection{IMLL Essential Nets}
 
-This subsection reviews known results. The exposition here is strongly
+This subsection reviews known results the essential nets\index{essential
+net} for
+intuitionistic multiplicative linear logic\index{logic!intuitionistic
+multiplicative linear}\index{intuitionistic multiplicative linear logic|see{logic}}
+(IMLL\index{IMLL|see{logic,
+intuitionistic multiplicative linear}}). The exposition here is strongly
 influenced by \citet{murawski2003}.
 
 We can translate a pair $\phi, p$ of
@@ -1879,6 +1906,7 @@ formulae so that the essential net is uniquely determined.}.
   \fix{add}
  \end{example}
 
+  \begin{definition}[Correct essential nets]
 \begin{enumerate}
  \item Any leaf labelled with $X^+$ (resp. $Y^-$) is connected to a
        unique leaf labelled with $X^-$ (resp. $Y^+$).
@@ -1890,8 +1918,10 @@ formulae so that the essential net is uniquely determined.}.
        for every $\parr^+$-node~$p$, every path from the root that reaches
        $p$'s dashed child also passes through $p$.
 \end{enumerate}
+  \end{definition}
 The essential net in Example~\ref{essential-amida} is not correct for
-condition~\ref{conditionL}.
+condition~\ref{conditionL}.  Actually, Amida axiom does not have
+any correct essential net.
 
  \begin{theorem}[\citet{lamarche2008,murawski2003}]
   An IMLL formula~$\phi$ is provable iff there exists a correct essential net
@@ -1946,21 +1976,23 @@ For a hypersequent~$\hyper$,
 \end{itemize}
  \end{definition}
 
-\fix{define correct Amida nets after defining correct essential nets}
+  \begin{definition}[Correct Amida nets]
+   \fix{define correct Amida nets}
+  \end{definition}
 
- The Amida edge between two edges
+ The Amida edge is not merely a crossing of vertical edges.
+ See the difference between
  \begin{center}
 \includegraphics[scale=0.4]{twoedges_amida_without_label.eps}
  \end{center}
-is the same as a pair of crossing edges
+and
  \begin{center}
 \includegraphics[scale=0.4]{crossing.eps}
  \end{center}
-in terms of reachability between endpoints\footnote{Differently from
-braids, we do not distinguish which edge goes over the other.}.
-The difference is the induced sequent at the bottom.
+The difference is the labels at the bottom.
 Although Amida edges cross the paths,
-they do not transmit labelings as seen in the next example.
+they do not transmit labels.
+This difference causes Amida nets to validate Amida axiom.
  \begin{example}
   The Amida net for the Amida axiom $(X\limp Y)\otimes(Y\limp X)$.
    \begin{center}
@@ -2051,13 +2083,22 @@ the full intuitionistic logic following
 
 \section{Related Work}
 
+One promising approach is using session types~\citep{honda-session}.
+Session types aims at typing channels and processes in $\pi$-calculus so
+that the process execution is deterministic and not ending in deadlock.
+In general session type systems are not based on well-known logic.
+
+
+\fix{mention join calculus here or in related work}
+
+
 \subsection{Pfenning}
 
 \citet{pfenning2010} provide a type system for a fragment of $\pi$-calculus.
-The type system of \citet{pfenning2010} imposes too strong a discipline
+Their type system imposes too strong a discipline
 than necessary to provide deadlock freedom.
-While the escrowing process $P$ is not typable in their type
-system, where
+The escrowing process $P$ below is not typable in their type
+system:
 \[
  P = \sendterm x y{\recvterm x a {\recvterm y b {\sendterm x b
  {\sendterm y a 0}}}}\enspace.
@@ -2244,6 +2285,21 @@ in $Q$.
 Of course, there is a way to escape the above restriction by making $P$
 and $Q$ communicate, but that option is prohibited by the typing rules.
 
+Wadler uses classical linear logic rather than intuitionistic linear
+logic.
+He justifies the choice for ``greater simplicity and symmetry.''
+Adding Amida axiom to the classical linear logic is a future direction.
+One looming difficulty is as follows.
+In classical multiplicative linear logic,
+adding Amida edges to proof nets seems harder than the intuitionistic case
+because classical MLL proof nets have no direction on edges.
+After a path crosses an Amida edge, the author has no idea which
+direction the path should continue.
+
+In other respects,
+Wadler's type system is similar to ours;
+our abbreviations are largely taken from Wadler's translations.
+
 \subsection{Beffara}
 
 \subsection{Giunti and Vasconcelos}
@@ -2304,8 +2360,7 @@ One of their typing rules
  is derivable.
  This suggests that the Amida axiom states that some
  computation is reversible.  We are not sure whether this is very
- useful within the realm of reversible computation \fix{cite some
- denmark people}.
+ useful within the realm of reversible computation~\citep{revcon}.
 
 \section{Discussion}
 
@@ -2369,7 +2424,7 @@ where $d_{ABCD}$ is induced by adjunction between $\otimes$ and $\limp$
 
 \subsection{Multiparty, recursions, \ldots}
 We expect it straightforward to add recursions in our type system.
-As a guidance we can take Dale Miller's $\mu$MALL~\fix{cite}.
+As a guidance we can take $\mu$MALL of \citet{mumall}.
 
 Our operational semantics is different from the standard session
 calculus.  Since our operational semantics seems more liberal,
@@ -2383,7 +2438,7 @@ guidance toward finding a more traditional operational semantics.
 
 It is tempting to add modalities showing agents to types so that the
 modalities show agents and then study the relationship with the
-multiparty session types \fix{cite}.
+multiparty session types~\citep{sync-multi-session, async-multi-session}.
 For that, intuitionistic epistemic logic~\citet{hirailpar,hiraimaster}
 will be useful.
 
