@@ -2858,8 +2858,9 @@ remove unnecessary synchronization while keeping the program correct
 in high performance computing.
 
 An anonymous refree pointed out that the introduction of
-modalities is interesting on its own.
+modalities [$i$] is interesting on its own.
 We have not investigated the semantics of these modalities.
+
 
 In \lgd, the source of nondeterminism can be explicitly expressed as the
 store prophecy.
@@ -2880,6 +2881,15 @@ In their realm, sequential consistency is considered too strong to
 assume everywhere.  If we are to study a weaker shared memory
 consistency in the same approach as here,
 we have to study a weaker logic.
+
+The affine variant of G\"odel--Dummett logic is called
+monoidal t-norm logic (MTL).  We developed a lambda calculus for this.
+After doing that, we noticed that adequacy of parametricity argument
+can be carried out using induction on just two type derivations;
+if we did the same for the second-order variant of \lgd,\,it would take
+induction over arbitrary number of derivations, using their heights.
+Apart from that, we could not find advantages of using MTL over
+using G\"odel--Dummett logic.
 
 \section{Conclusion}
 \label{conc}

@@ -1814,9 +1814,6 @@ the correctness condition for such graphical structures.
 There has been intensive study on proof nets,
 which started with~\citet{girard1987} and \citet{danos-regnier}.
 
-
-\fix{Girard, etc etc}
-
 Since the Amida axiom $(\phi\limp\psi)\otimes(\psi\limp\phi)$
 does not contain additives ($\with,\oplus$) or exponential ($!$),
 we can focus on the multiplicative connectives.
@@ -2373,6 +2370,7 @@ $\sigma_{ABCD}\colon (A\limp B)\otimes (C\limp D)\rightarrow (A\limp D) \otimes
  Before considering equality among morphisms,
  we know there is a non-trivial example.
   \begin{example}[A symmetric monoidal closed category with swaps]
+   \label{smcc}
    The preorder formed by objects as integers and morphisms as the usual
    order among integers~$\le$
    forms a symmetric monoidal closed category with swaps
@@ -2417,7 +2415,7 @@ where $d_{ABCD}$ is induced by adjunction between $\otimes$ and $\limp$
  $\phi$ and $\psi$.  Thus we can conclude that Amida axiom is
  inconsistent with weakening.
 
- On the other hand, from the operational perspective, we expect Amida
+ On the other hand, from \thref{smcc}, we know that Amida
  axiom to be consistent with contraction.
  We reckon that relevant Amida logic can be studied, but
  it is a mystery whether such a logic is philosophically relevant.

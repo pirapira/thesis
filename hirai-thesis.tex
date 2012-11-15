@@ -1,5 +1,8 @@
 \documentclass[doctor]{iscs-thesis}
 
+\usepackage[numbers,sort&compress]{natbib}
+\def\NAT@spacechar{~}% NEW
+
 %\usepackage{cleverref}
 \usepackage{stmaryrd,setspace,float}
 \usepackage[counterclockwise]{rotating}
@@ -13,7 +16,6 @@
 \usepackage{cmll}
 \usepackage{tipa}
 
-
 % \usepackage{tikz}
 % \usepackage{tikz-cd}
 
@@ -25,14 +27,11 @@
 \DefineVerbatimEnvironment{spec}{Verbatim}{fontsize=\small}
 \newcommand{\ignore}[1]{}
 
-\usepackage[numbers,sort&compress]{natbib}
-\def\NAT@spacechar{~}% NEW
 
 \usepackage{rotating}
 
 \usepackage{bussproofs,stmaryrd, showlabels}
 \EnableBpAbbreviations
-\usepackage{graphicx}	% required for `\includegraphics' (yatex added)
 
 %%% from haskell symposium submitted paper
 \usepackage{graphicx}
@@ -40,7 +39,6 @@
 \usepackage{amscd}
 
 \usepackage[amsmath,standard,thref,thmmarks]{ntheorem}
-%\usepackage{showlabels}
 
 % \doublespacing
 
@@ -82,8 +80,8 @@
 % \input{seqcon.tex}
 \appendix
 
-\input{pole.tex}
-\input{haskell.tex}
+% \input{pole.tex}
+% \input{haskell.tex}
 
 
 \bibliographystyle{plainnat}

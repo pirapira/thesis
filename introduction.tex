@@ -116,6 +116,14 @@ is a matter of concurrency}
   additive fragment of linear logic.  For these fragments of linear
   logic,
   \citet{abramsky1993computational} gave lambda calculi.
+  \textsf{FLew} stands for the full Lambek calculus with exchange and
+  weakening,
+  which is also known as intuitionistic affine logic.
+  Affine logics lack contraction, which causes exponential size increase
+  during cut-elimination process.
+  Asperti gave light affine logic~\citep{2002}.
+  \citet{terui2007} gave an affine typed lambda calculus for polynomial
+  time computation.
   \textsf{R} stands for relevance logic~\citep{urquhart1972},
   for which \citet{gabbay1992} gave a lambda calculus.
   \textsf{Int} stands for the intuitionistic propositional logic.
@@ -177,7 +185,7 @@ $(\phi\limp\psi)\oplus(\psi\limp\phi)$, which is the linear version of
 Dummett's axiom.  \fix{add words}
 
 Our fourth contribution is about the parametricity in the second-order
-setting.  When we allow logical formulas to have quantifiers on
+setting.  When we allow logical formulae to have quantifiers on
 propositional variables (e.g. $\forall X(X\imp X)$), the logic gets much
 more expressive.
 Moreover, these second-order types can give more detailed specification

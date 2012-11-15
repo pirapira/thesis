@@ -1,43 +1,27 @@
 \begin{eabstract}
- We give a computational interpretation of G\"odel--Dummett logic, based
- on the Curry--Howard isomorphism.  This leads to characterization
- of waitfree computation, which is a class of distributed
- computation.  Although both G\"odel--Dummett logic and waitfree computation are
- important players in their respective areas, their connection has not
- been known.  G\"odel--Dummett logic is an intermediate logic---a
- logic between classical and intuitionistic logics.
- Waitfree computation is a class of distributed computation where no process can
- wait for another.  Our contribution is defining a typed lambda calculus
- for G\"odel--Dummett logic, which can solve
- exactly the same problems solvable by waitfree computation.
- This is the first result characterizing shared memory consistency using
- a type system, marking an important step in
- an emerging area of research to be called ``implicit shared
- memory consistency.''
-
- In his Master's Thesis, the author sensed some semantic connection
- between G\"odel--Dummett logic and a degree of shared memory consistency
- called sequential consistency.
- However, we are heavily indebted to Arnon
- Avron's paper in 1991.  Our typed lambda calculus is based on Avron's
- hypersequents.
- Our problem comes from Avron's question
- ``it seems to us extremely important to determine the exact
- computational content of them [the logics with cut-elimination
- using hypersequents] and to develop corresponding $\lambda$-calculi.''
- To this twenty-year-old question, we give an answer for a typical
- example of G\"odel--Dummett logic.
- We show that the computational content of G\"odel--Dummett logic is
- waitfree computation.
-
- Technically, this research studies a typed lambda calculus.
- We show three theorems:
- no typed term can reduce infinitely often;
- no typed term can reduce to a term representing failure;
- and a typed term can solve a problem if and only if a waitfree protocol
- can solve the problem.
-
- \fix{MTL and Haskell}
+ We propose hyper-lambda calculi.  A hyper-lambda term is a finite
+ sequence of lambda terms, representing concurrent processes.  We give
+ two concrete hyper-lambda calculi: synchronous and asynchronous.  Both
+ employ a
+ pair of communication primitives exchanging their inputs.
+ In the synchronous case, both sides succeed.  In the asynchronous case,
+ at least one side obtains the other side's input.
+ The synchronous calculus denotes message-passing communication
+ and session types;
+ the asynchronous calculus characterizes shared-memory waitfree
+ communication.
+ Among processes of a typed hyper-lambda term,
+ all succeed in the synchronous case while
+ at least one succeeds in the asynchronous case.
+ Logically, the processes are interpreted conjunctively
+ in the synchronous case but disjunctively in the asynchronous case.
+ The synchronous calculus is based on our original Amida logic:
+ $(\phi\limp\psi)\otimes(\psi\limp\phi)$ on top of intuitionistic linear
+ logic;
+ the asynchronous calculus is based on G\"odel--Dummett logic:
+ $(\phi\imp\psi)\lor(\psi\imp\phi)$ on top of intuitionistic logic.
+ These calculi are in Curry--Howard correspondence with the
+ hypersequent-style natural deduction.
 \end{eabstract}
 
 \begin{jabstract}

@@ -152,7 +152,8 @@ Moreover, there are methods to recognize more formulae to be correct
 formulae~\cite{heyting1930}:
 \begin{description}
  \item[1.2.] If $a$ and $b$ are correct formulas, then $a\land b$ is a correct
-       formula.
+       formula\footnote{In quotes, we do not adjust the plural
+      ``formulas'' and ``formulae.'' }.
  \item[1.3.] If $a$ and $b$ are correct formulas, then $b$ is a correct formula.
 \end{description}
 
@@ -508,6 +509,48 @@ derivation~\citep[p.~36]{prawitz1965} can be reduced
  and the normal form in the typed lambda
  calculi under Curry--Howard isomorphism.
 
+\subsubsection{Tonk}
+
+Arthur Prior \fix{cite} invented a logical connective called tonk.
+ \begin{center}
+\AxiomC{$\phi$}
+\UnaryInfC{$\phi \text{ tonk }\psi$}
+\DisplayProof
+  \hfill
+\AxiomC{$\psi$}
+\UnaryInfC{$\phi \text{ tonk }\psi$}
+\DisplayProof
+  \hfill
+\AxiomC{$\phi\text{ tonk }\psi$}
+\UnaryInfC{$\phi$}
+\DisplayProof
+  \hfill
+\AxiomC{$\phi\text{ tonk }\psi$}
+\UnaryInfC{$\psi$}
+\DisplayProof
+ \end{center}
+From this,
+inversion principle requires this reduction:
+ \begin{center}
+  from
+  \AxiomC{$\phi$}
+  \UnaryInfC{$\phi\text{ tonk }\psi$}
+  \UnaryInfC{$\psi$}
+  \DisplayProof
+  to
+  \AxiomC{$\phi$}
+  \UnaryInfC{$\psi$}
+  \DisplayProof\enspace.
+ \end{center}
+The reduct is considered nonsense, so the tonk operator is abandoned.
+However, in Chapter~3, we pursue the possibility of compensating the
+nonsense by the dual nonsense, namely:
+ \begin{center}
+  \AxiomC{$\phi\qquad \psi$}
+  \UnaryInfC{$\psi\qquad \phi$}
+  \DisplayProof\enspace.
+ \end{center}
+
 
 \subsection{Curry--Howard Isomorphism}
 
@@ -621,13 +664,49 @@ Thomas~\citep{thomas1962} axiomatized
  which is rewritten using only implications but no disjunction or conjunction.
 
 \subsubsection{Sonobe}
-\fix{say something}
+
+\citet{sonobe} presented a sequent calculus for G\"odel--Dummett logic
+and proved cut-elimination theorem for it.
+On top of intuitionistic propositional logic, there is only one rule.
+However, the number of assumptions of the rule is not constantly
+bounded.  The rule can have assumptions as many as any natural number.
+After looking at \lgd\,in Chapter~\ref{ch:lambda},
+we can translate a proof in Sonobe's system into a \lgd\,typing
+derivation and then find the computational content of the original
+proof.  However, the author has never seen an attempt of determining
+the computational interpretatin of Sonobe's cut-elimination.
 
 \subsubsection{Avron}
-Hypersequent
 
+\citet{avron91} invented the hypersequent calculus.
+A \textit{hypersequent}\index{hypersequent} is a nonempty, finite sequence of sequents:
+\[
+\G_0\tr\phi_0\hmid \G_1\tr\phi_1\hmid \cdots \hmid \G_n\tr\phi_{n-1}
+\quad (n > 0)\enspace.
+\]
+When we say a \textit{possibly-empty}\index{possibly-empty}
+hypersequent\index{hypersequent!possibly-empty}, we allow $n$ to be 0.
+We use metavariable $\hyper$ for a hypersequent.
+For G\"odel--Dummett logic, \citet{avron91} formulated the communication
+rule\index{rule!communication}\index{communciation rule}
+\begin{center}
+ \AxiomC{$\hyper_0\hmid \G'_0, \G_0\tr \phi_0 $}
+ \AxiomC{$\hyper_1\hmid \G'_1, \G_1\tr \phi_1 $}
+ \BinaryInfC{$\hyper_0\hmid \hyper_1\hmid \G'_1,\G_0\tr\phi_0\hmid \G'_0,\G_1\tr\phi_1$}
+ \DisplayProof\enspace.
+\end{center}
+The rule contains no logical connectives.  That means in order to apply
+the rule, we do not have to pattern-match formulae except comparing
+whether two formulae are identical or not.
+Such a rule is called a \textit{structural
+rule}\index{rule!structural}\index{structural rule} as opposed to a
+logical rule\index{rule!logical}\index{logical rule}.
 
-\subsubsection{Later Developments}
+For the hypersequent calculus with the communication rule,
+\citet{avron91} showed cut-elimination theorem.
+He asked what is the computational content of G\"odel--Dummett and other
+intermediate logics (see the beginning of Chapter~\ref{ch:lambda} for
+quotation).
 
 \subsection{Waitfreedom}
 
@@ -679,7 +758,7 @@ the weak excluded middle,
 G\"odel--Dummett logic
 and classical logic.
 Although the Craig interpolation property is useful for program
-verification~\citep{unno2009} \fix{cite others},
+verification~\citep{mcmillan2003,esparza,unno2009},
 the above result itself is only of
 theoretical interest.
 
@@ -750,10 +829,6 @@ for classical logic,
  \end{center}
 we have to find a formula on the left hand
 side sequent whose top connective is $\wedge$.
-
-A \textit{structural rule}\index{structural rule}
-is a deduction rule that does not require
-pattern-matching on formulae except two of them are equal or not.
 
 Today, the logics without some structural rules are called \textit{substructural
 logics}\index{logic!substructural}.  There have been intensive studies on
