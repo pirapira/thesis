@@ -1,7 +1,7 @@
 \renewcommand{\comodL}{\comod cd}
 \renewcommand{\comodR}{\comod dc}
 
-\chapter{A Hyper-Lambda-Calculus for Asynchronous Communication}
+\chapter{An Asynchronous Hyper-Lambda Calculus}
 \label{ch:lambda}
 
 \subsection{Summary}
@@ -314,7 +314,7 @@ $[0]((\varphi\supset\psi)\vee(\psi\supset\varphi))$ is provable (Figure~\ref{fig
    {$\hyper_0\hmid\hyper_1\hmid\hyper_2\hmid
  \G,\D_0,\D_1,\D_2\vdash[i]\theta$}
 \ruleskip
-\caption[The underlying logic \fix{of what}.]
+\caption[The underlying logic of \lgd.]
  {The underlying logic.
  Metavariables $\m\phi$ and $\m\psi$ stand for global formulae.
  Metavariables~$i$ and $j$ stand for processes.
@@ -603,7 +603,7 @@ annotated as in Figure~\ref{fig:typed}.
  \tj{\imapsto{\mat M x {N_0} y {N_1}}}{[i]\theta}$}
  \DisplayProof
 \ruleskip
- \caption[Term assignment on \lgd\, rules.]
+ \caption[The typing rules of \lgd.]
  {Term assignment.
  Metavariable $\m M$ stands for global terms.
  When we remove variables and terms, we obtain the derivation rules for
@@ -1003,7 +1003,7 @@ $\mathcal{D}$ with $\mathcal{C}\reduce \mathcal{D}$.
 A term~$M$ is \textit{normal}\index{normal} when the configuration $\conf{}{M}$ is
 normal (the choice of $\lstore$ is irrelevant).
 
-\begin{example}[Reductions]
+\begin{example}[Reductions of \lgd]
  We take the term shown in
  Figure~\ref{fig:typed2} and replace $x$ with $v$ and $y$ with $w$ where
  $v$ and $w$ are pure closed terms.
@@ -2125,7 +2125,7 @@ And $(p)_j$ denotes $(q_i)_{i\in\processes}$ where $q_j = p$ and $q_i =
 \epsilon$ for all $i\neq j$.
 Below, we always choose fresh program variables.
 The definition is inductive over the type derivation, which is
-essentially compilation from lambda-terms to imperative programs:
+essentially compilation from lambda terms to imperative programs:
 \fix{specify where we rename variables}
 \begin{description}
  \item[$ij$-com]
@@ -2883,7 +2883,15 @@ consistency in the same approach as here,
 we have to study a weaker logic.
 
 The affine variant of G\"odel--Dummett logic is called
-monoidal t-norm logic (MTL).  We developed a lambda calculus for this.
+monoidal t-norm logic (MTL), which validates an axiom
+$(\phi\limp\psi)\oplus(\psi\limp\phi)$.
+\citet{Esteva2001271} considered monoidal t-norm logic (MTL) for
+\fix{what reason}
+In Chpater~\ref{ch:exchange}, we study a similar axiom
+$(\phi\limp\psi)\otimes(\psi\limp\phi)$.
+For comparison, we develop a hyper-lambda calculus for MTL in
+Appendix~\ref{ch:pole}.
+We developed a lambda calculus for this.
 After doing that, we noticed that adequacy of parametricity argument
 can be carried out using induction on just two type derivations;
 if we did the same for the second-order variant of \lgd,\,it would take

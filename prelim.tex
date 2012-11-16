@@ -58,8 +58,8 @@ to the extent relevant to the content of this thesis.
 Especially, we focus on the treatments of Dummett's axiom $(a\imp
 b)\lor(b\imp a)$ using the techniques in the history.
 We confine ourselves to the developments of propositional logic and
-ignore anything related to predicate logic or formalizing mathematics on
-logics.  Nothing in this section originates from the current author.
+ignore anything related to predicate logic or formalization of
+mathematics.
 
 \subsection{Birth of Formal Logic}
 
@@ -83,22 +83,16 @@ Then he defines a notation involving $A$ and $B$
 \]
 which ``stands for the
 judgment that \textit{the third of these possibilities does not take
-place, but one of the three other does\footnote{The emphasis is by
+place, but one of the three other does\footnote{The emphasis is found in
 the English translation~\citep[p.~14]{frege}.}}''~\citep[p.~14]{frege}.
 In the contemporary common mathematical terminology, this is equivalent
 to stating $B$ implies $A$.
-It was Russell who called this implication the material implication,
+It was Bertrand Russell who called this implication the material
+implication,
 according to~\citet{sep-conditionals}.
 After his notation, we still use $\vdash$ for judgements in our formal systems.
 
-It is worth noting that Frege used the notation for implication to
-define conjunction and
-disjunction in the formal system, not the other way around.  Even in
-today's treatments of
-like algebraic semantics or categorical semantics, implication is
-fundamental (orders in algebraic semantics, morphisms in categorical
-semantics) and other logical connectives
-can be defined using implication.
+\fix{Try proving Dummett's axiom in Begriffschrift}
 
 \subsection{Intuitionistic Propositional Logic}
 
@@ -116,15 +110,14 @@ Nontheless, Brouwer approved publication of his student Arend Heyting's
 work on defining a set of logical formulae as the intuitionistic
 propositional logic.
 
-\subsubsection{Heyting}
 In 1930, Heyting~\cite{heyting1930}\index{Heyting} developed a deduction
 system for the
 intuitionistic propositional logic.  The presentation is similar to
 the contemporary one except some notational differences.  The
 logical connectives are the same $\{\wedge,\vee,\supset,\neg\}$ as today, the
 first three binary and the last unary%
-\footnote{Though, in this thesis, we prefer using nullary $\bot$ instead of unary
-$\neg.$}%
+\footnote{Though, in this thesis, we prefer having nullary $\bot$ as a
+primitive and define $\neg a$ as an abbreviation for $\a\supset\bot$.}%
 .  Logical formulae are constructed
 using these connectives and the propositional variables.
 Although he sometimes used parentheses, he still used more points
@@ -148,8 +141,7 @@ from \citet{heyting1930}.}, i.e. assumed to be
  \item[4.1.] $\neg a\supset (a\supset b)$
  \item[4.11.] $((a\supset b)\land (a\supset \neg b)) \supset \neg a$\enspace.
 \end{description}
-Moreover, there are methods to recognize more formulae to be correct
-formulae~\cite{heyting1930}:
+There are more formulae given by the following rules~\cite{heyting1930}:
 \begin{description}
  \item[1.2.] If $a$ and $b$ are correct formulas, then $a\land b$ is a correct
        formula\footnote{In quotes, we do not adjust the plural
@@ -163,8 +155,13 @@ would be equivalent to intuitionistic mathematics, for the
 possiblitities of thought cannot be reduced to a finite number of rules
 set up in advance,''~\citep{heyting1930} he did not pursue completeness
 results for the deduction system
-except a remark mentioning Glivenko's theorem~\citep{glivenko0,glivenko1}.
-However, he used a form of semantics in order to show that
+except a remark mentioning Glivenko's
+theorem~\citep{glivenko0,glivenko1}.
+In other words, he did not pursue arguing that his system is strong
+enough.
+On the contrary, he argued his system is not too strong.
+He used what would be called algebraic semantics today
+in order to show that
 each axiom is independent from the other axioms and that
 the excluded middle is unprovable.
 For example, in order to refute the excluded middle, he used the
@@ -221,11 +218,12 @@ plays no rule here: it is not relevant that 2 is larger than 1 or 0 is
 less than 1 (in other places he uses ``all positive and negative
 whole numbers and 0'').  Although Heyting used natural numbers here, he
 already obtained an equivalent notion of what is called Heyting algebra
-today.
+today\footnote{Although he did not explicitly say that he can define a
+partial order using the semantics for $\imp$.}.
 
-That is why we can refute Dummett's axiom $(a\supset b)\lor (b\supset
+We can refute Dummett's axiom $(a\supset b)\lor (b\supset
 a)$\index{axiom!Dummett's} in the same method.
-Indeed, according to these tables below, when we assign 1 to $a$ and 2
+Indeed, according to the tables below, when we assign 1 to $a$ and 2
 to $b$, $(a\supset b)\lor (b\supset a)$ obtains 4, which is not 0.
 Since all correct formulae receive 0, $(a\imp b)\lor (b\imp a)$ is not a
 correct formula.
@@ -247,7 +245,7 @@ correct formula.
    3& 3& 3& 3& 3& 3\\
    4& 4& 1& 2& 3& 4\\
   \end{tabular}
-  \ruleskip
+  \hfill
   \begin{tabular}{c|ccccc}
    $\vee$&0 &1 &2 &3 &4 \\ \hline
    0& 0& 0& 0& 0& 0\\
@@ -256,7 +254,7 @@ correct formula.
    3& 0& 1& 2& 3& 4\\
    4& 0& 4& 4& 4& 4\\
   \end{tabular}
-  \hfill
+  \ruleskip
   \begin{tabular}{c|ccccc}
    $\neg$& 0& 1& 2& 3& 4\\ \hline
    & 3& 3& 3& 0& 3\\
@@ -272,8 +270,7 @@ there are infinitely many propositional logics between the
 intuitionistic propositional logic and the ``ordinary'' (in today's
 terminology, classical) propositional logic.  The second result is the
 first contribution to the realm of intermediate
-logics\index{logic!intermediate} (as
-Troelstra~\cite[p.~223]{goedelcollected} put it).
+logics\index{logic!intermediate} (according to Troelstra~\cite[p.~223]{goedelcollected}).
 For distinguishing those intermediate logics and the intuitionistic
 propositional logic, he uses a formula~$F_n$ for each positive natural
 number~$n$:
@@ -283,12 +280,6 @@ number~$n$:
 On an $n$-element chain, $F_{n+1}$ is valid while $F_n$ might not be
 satisfied.  As a result, no $F_n$ is valid in the intuitionistic
 propositional logic.
-Although Troelstra~\cite[p.~223]{goedelcollected} writes ``the reasons
-for studying intermediate logics are mainly technical,'' we find that
-one typical intermediate logic, G\"odel--Dummett logic, has a
-computational interpretation which has already been known: waitfreedom.
-The connection between G\"odel--Dummett logic and waitfreedom will be
-treated in Chapter~\ref{ch:lambda}.
 
 Among the formulae~$F_n$,
 especially, the formula~$F_2$, which is $(a_1\supset a_2)\land (a_2\supset
@@ -313,9 +304,16 @@ if either $A$ or $B$ is provable in $H$'', where $H$ is Heyting's calculus.
 According to this statement, it is obvious that Dummett's axiom
 $(p\supset q) \lor (q\supset p)$ is not provable.
 
+Although Troelstra~\cite[p.~223]{goedelcollected} writes ``the reasons
+for studying intermediate logics are mainly technical,'' we find that
+one typical intermediate logic, G\"odel--Dummett logic, has a
+computational interpretation which has already been known: waitfreedom.
+The connection between G\"odel--Dummett logic and waitfreedom will be
+treated in Chapter~\ref{ch:lambda}.
+
 \subsection{The Brouwer--Heyting--Kolmogorov Interpretation of Logical Connectives}
 
-\subsubsection{Kolmogorov}
+\subsubsection{Kolmogorov's view of implication as problem reduction}
 
 Thanks to Heyting~\cite{heyting1930}, we have a formal
 characterization of the intuitionistic implication.
@@ -339,7 +337,7 @@ In the calculus of problems, the logical connectives $\vee, \wedge,
  He continues to validate Heyting~\cite{heyting1930}'s axioms, and the
  deduction rules with respect to the problem calculus interpretation.
 
- Furthermore, he finds a rationale for not including the law of excluded
+ Furthermore, he finds a reason for not including the law of excluded
  middle $a\lor \neg a$ by saying ``one must possess a general method
  either to prove or to reduce to a contradiction any proposition.  If
  our reader does not consider himself to be omniscient, he will probably
@@ -357,13 +355,18 @@ In the calculus of problems, the logical connectives $\vee, \wedge,
 
 \subsubsection{Realization as Typed Lambda Terms}
 
-The Brouwer--Heyting--Kolmogorov interpretation reads: ``a proof of the
+One formulation of the
+Brouwer--Heyting--Kolmogorov\index{Brouwer--Heyting--Kolmogorov
+interpretation}
+(BHK\index{BHK|see{Brouwer--Heyting--Kolmogorov interpretation}})
+interpretation reads: ``a proof of the
 implication $\varphi\supset\psi$ is a construction which permits us to
- transform any proof of $\varphi$ into a proof of $\psi$''~\fix{cite}.
+ transform any proof of $\varphi$ into a proof of $\psi$''~\fix{cite troelstra}.
 The BHK
 interpretation does not specify what is a proof or what kind of
 transformation witnesses implication.
-Notwithstanding, there is a
+\fix{move below to C}
+There is one
 traditional realization of proofs as lambda terms where the
 introduction rule of implication is realized as the lambda abstraction
 and the elimination rule of implication is realized as the application
@@ -416,24 +419,29 @@ substructural logics albeit it has quantification over propositional variables.
 
 The deduction system of \citet{heyting1930} characterizes what is still
 called intuitionistic propositional logic today. However, Heyting's
-system has one drawback, which is shared with almost all other
+system has one drawback, which is shared with almost all%
+\footnote{Even Hilbert-style deduction
+systems can avoid this drawback if all theorems are axioms.} other
 Hilbert-style derivation systems:
 in order to prove a logical formula, sometimes we have to
-mention a larger, more complicated formulae.  Actually, there
+mention a larger, more complicated formula.  Actually, there
 are alternative formulations of intuitionistic (and classical)
 propositional logic by \citet{gentzen} where we only have to
 mention subformulae of the formula being proven.
-The alternative proof systems are called natural deduciton\index{natural
+The formidable property is called subformula property\index{subformula property}.
+The two proof systems are called natural deduciton\index{natural
 deduction} and sequent calculus\index{sequent calculus}.
 
 In contrast to the sytem of \citet{heyting1930} where a proof yields a
-finite set of ``correct formulae'', a proof in natural deduction and
+finite set of ``correct formulae,'' a proof in natural deduction and
 sequent calculus yields a pair of assumptions and conclusions.
 \citet{gentzen} used the form
 \[
  \mathbf{A_1},\ldots,\mathbf{A_{\boldsymbol\mu}}\longrightarrow \mathbf{B}
 \]
 as a sequent.  We will use $\vdash$ instead of $\longrightarrow$.
+In any case, a sequent stands for the implication:
+the conjunction of $\mathbf{A_i}$'s implies $\mathbf{B}$.
 
 In natural deduction, the assumptions and conclusions are presented
 vertically.  For example,
@@ -443,18 +451,48 @@ vertically.  For example,
   \DisplayProof
  \end{center}
  has a single assumption $A\land B$ and a conclusion~$B$.
+ The same content can be shown as
+  \begin{center}
+   \AxiomC{}
+   \UnaryInfC{$A\land B\tr A\land B$}
+   \UnaryInfC{$A\land B\tr B$}
+   \DisplayProof\enspace.
+  \end{center}
  The horizontal line shows an application of an inference rule%
  \footnote{In \citep{gentzen}, an inference rule is called an inference
  figure schema.}.
-Natural deduction has introduction rules and elimination rules for each
-logical connectives.  For example, the introduction and elimination
+ The sequent on top of the inference rule is called the
+ \textit{assumption}\index{assumption} of
+ the rule and the sequent below is called the
+ \textit{conclusion}\index{conclusion} of the rule.
+Natural deduction has \textit{introduction rules}\index{introduction
+ rule}
+ and \textit{elimination rules}\index{elimination rule} for each
+logical connectives.  An introduction rule of a connective contains the
+ connective in the conclusion but not in the assumptions (if any).
+ An elimination rule of a connective contains the connective in one of the
+ assumptions but not in the conclusion.
+For example, the introduction and elimination
 rules for $\wedge$
  (conjunction\footnote{\citet{gentzen} and \citet{prawitz1965} used
  $\&$.}) is as follows:
- \[
-  \fix{fill} \fix{fill} \fix{fill}
- \].
-In later chapters, we will use natural deduction for presenting logics.
+  \begin{center}
+   \AxiomC{$\G\tr\phi$}
+   \AxiomC{$\G\tr\psi$}
+   \BinaryInfC{$\G\tr\phi\land\psi$}
+   \DisplayProof
+   \hfill
+   \AxiomC{$\G\tr\phi\land\psi$}
+   \UnaryInfC{$\G\tr\phi$}
+   \DisplayProof
+   \hfill
+   \AxiomC{$\G\tr\phi\land\psi$}
+   \UnaryInfC{$\G\tr\psi$}
+   \DisplayProof
+   \enspace.
+  \end{center}
+  These rules are the meaning of conjunction~$\wedge$.
+  In later chapters, we will use natural deduction for presenting logics.
 
 \subsubsection{Prawitz}
 
@@ -919,25 +957,34 @@ propositional logic:
  linear logic.  Since we will extend his linear lambda calculus in
  Chapter~\ref{ch:exchange}, we are going to elaborate on this there.
 
- \subsubsection{Proof Nets}
+ \subsubsection{Proof Nets and Amida lotteries}
+
+Proof nets are graphical representation of proofs.
+Some different sequent calculus proofs are translated into the same
+proof net because the original proofs are only different in cosmetic
+ways (like which rule to apply first and exchanges of elements in a
+sequent).
+The succinct representation comes with the cost of specifying
+the correctness condition for such graphical structures.
+There has been intensive study on proof nets,
+which started with~\citet{girard1987} and \citet{danos-regnier}.
 
  We are going to treat the intuitionistic version of
  multiplicative linear logic, and its proof nets are based on Amida
  lotteries.
+ The Amida lottery is a traditional way to generate permutations on a set%
+ \footnote{The Amida lottery has been known in Japan since \fix{?}} in a
+ obfuscated way.
+Japanese schoolchildren use \textit{Amida lotteries}\index{Amida lotteries}
+for assigning seats, jobs, teams and so on to classmates.
 
-\subsubsection{Monoidal t-norm logic}
+\fix{add}
 
-The linear version of G\"odel--Dummett logic is called the monoidal
-t-norm logic (MTL), which validates an axiom
-$(\phi\limp\psi)\oplus(\psi\limp\phi)$.
+The diagram defines a permutation.
+From a top end, one can find the counterpart by following the vertical
+line, but one has to cross the bridge whenever one finds one and then
+after crossing the bridge, one has to go down the vertical line.
 
-\citet{Esteva2001271} considered monoidal t-norm logic (MTL) for
-\fix{what reason}
-
-In Chpater~\ref{ch:exchange}, we study a similar axiom
-$(\phi\limp\psi)\otimes(\psi\limp\phi)$.
-For comparison, we develop a hyper-lambda calculus for MTL in
-Appendix~\ref{ch:pole}.
 
 
 % \subsection{Parametricity}
@@ -1026,5 +1073,4 @@ Each chapter can be read independently.
 
 \subsection{\fix{chapter two}}
 \subsection{\fix{chapter three}}
-\subsection{\fix{chapter four}}
 

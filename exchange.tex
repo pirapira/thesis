@@ -1,4 +1,4 @@
-\chapter{A Hyper-Lambda-Calculus for Synchronous Communication}
+\chapter{A Synchronous Hyper-Lambda Calculus}
 \label{ch:exchange}
 
 \section{Introduction}
@@ -87,15 +87,6 @@ we proceed to developing a proof net structure for the logic.
 It turns out that the the ``Amida lottery,'' which is a traditional
 Japanese way of making arbitrary permutations, provides the answer.
 
-Japanese schoolchildren use \textit{Amida lotteries}\index{Amida lotteries}
-for assigning seats, jobs, teams and so on to classmates.
-
-\fix{add}
-
-The diagram defines a permutation.
-From a top end, one can find the counterpart by following the vertical
-line, but one has to cross the bridge whenever one finds one and then
-after crossing the bridge, one has to go down the vertical line.
 
 
 \section{Definitions}
@@ -363,7 +354,9 @@ The typing rules are in Figure~\ref{fig:exchange:rules}.
   %
   \ruleskip
   %
-  \caption{Most rules are taken from Abramsky~\citep{abramsky1993computational}.
+  \caption[The typing rules of the Amida calculus]
+  {The typing rules of the Amida calculus.
+  Most rules are taken from Abramsky~\citep{abramsky1993computational}.
   The Sync rule is original.   $\with$R only
   applicable to singleton hypersequents.}
   \label{fig:exchange:rules}
@@ -405,7 +398,7 @@ $\tj{x}{\phi}\tr\tj{\co c(cx)}{\phi}$
 \DisplayProof
  \end{center}
 
-\subsection{Evaluation Relation}
+\subsection{Evaluation}
 
 The set of canonical forms remains the same as Abramsky's
 LF~\citep{abramsky1993computational}:
@@ -415,7 +408,9 @@ LF~\citep{abramsky1993computational}:
 \]
 where $v$ and $w$ are canonical forms.
 
-An evaluation hypersequent $\hypere$ is defined by the following
+An \textit{evaluation
+hypersequent}\index{hypersequent!evaluation}\index{evaluation
+hypersequent}~$\hypere$ is defined by the following
 grammar:
 \[
  \hypere ::= t\eval_S t\mid (\hypere\hmid \hypere)
@@ -613,7 +608,8 @@ involved free variables~$S$.
   \UnaryInfC{$\hypere\hmid ct[\co c u/x]\eval_S v$}
   \DisplayProof
 
-  \caption{The definition of evaluation relation.
+  \caption[The definition of evaluation relation of the Amida
+  calculus]{The definition of evaluation relation of the Amida calculus.
   $\hypere$ is possibly empty evaluation hypersequence.
   The subscripts~$\bullet$ of $\eval_\bullet$ is introduced for keeping
   determinacy while
@@ -708,7 +704,7 @@ involved free variables~$S$.
   \end{description}
  \end{proof}
 
-\begin{example}
+\begin{example}[Evaluation of a term communicating with its subterm]
  \label{inner-something}
  The rule eval-subst in \thref{eval-subst} is not in Abramsky's
  LF~\citep{abramsky1993computational}.  However, it is necessary to give
@@ -986,7 +982,7 @@ $u\in\semo{\G\tr\tj t\phi}$.
   \thref{eval-subst}.
   This is why we see only $\eval_\emptyset$ in this proof.
 
-   \begin{corollary}[Convergence]
+   \begin{corollary}[Convergence of the Amida calculus]
     \label{convergence}
     If $\tr\tj{t}{\phi}$ is derivable,
     $t\eval_{\emptyset} v$ is derivable for some canonical form~$v$.
@@ -1095,7 +1091,7 @@ $u\in\semo{\G\tr\tj t\phi}$.
      \end{enumerate}
     \end{proof}
 
-    \begin{corollary}
+    \begin{corollary}[Determinacy of Amida calculus on well-formed terms]
      If $t\eval_\emptyset v$ and $t\eval_\emptyset w$ are derivable
      and singleton sequence $(t)$ is well-formed, then
      $v$ and $w$ are the same canonical forms.
@@ -1366,7 +1362,7 @@ $u\in\semo{\G\tr\tj t\phi}$.
       If have two terms that uses free variables of type $\phi^\ell$ and
       $\overline{\phi^\ell}$,
       we can replace those free variables by session realizers.
-       \begin{corollary}
+       \begin{corollary}[Binding both ends of a channel]
 	If
 	$\hypert_0\hmid \G,\tj{x}{\phi^\ell}\tr\tj{t}{\psi}$ and
 	$\hypert_1\hmid \D,\tj{y}{\overline{\phi^\ell}}\tr\tj{u}{\theta}$
@@ -1527,7 +1523,7 @@ $u\in\semo{\G\tr\tj t\phi}$.
     x.cx)u /x]\eval v\hmid \letin{u'\otimes w'}{z\otimes y}{t_1}\eval w
      $}
     \DisplayProof
-     \caption{Proof of \thref{processtype}.    The conclusion is
+     \caption[Proof of \thref{processtype}.]{Proof of \thref{processtype}.    The conclusion is
      identical to our goal up to abbreviations. }
      \label{fig:processtype}
     \end{sidewaysfigure}
@@ -1629,7 +1625,7 @@ $u\in\semo{\G\tr\tj t\phi}$.
    \end{description}
   \end{proof}
  \begin{example}
-  \fix{Give evaluation}
+  \fix{add label}
   Figure~\ref{fig:eval}
  \end{example}
 
@@ -1804,16 +1800,6 @@ Indeed, this process is not typable.
 
 \section{Proof Nets}
 
-Proof nets are graphical representation of proofs.
-Some different sequent calculus proofs are translated into the same
-proof net because the original proofs are only different in cosmetic
-ways (like which rule to apply first and exchanges of elements in a
-sequent).
-The succinct representation comes with the cost of specifying
-the correctness condition for such graphical structures.
-There has been intensive study on proof nets,
-which started with~\citet{girard1987} and \citet{danos-regnier}.
-
 Since the Amida axiom $(\phi\limp\psi)\otimes(\psi\limp\phi)$
 does not contain additives ($\with,\oplus$) or exponential ($!$),
 we can focus on the multiplicative connectives.
@@ -1823,8 +1809,6 @@ We first describe the IMLL proof nets and their properties.
 Then we add Amida links and see it characterizes the Amida logic.
 
 The Amida links are named after the Amida lottery,
-a traditional way to generate permutations on a set%
-\footnote{The Amida lottery has been known in Japan since \fix{?}}.
 
 \subsection{IMLL Essential Nets}
 
@@ -1920,7 +1904,8 @@ The essential net in Example~\ref{essential-amida} is not correct for
 condition~\ref{conditionL}.  Actually, Amida axiom does not have
 any correct essential net.
 
- \begin{theorem}[\citet{lamarche2008,murawski2003}]
+ \begin{theorem}[Soundness and completeness of the esseential nets for
+  IMLL by~\citet{lamarche2008,murawski2003}]
   An IMLL formula~$\phi$ is provable iff there exists a correct essential net
   of $\phi$.
  \end{theorem}
@@ -1990,7 +1975,7 @@ The difference is the labels at the bottom.
 Although Amida edges cross the paths,
 they do not transmit labels.
 This difference causes Amida nets to validate Amida axiom.
- \begin{example}
+ \begin{example}[Amida net for the Amida axiom]
   The Amida net for the Amida axiom $(X\limp Y)\otimes(Y\limp X)$.
    \begin{center}
     \includegraphics[scale=0.4]{amida-axiom.eps}
@@ -2135,7 +2120,8 @@ processes reduce to the canonical form~(\thref{convergence}).
 The most complicated example in \citet{pfenning2010} is the following
 one, which can be typed and evaluated in our framework as well.
 
- \begin{example}[Drink server example from \citet{pfenning2010}]
+ \begin{example}[Drink server example from \citet{pfenning2010} in Amida
+  calculus]
   \begin{align*}
    ServerProto &= (N\limp I \limp (N\otimes \one))\with (N\limp( I
   \otimes \one)) \\
@@ -2260,7 +2246,9 @@ one, which can be typed and evaluated in our framework as well.
   clients.
  \end{example}
 
-\subsection{Wadler}
+\subsection{Linear Logic and Session Types}
+
+\subsubsection{Wadler}
 
 \citet{wadler2012propositions} gave a type system for a process
 calculus based on classical linear logic.
@@ -2297,9 +2285,7 @@ In other respects,
 Wadler's type system is similar to ours;
 our abbreviations are largely taken from Wadler's translations.
 
-\subsection{Beffara}
-
-\subsection{Giunti and Vasconcelos}
+\subsubsection{Giunti and Vasconcelos}
 
 \citet{giunti2010} gives a type system for the pi calculus, which is
 extremely similar to our type system.
@@ -2328,7 +2314,7 @@ One of their typing rules
  typing descipline invented by \citet{giunti2010}.
  It will be worthwhile to compare their system with our type system.
 
- \subsection{Double Binder}
+ \subsubsection{Double Binder}
  Our $\nu x$ notation binds two variables $x_L$ and $x_R$.
  This is similar to the double binder $\nu x_L x_R$ appearing in
  \citet{gay2010}.
@@ -2421,7 +2407,9 @@ where $d_{ABCD}$ is induced by adjunction between $\otimes$ and $\limp$
  it is a mystery whether such a logic is philosophically relevant.
 
 \subsection{Multiparty, recursions, \ldots}
-We expect it straightforward to add recursions in our type system.
+Our type system has a drawback of having only finitely many processes.
+We expect it straightforward to overcome this weak point by
+add recursions in our type system.
 As a guidance we can take $\mu$MALL of \citet{mumall}.
 
 Our operational semantics is different from the standard session
@@ -2439,6 +2427,12 @@ modalities show agents and then study the relationship with the
 multiparty session types~\citep{sync-multi-session, async-multi-session}.
 For that, intuitionistic epistemic logic~\citet{hirailpar,hiraimaster}
 will be useful.
+
+In order to implement this lambda calculus, we need linear types.
+The uniqueness type of Clean~\fix{cite} is not enough because
+their type system allows weakening.
+
+\fix{compare with linear ML}
 
 \section{Conclusion}
 
