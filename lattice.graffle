@@ -53,7 +53,7 @@
 	<array>
 		<dict>
 			<key>Bounds</key>
-			<string>{{103.84117677476669, 252.2147045135498}, {57, 16}}</string>
+			<string>{{115, 253.00000443274439}, {57, 16}}</string>
 			<key>Class</key>
 			<string>ShapedGraphic</string>
 			<key>FitText</key>
@@ -77,18 +77,9 @@
 				<real>12</real>
 			</dict>
 			<key>ID</key>
-			<integer>57</integer>
+			<integer>82</integer>
 			<key>Layer</key>
 			<integer>0</integer>
-			<key>Line</key>
-			<dict>
-				<key>ID</key>
-				<integer>74</integer>
-				<key>Position</key>
-				<real>0.92492485046386719</real>
-				<key>RotationType</key>
-				<integer>0</integer>
-			</dict>
 			<key>Shape</key>
 			<string>Rectangle</string>
 			<key>Style</key>
@@ -119,78 +110,14 @@
 		<dict>
 			<key>Class</key>
 			<string>LineGraphic</string>
-			<key>Head</key>
-			<dict>
-				<key>ID</key>
-				<integer>74</integer>
-			</dict>
 			<key>ID</key>
-			<integer>75</integer>
+			<integer>78</integer>
 			<key>Layer</key>
 			<integer>0</integer>
 			<key>Points</key>
 			<array>
-				<string>{277.5, 53.5}</string>
-				<string>{160.5, 133.5}</string>
-			</array>
-			<key>Style</key>
-			<dict>
-				<key>stroke</key>
-				<dict>
-					<key>HeadArrow</key>
-					<string>0</string>
-					<key>Legacy</key>
-					<true/>
-					<key>LineType</key>
-					<integer>1</integer>
-					<key>TailArrow</key>
-					<string>0</string>
-				</dict>
-			</dict>
-		</dict>
-		<dict>
-			<key>Class</key>
-			<string>LineGraphic</string>
-			<key>ID</key>
-			<integer>76</integer>
-			<key>Layer</key>
-			<integer>0</integer>
-			<key>Points</key>
-			<array>
-				<string>{160.5, 133.5}</string>
+				<string>{277.5, 52.663829803466797}</string>
 				<string>{82.999992370605469, 242}</string>
-			</array>
-			<key>Style</key>
-			<dict>
-				<key>stroke</key>
-				<dict>
-					<key>HeadArrow</key>
-					<string>0</string>
-					<key>Legacy</key>
-					<true/>
-					<key>LineType</key>
-					<integer>1</integer>
-					<key>TailArrow</key>
-					<string>0</string>
-				</dict>
-			</dict>
-			<key>Tail</key>
-			<dict>
-				<key>ID</key>
-				<integer>74</integer>
-			</dict>
-		</dict>
-		<dict>
-			<key>Class</key>
-			<string>LineGraphic</string>
-			<key>ID</key>
-			<integer>74</integer>
-			<key>Layer</key>
-			<integer>0</integer>
-			<key>Points</key>
-			<array>
-				<string>{160.5, 133.5}</string>
-				<string>{130.05555555555554, 270.5}</string>
 			</array>
 			<key>Style</key>
 			<dict>
@@ -1794,8 +1721,8 @@ Abramsky}</string>
 			<integer>2</integer>
 			<key>Points</key>
 			<array>
-				<string>{187.87681159420308, 248}</string>
-				<string>{183.92028985507309, 267.5}</string>
+				<string>{187.87681159420291, 248}</string>
+				<string>{183.9202898550725, 267.5}</string>
 			</array>
 			<key>Style</key>
 			<dict>
@@ -1831,8 +1758,8 @@ Abramsky}</string>
 			<integer>2</integer>
 			<key>Points</key>
 			<array>
-				<string>{201.02564102564105, 209}</string>
-				<string>{192.47435897435912, 232}</string>
+				<string>{201.02564102564102, 209}</string>
+				<string>{192.47435897435898, 232}</string>
 			</array>
 			<key>Style</key>
 			<dict>
@@ -3101,7 +3028,7 @@ Abramsky}</string>
 	<key>MasterSheets</key>
 	<array/>
 	<key>ModificationDate</key>
-	<string>2012-11-15 10:53:34 +0000</string>
+	<string>2012-11-20 11:57:18 +0000</string>
 	<key>Modifier</key>
 	<string>Yoichi Hirai</string>
 	<key>NotesVisible</key>
@@ -3143,6 +3070,16 @@ Abramsky}</string>
 		<array>
 			<string>int</string>
 			<string>0</string>
+		</array>
+		<key>NSPrinter</key>
+		<array>
+			<string>coded</string>
+			<string>BAtzdHJlYW10eXBlZIHoA4QBQISEhAlOU1ByaW50ZXIAhIQITlNPYmplY3QAhZKEhIQITlNTdHJpbmcBlIQBKxxSSUNPSCBJUFNpTyBTUCBDODIwIFtGRUQwMEFdhoY=</string>
+		</array>
+		<key>NSPrinterName</key>
+		<array>
+			<string>string</string>
+			<string>RICOH IPSiO SP C820 [FED00A]</string>
 		</array>
 		<key>NSRightMargin</key>
 		<array>
@@ -3201,7 +3138,7 @@ Abramsky}</string>
 		<key>SidebarWidth</key>
 		<integer>120</integer>
 		<key>VisibleRegion</key>
-		<string>{{-72, 72}, {721.5, 399}}</string>
+		<string>{{-76, 25.5}, {728.5, 399}}</string>
 		<key>Zoom</key>
 		<real>2</real>
 		<key>ZoomValues</key>

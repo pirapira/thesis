@@ -365,52 +365,6 @@ implication $\varphi\supset\psi$ is a construction which permits us to
 The BHK
 interpretation does not specify what is a proof or what kind of
 transformation witnesses implication.
-\fix{move below to C}
-There is one
-traditional realization of proofs as lambda terms where the
-introduction rule of implication is realized as the lambda abstraction
-and the elimination rule of implication is realized as the application
-of lambda terms.
-This encoding has a formidable property:
-the reductions in the lambda calculus corresponds to the reductions of
-proofs that
-removes detours.
-For example, suppose a natural deduction proof introduces an implication and then
-immidiately eliminate the
-implication.  This proof can be encoded as a lambda term whose outermost
-structure is a $\beta$-redex: $(\lambda x. M)N$.
- The result of the $\beta$-reduction $M[N/x]$ encodes a proof tree using
- the same assumptions as the original and concluding the same formula as
- the original, yet without the aforementioned detour.
- a proof of implication allows transformation of proofs
-by means of
-substitution.  The encoding of proofs as lambda terms is traditionally
-called the Curry--Howard isomorphism.
-% The situation is similar to axiomatized geometry where lines and points
-% could be tables and chairs \fix{(cite)}.
-The former explanation of implications is justified in classical propositional logic.
-The latter view is most naturally materialized in the situation of
-intuitionistic propositional logic.  The last century saw their
-generalization called intermediate logics~\citep{umezawa} (or superintuitionistic
-logics\index{logic!superintuitionistic}), of which a typical example is
-called G\"odel--Dummett logic.
-In this thesis we investigate the Curry--Howard isomorphism for
-G\"odel--Dummett logic.  The G\"odel--Dummett
-logic\index{logic!G\"odel--Dummett} validates formulas
-of the form $(\phi\imp\psi)\lor(\psi\imp\phi)$, which is known as
-Dummett's axiom\index{axiom!Dummett's}\index{Dummett's
-axiom|see{axiom}}.  We add a construct to the simply typed lambda
-calculus
-that witnesses Dummett's axiom.
-After the intermediate logics, the generalization went further to
-substructural
-logics~\citep{residuated}, which contains all the intermedaite logics as
-well as the
-(intuitionistic) multiplicative
-additive fragment of linear logic.
-In the later chapter, we make a typing system that lacks contraction and
-weakening, which falls outside of intermediate logics but within
-substructural logics albeit it has quantification over propositional variables.
 
 
 \subsection{Natural Deduction and Sequent Calculus}
@@ -492,7 +446,16 @@ rules for $\wedge$
    \enspace.
   \end{center}
   These rules are the meaning of conjunction~$\wedge$.
-  In later chapters, we will use natural deduction for presenting logics.
+  In sequent calculus, the introduction rules stay the same but called
+  the right rules because they operate on the right hand side of
+  sequents.
+  The elimination rules are rewriten so that they operate on the left
+  side of sequents and they are called the left rules.
+
+  In Chapter~\ref{ch:example}, we will use sequent calculus for
+  presenting Amida logic.
+  In Chapter~\ref{ch:lambda}, we will use sequent-stye natural deduction
+  for preseinting G\"odel--Dummett logic.
 
 \subsubsection{Prawitz}
 
@@ -533,10 +496,15 @@ derivation~\citep[p.~36]{prawitz1965} can be reduced
  maximal formulae.
 
  Further, \citet[Chapter~IV]{prawitz1965} formulated a weaker notion
- called maximal segments.  Above, in the definition of maximal formulae,
+ called maximal segments.
+ Above, in the definition of maximal formulae,
  the elimination rule must be placed immediately below the corresponding
  introduction rule.  Prawitz allowed other inference lines between the
- introduction and elimination rules and defined maximal segments.
+ introduction and elimination rules and defined maximal segments%
+ \footnote{A maximal segment can contain many occurrences of the same
+ formula without being influenced by any inference rules.
+ Such ``syntactic beaurocracy'' can be removed by proof nets.
+ See Section~\ref{sec:proofnets} for an example}.
  A derivation without maximal segments is called normal.
  And Prawitz proved the existence of a normal derivation of $\G\vdash A$
  given any derivation of $\G\vdash A$.
@@ -580,7 +548,8 @@ inversion principle requires this reduction:
   \UnaryInfC{$\psi$}
   \DisplayProof\enspace.
  \end{center}
-The reduct is considered nonsense, so the tonk operator is abandoned.
+The reduct is considered nonsense because if there are any theorems all
+formulae must be theorems.  This is an argument refuting the tonk operator.
 However, in Chapter~3, we pursue the possibility of compensating the
 nonsense by the dual nonsense, namely:
  \begin{center}
@@ -592,19 +561,34 @@ nonsense by the dual nonsense, namely:
 
 \subsection{Curry--Howard Isomorphism}
 
+At the core of computer science lies the interplay of static formalism
+and dynamic behaviour.  We can find examples in typed lambda calculi,
+where static formalism of type derivations interacts with dynamic
+behaviour of lambda terms.
+Type derivations of static objects associtating lambda terms to types.
+The reduction on terms gives dynamics, defining which term reduce
+to which.  Static type derivations can guarantee dynamic properties of
+programs such as strong normalization \fix{cite},
+deadlock freedom \fix{cite}
+and so on.
+
 The Curry--Howard isomorphism\index{Curry--Howard isomorphism}
  is originally a correspondence between
 intuitionistic propositional logic proofs and typed lambda terms, but
-the technical term has obtained a more general meaning containing
+the technical term has obtained a more general meaning spanning over the
 correspondence between proofs and programs in general.
-The phrase ``computational interpretation'' is reserved for
-the Curry--Howard isomorphism.
+The phrase ``computational interpretation'' is most often used for
+the Curry--Howard
+isomorphism~\citep{abramsky1993computational,parigot2000,bierman1998,martini1996}.
 \citet{curryhoward} recently presented a comprehensive reference on the
 topic, containing lots of historical and bibliographical remarks.
 
 \subsubsection{Curry}
 The Curry--Howard isomorphism is originally the correspondence of
-the typed lambda terms and the proofs of the implicational fragment of
+the typed lambda terms and the proofs of the implicational fragment%
+ \footnote{The implicational fragment\index{fragment!implicational} of a
+ logic can be defined by taking formulae only containing implications
+ but no other connectives.} of
 the intuitionistic propositional logic.
 According to \citep{curryhoward}, the first explicit statement of the
 correspondence appears
@@ -615,18 +599,23 @@ The footnote~28 of \citep{curry1942} reads:
  \begin{quote}
   Note the similarity of the postulates for $F$ and those for $P$.  If
   in any of the former postulates we change $F$ to $P$ and drop the
-  combinator we have the corresponding postulate for $P$.
+  combinator we have the corresponding postulate for $P$
  \end{quote}
+ where a postulate for $F$ is is something like $\tr F X Y f$ which
+ represents the statement that $f$ belongs to the
+ class of functions from $X$ to $Y$; and $P$ is the implicational
+ fragment of the intuitionistic propositional logic.
  On the same page, there is Postulate~(PC):
 \[
  \vdash (\beta\supset (\alpha\supset \gamma))\supset (\alpha \supset
- (\beta\supset \gamma))\enspace.
+ (\beta\supset \gamma))
 \]
-And a corresponding Postulate~(FC):
+and the corresponding Postulate~(FC):
 \[
  \vdash F(F\beta(F\alpha\gamma))(F\alpha(F\beta\gamma))C
 \]
- where $C\equiv \lambda^3 xyz\cdot xzy$ and $F\alpha\beta$ shows the
+ where $C$ is $\lambda^3 xyz\cdot xzy$ and the notation $F\alpha\beta$
+ shows the
  functional character of a
  function from $\alpha$ to $\beta$.  The postulate~(FC) is said to
  state the functional character of $C$.
@@ -656,30 +645,76 @@ And a corresponding Postulate~(FC):
  y.\lambda z. xzy$, which is the combinator $C$, to the logical formula
  $(\beta\supset (\alpha\supset
  \gamma))\supset (\alpha\supset(\beta\supset\gamma))$.
-
-The
-precise statements for the correspondence appear in
-\citet[9E]{curry1974combinatory}, a section titled ``analogies with
-propositional algebra.''
-\fix{cite the statements}
+ Throughout this thesis, we use $\colon$ to associate terms with types.
 
  Henceforth, we do not give deduction system of a logic and
  typing rules for a typed lambda calculi separately because
  the former can be obtained from the lattar by this correspondence.
+The
+precise statements for the correspondence appear in
+\citet[9E]{curry1974combinatory}, a section titled ``analogies with
+propositional algebra.''
 
-There, Curry notes the correspondence is not isomorphism\fix{or, in
-sorenzen's book ???}  We take a finer approach.
+Curry--Howard isomorphism provides
+one realization of BHK interpretation: proofs as lambda terms where the
+introduction rule of implication is realized as the lambda abstraction
+and the elimination rule of implication is realized as the application
+of lambda terms.
+This encoding has a formidable property:
+the reductions in the lambda calculus corresponds to the reductions of
+proofs that
+removes detours.
+For example, suppose a natural deduction proof introduces an implication and then
+immidiately eliminate the
+implication.  This proof can be encoded as a lambda term whose outermost
+structure is a $\beta$-redex: $(\lambda x. M)N$.
+ The result of the $\beta$-reduction $M[N/x]$ encodes a proof tree using
+ the same assumptions as the original and concluding the same formula as
+ the original, yet without the aforementioned detour.
+ a proof of implication allows transformation of proofs
+by means of
+substitution.  The encoding of proofs as lambda terms is traditionally
+called the Curry--Howard isomorphism.
+% The situation is similar to axiomatized geometry where lines and points
+% could be tables and chairs \fix{(cite)}.
+The former explanation of implications is justified in classical propositional logic.
+The latter view is most naturally materialized in the situation of
+intuitionistic propositional logic.  The last century saw their
+generalization called intermediate logics~\citep{umezawa} (or superintuitionistic
+logics\index{logic!superintuitionistic}), of which a typical example is
+called G\"odel--Dummett logic.
+In this thesis we investigate the Curry--Howard isomorphism for
+G\"odel--Dummett logic.  The G\"odel--Dummett
+logic\index{logic!G\"odel--Dummett} validates formulas
+of the form $(\phi\imp\psi)\lor(\psi\imp\phi)$, which is known as
+Dummett's axiom\index{axiom!Dummett's}\index{Dummett's
+axiom|see{axiom}}.  We add a construct to the simply typed lambda
+calculus
+that witnesses Dummett's axiom.
+After the intermediate logics, the generalization went further to
+substructural
+logics~\citep{residuated}, which contains all the intermedaite logics as
+well as the
+(intuitionistic) multiplicative
+additive fragment of linear logic.
+In the later chapter, we make a typing system that lacks contraction and
+weakening, which falls outside of intermediate logics but within
+substructural logics albeit it has quantification over propositional variables.
 
 \subsubsection{Application to Programming Languages}
 
 \citet{landin1965} noticed some similarities between ALGOL~60 syntax and
 the untyped lambda calculus.
-\fix{survey ML like languages}
+\fix{ML OCaml SML SML# Haskell F#}
 
-However, none has employed Dummett's axiom as a type for a language primitive.
+However, none has employed Dummett's axiom
+$(\phi\imp\psi)\lor(\psi\imp\phi)$
+or Amida axiom\footnote{For explanation of $\otimes$ and $\limp$, see \ref{subsub:la-logics}.}
+$(\phi\limp\psi)\otimes(\psi\limp\phi)$
+as a type for a language primitive.
 
 \subsection{G\"odel--Dummett Logic}
-\subsubsection{Dummett}
+\subsubsection{Dummett's axiomatization}
 Dummett~\cite{dummett59} considers a semantics on $\{0,1,2,\ldots,\omega\}$ where
 $\wedge$ is interpreted as maximum, $\vee$ as minimum, $\bot$ as $\omega$
 and conjunction~$\wedge$
@@ -694,6 +729,7 @@ and conjunction~$\wedge$.}
 		    y &\text{ if } x < y
 		  \end{cases}\enspace.
 \end{align*}
+\fix{make it a table}
 He axiomatized the logic by adding $(p\supset q)\lor(q\supset p)$ on top
 of the axioms for the intuitionistic propositional logic.
 Thomas~\citep{thomas1962} axiomatized
@@ -756,17 +792,33 @@ quotation).
 
 \subsubsection{Saks and Zaharoglow}
 
-\subsection{Superintuitionistic (Intermediate) Logics}
+\subsection{Intermediate (Superintuitionistic) Logics}
 
-A logic is a set of logical formulae which is closed by
-substitution and modus ponens.
- A superintuitionistic logic is a logic
-that contains the intuitionistic propositional logic.  A logic is consistent when it does not
+In this thesis,
+a \textit{logic}\index{logic} is a set of logical formulae which is
+closed by
+substitution and modus ponens%
+\footnote{There are, however, logics not closed for substitution such as
+dynamic epistemic logic \fix{cite} and inquisive logic \fix{cite}.  Thus
+in general it would be fair to say that a logic is a set of logical
+formulae.}.
+Elements of a logic is called \textit{theorems}\index{theorem}.
+By \textit{substitution}\index{substitution}-closedness, if $\phi$ is a
+theorem, $\phi[\psi/X]$ (i.e. the
+logical formula obtained by replacing all occurrences of $X$ with
+$\psi$) is also a theorem.
+By \textit{modus ponens}\index{modus ponens} closedness, if
+$\phi\imp\psi$ (or $\phi\limp\psi$) and $\phi$ are
+theorems, $\psi$ is also a theorem.
+An intermediate logic is a consistent logic
+that contains the intuitionistic propositional logic.  A logic is
+\textit{consistent}\index{consistent} when it does not
 contain all logical formulae.
 
+Early intermediate logicians seems to have focused on algebraic aspects
+on intermediate logics in general.
 Troelstra~\cite[p.~223]{goedelcollected} writes ``the reasons
 for studying intermediate logics are mainly technical.''
-
 In a survey paper, Hosoi and Ono~\cite{hosoi-ono} says:
  \begin{quote}
   The study of intermediate logics seems to have two aspects: One is to
@@ -803,12 +855,12 @@ theoretical interest.
 We take the first approach described by Hosoi and Ono: namely,
 studying particular logics instead of intermediate logics in general.
 This thesis is about particular logics: G\"odel--Dummett logic and
-monoidal t-norm logic.  We claim that these logics are usual logics
-on which we can develop programming language.  The Curry--Howard
+Amida logic.  We claim that these logics can be used for developing
+ programming languages.  The Curry--Howard
 isomorphism is our justification of studying these particular logics.
 G\"odel--Dummett logic is one typical intermediate logic.
-Monoidal t-norm logic, on the other hand, is not an intermediate logic
-because it lacks a structural rule called contraction.  Such logics are
+Amida logic, on the other hand, is not an intermediate logic
+because it lacks a structural rule called weakening.  Such logics are
 called substructural logics, whose history will be followed in \ref{linear}.
 
 We have to note that there has been some attempts to apply some
@@ -817,7 +869,7 @@ theory.
 \citet{Hajek:TheJournalOfSymbolicLogic:2000} tried to use \L{}ukasiewicz
 logic in order to resolve the liar's paradox.
 The idea is assigning the truth value 0.5 to the sentence
-``this sentence is false''.  When a sentence has
+``this sentence is false.''  When a sentence has
 the truth value~$x$, a sentence that claims falsehood of the first
 sentence should have the truth value $1-x$.  When the first and second
 sentences are identical, it should have the truth value~$0.5$.
@@ -825,7 +877,8 @@ sentences are identical, it should have the truth value~$0.5$.
 and found a consistent formulation (in the sense there exists a model to
 each finite subtheory).
 However, in the case of axiomatic set theory with comprehension,
-\citet{hajek2005} showed that induction over natural numbers is contradictory.
+\citet{hajek2005} showed that having induction over natural numbers is
+contradictory.  \fix{mention Yatabe}
 
 Computationally inclined research on intermediate logics can be found
 in proof searching.  For the typical intermediate logic G\"odel--Dummett
@@ -838,21 +891,17 @@ called ILTP library~\citep{iltp}.
 Related to proof searching,
 Ferm\"uller~\cite{parallel} gave a game semantics for G\"odel--Dummett
 logic, which is based on Lorenzen game~\cite{curryhoward} and essentially
-proof searching bottom-to-up.
-\fix{what communication is made?}
+proof searching bottom-to-up.  The game contains concurrent subgames but
+he gave no explicit mentions on waitfree computation.
 
-However, there has been no lambda calculi or programming languages based
-on intermediate logics, apart from some cut-elimination results by
-\citet{sonobe} and \citet{avron91}.
+On the other approach of proof reduction, there has been no lambda
+calculi or programming languages based
+on intermediate logics, despite the fact cut-elimination results are
+obtained by \citet{sonobe} and \citet{avron91}.
 
 
 \subsection{Substructural Logics}
 \label{linear}
-
-We can understand the difference of the intuitionistic propositional
-logic from classical
-logic as the lack of contraction rule on the right hand side
-\fix{really??}.
 
 In sequent calculus or the sequent style natural deduction, when we
 apply most rules, we need to make pattern-matching on the logical
@@ -869,9 +918,16 @@ we have to find a formula on the left hand
 side sequent whose top connective is $\wedge$.
 
 Today, the logics without some structural rules are called \textit{substructural
-logics}\index{logic!substructural}.  There have been intensive studies on
+logics}\index{logic!substructural}, the smallest of which is called the
+full Lambek calculus (FL).  There have been intensive studies on
 substructural logics mainly from the algebraic
 approach~\cite{residuated}.
+
+Throughout this thesis, we consider only logics with the structural rule
+called exchange.
+The exchange rule allows permutation of formulae in contexts.
+The well-known substructural logics with the exchange rule are shown in
+Figure~\ref{fig:lattice}.
 
 \subsubsection{BCI and BCK Logics}
 
@@ -889,11 +945,14 @@ closed by modus ponens and substitution that contains
 \end{description}
 From these, by modus ponens and substitution, (I) $\phi\imp\phi$
 follows, but
-(W) $(\psi\imp(\psi\imp\phi))\imp(\psi\imp\phi)$ does not follow.
+(W) $(\psi\imp(\psi\imp\phi))\imp(\psi\imp\phi)$ does not
+follow\footnote{Here, the capital alphabet W is a name of a combinator.
+Elsewhere, W stands for a structural rule weakening.}.
 Thus, the left hand side contraction is not admissible in the sequent
 calculus for the BCK logic.
 
 \subsubsection{Linear and Affine Logics}
+\label{subsub:la-logics}
 
 Girard invented the linear
 logic~\citep{girard1987}\index{logic!linear}\index{linear
@@ -938,13 +997,27 @@ propositional logic:
  In general, a binary operator is called multiplicative (resp.~additive)
  when the right rule in sequent calculus (or introduction rule in
  natural deduction) for the operator splits the context (resp. copies
- the whole context in all branches). \fix{introduce ``context''
- somewhere before this}
+ the whole context in all branches).
  The example above shows how the additive and multiplicative
  conjunctions are different.
  The words multiplicative and addtive are originally adjectives but
  we sometimes use them as nouns: ``multiplicatives'' for the
  multiplicative operators and ``additives'' for the additive operators.
+
+ Although additive implication can be defined \fix{cite troelstra},
+ the multiplicative implication~$\limp$ has a more important role
+ because our interpretation of $\tr$ symbol in a sequent is the
+ multiplicative implication
+  \begin{center}
+   \AxiomC{$\G,\phi\tr\psi$}
+   \Understand{$\G\tr\phi\limp\psi$}
+   \DisplayProof
+   \hfill
+   \AxiomC{$\G\tr\phi\limp\psi$}
+   \AxiomC{$\D\tr\phi$}
+   \BinaryInfC{$\G,\D\tr\psi$}
+   \DisplayProof\enspace.
+  \end{center}
 
  % Depending on the formulation, there can be two
  % implications \fix{cite Troelstra}.
@@ -985,92 +1058,11 @@ From a top end, one can find the counterpart by following the vertical
 line, but one has to cross the bridge whenever one finds one and then
 after crossing the bridge, one has to go down the vertical line.
 
-
-
-% \subsection{Parametricity}
-
-% \subsubsection{Tait's Method}
-
-% Reynold
-
-% Logical Relation
-
-% Steps Index
-
-% \subsubsection{Classical Realizability}
-
-% Krivine
-
-% Curien
-
-% \subsubsection{Summary}
-
-% Omitted
-
-% focusng
-
-% sara negri and von plato
-
-% expansion to modal logics
-
-% tradition of game semantics
-
-\section{Significance of Our Contributions}
-
-At the core of computer science lies the interplay of static formalism
-and dynamic behaviour.  We can find examples in typed lambda calculi,
-where static formalism of type derivations interacts with dynamic
-behaviour of lambda terms.
-Type derivations of static objects associtating lambda terms to types.
-The reduction on terms gives dynamics, defining which term reduce
-to which.  Static type derivations can guarantee dynamic properties of
-programs such as strong normalization \fix{cite},
-deadlock freedom \fix{cite}
-and so on.
-
-Dynamic behaviour involves time.
-One simple notion of time is that of totally-ordered events where
-one event happens before the other or the other before one \fix{cite something}.
-This sentence is syntactically similar to Dummett's axiom that states
-one proposition implies the other or the other implies one.
-We investigate whether this syntactic similarity is reflected
-in the dynamic semantics of logics: namely, the lambda calculi.
-
-\fix{describe lambda}
-
-Our investigation is guided by the Curry--Howard isomorphism.
-We look at proofs as programs and propositions as types.
-The Curry--Howard isomorphism is used to give computational content
-to mathematical proofs, and on the other hand to give mathematical
-guarantees to computer programs.
-
-
-There have been several attempts of finding computational meaning of
-Dummett's axiom.  \fix{name examples}
-The best thing we can hope is that the computational
-interpretation coincides with something we know already.
-That is the case indeed.
-
-We extended the Curry--Howard correspondence to G\"odel--Dummett logic.
-The Curry--Howard correspondence is \fix{add}
-
-G\"odel--Dummett logic is an intermediate logic~\citep{umezawa} between
-classical logic and intuitionistic logic.  Every theorem in
-intuitionistic logic is a theorem in G\"odel--Dummet logic and every
-theorem in G\"odel--Dummett logic is a theorem in classical logic.
-These inclusions are strict.  The law of excluded middle
-$\varphi\vee(\varphi\supset \bot)$ is not a theorem in G\"odel--Dummett
-logic and $(\varphi\supset\psi)\vee(\psi\supset\varphi)$ is not a
-theorem in intuitionistic logic.
-
-In terms of Kripke semantics, the axiom is sound and complete for
-requiring that the models are linearly ordered.
-In terms of algebraic semantics, the axiom is sound and complete for
-requiring that the truth values are linearly ordered.
-In terms of computation, what is it?
+\section{To the Next Chapters}
 
 Each chapter can be read independently.
-
-\subsection{\fix{chapter two}}
-\subsection{\fix{chapter three}}
-
+\begin{itemize}
+ \item if your are interested in process calculi, \fix{}
+ \item a proof net enthusiasist might find \fxi{} interesting
+ \item shared memory consistency consistency,
+\end{itemize}
