@@ -117,7 +117,7 @@ the contemporary one except some notational differences.  The
 logical connectives are the same $\{\wedge,\vee,\supset,\neg\}$ as today, the
 first three binary and the last unary%
 \footnote{Though, in this thesis, we prefer having nullary $\bot$ as a
-primitive and define $\neg a$ as an abbreviation for $\a\supset\bot$.}%
+primitive and define $\neg a$ as an abbreviation for $a\supset\bot$.}%
 .  Logical formulae are constructed
 using these connectives and the propositional variables.
 Although he sometimes used parentheses, he still used more points
@@ -705,7 +705,7 @@ substructural logics albeit it has quantification over propositional variables.
 
 \citet{landin1965} noticed some similarities between ALGOL~60 syntax and
 the untyped lambda calculus.
-\fix{ML OCaml SML SML# Haskell F#}
+\fix{ML OCaml SML SML\# Haskell F\#}
 
 However, none has employed Dummett's axiom
 $(\phi\imp\psi)\lor(\psi\imp\phi)$
@@ -1010,7 +1010,7 @@ propositional logic:
  multiplicative implication
   \begin{center}
    \AxiomC{$\G,\phi\tr\psi$}
-   \Understand{$\G\tr\phi\limp\psi$}
+   \UnaryInfC{$\G\tr\phi\limp\psi$}
    \DisplayProof
    \hfill
    \AxiomC{$\G\tr\phi\limp\psi$}
@@ -1063,6 +1063,6 @@ after crossing the bridge, one has to go down the vertical line.
 Each chapter can be read independently.
 \begin{itemize}
  \item if your are interested in process calculi, \fix{}
- \item a proof net enthusiasist might find \fxi{} interesting
+ \item a proof net enthusiasist might find \fix{} interesting
  \item shared memory consistency consistency,
 \end{itemize}
