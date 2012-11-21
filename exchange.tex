@@ -95,7 +95,7 @@ Japanese way of making arbitrary permutations, provides the answer.
 For a set $S$, we define $\phi\in\form(S)$ by BNF:
 \[
  \phi::=s\mid \one \mid X \mid \phi\otimes\phi\mid \phi\limp\phi\mid
- \phi\oplus\phi\mid \phi\with\phi\mid \bang\phi\mid \forall X.\phi
+ \phi\oplus\phi\mid \phi\with\phi
 \]
 where $s$ is an element of $S$ and $X$ is a propositional variable.
 The propositional variable in the last clause is binding.
@@ -109,15 +109,13 @@ LF~\citep{abramsky1993computational}, we first define patterns
 binding sets of variables:
 \begin{itemize}
  \item $\ast$ is a pattern binding $\emptyset$,
- \item $\lpair{x,\_}$, $\lpair{\_,x}$ and $\bang x$ are patterns binding
-       $\{x\}$,
- \item $x\otimes y$ and $x@y$ are patterns binding $\{x,y\}$.
+ \item $\lpair{x,\_}$ and $\lpair{\_,x}$ are patterns binding $\{x\}$,
+ \item $x\otimes y$ is a pattern binding $\{x,y\}$.
 \end{itemize}
 We write $BV(p)$ for the set of bound variables of pattern~$p$.
 Using patterns, we define a term $t$ with free variables~$S$.
 We assume countably infinitely many \textit{channels}\index{channel}
-with involution
-satisfying $\co c\neq c$ and $\co{\co c} = c$.
+with involution satisfying $\co c\neq c$ and $\co{\co c} = c$.
 \begin{itemize}
  \item a variable $x$ is a term with free variables $\{x\}$,
  \item if $t$ is a term with free variables~$S$, $u$ is a term with
@@ -126,7 +124,7 @@ satisfying $\co c\neq c$ and $\co{\co c} = c$.
  \item if $t$ and $u$ are terms with free variables $S$, then
        $\lpair{t,u}$ is a term with free variables~$S$,
  \item if $t$ is a term with free variables~$S$, then
-       $\inl x, \inr t$ and $\bang t$ are terms with free variables~$S$
+       $\inl x$ and $\inr t$ are terms with free variables~$S$
  \item if $t$ is a term with free variables $S\cup \{x\}$ and $x$ is not
        in $S$, then $\lambda x.t$ is a term with free variables~$S$,
  \item if $t$ is a term with free variables~$S$, $p$ is a pattern
@@ -172,12 +170,15 @@ where $\G$ is a context.
 In this chapter, we interpret the components conjunctively.
 We name this technique the \textit{conjunctive
 hypersequent}\index{hypersequent!conjunctive}.
-
 Differently from the previous
 papers~\citep{avron91,Baaz01122003,avrontableau,avron96},
 here, the hypersequent $\G\tr\phi\hmid \D\tr\psi$ is interpreted as the
 conjunction of components:
-$(\bigotimes\G\limp\phi)\otimes (\bigotimes\D\limp\psi)$.
+$(\bigotimes\G\limp\phi)\otimes (\bigotimes\D\limp\psi)$ where
+$\bigotimes\G$ stands for the $\otimes$-conjunction of elements of $\G$.
+\fix{define somewhere conjunction of elements of a sequence}
+The conjunctive treatment is our original, and finding an application
+of conjunctive hypersequents is one of our contributions.
 
 The typing rules are in Figure~\ref{fig:exchange:rules}.
  \begin{figure}
@@ -310,49 +311,6 @@ The typing rules are in Figure~\ref{fig:exchange:rules}.
   \DisplayProof
   %
   \ruleskip
-  % !R
-  \AxiomC{$\bang\hypert\hmid\bang\G\tr\tj{t}{\phi}$}
-  \LL{$\bang$R}
-  \UnaryInfC{$\bang\hypert\hmid\bang\G\tr\tj{\bang t}{\bang \phi}$}
-  \DisplayProof
-  where $\bang\hypert$ contains only components typed $\bang\D\tr \bang\psi$.
-  %
-  \ruleskip
-  % dereliction
-  \AxiomC{$\hypert\hmid\G,\tj{x}{\phi}\tr\tj{t}{\psi}$}
-  \LL{Dereliction}
-  \UnaryInfC{$\hypert\hmid\G,\tj{z}{\bang\phi}\tr\tj{\letin{z}{\bang x}{t}}{\psi}$}
-  \DisplayProof
-  %
-  \ruleskip
-  % contraction
-  \AxiomC{$\hypert\hmid\G,\tj{x}{\bang\phi},\tj{y}{\bang\phi}\tr\tj{t}{\psi}$}
-  \LL{Contraction}
-  \UnaryInfC{$\hypert\hmid\G,\tj{z}{\bang\phi}\tr\tj{\letin{z}{x@y}{t}}{\psi}$}
-  \DisplayProof
-  %
-  \ruleskip
-  % weakening
-  \AxiomC{$\hypert\hmid\G\tr\tj{t}{\psi}$}
-  \LL{Weakening}
-  \UnaryInfC{$\hypert\hmid\G,\tj{z}{\bang\phi}\tr\tj{\letin{z}{\_}{t}}{\psi}$}
-  \DisplayProof
-  %
-  \ruleskip
-  % forall R
-  \AxiomC{$\hypert\hmid\G\tr\tj{t}{\phi}$}
-  \LL{$\forall$R}
-  \UnaryInfC{$\hypert\hmid\G\tr\tj{t}{\forall X.\phi}$}
-  \DisplayProof (No free $X$ appears in $\G$ or $\hypert$)
-  %
-  \hfill
-  % forall L
-  \AxiomC{$\hypert\hmid\G,\tj{x}{\phi[\psi/X]}\tr\tj{t}{\phi}$}
-  \LL{$\forall$L}
-  \UnaryInfC{$\hypert\hmid\G,\tj{x}{\forall X.\phi}\tr\tj{t}{\phi}$}
-  \DisplayProof
-  %
-  \ruleskip
   %
   \caption[The typing rules of the Amida calculus]
   {The typing rules of the Amida calculus.
@@ -398,12 +356,113 @@ $\tj{x}{\phi}\tr\tj{\co c(cx)}{\phi}$
 \DisplayProof
  \end{center}
 
+ The typing system is has two strong properties about structural rules:
+ weakening and contraction.
+ We first state the property about specialized contraction rules.
+ \begin{proposition}
+  For any formula~$\phi$, if the specialized contraction rule (here, we
+  omit variables and terms)
+   \begin{center}
+    \AxiomC{$\hyper\hmid\phi,\G\tr\psi$}
+    \UnaryInfC{$\hyper\hmid\phi,\phi,\G\tr\psi$}
+    \DisplayProof
+   \end{center}
+  is\footnote{This condition is equivalent to derivability of
+  $\phi\tr\phi\otimes\phi$, thanks to $\otimes$R rule and
+  $\otimes$L rule.} admissible for any possibly-empty hypersequent~$\hyper$,
+  context~$\G$ and formula~$\phi$, then, $\phi$ is
+  a theorem of Amida logic. \fix{define theorem somewhere}
+ \end{proposition}
+ \begin{proof}
+  By the following derivation (again we omit variables and terms).
+  \begin{center}
+   \AxiomC{}
+   \UnaryInfC{$\tr\one$}
+   \AxiomC{}
+   \UnaryInfC{$\phi\tr\phi$}
+   \BinaryInfC{$\tr\one\hmid \phi\tr\phi$}
+   \UnaryInfC{$\tr\phi\hmid \phi\tr\one$}
+   \AxiomC{}
+   \UnaryInfC{$\phi\tr\phi$}
+   \BinaryInfC{$\tr\phi\hmid \phi,\phi\tr\one\otimes\phi$}
+   \LL{C}
+   \UnaryInfC{$\tr\phi\hmid \phi\tr\one\otimes\phi$}
+   \UnaryInfC{$\tr\one\otimes\phi$}
+   \AxiomC{}
+   \UnaryInfC{$\phi\tr\phi$}
+   \UnaryInfC{$\one,\phi\tr\phi$}
+   \BinaryInfC{$\tr\phi$}
+   \DisplayProof
+  \end{center}
+  where C marks the step where the specialized contraction is used.
+ \end{proof}
+
+ \begin{corollary}[Amida logic proves any exponential formula]
+  If we are to introduce the bang modality of linear logic,
+  then any formula of the form $!\phi$ is a theorem.
+ \end{corollary}
+
+ \begin{corollary}[Incompatibility of additive disjunctive unit with Amida
+  logic]
+  If there is a formula~$\zero$ such that $\zero\tr\phi$ is derivable
+  for any formula~$\phi$, then $\zero$ is provable (and as a consequence
+  any formula is provable i.e. the resulting logic is inconsistent).
+ \end{corollary}
+ However, the Amida logic itself is consistent (see \thref{smcc} or
+ \thref{consistent-amida}).
+
+ Next we state the property about the weakening rule.
+ \begin{proposition}[Incompatibility of weakening with Amida logic]
+  If we add the weakening rule
+   \begin{center}
+    \AxiomC{$\hyper\hmid \G\tr\psi$}
+    \LL{\rm W}
+    \UnaryInfC{$\hyper\hmid \phi,\G\tr\psi$}
+    \DisplayProof
+   \end{center}
+  to Amida logic (where we omit variables and terms), the resulting
+  logic is inconsistent.
+ \end{proposition}
+ \begin{proof}
+  Any formula~$\phi$ is provable
+  by the following derivation tree (again we omit variables and terms)
+  \begin{center}
+   \AxiomC{}
+   \LL{Ax}
+   \UnaryInfC{$\tr\one$}
+   \AxiomC{}
+   \LL{Ax}
+   \UnaryInfC{$\phi\tr\phi$}
+   \LL{merge}
+   \BinaryInfC{$\tr\one\hmid\phi\tr\phi$}
+   \LL{Sync}
+   \UnaryInfC{$\tr\phi\hmid\phi\tr\one$}
+   \LL{$\limp$R}
+   \UnaryInfC{$\tr\phi\hmid\tr\phi\limp\one$}
+   \LL{W}
+   \UnaryInfC{$\phi\limp\one\tr\phi\hmid\tr\phi\limp\one$}
+   \LL{Cut}
+   \UnaryInfC{$\tr\phi$}
+   \DisplayProof
+  \end{center}
+  where W marks the usage of weakening.
+ \end{proof}
+
+ To summarize, anything below is inconsistent with Amida logic.
+ \begin{itemize}
+  \item a formula $\zero$ for which $\tr\zero\limp\phi$ is derivable for
+	all $\phi$
+  \item second order universal quantification
+  \item contraction rule
+  \item weakening rule.
+ \end{itemize}
+
 \subsection{Evaluation}
 
 The set of canonical forms remains the same as Abramsky's
 LF~\citep{abramsky1993computational}:
 \[
- \lpair{t,u}\qquad \bang t\qquad \ast\qquad v\otimes w\qquad \lambda
+ \lpair{t,u}\qquad \ast\qquad v\otimes w\qquad \lambda
  x.t\qquad \inl{v}\qquad\inr{w}
 \]
 where $v$ and $w$ are canonical forms.
@@ -582,23 +641,6 @@ involved free variables~$S$.
   \BinaryInfC{$\hypere\hmid \mat t x u y s\eval_{S\sqcup S'} \mat {t'} x {u'} y {s'}$}
   \DisplayProof \\ when $S$ is nonempty
   \ruleskip
-  \AxiomC{$t\eval_S t'$}
-  \UnaryInfC{$\bang t\eval_S \bang t'$}
-  \DisplayProof
-  \hfill
-  \AxiomC{$\hypere\hmid t\eval_\emptyset \bang v\hmid u[v/x]\eval_\emptyset w$}
-  \UnaryInfC{$\hypere \hmid \letin t {\bang x} u\eval_\emptyset w$}
-  \DisplayProof
-  \hfill
-  \AxiomC{$\hypere\hmid t\eval_\emptyset \bang s\hmid u\eval_S v$}
-  \UnaryInfC{$\hypere \hmid \letin t {\_} u\eval_S v$}
-  \DisplayProof
-  \ruleskip
-  \AxiomC{$\hypere\hmid t\eval_\emptyset \bang s\hmid u[\bang s/x,\bang
-  s/y]\eval_S v$}
-  \UnaryInfC{$\hypere\hmid\letin t {x@y} u\eval_S v$}
-  \DisplayProof
-  \hfill
   \AxiomC{$\hypere\hmid t\eval_S t'\hmid u\eval_{BV(p)} u'$}
   \UnaryInfC{$\hypere\hmid\letin t p u\eval_{S\sqcup S'} \letin {t'} p {u'}$}
   \DisplayProof \\
@@ -748,11 +790,7 @@ as follows:
  \semo{\phi\with\psi}&= \{t\in\terms \mid t\eval_\emptyset\lpair{v,w},\quad
  v\in\semo{\phi}, w\in\semo{\psi}\}\\
  \semo{\phi\oplus\psi}&= \{t\in\terms\mid (t\eval_\emptyset \inl{v}, v\in
- \semo{\phi})\text{ or }(t\eval_\emptyset\inr{w}, w \in \semo{\psi})\}\\
- \semo{\bang \phi}&= \{t\in\terms \mid t\eval_\emptyset \bang u, \quad
- u\in\semo{\phi}\}\\
- \semo{\forall X.\phi}&= \bigcap\{\semo{\phi[\mathcal X/X]}\mid \psi\in
- 2^\terms\}\enspace.
+ \semo{\phi})\text{ or }(t\eval_\emptyset\inr{w}, w \in \semo{\psi})\}\enspace.
 \end{align*}
 
 For a context~$\G = \tj{x_0}{\phi_0},\ldots,\tj{x_n}{\phi_n}$,
@@ -868,62 +906,6 @@ $u\in\semo{\G\tr\tj t\phi}$.
 	  \vec O\eval \vec o \hmid (\letin z {x\otimes y} t)[\vec
 	 g/\G][v/z] \eval w\enspace.
 	 \]
-    \item[(Dereliction)]
-	 The derivation ends as
-	  \begin{center}
-	   \AxiomC{$\hypert\hmid\G,\tj{x}{\phi}\tr\tj{t}{\psi}$}
-	   \UnaryInfC{$\hypert\hmid\G,\tj{z}{\bang\phi}\tr\tj{\letin z
-	   {\bang x} t}\psi$}
-	   \DisplayProof\enspace.
-	  \end{center}
-	 Take any $u\in\semo{\bang\phi}$, $\vec g\in\semo\G$ and $\vec
-	 O\in\semo\hypert$.
-	 By definition of $\semo{\bang\phi}$,
-	 $u\eval\bang v$ is derivable for some $v\in\semo{\phi}$.
-	 By induction hypothesis, 
-	 \[
-	 \vec O\eval \vec o\hmid t[v/x][\vec g/\G]\eval w
-	 \]
-	 is derivable for some $\vec o$ and $w\in\semo{\psi}$.
-	 Since
-	 \[
-	  \vec O\eval \vec o\hmid u\eval \bang v\hmid t[v/x][\vec
-	 g/\G]\eval w
-	 \]
-	 is derivable, so is
-	 \[
-	  \vec O\eval \vec o \hmid
-	 (\letin z {\bang x} t)[\vec g/\G][u/z] \eval w\enspace.
-	 \]
-    \item[(Contraction)]
-	 The derivation ends as
-	 \begin{center}
-	  \AxiomC{$\hypert\hmid\G,\tj{x}{\bang \phi},\tj{y}{\bang \phi}\tr\tj{t}{\psi}$}
-	  \UnaryInfC{$\hypert\hmid \G,\tj{z}{\bang\phi}\tr\tj{\letin z
-	  {x@y} t}{\psi}$}
-	  \DisplayProof
-	 \end{center}
-	 Take any $O\in\semo{\hypert}$, $\vec{g}\in\semo{\G}$ and
-	 $u\in\semo{\bang\phi}$.
-	 Since $u$ is in $\semo{\bang\phi}$, there exists a term $u'$ in
-	 $\semo{\phi}$
-	 where $u\eval \bang u'$.
-	 Moreover, by induction hypothesis,
-	 \[
-	 \hypert\eval\vec{o}\hmid t[\vec g/\G][\bang u'/x][\bang u'/y]\eval t'
-	 \]
-	 is derivable for some $\vec{o}$ and $t'\in\semo{\psi}$.
-	 By merge,
-	 \[
-	 \hypert\eval\vec{o}\hmid t[\vec g/\G][\bang u'/x][\bang u'/y]\eval
-	 t'\hmid u\eval \bang u'
-	 \]
-	 is derivable and then
-	 \[
-	 \hypert\eval\vec{o}\hmid
-	 (\letin{z}{x@y}{t})[\vec g/\G][\bang u'/z]\eval t'
-	 \]
-	 is also derivable.
     \item[($\with$L$_0$)]
 	 The derivation ends in
 	 \begin{center}
@@ -970,8 +952,6 @@ $u\in\semo{\G\tr\tj t\phi}$.
 	 \lpair{t,u}[\vec g/\G]\eval \lpair{t,u}[\vec g/\G]
 	 \]
 	 is derivable.
-    \item[($\forall$R)]
-	 Since the induction hypothesis holds regardless of $\semo{X}_0$.
     \item[Other rules]
 	 Other cases are immediate.
    \end{description}
@@ -989,13 +969,14 @@ $u\in\semo{\G\tr\tj t\phi}$.
    \end{corollary}
 
    \begin{corollary}[Consistency of Amida logic]
-    $\tr\tj{t}{\forall X.X}$ is not derivable for any term~$t$.
+    \label{consistent-amida}
+    $\tr\tj{t}{X}$ is not derivable for any term~$t$.
    \end{corollary}
     \begin{proof}
-     Assume $\tr\tj{t}{\forall X.X}$ is derivable.
+     Assume $\tr\tj{t}{X}$ is derivable.
      Then, by \thref{thm:generalconvergence},
-     $t\eval_\emptyset t'$ is derivable for some $t'$ in $\semo{\forall X.X}$.
-     However, $\semo{\forall X.X}$ is empty.
+     $t\eval_\emptyset t'$ is derivable for some $t'$ in $\semo{X}$.
+     However, $\semo{X}$ was taken empty.
     \end{proof}
 
     \subsection{Determinacy}
@@ -1111,10 +1092,7 @@ $u\in\semo{\G\tr\tj t\phi}$.
     types}\index{type!session}\index{session type|see{type}}.
     Session types~\cite{honda-session} can specify a communication
     protocol over a channel.
-    Instead of the standard notation $\bang\phi.\psi$, we use
-    $\sendtype{\phi}{\psi}$ in order to avoid the confusion with
-    $\bang\phi$.
-    For symmetry, we use $\recvtype{\phi}\psi$ instead of $?\phi.\psi$.
+    \fix{make the sendtype, recvtype standard ! and ?}
     The definitions and the descriptions are modification from
     \citet{wadler2012propositions}'s translations and descriptions.
     \begin{align*}
@@ -1143,7 +1121,6 @@ $u\in\semo{\G\tr\tj t\phi}$.
      \recvtype\phi\psi
      \mid \oplus\{l_i\colon\phi_i\}_{i\in I}
      \mid \with\{l_i\colon\phi_i\}_{i\in I}
-     \mid \bang\phi
     \]
     covers all types.
 
@@ -1791,15 +1768,12 @@ We call this situation \textit{dummy deadlocks}\index{deadlock!dummy}.
 
 On the other hand,
 the same trick cannot be used for the following process.
-\[
- \nu(x\colon \sendtype{\two}\terminate).
- \recvterm{x_R}y{\letin y {y_0@y_1}{\sendterm{x_L}{y_0}{y_1}}}\enspace.
-\]
+\fix{add example}
 This is an example of real deadlocks.
 Indeed, this process is not typable.
 
 \section{Proof Nets}
-\ref{sec:proofnets}
+\label{sec:proofnets}
 
 Since the Amida axiom $(\phi\limp\psi)\otimes(\psi\limp\phi)$
 does not contain additives ($\with,\oplus$) or exponential ($!$),
@@ -1830,7 +1804,7 @@ as follows
 We omit the definition of polarized MLL formulae because all grammar is
 exposed in the translation below.
 \begin{align*}
- \imtrans{\one}^+ = \one^+ \qquad & \imtrans{\one}^- = \zero^- \\
+ \imtrans{\one}^+ = \one^+ \qquad & \imtrans{\one}^- = \bot^- \\
  \imtrans{X}^+ = X^+      \qquad & \imtrans{X}^- = X^- \\
  \imtrans{\phi\limp\psi}^+ = \imtrans{\phi}^-\parr^+\imtrans{\psi}^+
  \qquad & \imtrans{\phi\limp\psi}^- = \imtrans{\phi}^+ \otimes^-
@@ -1852,7 +1826,8 @@ For example, the Amida axiom can be translated into a polarized MLL formula.
 
 Any polarized MLL formula can be translated further into
 a finite rooted tree with these branches and polarized atomic formulae
-($X^-, X^+, \one^+,\zero^-$) at the leaves.
+($X^-, X^+, \one^+,\bot^-$) at the leaves. \fix{rules for atomic units
+are they OK?}
  \begin{center}
   \includegraphics[scale=0.4]{rules-original.eps}
  \end{center}
@@ -1870,11 +1845,11 @@ line from $p$ reaches.
 The branching nodes labelled by $\parr^+, \parr^-, \otimes^+$ and
 $\otimes^-$ are called \textit{operator nodes}.
 
-When we add axiom edges, $\zero$-branches (shown below)
+When we add axiom edges, $\bot$-branches (shown below)
 and some other operator nodes (shown above)
 we obtain an
 essential net of $\phi$.
-Due to the arbitrarity of choosing axioms and $0^-$-branches,
+Due to the arbitrarity of choosing axioms and $\bot-$-branches,
 there are more than one essential nets for a formula%
 \footnote{\citet{murawski2003} restricts the class of formulae to linearly balanced
 formulae so that the essential net is uniquely determined.}.
@@ -1892,10 +1867,10 @@ formulae so that the essential net is uniquely determined.}.
 \begin{enumerate}
  \item Any leaf labelled with $X^+$ (resp. $Y^-$) is connected to a
        unique leaf labelled with $X^-$ (resp. $Y^+$).
-       Any leaf labelled with $0^-$ is connected to an up-edge
+       Any leaf labelled with $\bot^-$ is connected to an up-edge
        ($\one^+$ does not have to be connected to anything.)
  \item The directed graph formed by up-edge, down-edge, axiom edges and
-       0-branches is acyclic.
+       $\bot$-branches is acyclic.
  \item \label{conditionL}
        for every $\parr^+$-node~$p$, every path from the root that reaches
        $p$'s dashed child also passes through $p$.
@@ -2153,7 +2128,7 @@ one, which can be typed and evaluated in our framework as well.
    \UnaryInfC{$\tj{z}\one,\tj{x}{SP}\tr\tj{\ign z x}{SP}$}
    \BinaryInfC{$\tj{s}{\overline{SP}},\tj{x}{SP}\tr\tj{\ign{Serv}x}{SP}$}
    \UnaryInfC{$\tr\tj{\nu(\tj{s}{SP}).\ign{Serv[s_R/s]}{s_L}}{SP}$}
-   \UnaryInfC{$\tr\bang\tj{\nu(\tj{s}{SP}).\ign{Serv[s_R/s]}{s_L}}{\bang
+   \UnaryInfC{$\tr\tj{\nu(\tj{s}{SP}).\ign{Serv[s_R/s]}{s_L}}{
    SP}$}
    \DisplayProof
   \end{center}
@@ -2388,25 +2363,6 @@ where $d_{ABCD}$ is induced by adjunction between $\otimes$ and $\limp$
  (B\otimes D)$, which is provided by symmetric monoidal closed
  properties.
 
- \subsection{Logical Considerations}
-
- When we add
- the intuitionistic version of Amida axiom
- $(\phi\imp\psi)\land(\psi\imp\phi)$ to the intuitionistic propositional
- logic,
- the logic becomes inconsistent.
- Actually,
- if we have weakening, we can derive $(\phi\land \psi)\imp \phi$ so that
- we can throw away half of the Amida axiom
- $(\phi\imp\psi)\land(\psi\imp\phi)$ to obtain $\phi\imp\psi$ for any
- $\phi$ and $\psi$.  Thus we can conclude that Amida axiom is
- inconsistent with weakening.
-
- On the other hand, from \thref{smcc}, we know that Amida
- axiom to be consistent with contraction.
- We reckon that relevant Amida logic can be studied, but
- it is a mystery whether such a logic is philosophically relevant.
-
 \subsection{Multiparty, recursions, \ldots}
 Our type system has a drawback of having only finitely many processes.
 We expect it straightforward to overcome this weak point by
@@ -2438,8 +2394,7 @@ their type system allows weakening.
 \section{Conclusion}
 
 We found Amida logic, which can be characterized by Amida axiom
-$(\phi\limp\psi)\otimes(\psi\limp\phi)$ on top of intuitionistic
-linear logic.
+$(\phi\limp\psi)\otimes(\psi\limp\phi)$ on top of IMALL.
 The logic has an application for encoding process calculi and session type
 system.
 As a technique, we first used conjunctive hypersequents,
