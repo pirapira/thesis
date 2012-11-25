@@ -3,6 +3,21 @@
 
 \section{Introduction}
 
+There is a PhD student who says:
+\begin{quotation}
+ I bought a pair of wooden shoes in Amsterdam.  I put
+ a coin in the left one and a key in the right one.
+ Next morning, I found those objects in the opposite shoes:
+ the key in the left and the coin in the right.
+ The same experiments succeeded even if the shoes were put in distance, one in
+ university and one at home.  After every night, I found whatever objects swapped in
+ the pair of wooden shoes.
+ Probably, this fast transfer method helped merchants of
+ VOC\footnote{VOC is the Dutch East India Company.}.
+\end{quotation}
+We do not claim existence of such shoes, but propose
+a similar programming abstraction in the context of typed lambda calculi.
+
 We propose a way to unify ML-style programming
 languages~\citep{milner1997definition, marlow2010haskell} and
 $\pi$-calculus~\citep{milner1999communicating}, which are two of Robin
@@ -50,7 +65,7 @@ $(\phi\limp\psi)\otimes(\psi\limp\phi)$%
 \footnote{Takeuti Izumi asked about conjunctions
 after the author talked about $(\phi\limp\psi)\oplus (\psi\limp\phi)$.}.
 A natural way to add $(\phi\limp\psi)\otimes(\psi\limp\phi)$ as an axiom
-is adding a pair of primitives $c,\co c$ so that
+is adding a pair of primitives $c$ and $\co c$ so that
 $\cdots ct \cdots \co c u \cdots$ reduces to
 $\cdots u  \cdots t \cdots$: in words,
 $c$ outputs $\co c$'s input and vice versa.
@@ -319,44 +334,60 @@ The typing rules are in Figure~\ref{fig:exchange:rules}.
   applicable to singleton hypersequents.}
   \label{fig:exchange:rules}
  \end{figure}
+ When $\tr\tj t\phi$ is derivable,
+ type~$\phi$ is inhabited.  In other words,
+ $\phi$ is provable in Amida logic i.e. $\phi$ is a theorem of Amida logic.
 For example,
-the formula $(\phi\limp\psi)\otimes(\psi\limp\phi)$ is realized by
+the formula $(\phi\limp\psi)\otimes(\psi\limp\phi)$ is proved by
 the following derivation.
  \begin{center}
   \AxiomC{}
+  \LL{Ax}
   \UnaryInfC{$\tj{x}{\phi}\tr\tj{x}{\phi}$}
   \AxiomC{}
+  \LL{Ax}
   \UnaryInfC{$\tj{y}{\psi}\tr\tj{y}{\psi}$}
+  \LL{merge}
   \BinaryInfC{$\tj{x}{\phi}\tr\tj{x}{\phi} \hmid
   \tj{y}{\psi}\tr\tj{y}{\psi}$}
+  \LL{Sync}
   \UnaryInfC{$ \tj{x}{\phi}\tr\tj{cx}{\psi} \hmid \tj{y}{\psi}
   \tr\tj{\co c y}{\phi}$}
+  \LL{$\limp$R}
   \UnaryInfC{$ \tr\tj{\lambda x.cx}{\phi\limp\psi} \hmid \tj{y}{\psi}
   \tr\tj{\co c y}{\phi}$}
+  \LL{$\limp$R}
   \UnaryInfC{$ \tr\tj{\lambda x.cx}{\phi\limp\psi} \hmid
   \tr\tj{\lambda y.\co c y}{\phi\limp\phi}$}
+  \LL{$\otimes$R}
   \UnaryInfC{$ \tr\tj{{(\lambda x.cx) \otimes (\lambda y.\co c
   y)}}{(\phi\limp\psi)\otimes(\phi\limp\phi)}$}
   \DisplayProof
  \end{center}
 Another example shows how we can type the term $\co c(c x)$.
  \begin{center}
-\AxiomC{$\tj{x}{\phi}\tr\tj{x}{\phi}$}
-\AxiomC{$\tj{y}{\psi}\tr\tj{y}{\psi}$}
-\BinaryInfC{$\tj{x}{\phi}\tr\tj{x}{\phi} \hmid
-\tj{y}{\psi}\tr\tj{y}{\psi} $}
-\UnaryInfC{
-$\tj{x}{\phi}\tr\tj{cx}{\psi} \hmid
-\tj{y}{\psi}\tr\tj{\co cy}{\phi} $
-}
-\LL{(Cut)}
-\UnaryInfC{
-$\tj{x}{\phi}\tr\tj{\co c(cx)}{\phi}$
-}
+  \AxiomC{}
+  \LL{Ax}
+  \UnaryInfC{$\tj{x}{\phi}\tr\tj{x}{\phi}$}
+  \AxiomC{}
+  \LL{Ax}
+  \UnaryInfC{$\tj{y}{\psi}\tr\tj{y}{\psi}$}
+  \LL{merge}
+  \BinaryInfC{$\tj{x}{\phi}\tr\tj{x}{\phi} \hmid
+  \tj{y}{\psi}\tr\tj{y}{\psi} $}
+  \LL{Sync}
+  \UnaryInfC{
+  $\tj{x}{\phi}\tr\tj{cx}{\psi} \hmid
+  \tj{y}{\psi}\tr\tj{\co cy}{\phi} $
+  }
+  \LL{Cut}
+  \UnaryInfC{
+  $\tj{x}{\phi}\tr\tj{\co c(cx)}{\phi}$
+  }
 \DisplayProof
  \end{center}
 
- The typing system is has two strong properties about structural rules:
+ The typing system is has two strong properties about the missing structural rules:
  weakening and contraction.
  We first state the property about specialized contraction rules.
  \begin{proposition}
@@ -364,6 +395,7 @@ $\tj{x}{\phi}\tr\tj{\co c(cx)}{\phi}$
   omit variables and terms)
    \begin{center}
     \AxiomC{$\hyper\hmid\phi,\G\tr\psi$}
+    \LL{C}
     \UnaryInfC{$\hyper\hmid\phi,\phi,\G\tr\psi$}
     \DisplayProof
    \end{center}
@@ -377,20 +409,32 @@ $\tj{x}{\phi}\tr\tj{\co c(cx)}{\phi}$
   By the following derivation (again we omit variables and terms).
   \begin{center}
    \AxiomC{}
+   \LL{$\one$R}
    \UnaryInfC{$\tr\one$}
    \AxiomC{}
+   \LL{Ax}
    \UnaryInfC{$\phi\tr\phi$}
+   \LL{merge}
    \BinaryInfC{$\tr\one\hmid \phi\tr\phi$}
+   \LL{Sync}
    \UnaryInfC{$\tr\phi\hmid \phi\tr\one$}
    \AxiomC{}
+   \LL{Ax}
    \UnaryInfC{$\phi\tr\phi$}
+   \LL{$\otimes$R}
    \BinaryInfC{$\tr\phi\hmid \phi,\phi\tr\one\otimes\phi$}
    \LL{C}
    \UnaryInfC{$\tr\phi\hmid \phi\tr\one\otimes\phi$}
+   \LL{Cut}
    \UnaryInfC{$\tr\one\otimes\phi$}
    \AxiomC{}
+   \LL{Ax}
    \UnaryInfC{$\phi\tr\phi$}
+   \LL{$\one$L}
    \UnaryInfC{$\one,\phi\tr\phi$}
+   \LL{$\otimes$L}
+   \UnaryInfC{$\one\otimes\phi\tr\phi$}
+   \LL{Cut}
    \BinaryInfC{$\tr\phi$}
    \DisplayProof
   \end{center}
@@ -398,8 +442,8 @@ $\tj{x}{\phi}\tr\tj{\co c(cx)}{\phi}$
  \end{proof}
 
  \begin{corollary}[Amida logic proves any exponential formula]
-  If we are to introduce the bang modality of linear logic,
-  then any formula of the form $!\phi$ is a theorem.
+  If we are to introduce the bang modality~\citep{girard1987} of linear
+  logic, then any formula of the form $!\phi$ is a theorem.
  \end{corollary}
 
  \begin{corollary}[Incompatibility of additive disjunctive unit with Amida
@@ -459,6 +503,9 @@ $\tj{x}{\phi}\tr\tj{\co c(cx)}{\phi}$
 
 \subsection{Evaluation}
 
+As a programming language, Amida calculus is equipped with an
+operational semantics that evaluates a closed hyperterm into a sequence
+of canonical forms.
 The set of canonical forms remains the same as Abramsky's
 LF~\citep{abramsky1993computational}:
 \[
@@ -472,7 +519,7 @@ hypersequent}\index{hypersequent!evaluation}\index{evaluation
 hypersequent}~$\hypere$ is defined by the following
 grammar:
 \[
- \hypere ::= t\eval_S t\mid (\hypere\hmid \hypere)
+ \hypere ::= t\eval t\mid (\hypere\hmid \hypere)
 \]
 where $S$ is a finite set of variables.
 
@@ -482,180 +529,91 @@ Most rules are similar to those of Abramsky's
 LF~\citep{abramsky1993computational}.
 We add the semantics for channels.
 
-For the sake of \thref{eval-subst} (which will be used for
-\thref{thm:generalconvergence} and then consistency), we have to
-evaluate a closed subterm~$s$ in
-$\lambda
-x.t[s/y]$ while Abramsky never evaluated
-anything inside lambda.
-We decided to evaluate every closed subterms even they are in the
-body~$M$ of a lambda abstraction $\lambda x.M$
-because channels can appear in the body of lambda-abstraction.
-In order to keep track of that, we annotate the $\eval$ relation with
-involved free variables~$S$.
-
- \begin{proposition}
-  If evaluation hypersequent $\hypere\hmid t\eval_S v$
-  is derivable, $S$ is identical to the set of free variables of $t$.
- \end{proposition}
- \begin{proof}
-  Inductively on the evaluation derivations.
- \end{proof}
-
- The components in the hypersequent represent concurrently running
- processes.
- Thus, the evaluation derivation can be reordered in the following
- manner.
- We call this move moving $R$ upwards.
-  \begin{proposition}
-   \fix{state}
-  \end{proposition}
-  \begin{proof}
-   \fix{prove}
-  \end{proof}
-
  \begin{figure}
   \centering
   % ast
   \AxiomC{}
-  \UnaryInfC{$\ast\eval_\emptyset \ast$}
-  \DisplayProof
-  \hfill
-  \AxiomC{}
-  \UnaryInfC{$x\eval_{\{x\}} x$}
+  \UnaryInfC{$\ast\eval \ast$}
   \DisplayProof
   \hfill
   % ast elim
-  \AxiomC{$\hypere\hmid t\eval_\emptyset \ast \hmid u\eval_S v$}
-  \UnaryInfC{$\hypere\hmid \ign t u\eval_S v$}
+  \AxiomC{$\hypere\hmid t\eval \ast \hmid u\eval v$}
+  \UnaryInfC{$\hypere\hmid \ign t u\eval v$}
   \DisplayProof
   \hfill
   % otimes
-  \AxiomC{$\hypere\hmid t\eval_S v\hmid u\eval_{S'} w$}
-  \UnaryInfC{$\hypere\hmid t\otimes u\eval_{S\sqcup S'} v\otimes w$}
+  \AxiomC{$\hypere\hmid t\eval v\hmid u\eval w$}
+  \UnaryInfC{$\hypere\hmid t\otimes u\eval v\otimes w$}
   \DisplayProof
   \ruleskip
   % ign_not yet
-  \AxiomC{$\hypere\hmid t\eval_S t'\hmid u\eval_{S'} u'$}
-  \UnaryInfC{$\hypere\hmid \ign t u \eval_{S\sqcup S'} \ign{t'}{u'}$}
+  \AxiomC{$\hypere\hmid t\eval t'\hmid u\eval u'$}
+  \UnaryInfC{$\hypere\hmid \ign t u \eval \ign{t'}{u'}$}
   \DisplayProof
   \hfill
   % otimes elim
-  \AxiomC{$\hypere\hmid t\eval_\emptyset v\otimes w\hmid u[v/x,w/y]\eval_{S} v'$}
-  \UnaryInfC{$\hypere\hmid \letin t {x\otimes y} u \eval_{S} v'$}
+  \AxiomC{$\hypere\hmid t\eval v\otimes w\hmid u[v/x,w/y]\eval v'$}
+  \UnaryInfC{$\hypere\hmid \letin t {x\otimes y} u \eval v'$}
   \DisplayProof
-  \ruleskip
-  \AxiomC{$\hypere\hmid t\eval_S {t'}\hmid u\eval_{S'\sqcup\{x,y\}} {u'}$}
-  \UnaryInfC{$\hypere\hmid \letin t {x\otimes y} u \eval_{S\sqcup S'} \letin {t'}
-  {x\otimes y} {u'}$}
-  \DisplayProof if $S$ is not empty
   \ruleskip
   \AxiomC{$\hypere$}
   \AxiomC{$\hypere'$}
   \BinaryInfC{$\hypere\hmid \hypere'$}
   \DisplayProof
   \hfill
-  \AxiomC{$\hypere\hmid t\eval_{S\sqcup \{x\}} t'$}
-  \UnaryInfC{$\hypere\hmid \lambda x.t\eval_{S} \lambda x.t'$}
-  \DisplayProof
-  \hfill
-  \AxiomC{$\hypere\hmid t\eval_\emptyset \lambda x.t'\hmid u\eval_\emptyset v\hmid
-  t'[v/x]\eval_{\emptyset} w$}
-  \UnaryInfC{$\hypere\hmid tu\eval_{\emptyset} w$}
+  \AxiomC{}
+  \UnaryInfC{$\lambda x.t\eval \lambda x.t$}
   \DisplayProof
   \ruleskip
-  \AxiomC{$\hypere\hmid t\eval_S t'\hmid u\eval_{S'} u'$}
-  \UnaryInfC{$\hypere\hmid tu\eval_{S\sqcup S'} t'u'$}
-  \DisplayProof when $S\sqcup S'$ is nonempty
-  \hfill
-  \AxiomC{$\hypere\hmid t\eval_{\emptyset} v\hmid u\eval_{\emptyset} w$}
-  \UnaryInfC{$\hypere\hmid ct\eval_{\emptyset} w\hmid \co cu\eval_{\emptyset} v$}
+  \AxiomC{$\hypere\hmid t\eval v\hmid u\eval w$}
+  \UnaryInfC{$\hypere\hmid ct\eval w\hmid \co cu\eval v$}
   \DisplayProof
   \ruleskip
-  \AxiomC{$t\eval_S t'$}
-  \AxiomC{$u\eval_{S'} u'$}
-  \BinaryInfC{$
-  \hypere\hmid\lpair{t, u}\eval_{S\sqcup S'}
-  \hypere\hmid\lpair{t', u'}$}
-  \DisplayProof when $S\sqcup S'$ is not empty
-  \hfill
-  \AxiomC{   $\hypere\hmid t\eval_S t'\hmid s\eval_{S'} s'\hmid
+  \AxiomC{   $\hypere\hmid t\eval t'\hmid s\eval s'\hmid
   \hypere'$}
   \LL{ex}
-  \UnaryInfC{$\hypere\hmid s\eval_{S'} s'\hmid t\eval_S t'\hmid \hypere'$}
+  \UnaryInfC{$\hypere\hmid s\eval s'\hmid t\eval t'\hmid \hypere'$}
   \DisplayProof
   \ruleskip
   \AxiomC{$\hypere\hmid
-  t\eval_\emptyset\lpair{t_0,t_1}\hmid t_0\eval_\emptyset v_0
-  \hmid  u[v_0/x]\eval_\emptyset w$}
+  t\eval\lpair{t_0,t_1}\hmid t_0\eval v_0
+  \hmid  u[v_0/x]\eval w$}
   \UnaryInfC{$\hypere \hmid
-  \letin t {\lpair{x,\_}} u\eval_\emptyset w$}
+  \letin t {\lpair{x,\_}} u\eval w$}
   \DisplayProof
   \ruleskip
   \AxiomC{$\hypere
-  \hmid t\eval_S t'
-  \hmid  u\eval_{S'\sqcup \{x\}} u'$}
+  \hmid t\eval\lpair{t_0,t_1}\hmid t_1\eval v_1
+  \hmid  u[v_1/y]\eval w$}
   \UnaryInfC{$\hypere \hmid
-  \letin t {\lpair{x,\_}} u\eval_{S\sqcup S'}
-  \letin {t'} {\lpair{x,\_}} {u'}
-  $}
-  \DisplayProof when $S\sqcup S'$ is not empty
-  \ruleskip
-  \AxiomC{$\hypere
-  \hmid t\eval_\emptyset\lpair{t_0,t_1}\hmid t_1\eval_\emptyset v_1
-  \hmid  u[v_1/y]\eval_\emptyset w$}
-  \UnaryInfC{$\hypere \hmid
-  \letin t {\lpair{\_,y}} u\eval_\emptyset w$}
+  \letin t {\lpair{\_,y}} u\eval w$}
   \DisplayProof
-  \ruleskip
-  \AxiomC{$\hypere
-  \hmid t\eval_S t'
-  \hmid  u\eval_{S'\sqcup \{y\}} u'$}
-  \UnaryInfC{$\hypere \hmid
-  \letin t {\lpair{\_,y}} u\eval_{S\sqcup S'}
-  \letin {t'} {\lpair{\_,y}} {u'}
-  $}
-  \DisplayProof
-  when $S\sqcup S'$ is not empty
   \ruleskip
     % additive or intro
-  \AxiomC{$\hypere\hmid t\eval_S v$}
-  \UnaryInfC{$\hypere\hmid \inl{t}\eval_S \inl{v}$}
+  \AxiomC{$\hypere\hmid t\eval v$}
+  \UnaryInfC{$\hypere\hmid \inl{t}\eval \inl{v}$}
   \DisplayProof
   \hfill
-  \AxiomC{$\hypere\hmid u\eval_S w$}
-  \UnaryInfC{$\hypere \hmid \inr{u}\eval_S \inr{w}$}
+  \AxiomC{$\hypere\hmid u\eval w$}
+  \UnaryInfC{$\hypere \hmid \inr{u}\eval \inr{w}$}
   \DisplayProof
   \ruleskip
   % additive or elim
-  \AxiomC{$\hypere\hmid t\eval_\emptyset \inl{v}\hmid u[v/x]\eval_\emptyset w$}
-  \UnaryInfC{$\hypere\hmid \mat t x u y {u'}\eval_\emptyset w$}
+  \AxiomC{$\hypere\hmid t\eval \inl{v}\hmid u[v/x]\eval w$}
+  \UnaryInfC{$\hypere\hmid \mat t x u y {u'}\eval w$}
   \DisplayProof
   \hfill
-  \AxiomC{$\hypere\hmid t\eval_\emptyset \inr{v}\hmid u'[v/y]\eval_\emptyset w$}
-  \UnaryInfC{$\hypere\hmid \mat t x u y {u'}\eval_\emptyset w$}
+  \AxiomC{$\hypere\hmid t\eval \inr{v}\hmid u'[v/y]\eval w$}
+  \UnaryInfC{$\hypere\hmid \mat t x u y {u'}\eval w$}
   \DisplayProof
   \ruleskip
-  \AxiomC{$\hypere\hmid t\eval_S t'\hmid u\eval_{S'\sqcup \{x\}} u'$}
-  \AxiomC{$\hypere\hmid t\eval_S t'\hmid s\eval_{S'\sqcup \{y\}} s'$}
-  \BinaryInfC{$\hypere\hmid \mat t x u y s\eval_{S\sqcup S'} \mat {t'} x {u'} y {s'}$}
-  \DisplayProof \\ when $S$ is nonempty
-  \ruleskip
-  \AxiomC{$\hypere\hmid t\eval_S t'\hmid u\eval_{BV(p)} u'$}
-  \UnaryInfC{$\hypere\hmid\letin t p u\eval_{S\sqcup S'} \letin {t'} p {u'}$}
-  \DisplayProof \\
-  \ruleskip
-  \AxiomC{$\hypere\hmid t[w/x]\eval_\emptyset w\hmid u\eval_S v$}
-  \LL{nested-channel}
-  \UnaryInfC{$\hypere\hmid ct[\co c u/x]\eval_S v$}
+  \AxiomC{$\hypere\hmid t\eval v\hmid u[v/x]\eval w$}
+  \LL{eval-subst}
+  \UnaryInfC{$ \hypere\hmid u[t/x] \eval w $}
   \DisplayProof
-
   \caption[The definition of evaluation relation of the Amida
   calculus]{The definition of evaluation relation of the Amida calculus.
   $\hypere$ is possibly empty evaluation hypersequence.
-  The subscripts~$\bullet$ of $\eval_\bullet$ is introduced for keeping
-  determinacy while
-  having eval-subst rule (\thref{eval-subst}) admissible.
   The whole system is based on Abramsky's LF
   \citep{abramsky1993computational}, but differently from it,
   we evaluate closed subterms even when they are in the scope of $\lambda$.
@@ -663,102 +621,19 @@ involved free variables~$S$.
   \label{fig:eval}
  \end{figure}
 
- \fix{add a proposition saying we can move a rule application upwards
- relative to a component
- unless it is a sync rule with that component}
- \fix{this is why the rule sync is named after synchronization}
-
- \begin{proposition}
-   \label{eval-subst}
-  \AxiomC{$\hypere\hmid t\eval_\emptyset v\hmid u[v/x]\eval_\emptyset w$}
-  \LL{eval-subst}
-  \UnaryInfC{$ \hypere\hmid u[t/x] \eval_\emptyset w $}
-  \DisplayProof
-   is admissible.
- \end{proposition}
- \begin{proof}
-  By induction on the height of derivation, but we classify the
-  situation by the form of $u$.
-  \begin{description}
-   \item[($u$ is $x$)]
-	Since $\hypere\hmid t\eval_\emptyset v\hmid v\eval_\emptyset w$
-	is derivable, $w$ must be identical to $v$.
-	Also, since canonical form~$v$ does not contain channels,
-	$\hypere\hmid t\eval_\emptyset v$ is derivable and so is
-	$\hypere\hmid t\eval_\emptyset w$.
-   \item[($u$ is $cu'$)]
-	$\hypere\hmid t\eval_\emptyset v\hmid cu'[v/x]\eval_\emptyset w$
-	is derivable.  If the last rule touches components in $\hypere$,
-	our statement follows from the induction hypothesis.
-	If the last rule touches $t$ but $t$ is not of the form $\co c t'$, then
-	we can move the rule upwards\fix{why?}.
-	Otherwise, when the last rule introduces the channel pair $c,\co c$,
-	there are three possibilities for how the pair
-	$c, \co c$ is introduced.
-	\begin{description}
-	 \item[(with $\hypere$)]
-	       \begin{center}
-		\AxiomC{$\hypere\hmid s\eval_\emptyset w\hmid t\eval_\emptyset v\hmid
-		u'[v/x]\eval_\emptyset w'$}
-		\UnaryInfC{$\hypere \hmid \co c s\eval_\emptyset w'\hmid t\eval_\emptyset v
-		\hmid cu'[v/x]\eval_\emptyset w$}
-		\DisplayProof
-	       \end{center}
-	      By induction hypothesis,
-	       \begin{center}
-		$\hypere\hmid s\eval w\hmid u'[t/x]\eval w'$
-	       \end{center}
-	      is derivable. So is
-	       \begin{center}
-		$\hypere\hmid \co c s\eval_\emptyset w'\hmid cu'[t/x]\eval_\emptyset w$\enspace.
-	       \end{center}
-	 \item[(with $t$)]
-	       \begin{center}
-		\AxiomC{$\hypere\hmid t'\eval_\emptyset w\hmid u'[v/x]\eval_\emptyset v$}
-		\UnaryInfC{$\hypere \hmid \co ct'\eval_\emptyset v\hmid
-		cu'[v/x]\eval_\emptyset w$}
-		\DisplayProof
-	       \end{center}
-	      By nested-channel, $\hypere\hmid cu'[\co c t'/x]\eval_\emptyset v$
-	      is derivable.
-	 \item[(with $u'$)]
-	       \begin{center}
-		\AxiomC{$\hypere\hmid t\eval_\emptyset v\hmid
-		u''[w'/y]\eval_\emptyset w'\hmid u'''[v/x]\eval_\emptyset w$}
-		\UnaryInfC{$\hypere\hmid t\eval_\emptyset v\hmid cu''[\co
-		cu'''[v/x]/y]\eval_\emptyset w$}
-		\DisplayProof
-	       \end{center}
-	      By induction hypothesis,
-	      $\hypere\hmid u''[w'/y]\eval_\emptyset w'\hmid
-	      u'''[t/x]\eval_\emptyset w$
-	      is derivable and so is
-	      $\hypere\hmid cu''[\co cu'''[t/x]/y]\eval_\emptyset w$.
-	\end{description}
-   \item[($u$ is of other forms)]
-	We modify the derivation so that
-	$t\eval_\emptyset v\hmid u[v/x]$ stays in the same hypersequent.
-	For that we move any rule touching $t\eval_\emptyset v$ upwards
-	by \thref{upwards}
-	and any merge rule occurence upward.
-	Delaying those rules upwards allows us to decompose the term~$u$
-	until it becomes a single free variable~$x$.
-  \end{description}
- \end{proof}
-
 \begin{example}[Evaluation of a term communicating with its subterm]
  \label{inner-something}
- The rule eval-subst in \thref{eval-subst} is not in Abramsky's
+ The rule eval-subst in \thref{fig:eval} is not in Abramsky's
  LF~\citep{abramsky1993computational}.  However, it is necessary to give
  the following evaluation.
   \begin{center}
    \AxiomC{}
-   \UnaryInfC{$\ast\eval_\emptyset\ast$}
-   \AxiomC{$t\eval_\emptyset v$}
-   \BinaryInfC{$\ast\eval_\emptyset\ast\hmid t\eval_\emptyset v$}
-   \UnaryInfC{$c\ast\eval_\emptyset v\hmid \co ct\eval_\emptyset\ast$}
+   \UnaryInfC{$\ast\eval\ast$}
+   \AxiomC{$t\eval v$}
+   \BinaryInfC{$\ast\eval\ast\hmid t\eval v$}
+   \UnaryInfC{$c\ast\eval v\hmid \co ct\eval\ast$}
    \LL{eval-subst}
-   \UnaryInfC{$c(\co c t)\eval_\emptyset v$}
+   \UnaryInfC{$c(\co c t)\eval v$}
    \DisplayProof
   \end{center}
 \end{example}
@@ -768,7 +643,7 @@ involved free variables~$S$.
 
 Convergence states that if
 $\tr\tj t \phi$ is derivable,
-there exists a canonical form~$v$ so that $t\eval_\emptyset v$ is derivable.
+there exists a canonical form~$v$ so that $t\eval v$ is derivable.
 Since the proof of convergence is inductive over
 the typing derivations, we have to generalize the statement for
 hypersequents with multiple compontents.
@@ -782,15 +657,15 @@ as follows:
 \begin{align*}
  \semo{\mathcal X} &= \mathcal X\\
  \semo{X} &= \semo{X}_0\\
- \semo{\one} &= \{t\in \terms \mid t\eval_\emptyset \ast\} \\
- \semo{\phi\otimes \psi}&= \{t\in\terms \mid t\eval_\emptyset v\otimes w,\quad
+ \semo{\one} &= \{t\in \terms \mid t\eval \ast\} \\
+ \semo{\phi\otimes \psi}&= \{t\in\terms \mid t\eval v\otimes w,\quad
  v\in\semo{\phi},\quad w\in \semo{\psi}\}\\
- \semo{\phi\limp\psi}&= \{t\in\terms \mid t\eval_\emptyset \lambda x.v,\quad
+ \semo{\phi\limp\psi}&= \{t\in\terms \mid t\eval \lambda x.v,\quad
  \forall u\in\semo{\phi}.(tu\in\semo{\psi})\}\\
- \semo{\phi\with\psi}&= \{t\in\terms \mid t\eval_\emptyset\lpair{v,w},\quad
+ \semo{\phi\with\psi}&= \{t\in\terms \mid t\eval\lpair{v,w},\quad
  v\in\semo{\phi}, w\in\semo{\psi}\}\\
- \semo{\phi\oplus\psi}&= \{t\in\terms\mid (t\eval_\emptyset \inl{v}, v\in
- \semo{\phi})\text{ or }(t\eval_\emptyset\inr{w}, w \in \semo{\psi})\}\enspace.
+ \semo{\phi\oplus\psi}&= \{t\in\terms\mid (t\eval \inl{v}, v\in
+ \semo{\phi})\text{ or }(t\eval\inr{w}, w \in \semo{\psi})\}\enspace.
 \end{align*}
 
 For a context~$\G = \tj{x_0}{\phi_0},\ldots,\tj{x_n}{\phi_n}$,
@@ -814,12 +689,12 @@ $u\in\semo{\G\tr\tj t\phi}$.
   is derivable,
   for any $(\vec{u^i}) \in \semo{\G_i}$ for ${0\le i \le n}$,
   there exist canonical forms $(v_i\in\semo{\phi_i})_{0\le i\le n}$ so
-  that $t_0[\vec{u^0}/ \G_0]\eval_\emptyset v_0\hmid\cdots\hmid
-  t_n[\vec{u^n}/\G_n]\eval_\emptyset v_n$ is derivable.
+  that $t_0[\vec{u^0}/ \G_0]\eval v_0\hmid\cdots\hmid
+  t_n[\vec{u^n}/\G_n]\eval v_n$ is derivable.
  \end{proposition}
   \begin{proof}
    By induction on the type derivation.  In this proof we use $\eval$
-   for $\eval_\emptyset$.
+   for $\eval$.
    \begin{description}
     \item[(IE)]
 	 Since terms in $\semo{\phi}$ and $\semo{\psi}$ do not contain
@@ -851,7 +726,7 @@ $u\in\semo{\G\tr\tj t\phi}$.
     is derivable.
     The last term $u[(vw_0)/x][\vec d/\D]$ is identical to
     $u[vy/x][w_0/y][\vec d/\D]$.
-    Thus, by subst-eval in \thref{eval-subst},
+    Thus, by eval-subst in \thref{fig:eval},
     \[
     \vec O\eval\vec{w'}\hmid u[fy/x][t/y][\vec d/\D]\eval w_1
     \]
@@ -956,16 +831,11 @@ $u\in\semo{\G\tr\tj t\phi}$.
 	 Other cases are immediate.
    \end{description}
   \end{proof}
-  In this proof, only $\eval_\emptyset$ occured.  This is because the
-  $\eval_S$ relation for general $S$ is defined in order to reduce all
-  closed subterms.  That property is already exploited in
-  \thref{eval-subst}.
-  This is why we see only $\eval_\emptyset$ in this proof.
 
    \begin{corollary}[Convergence of the Amida calculus]
     \label{convergence}
     If $\tr\tj{t}{\phi}$ is derivable,
-    $t\eval_{\emptyset} v$ is derivable for some canonical form~$v$.
+    $t\eval v$ is derivable for some canonical form~$v$.
    \end{corollary}
 
    \begin{corollary}[Consistency of Amida logic]
@@ -975,108 +845,13 @@ $u\in\semo{\G\tr\tj t\phi}$.
     \begin{proof}
      Assume $\tr\tj{t}{X}$ is derivable.
      Then, by \thref{thm:generalconvergence},
-     $t\eval_\emptyset t'$ is derivable for some $t'$ in $\semo{X}$.
+     $t\eval t'$ is derivable for some $t'$ in $\semo{X}$.
      However, $\semo{X}$ was taken empty.
     \end{proof}
 
-    \subsection{Determinacy}
+    \subsection{Lack of Determinacy}
 
-    A sequence of terms $(t_i)_{0\le i \le n}$ is
-    \textit{well-formed}\index{well-formed!--- sequence of terms} iff both
-    of these conditions are met:
-    \begin{itemize}
-     \item if a channel~$c$ appears in any of $t_i$,
-	   each of $c$ and $\bar c$ appears only once in $(t_i)_{0\le i
-	   \le n}$,
-     \item if any $t_i$ contains a subterm of the form $ct[\bar cu/x]$,
-	   then, $t$ contains no channels.
-    \end{itemize}
-    The first condition is natural while the second is rather
-    cumbersome so that we hope to remove the second condition in the
-    future.
-
-    \begin{proposition}
-     \label{remove-local}
-     If $\hypere\hmid \hypere'$ has a derivation of height~$h$ and
-     $\hypere'$ does not contain
-     containing any channels, $\hypere$ and $\hypere'$ are separately
-     derivable within height~$h$ or less.
-    \end{proposition}
-    \begin{proof}
-     By induction on the height of derivations.
-    \end{proof}
-
-    \begin{proposition}
-     For a well-formed sequence of terms
-     $(t_i)_{0\le i\le n}$,
-     there exist a unique (if any) sequence of terms $(u_i)_{0\le i \le
-     n}$ and a unique (if any) sequence of sets of variables
-     $(S_i)_{0\le i \le n}$ such that
-     \[
-     t_0\eval_{S_0} u_0\hmid \cdots \hmid t_n\eval_{S_n} u_n
-     \]
-     is derivable.
-    \end{proposition}
-    \begin{proof}
-     First, by induction on evaluation derivation,
-     $S_i$ must be identical to the set of free variables in $t_i$.
-     Second, all rules of evaluation relation derivations except
-     nested-channel and ex (in Figure~\ref{fig:eval})
-     have distinct conclusions so that
-     the conclusion can determine the last rule
-     applied up to the choice of the last-generated component.
-     Now we have three things to consider.
-     \begin{enumerate}
-      \item The ex rule can be disregarded if we consider
-	    a hypersequent as a finite set of components rather than
-	    a finite sequence of components.
-      \item In the nested-channel rule application,
-	    we cannot immediately determine $w$:
-	     \begin{center}
-  \AxiomC{$\hypere\hmid t[w/x]\eval_\emptyset w\hmid u\eval_S v$}
-  \LL{nested-channel}
-  \UnaryInfC{$\hypere\hmid ct[\co c u/x]\eval_S v$}
-  \DisplayProof
-	     \end{center}
-	    because $w$ is contained in both sides of $\eval_\emptyset$.
-	    However, by well-formedness, $t$ does not contain channels.
-	    Thus, by \thref{remove-local}, a simpler evaluation
-	    hypersequent $\hypere
-	    \hmid u\eval_S v$ is derivable within the same height
-	    so that we can determine $v$
-	    from induction hypothesis.
-      \item From bottom to up, we can choose components in different
-	    orders.
-	    For example, we have different derivations for the same
-	    conclusion as
-	     \begin{center}
-	      \AxiomC{$v\eval v\hmid \inr w\eval \inr w$}
-	      \UnaryInfC{$\inl v\eval \inl v\hmid \inr w\eval \inr w$}
-	      \DisplayProof
-	     \end{center}
-	    and
-	     \begin{center}
-	      \AxiomC{$\inl v\eval \inl v\hmid w\eval w$}
-	      \UnaryInfC{$\inl v\eval \inl v \hmid \inr w\eval \inr w$}
-	      \DisplayProof\enspace.
-	     \end{center}
-	    However, such choices are locally confluent because
-	    the only rule touching more than two components
-	    in the conclusion is
-	     \begin{center}
-	      \AxiomC{$\hypere\hmid t\eval_{\emptyset} v\hmid u\eval_{\emptyset} w$}
-	      \UnaryInfC{$\hypere\hmid ct\eval_{\emptyset} w\hmid \co cu\eval_{\emptyset} v$}
-	      \DisplayProof
-	     \end{center}
-	    but neither $c$ or $\co c$ appears in $\hypere$ due to well-formedness.
-     \end{enumerate}
-    \end{proof}
-
-    \begin{corollary}[Determinacy of Amida calculus on well-formed terms]
-     If $t\eval_\emptyset v$ and $t\eval_\emptyset w$ are derivable
-     and singleton sequence $(t)$ is well-formed, then
-     $v$ and $w$ are the same canonical forms.
-    \end{corollary}
+    \fix{write something}
 
     \section{Sessions and Processes}
     \label{sec:session-process}
@@ -1092,7 +867,6 @@ $u\in\semo{\G\tr\tj t\phi}$.
     types}\index{type!session}\index{session type|see{type}}.
     Session types~\cite{honda-session} can specify a communication
     protocol over a channel.
-    \fix{make the sendtype, recvtype standard ! and ?}
     The definitions and the descriptions are modification from
     \citet{wadler2012propositions}'s translations and descriptions.
     \begin{align*}
@@ -1174,16 +948,20 @@ $u\in\semo{\G\tr\tj t\phi}$.
       These rules are admissible.
        \begin{center}
       \AxiomC{$\hypert\hmid\tj{y}{\psi}, \tj{x}{\chi}\tr\tj{t}{\phi}$}
+	\LL{\rm recv}
       \UnaryInfC{$\hypert\hmid\tj{x}{\recvtype\psi\chi}\tr\tj{\recvterm x y
       t}{\phi}$}
       \DisplayProof
       \hfill
-      \AxiomC{$\hypert\hmid \G,\tj{x}{\chi}\tr\tj{t}{\phi}\hmid \D\tr\tj{u}\psi$}
+      \AxiomC{$\hypert\hmid \G,\tj{x}{\chi}\tr\tj{t}{\phi}\hmid
+	\D\tr\tj{u}\psi$}
+	\LL{\rm send}
       \UnaryInfC{$\hypert\hmid \G,\D,\tj{x}{\sendtype
       \psi\chi}\tr\tj{\sendterm x u t}{\phi}$}
       \DisplayProof
       \ruleskip
       \AxiomC{$\hypert\hmid \G\tr\tj{t}{\phi}$}
+	\LL{\rm end}
       \UnaryInfC{$\hypert\hmid \G,\tj{x}{\terminate}\tr\tj{\ign x
       t}{\phi}$}
       \DisplayProof
@@ -1225,17 +1003,23 @@ $u\in\semo{\G\tr\tj t\phi}$.
       \begin{center}
        \small
        \AxiomC{}
+       \LL{Ax}
        \UnaryInfC{$\tj{z}{\two} \tr\tj z \two$}
+       \LL{end}
        \UnaryInfC{$\tj{z}{\two},\tj{y}{\terminate}\tr\tj{\ign y z}\two$}
+       \LL{end}
        \UnaryInfC{$\tj{z}{\two},\tj{x}{\terminate},
        \tj{y}{\terminate}\tr\tj{\ign {x,y} z}\two$}
-       \UnaryInfC{$\tj{x}{\terminate},\tj{y}{\recvtype\two\terminate}\tr
+       \LL{recv}
+       \UnaryInfC{$\tj{x}{\terminate},\tj{y}{\recvtype{(\two)}\terminate}\tr
        \tj{\recvterm y z
        {\ign {x,y}  z}}{\two}$}
        \AxiomC{}
-       \UnaryInfC{$\tj{y'}{\sendtype{\two}{\terminate}}\tr\tj{y'}{\sendtype\two\terminate}$}
-       \BinaryInfC{$\tj{y}{\recvtype\two\terminate},\tj{x}{\sendtype{\sendtype
-       \two \terminate}\terminate}, \tj{y'}{\sendtype \two
+       \LL{Ax}
+       \UnaryInfC{$\tj{y'}{\sendtype{(\two)}{\terminate}}\tr\tj{y'}{\sendtype{(\two)}\terminate}$}
+       \LL{send}
+       \BinaryInfC{$\tj{y}{\recvtype{(\two)}\terminate},\tj{x}{\sendtype{(\sendtype
+       {(\two)} \terminate)}\terminate}, \tj{y'}{\sendtype {(\two)}
        \terminate}\tr\tj
        {\sendterm x y{\recvterm {y'}z{\ign {x,y} z}}}\two$}
        \DisplayProof
@@ -1250,10 +1034,10 @@ $u\in\semo{\G\tr\tj t\phi}$.
        \AxiomC{}
        \UnaryInfC{$\tr\tj\ast\one$}
        \UnaryInfC{$\tr\tj{\inl{\ast}}{\two}$}
-       \BinaryInfC{$\tj{w'}{\sendtype\two\terminate}\tr\tj{\sendterm{w'}{\inl\ast}{\ign
+       \BinaryInfC{$\tj{w'}{\sendtype{(\two)}\terminate}\tr\tj{\sendterm{w'}{\inl\ast}{\ign
        {w'}\ast}}{\one}$}
-       \UnaryInfC{$\tj{w'}{\sendtype\two\terminate},\tj{x'}\terminate\tr\tj{\ign{x'}{\sendterm{w'}{\inl\ast}{\ign{w'}\ast}}}{\one}$}
-       \UnaryInfC{$\tj{x'}{\recvtype{\sendtype\two\terminate}\terminate}\tr\tj{
+       \UnaryInfC{$\tj{w'}{\sendtype{(\two)}\terminate},\tj{x'}\terminate\tr\tj{\ign{x'}{\sendterm{w'}{\inl\ast}{\ign{w'}\ast}}}{\one}$}
+       \UnaryInfC{$\tj{x'}{\recvtype{(\sendtype{(\two)}\terminate)}\terminate}\tr\tj{
        \recvterm{x'}{w'}{\ign{x'}{\sendterm{w'}{\inl\ast}{\ign{w'}\ast}}}}\one$}
        \DisplayProof
       \end{center}
@@ -1376,8 +1160,8 @@ $u\in\semo{\G\tr\tj t\phi}$.
 	 in \thref{ex:typed-processes}.  Indeed,
 	 \begin{align*}
 	  \tr &
-	  \nu(\tj{x}{\recvtype{\sendtype{\two}\terminate}\terminate}).
-	  \nu(\tj{y}{\sendtype\two\terminate}).
+	  \nu(\tj{x}{\recvtype{(\sendtype{(\two)}\terminate)}\terminate}).
+	  \nu(\tj{y}{\sendtype{(\two)}\terminate}).
 	  \\ & {\left(
 	 \sendterm {x_R}{y_L}{\recvterm {y_R} z {\ign{x_R,y_R}z}}
 	 \right)}
@@ -1529,8 +1313,8 @@ $u\in\semo{\G\tr\tj t\phi}$.
     \inl\ast\eval\inl\ast
     $}
     \LL{$\diamondsuit$}
-    \UnaryInfC{$\leftside{\sendtype\two\terminate}\eval \lambda x.cx\hmid
-    \rightside{\sendtype \two\terminate}\eval \inl\ast\otimes\ast\hmid
+    \UnaryInfC{$\leftside{\sendtype{(\two)}\terminate}\eval \lambda x.cx\hmid
+    \rightside{\sendtype {(\two)}\terminate}\eval \inl\ast\otimes\ast\hmid
     $}
     \noLine
     \UnaryInfC{\small
@@ -1541,7 +1325,7 @@ $u\in\semo{\G\tr\tj t\phi}$.
     (\recvterm{x_R}z{\ign {x_R} z})[\inl\ast\otimes\ast/x_R]\eval\inl\ast
     $
     }
-    \UnaryInfC{$\bothside{\sendtype\two\terminate}\eval
+    \UnaryInfC{$\bothside{\sendtype{(\two)}\terminate}\eval
     \lambda x.cx\otimes (\inl\ast\otimes \ast) \hmid$}
     \noLine
     \UnaryInfC{\small $
@@ -1550,7 +1334,7 @@ $u\in\semo{\G\tr\tj t\phi}$.
     (\recvterm{x_R}z{\ign {x_R} z})[\inl\ast\otimes\ast/x_R]
     \eval \ast \otimes \inl\ast
     $}
-    \UnaryInfC{$\nu(\tj{x}{\sendtype{\one\oplus\one}{\terminate}}).
+    \UnaryInfC{$\nu(\tj{x}{\sendtype{(\one\oplus\one)}{\terminate}}).
     \left(\sendterm{x_L}{\inl\ast}{\ign{x_L}\ast}\right)\otimes
     \left(\recvterm{x_R}{z}{\ign {x_R}z}\right)\eval \ast\otimes\inl\ast$}
     \DisplayProof
@@ -1624,8 +1408,8 @@ $u\in\semo{\G\tr\tj t\phi}$.
    \inl\ast\eval\inl\ast\hmid\ast\eval\ast
    $}
    \UnaryInfC{$
-   \leftside{\sendtype\two\terminate}\eval \lambda x. cx\hmid
-   \rightside{\sendtype\two\terminate}\eval \inl\ast\otimes \ast \hmid
+   \leftside{\sendtype{(\two)}\terminate}\eval \lambda x. cx\hmid
+   \rightside{\sendtype{(\two)}\terminate}\eval \inl\ast\otimes \ast \hmid
    (\sendterm{y'}{\inl\ast}\ast)[\lambda x.cx/y']\eval\ast\hmid
    (\recvterm y z z)[\inl\ast\otimes\ast / y]\eval\inl\ast
    $}
@@ -1633,8 +1417,8 @@ $u\in\semo{\G\tr\tj t\phi}$.
    \UnaryInfC{$\leftside\terminate\eval\ast\hmid
    \rightside\terminate\eval \ast$}
    \BinaryInfC{$
-   \leftside{\sendtype\two\terminate}\eval \lambda x. cx\hmid
-   \rightside{\sendtype\two\terminate}\eval \inl\ast\otimes \ast \hmid
+   \leftside{\sendtype{(\two)}\terminate}\eval \lambda x. cx\hmid
+   \rightside{\sendtype{(\two)}\terminate}\eval \inl\ast\otimes \ast \hmid
    (\sendterm{y'}{\inl\ast}\ast)[\lambda x.cx/y']\eval\ast\hmid
    (\recvterm y z z)[\inl\ast\otimes\ast / y]\eval\inl\ast
    \hmid
@@ -1642,8 +1426,8 @@ $u\in\semo{\G\tr\tj t\phi}$.
    \rightside\terminate\eval \ast
    $}
    \UnaryInfC{\small $
-   \leftside{\sendtype\two\terminate}\eval \lambda x. cx\hmid
-   \rightside{\sendtype\two\terminate}\eval \inl\ast\otimes \ast \hmid
+   \leftside{\sendtype{(\two)}\terminate}\eval \lambda x. cx\hmid
+   \rightside{\sendtype{(\two)}\terminate}\eval \inl\ast\otimes \ast \hmid
    \leftside{\terminate}\eval\ast\hmid
    \rightside{\terminate}\eval\ast\hmid
    (\sendterm{y'}{\inl\ast}\ast)[\lambda x.cx/y']\eval\ast\hmid
@@ -1653,42 +1437,42 @@ $u\in\semo{\G\tr\tj t\phi}$.
    \rightside\terminate\eval \ast
    $}
    \UnaryInfC{$
-   \rightside{\sendtype\two\terminate}\eval \inl\ast\otimes \ast \hmid
-   \leftside{\recvtype{\sendtype\two\terminate}\terminate}\eval \lambda
+   \rightside{\sendtype{(\two)}\terminate}\eval \inl\ast\otimes \ast \hmid
+   \leftside{\recvtype{(\sendtype{(\two)}\terminate)}\terminate}\eval \lambda
    x.dx\hmid
-   \rightside{\recvtype{\sendtype\two\terminate}\terminate}\eval\lambda
+   \rightside{\recvtype{(\sendtype{(\two)}\terminate)}\terminate}\eval\lambda
    x.cx\otimes \ast\hmid
    $}
    \noLine
    \UnaryInfC{$
    (\recvterm{x'}z{\sendterm{z}{\inl\ast}\ast})[\lambda x.cx\otimes \ast/y']\eval\ast\hmid
-   (\sendterm{x}{\leftside{\sendtype\two\terminate}}{\recvterm y z
+   (\sendterm{x}{\leftside{\sendtype{(\two)}\terminate}}{\recvterm y z
    z})[\lambda x.dx / x][\inl\ast\otimes\ast / y]\eval\inl\ast
    $}
    \doubleLine
    \UnaryInfC{$
    (\recvterm{x'}{z}{\sendterm z{\inl\ast}{\ast}})
-   [\rightside{\recvtype{\sendtype{\two}{\terminate}}{\terminate}}/x']
+   [\rightside{\recvtype{(\sendtype{(\two)}{\terminate})}{\terminate}}/x']
    \eval \ast
    \hmid
-   (\sendterm{x}{\leftside{\sendtype\two\terminate}}{\recvterm y z z})
-   [\leftside{\recvtype{\sendtype\two\terminate}\terminate}/x]
-   [\rightside{\sendtype\two\terminate}/y]
+   (\sendterm{x}{\leftside{\sendtype{(\two)}\terminate}}{\recvterm y z z})
+   [\leftside{\recvtype{(\sendtype{(\two)}\terminate)}\terminate}/x]
+   [\rightside{\sendtype{(\two)}\terminate}/y]
    \eval \inl\ast
    $}
    \UnaryInfC{$
    (\recvterm{x'}{z}{\sendterm z{\inl\ast}{\ast}})
-   [\rightside{\recvtype{\sendtype{\two}{\terminate}}{\terminate}}/x']
+   [\rightside{\recvtype{(\sendtype{(\two)}{\terminate})}{\terminate}}/x']
    \otimes
-   (\sendterm{x}{\leftside{\sendtype\two\terminate}}{\recvterm y z z})
-   [\leftside{\recvtype{\sendtype\two\terminate}\terminate}/x]
-   [\rightside{\sendtype\two\terminate}/y]
+   (\sendterm{x}{\leftside{\sendtype{(\two)}\terminate}}{\recvterm y z z})
+   [\leftside{\recvtype{(\sendtype{(\two)}\terminate)}\terminate}/x]
+   [\rightside{\sendtype{(\two)}\terminate}/y]
    \eval \ast\otimes \inl\ast
    $}
    \UnaryInfC{$
-   \letin{\bothside{\recvtype{\sendtype{\two}{\terminate}}{\terminate}}}{x'\otimes
+   \letin{\bothside{\recvtype{(\sendtype{(\two)}{\terminate})}{\terminate}}}{x'\otimes
    x}{
-   \letin{\bothside{\sendtype\two\terminate}}{y'\otimes y}{
+   \letin{\bothside{\sendtype{(\two)}\terminate}}{y'\otimes y}{
    (\recvterm{x'}{z}{\sendterm z{\inl\ast}{\ast}})
    \otimes
    (\sendterm{x}{y'}{\recvterm y z z})
@@ -1735,15 +1519,15 @@ we can build the following type derivation.
   \AxiomC{}
   \UnaryInfC{$\tj{y}\two\tr\tj y \two$}
   \BinaryInfC{$\tj{y}\two,\tj{x_L}{\terminate},
-  \tj{x_R}{\sendtype\two\terminate}\tr
+  \tj{x_R}{\sendtype{(\two)}\terminate}\tr
   \tj{\sendterm{x_R}{y}{\ign{x_L,x_R}{0}}}{\one}$}
   \UnaryInfC{
-  $\tj{x_L}{\recvtype\two\terminate},\tj{x_R}{\sendtype \two \terminate}
+  $\tj{x_L}{\recvtype{(\two)}\terminate},\tj{x_R}{\sendtype{(\two)} \terminate}
   \tr\tj
   {\recvterm {x_L}{y}{\sendterm{x_R}{y}{\ign {x_L,x_R} 0}}}\one$
   }
   \UnaryInfC{
-  $\tr\tj{\nu\tj{x}{\recvtype\two\terminate}.
+  $\tr\tj{\nu\tj{x}{\recvtype{(\two)}\terminate}.
   \recvterm {x_L}{y}{\sendterm{x_R}{y}{\ign {x_L,x_R} 0}}}{\one}$
   }
   \DisplayProof
@@ -2074,7 +1858,7 @@ is based on.
 In our type system, the following sequent is derivable
 \begin{align*}
 &
-\tj{x}{\sendtype{\sendtype{B}{\recvtype{A}\terminate}}{\recvtype B
+\tj{x}{\sendtype{(\sendtype{B}{\recvtype{A}\terminate})}{\recvtype B
 {\sendtype A \terminate}}}
 \tr\\
 &\tj{
@@ -2168,54 +1952,9 @@ one, which can be typed and evaluated in our framework as well.
   is price quoting, and asks the price of the tea, receives the price
   and terminates.
 
-  Here is another client.
-  \begin{center}
-   \AxiomC{}
-   \UnaryInfC{$ \tr\tj{0}\one $}
-   \UnaryInfC{$ \tj{s}{\terminate}\tr\tj{\ign s 0}\one$}
-   \UnaryInfC{$ \tj{s}{\terminate},\tj{rc}{N}\tr\tj{
-   {\ign {rc,s} 0}}\one$}
-   \UnaryInfC{$ \tj{s}{\recvtype{N}\terminate}\tr
-   \tj
-   {\recvterm{s}{rc}{\ign {rc,s} 0}}
-   {\one}$}
-   \AxiomC{}
-   \UnaryInfC{$\tr\tj{pin}{I}$}
-   \BinaryInfC{$ \tj{s}{\sendtype{I}{\recvtype{N}\terminate}}\tr
-   \tj
-   {\sendterm{s}{pin}{\recvterm{s}{rc}{\ign {rc,s} 0}}}
-   {\one}$}
-   \UnaryInfC{$ \tj{s}{\sendtype{N}{\sendtype{I}{\recvtype{N}\terminate}}}\tr
-   \tj
-   {\sendterm{s}{cof}{\sendterm{s}{pin}{\recvterm{s}{rc}{\ign {rc,s} 0}}}}
-   {\one}$}
-   \UnaryInfC{$ \tj{s}{ServerProto}\tr
-   \tj
-   {\letin s {\lpair{s,\_}}
-   {\sendterm{s}{cof}{\sendterm{s}{pin}{\recvterm{s}{rc}{\ign {rc,s} 0}}}}}
-   {\one}$}
-   \DisplayProof
-  \end{center}
-  We abbreviate the process as $BClnt_s$.
 
   We can combine the server with two clients.
    \begin{center}
-    \AxiomC{$\tj{s}{SP}\tr\tj{QClint_s}{\one}$}
-    \AxiomC{$\tj{s'}{SP}\tr\tj{BClint_{s'}}{\one}$}
-    \BinaryInfC{$\tj{s}{SP},\tj{s'}{SP}\tr
-    \tj{{QClint_s}\otimes{BClint_{s'}}}{\one\otimes\one}$}
-    \UnaryInfC{$\tj{s}{!SP},\tj{s'}{!SP}\tr
-    \tj{\letin{s}{!s}{\letin{s'}{!s'}
-    {{QClint_s}\otimes{BClint_{s'}}}}}{\one\otimes\one}$}
-    \UnaryInfC{$\tj{s}{!SP}\tr
-    \tj{\letin{s}{s@s'}{
-    \letin{s}{!s}{\letin{s'}{!s'}
-    {{QClint_s}\otimes{BClint_{s'}}}}}}{\one\otimes\one}$}
-    \UnaryInfC{$\tr
-    \tj{\letin{!Serv}{s@s'}{
-    \letin{s}{!s}{\letin{s'}{!s'}
-    {{QClint_s}\otimes{BClint_{s'}}}}}}{\one\otimes\one}$}
-    \DisplayProof
    \end{center}
 
   Here is an evaluation of the combined system of the server and the two

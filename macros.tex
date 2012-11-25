@@ -247,8 +247,8 @@
 
 \newcommand{\terminate}{\mathsf{end}}
 
-\newcommand{\sendtype}[2]{\tuple{#1}.{#2}}
-\newcommand{\recvtype}[2]{(#1).{#2}}
+\newcommand{\sendtype}[2]{\mathop{!}{#1}{#2}}
+\newcommand{\recvtype}[2]{\mathop{?}{#1}{#2}}
 
 \newcommand{\sendterm}[3]{{#1}\langle{#2}\rangle.{#3}}
 \newcommand{\recvterm}[3]{{{#1}({#2}).{#3}}}
@@ -260,5 +260,5 @@
 \newcommand{\hypere}{\mathcal{E}}
 
 \newcommand{\two}{\one\oplus\one}
-z
+
 \newcommand{\imtrans}[1]{\text{\textopencorner}{#1}\text{\textcorner}}
