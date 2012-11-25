@@ -2,7 +2,7 @@
 
   We use ``iff\index{iff}'' as an abbreviation for ``if and only if.''
   We use set-theoretic concepts such as sets, relations and functions.
-  For a set~$X$, $\powerset X$ denotes the powerset of $X$.
+  For a set~$X$, $2^X$ denotes the powerset of $X$.
    $X\setminus Y$ denotes the subset of $X$ that consists of those
    elements of $X$ that are not elements of $Y$.
    Everywhere, we consider countably infinite set of logical formulae.
@@ -206,7 +206,7 @@ rows stand for the postarguments (the arguments right of the operator).
 For example, if we assign 1 to $a$ and 2 to $b$,
 $a\supset b$ obtains value~0.
 Under any assignment to propositional variables, all of Heyting's axioms
-are assigned 0.  Moreover, these tables have two formidable properties:
+are assigned 0.  Moreover, these tables have two desirable properties:
 \begin{enumerate}
  \item $0\land 0 = 0$
  \item $0\supset a$ has the value 0 only when $a = 0$.
@@ -364,7 +364,8 @@ interpretation}
 (BHK\index{BHK|see{Brouwer--Heyting--Kolmogorov interpretation}})
 interpretation reads: ``a proof of the
 implication $\varphi\supset\psi$ is a construction which permits us to
- transform any proof of $\varphi$ into a proof of $\psi$''~\fix{cite troelstra}.
+ transform any proof of $\varphi$ into a proof of $\psi$''~\fix{cite
+ troelstra 大学で}.
 The BHK
 interpretation does not specify what is a proof or what kind of
 transformation witnesses implication.
@@ -385,7 +386,7 @@ mention a larger, more complicated formula.  Actually, there
 are alternative formulations of intuitionistic (and classical)
 propositional logic by \citet{gentzen} where we only have to
 mention subformulae of the formula being proven.
-The formidable property is called subformula property\index{subformula property}.
+The desirable property is called subformula property\index{subformula property}.
 The two proof systems are called natural deduciton\index{natural
 deduction} and sequent calculus\index{sequent calculus}.
 
@@ -663,7 +664,7 @@ one realization of BHK interpretation: proofs as lambda terms where the
 introduction rule of implication is realized as the lambda abstraction
 and the elimination rule of implication is realized as the application
 of lambda terms.
-This encoding has a formidable property:
+This encoding has a desirable property:
 the reductions in the lambda calculus corresponds to the reductions of
 proofs that
 removes detours.
@@ -1034,6 +1035,7 @@ propositional logic:
  Chapter~\ref{ch:exchange}, we are going to elaborate on this there.
 
  \subsubsection{Proof Nets and Amida Lotteries}
+ \label{amidalot}
 
 Proof nets are graphical representation of proofs.
 Some different sequent calculus proofs are translated into the same
@@ -1049,10 +1051,9 @@ which started with~\citet{girard1987} and \citet{danos-regnier}.
  multiplicative linear logic, and its proof nets are based on Amida
  lotteries.
  The Amida lottery is a traditional way to generate permutations on a set%
- \footnote{The Amida lottery has been known in Japan since \fix{?}} in a
- obfuscated way.
-Japanese schoolchildren use \textit{Amida lotteries}\index{Amida lotteries}
-for assigning seats, jobs, teams and so on to classmates.
+ in an obfuscated way.
+ Japanese schoolchildren use \textit{Amida lotteries}\index{Amida lotteries}
+ for assigning seats, jobs, teams and so on to classmates.
 
 \fix{add}
 
@@ -1064,8 +1065,8 @@ after crossing the bridge, one has to go down the vertical line.
 \section{To the Next Chapters}
 
 Each chapter can be read independently.
-\begin{itemize}
- \item if your are interested in process calculi, \fix{}
- \item a proof net enthusiasist might find \fix{} interesting
- \item shared memory consistency consistency,
-\end{itemize}
+Chapter~\ref{ch:exchange} treats a synchronous hyper-lambda calculus and
+Chapter~\ref{ch:lambda} deals with an asynchronous one.
+The operational semantics is simpler in the synchronous case while
+the type system is more exotic in the synchronous case.
+The asynchronous one is apt for shared--memory implementation.

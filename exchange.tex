@@ -12,16 +12,15 @@ There is a PhD student who says:
  The same experiments succeeded even if the shoes were put in distance, one in
  university and one at home.  After every night, I found whatever objects swapped in
  the pair of wooden shoes.
- Probably, this fast transfer method helped merchants of
- VOC\footnote{VOC is the Dutch East India Company.}.
+ This fast transfer method might have helped merchants of
+ the Dutch East India Company (VOC).
 \end{quotation}
 We do not claim existence of such shoes, but propose
 a similar programming abstraction in the context of typed lambda calculi.
 
 We propose a way to unify ML-style programming
 languages~\citep{milner1997definition, marlow2010haskell} and
-$\pi$-calculus~\citep{milner1999communicating}, which are two of Robin
-Milner's achievements.
+$\pi$-calculus~\citep{milner1999communicating}.
 ``Well-typed expressions do not go wrong,'' said \citet{milner1978}.
 However, when communication is involved, how to maintain the principle
 is not yet settled.
@@ -32,7 +31,7 @@ a}, with commands
 \texttt{putMVar mv} of type \texttt{a -> IO ()} and \texttt{takeMVar mv}
 of type \texttt{IO
 a}\footnote{The arrow \texttt{->} shows implication $\imp$ and the tuple
-() shows the unit type $\one$}.
+() shows the unit type $\one$.}.
 The former command consumes an argument of type~\texttt{a} and
 the argument appears from the latar command.
 However, if programmers make mistakes, these commands can
@@ -44,41 +43,43 @@ Fundamentally, this is because the type system of Haskell
 is based on intuitionistic logic, which allows throwing away proofs.
 
 As a remedy, we invent a typed lambda calculus where
-the user is forced to use both of sending and receiving primitives each once.
+the user is forced to use each of sending and receiving primitives.
 For that we use the technique of linear types:
 linear types can specify a portion of program to be used
 just once.
 
-We show that it is still possible to build
-a type system which is based on a logic.
-Wadler and Pfenning did that, but our type system can type processes
+Linear logic is used by \citet{wadler2012propositions} and
+\citet{pfenning2010} to encode sessino types, but our type system can
+type processes
 which Wadler
 and Pfenning's system cannot.
 
-From the standard intuitionistic linear logic,
-the only change is adding Amida axiom\index{axiom!Amida}\index{Amida axiom|see{axiom}}
+From the intuitionistic linear logic,
+the only addition is Amida axiom\index{axiom!Amida}\index{Amida axiom|see{axiom}}
 $(\phi\limp\psi)\otimes(\psi\limp\phi)$.
 We call the resulting logic Amida logic.
 In Amida logic, we can express $\pi$-calculus-like processes as macros.
-To be honest, our initial motivation was just studying the axiom
+Our initial motivation was just studying the axiom
 $(\phi\limp\psi)\otimes(\psi\limp\phi)$%
 \footnote{Takeuti Izumi asked about conjunctions
 after the author talked about $(\phi\limp\psi)\oplus (\psi\limp\phi)$.}.
-A natural way to add $(\phi\limp\psi)\otimes(\psi\limp\phi)$ as an axiom
+From the viewpoint of typed lambda calculi, a natural way to add
+the axiom
+$(\phi\limp\psi)\otimes(\psi\limp\phi)$
 is adding a pair of primitives $c$ and $\co c$ so that
 $\cdots ct \cdots \co c u \cdots$ reduces to
 $\cdots u  \cdots t \cdots$: in words,
 $c$ outputs $\co c$'s input and vice versa.
-We can obtain the send-receive communication when we specialize the
-axiom as $(\phi\limp \one)\otimes(\one\limp\phi)$.  The left hand side
+We can obtain the send--receive communication when we specialize the
+axiom as $(\phi\limp \one)\otimes(\one\limp\phi)$; the left hand side
 $\tj{c}{\phi\limp\one}$ is the sending primitive and
 the right hand side $\tj{\co c}{\one \limp\phi}$ is the receiving
 primitive.
 
 When we want to use these primitives anywhere in lambda terms,
 there is one problem: what happens to $\co c(c t)$?
-In this case, we do not know the output of $c$ because we only have an
-equality between $\co c$'s input and $c$'s output.
+In this case, we do not know the output of $c$ because the output of $c$
+comes from $\bar c$'s input, which is the output of $c$.
 Fortunately, we just want to know the output of $\co c$, which is the
 input of $c$, that is, $t$.
 In a more complicated case $\co c(\co d(c (d t)))$,
@@ -90,15 +91,16 @@ We have more questions.
 \begin{itemize}
  \item Due to addition of the axiom, is it the case that
        every type is inhabited?  In other words,
-      is the resulting type system consistent (Sect.~\ref{sec:convergence})?
- \item How does it generalize over channels having more complicated
-       protocols (Sect.~\ref{sec:session-process})?
- \item Can we implement process calculi using the aforementioned
-       primitives (Sect.~\ref{sec:session-process})?
+      is the resulting type system consistent (Section~\ref{sec:convergence})?
+ \item How can we generalize the channels to serve more complicated
+       protocols than one--shot send--receive communication (Section~\ref{sec:session-process})?
+ \item Can we implement process calculi using these communication
+       primitives (Section~\ref{sec:session-process})?
 \end{itemize}
 
 After following these practical questions,
-we proceed to developing a proof net structure for the logic.
+we proceed to developing a proof net structure for the logic
+(Section~\ref{sec:proofnets}).
 It turns out that the the ``Amida lottery,'' which is a traditional
 Japanese way of making arbitrary permutations, provides the answer.
 
@@ -107,14 +109,13 @@ Japanese way of making arbitrary permutations, provides the answer.
 \section{Definitions}
 
 \subsection{Types}
-For a set $S$, we define $\phi\in\form(S)$ by BNF:
+We assume countably infinite set of propositional variables, for which
+we use $X,Y$ and so on.
+We define a type~$\phi$ by BNF:
 \[
- \phi::=s\mid \one \mid X \mid \phi\otimes\phi\mid \phi\limp\phi\mid
- \phi\oplus\phi\mid \phi\with\phi
+ \phi::=\one \mid X \mid \phi\otimes\phi\mid \phi\limp\phi\mid
+ \phi\oplus\phi\mid \phi\with\phi\enspace.
 \]
-where $s$ is an element of $S$ and $X$ is a propositional variable.
-The propositional variable in the last clause is binding.
-A \textit{type}\index{type} is an element of $\form(\emptyset)$.
 A \textit{formula}\index{formula} is a type.
 
 \subsection{Terms and Free Variables}
@@ -127,14 +128,14 @@ binding sets of variables:
  \item $\lpair{x,\_}$ and $\lpair{\_,x}$ are patterns binding $\{x\}$,
  \item $x\otimes y$ is a pattern binding $\{x,y\}$.
 \end{itemize}
-We write $BV(p)$ for the set of bound variables of pattern~$p$.
 Using patterns, we define a term $t$ with free variables~$S$.
 We assume countably infinitely many \textit{channels}\index{channel}
 with involution satisfying $\co c\neq c$ and $\co{\co c} = c$.
 \begin{itemize}
  \item a variable $x$ is a term with free variables $\{x\}$,
  \item if $t$ is a term with free variables~$S$, $u$ is a term with
-       free variables~$S'$ and $S$ and $S'$ are disjoint, $t\otimes u$ and
+       free variables~$S'$ and $S$ and $S'$ are disjoint, then $t\otimes
+       u$ and
        $tu$ are terms with free variables $S\cup S'$,
  \item if $t$ and $u$ are terms with free variables $S$, then
        $\lpair{t,u}$ is a term with free variables~$S$,
@@ -159,7 +160,7 @@ introducing channels, which are our communication primitives.
 We introduce an abbreviation
 \begin{align*}
  \ign \epsilon t   & \equiv t\\
- \ign {s_0,\vec s} t & \equiv \letin {s_0} \ast {\ign {\vec s} t}
+ \ign {s_0,\vec s} t & \equiv \letin {s_0} \ast {(\ign {\vec s} t)}
 \end{align*}
 inductively for a sequence of terms~$\vec s$.
 $\epsilon$ stands for the empty sequence.
@@ -169,8 +170,7 @@ The symbol $\mathsf{ign}$ is intended to be pronounced ``ignore''.
 
 On top of Abramsky's linear lambda calculus
 LF~\citep{abramsky1993computational}\index{LF}, we add a rule to
-make $(\phi\limp\psi)\otimes(\psi\limp\phi)$ inhabited. \fix{define
-inhabited somewhere}
+make a closed term of type $(\phi\limp\psi)\otimes(\psi\limp\phi)$.
 A \textit{context}\index{context}~$\G$ is a possibly empty sequence of
 variables associated with
 types where the same variable appears at most once.
@@ -336,9 +336,10 @@ The typing rules are in Figure~\ref{fig:exchange:rules}.
  \end{figure}
  When $\tr\tj t\phi$ is derivable,
  type~$\phi$ is inhabited.  In other words,
- $\phi$ is provable in Amida logic i.e. $\phi$ is a theorem of Amida logic.
-For example,
-the formula $(\phi\limp\psi)\otimes(\psi\limp\phi)$ is proved by
+ $\phi$ is provable in Amida logic i.e. $\phi$ is a theorem of Amida
+ logic.
+ \begin{example}
+The formula $(\phi\limp\psi)\otimes(\psi\limp\phi)$ is proved by
 the following derivation.
  \begin{center}
   \AxiomC{}
@@ -386,6 +387,7 @@ Another example shows how we can type the term $\co c(c x)$.
   }
 \DisplayProof
  \end{center}
+ \end{example}
 
  The typing system is has two strong properties about the missing structural rules:
  weakening and contraction.
@@ -421,8 +423,10 @@ Another example shows how we can type the term $\co c(c x)$.
    \AxiomC{}
    \LL{Ax}
    \UnaryInfC{$\phi\tr\phi$}
+   \LL{merge}
+   \BinaryInfC{$\tr\phi\hmid \phi\tr\one\hmid\phi\tr\phi$}
    \LL{$\otimes$R}
-   \BinaryInfC{$\tr\phi\hmid \phi,\phi\tr\one\otimes\phi$}
+   \UnaryInfC{$\tr\phi\hmid \phi,\phi\tr\one\otimes\phi$}
    \LL{C}
    \UnaryInfC{$\tr\phi\hmid \phi\tr\one\otimes\phi$}
    \LL{Cut}
@@ -434,8 +438,10 @@ Another example shows how we can type the term $\co c(c x)$.
    \UnaryInfC{$\one,\phi\tr\phi$}
    \LL{$\otimes$L}
    \UnaryInfC{$\one\otimes\phi\tr\phi$}
+   \LL{merge}
+   \BinaryInfC{$\tr\one\otimes\phi \hmid \one\otimes\phi\tr\phi$}
    \LL{Cut}
-   \BinaryInfC{$\tr\phi$}
+   \UnaryInfC{$\tr\phi$}
    \DisplayProof
   \end{center}
   where C marks the step where the specialized contraction is used.
@@ -445,6 +451,10 @@ Another example shows how we can type the term $\co c(c x)$.
   If we are to introduce the bang modality~\citep{girard1987} of linear
   logic, then any formula of the form $!\phi$ is a theorem.
  \end{corollary}
+ \begin{proof}
+  Since $!\phi\limp !\phi\otimes!\phi$ is a theorem in intuitionistic
+  linear logic.
+ \end{proof}
 
  \begin{corollary}[Incompatibility of additive disjunctive unit with Amida
   logic]
@@ -452,7 +462,19 @@ Another example shows how we can type the term $\co c(c x)$.
   for any formula~$\phi$, then $\zero$ is provable (and as a consequence
   any formula is provable i.e. the resulting logic is inconsistent).
  \end{corollary}
- However, the Amida logic itself is consistent (see \thref{smcc} or
+ Further, this implies that Amida logic is incompatible with second
+ order universal quantification so that the parametricity argument for session
+ types by \citet{cairesrelational} is not applicable.
+ \begin{corollary}[Incompatibility of second order universal
+  quantification with Amida logic]
+  If we add the second order universal quantification to Amida logic,
+  the resulting logic is inconsistent.
+ \end{corollary}
+ \begin{proof}
+  $\forall X.X\tr\phi$ is derivable for any $\phi$.
+ \end{proof}
+ Although various extensions to Amida logic yields inconsistency,
+ the Amida logic itself is consistent (see \thref{smcc} or
  \thref{consistent-amida}).
 
  Next we state the property about the weakening rule.
@@ -522,6 +544,8 @@ grammar:
  \hypere ::= t\eval t\mid (\hypere\hmid \hypere)
 \]
 where $S$ is a finite set of variables.
+We ignore the difference between $(\hypere_0\hmid \hypere_1)\hmid
+\hypere_2$ and $\hypere_0\hmid(\hypere_1\hmid\hypere_2)$.
 
 Now we define evaluation as a set of evaluation hypersequents
 (Figure~\ref{fig:eval}).
@@ -546,11 +570,6 @@ We add the semantics for channels.
   \UnaryInfC{$\hypere\hmid t\otimes u\eval v\otimes w$}
   \DisplayProof
   \ruleskip
-  % ign_not yet
-  \AxiomC{$\hypere\hmid t\eval t'\hmid u\eval u'$}
-  \UnaryInfC{$\hypere\hmid \ign t u \eval \ign{t'}{u'}$}
-  \DisplayProof
-  \hfill
   % otimes elim
   \AxiomC{$\hypere\hmid t\eval v\otimes w\hmid u[v/x,w/y]\eval v'$}
   \UnaryInfC{$\hypere\hmid \letin t {x\otimes y} u \eval v'$}
@@ -652,10 +671,9 @@ For that we first assign a set of closed terms to each type.
 \newcommand{\terms}{\mathcal{T}}
 We denote by $\terms$ the set of closed terms.
 Given $\semo{X}_0\in 2^\terms$ for each propositional variable~$X$,
-we define $\semo{\cdot}\colon \form{(2^\terms)}\rightarrow {2^\terms}$
+we define $\semo{\phi}$ as an element of ${2^\terms}$
 as follows:
 \begin{align*}
- \semo{\mathcal X} &= \mathcal X\\
  \semo{X} &= \semo{X}_0\\
  \semo{\one} &= \{t\in \terms \mid t\eval \ast\} \\
  \semo{\phi\otimes \psi}&= \{t\in\terms \mid t\eval v\otimes w,\quad
@@ -669,13 +687,13 @@ as follows:
 \end{align*}
 
 For a context~$\G = \tj{x_0}{\phi_0},\ldots,\tj{x_n}{\phi_n}$,
-the notation~$\semo{\G}$ denotes the set of sequences $u_0,\ldots,u_n$
+notation~$\semo{\G}$ denotes the set of sequences $u_0,\ldots,u_n$
 of closed terms
 such that each $u_i$ is in $\semo{\phi_i}$.
-For a sequent $\G\tr\tj{t}{\phi}$, $\semo{\G\tr\tj{t}{\phi}}$ denotes
+For a sequent $\G\tr\tj{t}{\phi}$, notation $\semo{\G\tr\tj{t}{\phi}}$ denotes
 the set consisting of terms $t[\vec g/G]$ for some $\vec g\in\semo{\G}$.
-For a hypersequent with terms $\hypert$,
-$\semo\hypert$ is defined in a component-wise way:
+For a hypersequent $\hypert$,
+$\semo\hypert$ is defined in a component-wise way: the set
 $\semo{\hypert\hmid\G\tr\tj t\phi}$ contains any {\kern
 -6pt}$\hmid${\kern -6pt}-delimited
 sequence of terms
@@ -726,7 +744,7 @@ $u\in\semo{\G\tr\tj t\phi}$.
     is derivable.
     The last term $u[(vw_0)/x][\vec d/\D]$ is identical to
     $u[vy/x][w_0/y][\vec d/\D]$.
-    Thus, by eval-subst in \thref{fig:eval},
+    Thus, by eval-subst in Figure~\ref{fig:eval},
     \[
     \vec O\eval\vec{w'}\hmid u[fy/x][t/y][\vec d/\D]\eval w_1
     \]
@@ -734,13 +752,15 @@ $u\in\semo{\G\tr\tj t\phi}$.
     \item[(Cut)] Essentially the same as and simpler than ($\limp$L).
     \item[(Sync)]
 	 The derivation ends as
+	  \begin{center}
 	 \AxiomC{$\hypert\hmid \G\tr\tj{t}{\phi}\hmid \D\tr\tj{u}{\psi}$}
 	 \UnaryInfC{$\hypert\hmid \G\tr\tj{ct}{\psi}\hmid \D\tr\tj{\co
 	 cu}{\phi}$}
 	 \DisplayProof\enspace.
+	  \end{center}
 	 Take any $\vec O\in\semo{\hypert}$, $\vec g\in \semo{\G}$ and $\vec
 	 d\in\semo{\D}$.
-	 By induction hypothesis, the hyper evaluation
+	 By induction hypothesis, the evaluation
 	 \[
 	 \vec O\eval \vec{v'}\hmid t[\vec g/\G] \eval v\hmid u[\vec
 	 d/\D]\eval w
@@ -758,7 +778,7 @@ $u\in\semo{\G\tr\tj t\phi}$.
 	   \AxiomC{$\hypert\hmid\G,\tj{x}{\phi},\tj{y}{\psi}\tr\tj{t}\theta$}
 	   \UnaryInfC{$\hypert\hmid\G,\tj{z}{\phi\otimes
 	   \psi}\tr\tj{\letin z {x\otimes y} t}{\theta}$}
-	   \DisplayProof
+	   \DisplayProof\enspace.
 	  \end{center}
 	 Take any $v\in \semo{\phi\otimes\psi}$, $\vec g\in \semo{\G}$
 	 and $\vec O\in\semo{\hypert}$.
@@ -782,13 +802,13 @@ $u\in\semo{\G\tr\tj t\phi}$.
 	 g/\G][v/z] \eval w\enspace.
 	 \]
     \item[($\with$L$_0$)]
-	 The derivation ends in
+	 The derivation ends as
 	 \begin{center}
 	  \AxiomC{$\hypert\hmid\G,\tj{x}{\phi}\tr\tj{t}{\theta}$}
 	  \UnaryInfC{$\hypert\hmid\G,\tj{z}{\phi\with\psi}\tr\tj{
 	  \letin z {\lpair{x,\_}} t
 	  }{\theta}$}
-	  \DisplayProof
+	  \DisplayProof\enspace.
 	 \end{center}
 	 Take any $\vec g\in\semo{\G}$, $s\in\semo{\phi\with\psi}$
 	 and $O\in\semo{\hypert}$
@@ -812,7 +832,7 @@ $u\in\semo{\G\tr\tj t\phi}$.
 	  \AxiomC{$\G\tr\tj{t}{\phi}$}
 	  \AxiomC{$\G\tr\tj{u}{\psi}$}
 	  \BinaryInfC{$\G\tr\tj{\lpair{t,u}}{\phi\with\psi}$}
-	  \DisplayProof
+	  \DisplayProof\enspace.
 	 \end{center}
 	 By induction hypothesis,
 	 $t[\vec g/\G]\eval v$ and
@@ -844,6 +864,7 @@ $u\in\semo{\G\tr\tj t\phi}$.
    \end{corollary}
     \begin{proof}
      Assume $\tr\tj{t}{X}$ is derivable.
+     Take $\semo{X}_0$ to be empty.
      Then, by \thref{thm:generalconvergence},
      $t\eval t'$ is derivable for some $t'$ in $\semo{X}$.
      However, $\semo{X}$ was taken empty.
@@ -851,7 +872,14 @@ $u\in\semo{\G\tr\tj t\phi}$.
 
     \subsection{Lack of Determinacy}
 
-    \fix{write something}
+    Determinacy states that if $t\eval v$ and $t\eval w$ hold,
+    then $v$ and $w$ are identical.
+    The Amida calculus lacks determinacy.
+    To demonstrate that, we need a term~$t$ with $t\eval v$ where $t$
+    and $v$ are different. For example, take $t = (\lambda x. x)\ast$
+    and $v = \ast$.
+    Then, both $\lambda y.t\eval \lambda y.t$ and $\lambda y.t\eval
+    \lambda y.v$ are derivable.
 
     \section{Sessions and Processes}
     \label{sec:session-process}
@@ -924,7 +952,8 @@ $u\in\semo{\G\tr\tj t\phi}$.
 
     \subsection{Processes as Abbreviations}
 
-    We define the sending and receiving as abbreviations:
+    We define the sending and receiving constructs of process calculi as
+    abbreviations:
     \begin{align*}
      \sendterm x u t &\equiv t[(xu) /x] &\text{send $u$ through channel
      $x$ and then use $x$ in $t$} \\
@@ -940,7 +969,14 @@ $u\in\semo{\G\tr\tj t\phi}$.
     We are going to introduce the name restriction $\nu x.t$ after
     implementing channels.
 
+    Below, we are going to justify these abbreviations statically and
+    dynamically.
+    The static justification comes from typing rules
+    (\ref{processtyping}) and the dynamic justification comes from
+    evaluation (\ref{processeval}).
+
     \subsection{Process Typing Rules as Abbreviations}
+    \label{processtyping}
     The session type abbreviation and the processes abbreviation allow
     us to use he typing rules in the next proposition.
      \begin{proposition}
@@ -971,7 +1007,7 @@ $u\in\semo{\G\tr\tj t\phi}$.
 	\DisplayProof
        \end{center}
      \end{proposition}
-     Before entering the proof, we note that the types of $x$ change in
+     Before entering the proof, we note that the types of variable $x$ change in
      the rules.  This reflects the intuition of session types: the
      session type of a channel changes after some communication occurs
      through the channel.
@@ -979,7 +1015,9 @@ $u\in\semo{\G\tr\tj t\phi}$.
        Without abbreviations, the first rule is actually one of the
        original rules:
 	\begin{center}
-	 \AxiomC{$\hypert\hmid\tj{y}{\psi}, \tj{x}{\chi}\tr\tj{t}{\phi}$}
+	 \AxiomC{$\hypert\hmid\tj{y}{\psi},
+	 \tj{x}{\chi}\tr\tj{t}{\phi}$}
+	 \LL{$\otimes$L}
 	 \UnaryInfC{$\hypert\hmid\tj{x}{\psi\otimes\chi}\tr\tj{\letin x
 	 {y\otimes x} t}{\phi}$}
 	 \DisplayProof\enspace.
@@ -987,21 +1025,25 @@ $u\in\semo{\G\tr\tj t\phi}$.
        Without abbreviations, the second rule is also one of the
        original rules:
 	\begin{center}
-	 \AxiomC{$\hypert\hmid \G,\tj{x}{\chi}\tr\tj{t}{\phi}\hmid \D\tr\tj{u}\psi$}
+	 \AxiomC{$\hypert\hmid \G,\tj{x}{\chi}\tr\tj{t}{\phi}\hmid
+	 \D\tr\tj{u}\psi$}
+	 \LL{$\limp$L}
 	 \UnaryInfC{$\hypert\hmid \G,\D,\tj{x}{
       \psi\limp\chi}\tr\tj{t[(xu)/x]}{\phi}$}
 	 \DisplayProof\enspace.
 	\end{center}
-       The third and the fourth rule are more evidently one of the original rules.
+       The third and the fourth rule are more evidently one of the
+       original rules
+       $\one$L and $\one$R.
       \end{proof}
 
     \begin{example}[Typed communicating terms]
      \label{ex:typed-processes}
      Using \thref{typing_process}, we can type processes.
-     Here is one process, which sends a channel $y$ through $x$ and then
+     Figure~\ref{fig:typed-process} contains one process, which sends a channel $y$ through $x$ and then
      wait for input in a channel~$y'$.
-      \begin{center}
-       \small
+      \begin{sidewaysfigure}
+       \centering
        \AxiomC{}
        \LL{Ax}
        \UnaryInfC{$\tj{z}{\two} \tr\tj z \two$}
@@ -1023,20 +1065,29 @@ $u\in\semo{\G\tr\tj t\phi}$.
        \terminate}\tr\tj
        {\sendterm x y{\recvterm {y'}z{\ign {x,y} z}}}\two$}
        \DisplayProof
-      \end{center}
+       \caption{A typed process.}
+       \ref{fig:typed-process}
+      \end{sidewaysfigure}
      Here is another process that takes an input~$w'$ from channel~$x'$, where
      the input $w'$ itself is expected to be a channel.
      After receiving $w'$, the process puts $\inl{\ast}$ in $w'$.
       \begin{center}
        \AxiomC{}
+       \LL{$\one$R}
        \UnaryInfC{$\tr\tj\ast\one$}
+       \LL{end}
        \UnaryInfC{$\tj{w'}\terminate\tr\tj{\ign{w'}\ast}\one$}
        \AxiomC{}
+       \LL{$\one$R}
        \UnaryInfC{$\tr\tj\ast\one$}
+       \LL{$\oplus$R}
        \UnaryInfC{$\tr\tj{\inl{\ast}}{\two}$}
+       \LL{send}
        \BinaryInfC{$\tj{w'}{\sendtype{(\two)}\terminate}\tr\tj{\sendterm{w'}{\inl\ast}{\ign
        {w'}\ast}}{\one}$}
+       \LL{end}
        \UnaryInfC{$\tj{w'}{\sendtype{(\two)}\terminate},\tj{x'}\terminate\tr\tj{\ign{x'}{\sendterm{w'}{\inl\ast}{\ign{w'}\ast}}}{\one}$}
+       \LL{recv}
        \UnaryInfC{$\tj{x'}{\recvtype{(\sendtype{(\two)}\terminate)}\terminate}\tr\tj{
        \recvterm{x'}{w'}{\ign{x'}{\sendterm{w'}{\inl\ast}{\ign{w'}\ast}}}}\one$}
        \DisplayProof
@@ -1058,7 +1109,7 @@ $u\in\semo{\G\tr\tj t\phi}$.
     $\phi\limp \one$.
     We can generalize this phenomenon to the more complicated session
     types.
-     \begin{theorem}[Session Realizers]
+     \begin{theorem}[Session realizers]
       For any linear type~$\phi^\ell$\kern -2pt, the hypersequent
       $\tr\tj{t}{\phi^\ell}\hmid \tr\tj{u}{\overline{\phi^\ell}}$
       is derivable for some terms $t$ and $u$.
@@ -1066,8 +1117,9 @@ $u\in\semo{\G\tr\tj t\phi}$.
       \begin{proof}
        Induction on $S$.
        \begin{description}
-	\item[(end)] \AxiomC{} \UnaryInfC{$\tr\tj\ast\one$}
-	     \AxiomC{} \UnaryInfC{$\tr\tj\ast\one$}
+	\item[(end)] \AxiomC{} \LL{Ax }\UnaryInfC{$\tr\tj\ast\one$}
+	     \AxiomC{} \LL{Ax} \UnaryInfC{$\tr\tj\ast\one$}
+	     \LL{merge}
 	     \BinaryInfC{$\tr\tj\ast\one\hmid\tr\tj\ast\one$}
 	     \DisplayProof is what we seek.
 	\item[($\sendtype{\psi}{\phi^\ell}$)]
@@ -1077,12 +1129,21 @@ $u\in\semo{\G\tr\tj t\phi}$.
 	     derivation:
 	      \begin{center}
 	      \AxiomC{}
+	       \LL{Ax}
 	       \UnaryInfC{$\tj{x}{\psi}\tr\tj{x}{\psi}$}
-	       \AxiomC{$\tr\tj{t'}{\phi^\ell}\hmid \tr
+	       \AxiomC{}
+	       \noLine
+	       \LL{IH}
+	       \UnaryInfC{$\tr\tj{t'}{\phi^\ell}\hmid \tr
 	       \tj{u'}{\overline{\phi^\ell}}$}
-	       \BinaryInfC{$\tj{x}{\psi}\tr\tj{x}{\psi}\hmid
+	       \LL{merge}
+	       \BinaryInfC{$\tj{x}{\psi}\tr\tj{x}{\psi}\hmid \tr\tj{t'}{\phi^\ell}\hmid \tr
+	       \tj{u'}{\overline{\phi^\ell}}$}
+	       \LL{$\otimes$R}
+	       \UnaryInfC{$\tj{x}{\psi}\tr\tj{x}{\psi}\hmid
 	       \tr\tj{t'}{\phi^\ell}\hmid \tr
 	       \tj{u'}{\overline{\phi^\ell}}$}
+	       \LL{$\limp$R}
 	       \UnaryInfC{$\tj{x}{\psi}\tr\tj{cx}{\phi^\ell}\hmid
 	       \tr\tj{(\co ct')\otimes u'}{\psi\otimes \overline{\phi^\ell}}$}
 	       \UnaryInfC{$\tr\tj{\lambda x.cx}{\psi\limp\phi^\ell}\hmid
@@ -1105,18 +1166,18 @@ $u\in\semo{\G\tr\tj t\phi}$.
 	     \]
 	     Combining $|I|$ such derivations, we can derive
 	     \[
-	     \tr\tj{\tuple{t_i}_{i\in I}^n}{\with_{i\in I}{\phi_i}}
+	     \tr\tj{\tuple{t_i}_{i\in I}}{\with_{i\in I}{\phi_i}}
 	     \hmid
 	     \tuple{\tr\tj{i(u_i)}{\oplus_{j\in
-	     I}{\overline{\phi_j}}}}_{i\in I}^n
+	     I}{\overline{\phi_j}}}}_{i\in I}
 	     \]
 	     for a fresh natural number~$n$.
-	     \fix{define and explain about this form of hypersequents}
 	\item[($\with\{l_i\colon \phi_i\}$)]
 	     Symmetric to above.
        \end{description}
       \end{proof}
-      We call the pair $t,u$ the session realizers of $\phi^\ell$ and
+      We call the above pair $t,u$ in the statement the \textit{session
+      realizers}\index{session realizer} of $\phi^\ell$ and
       denote them by $\leftside{\phi^\ell}, \rightside{\phi^\ell}$.
       Moreover, we use $\bothside{\phi^\ell}$ to denote the pair
       $\leftside{\phi^\ell}\otimes\rightside{\phi^\ell}$.
@@ -1125,12 +1186,12 @@ $u\in\semo{\G\tr\tj t\phi}$.
       we can replace those free variables by session realizers.
        \begin{corollary}[Binding both ends of a channel]
 	If
-	$\hypert_0\hmid \G,\tj{x}{\phi^\ell}\tr\tj{t}{\psi}$ and
-	$\hypert_1\hmid \D,\tj{y}{\overline{\phi^\ell}}\tr\tj{u}{\theta}$
+	$\hypert\hmid \G,\tj{x}{\phi^\ell}\tr\tj{t}{\psi}\hmid
+	\D,\tj{y}{\overline{\phi^\ell}}\tr\tj{u}{\theta}$
 	are derivable,
 	\[
-	\hypert_0\hmid \G\tr\tj{t[\leftside{\phi^\ell}/ x]}{\psi}
-	\hmid \hypert_1\hmid \D\tr\tj{u[\rightside{\phi^\ell}/ y]}{\theta}
+	\hypert\hmid \G\tr\tj{t[\leftside{\phi^\ell}/ x]}{\psi}
+	\hmid \D\tr\tj{u[\rightside{\phi^\ell}/ y]}{\theta}
 	\]
 	is also derivable.
        \end{corollary}
@@ -1179,17 +1240,20 @@ $u\in\semo{\G\tr\tj t\phi}$.
 	\end{example}
 
 
-      \subsubsection{Evaluation of Processes}
+      \subsubsection{Process Evaluation as Abbreviations}
+      \label{processeval}
 
       The intention of defining $\sendterm x u {t_0}$ and $\recvterm y z {t_1}$
       is mimicking communication in process calculi.
       When we substitute $x$ and $y$ with session type realizers,
       these terms actually make communication.
 
-      A rule\\
-      \AxiomC{$\hypere$}
-      \UnaryInfC{$\hypere'$}
-      \DisplayProof\\
+      A rule
+       \begin{center}
+	\AxiomC{$\hypere$}
+	\UnaryInfC{$\hypere'$}
+	\DisplayProof
+       \end{center}
       is \textit{admissible}\index{admissible}
       iff $\hypere'$ is derivable whenever $\hypere$ is.
 
@@ -1227,8 +1291,7 @@ $u\in\semo{\G\tr\tj t\phi}$.
     \UnaryInfC{$\lambda x.cx\eval \lambda x.cx$}
     \AxiomC{}
     \UnaryInfC{$\lambda x.cx\eval \lambda x.cx$}
-    \AxiomC{}
-    \UnaryInfC{$\hypere\hmid \leftside{\phi^\ell}\eval v'\hmid
+    \AxiomC{$\hypere\hmid \leftside{\phi^\ell}\eval v'\hmid
     \rightside{\phi^\ell}\eval w'\hmid t_0[v'/x]\eval v\hmid u\eval
     u'\hmid
     t_1[u'/z][w'/y]\eval w$}
@@ -1343,13 +1406,13 @@ $u\in\semo{\G\tr\tj t\phi}$.
   \end{example}
 
   \subsection{Copycatting}
-  \begin{theorem}
+  \begin{proposition}
    For any linear type~$\phi^\ell$,
    we can derive
    $\tj{x}{\phi^\ell},\tj{y}{\overline{\phi^\ell}}\tr
    \tj{t}{\one}$
    for some term~$t$.
-  \end{theorem}
+  \end{proposition}
   \begin{proof}
    By induction on $\phi^\ell$.
    \begin{description}
@@ -1380,109 +1443,129 @@ $u\in\semo{\G\tr\tj t\phi}$.
     \item[($\recvtype\psi{\phi^\ell}$)]
 	 Symmetric to above.
     \item[($\oplus\{l_i\colon\phi^\ell_i\}$)]
-	 \fix{fill}
+	 For brevity, we treat
+	 $\otimes\{\mathrm{Left}:\phi_-^\ell,\mathrm{Right}:\phi_1^\ell\}$.
+	 By induction hypotheses,
+	 $\tj{x_0}{\phi_0^\ell},
+	 \tj{y_0}{\overline{\phi_0^\ell}}\tr\tj{t_0}{\one}$ and
+	 $\tj{x_1}{\phi_1^\ell},
+	 \tj{y_1}{\overline{\phi_1^\ell}}\tr\tj{t_1}{\one}$ are
+	 derivable.  Thus,
+	 \[
+	 \tj{x_0}{\phi_0^\ell},\tj{y}{\overline{\phi_0^\ell\oplus\phi_1^\ell}}\tr\tj{\letin
+	 y{\lpair{y_0,\_}}{t_0}}{\one}
+	 \]
+	 and
+	 \[
+	  \tj{x_1}{\phi_1^\ell},\tj{y}{\overline{\phi_0^\ell\oplus\phi_1^\ell}}\tr
+	 \tj{\letin y {\lpair{\_,y_1}} {t_1} }{\one}
+	 \]
+	 are derivable.  Using these, we can conclude a derivation of
+	 \begin{align*}
+	  \tj{x}{\phi_0^\ell\oplus\phi_1^\ell},
+	 \tj{y}{\overline{\phi_0^\ell\oplus\phi_1^\ell}}
+	 \tr\\
+	  \tj{\mat x {x_0}{\letin
+	 y{\lpair{y_0,\_}}{t_0}} {x_1} {\letin y {\lpair{\_,y_1}} {t_1}}}{\one}
+	 \end{align*}
     \item[($\with\{l_i\colon\phi^\ell_i\}$)]
 	 Symmetric to above.
    \end{description}
   \end{proof}
- \begin{example}
-  \fix{add label}
-  Figure~\ref{fig:eval}
- \end{example}
 
-  \begin{sidewaysfigure}
-   \centering
-   \AxiomC{}
-   \UnaryInfC{$\leftside\terminate\eval \ast\hmid
-   \rightside\terminate\eval\ast$}
-   \AxiomC{}
-   \UnaryInfC{$\ast\eval\ast$}
-   \UnaryInfC{$\inl\ast\eval\inl\ast$}
-   \AxiomC{}
-   \UnaryInfC{$\ast\eval\ast$}
-   \BinaryInfC{$\inl\ast\eval\inl\ast\hmid\ast\eval\ast$}
-   \BinaryInfC{$
-   \leftside\terminate\eval \ast\hmid
-   \rightside\terminate\eval\ast
-   \hmid
-   \inl\ast\eval\inl\ast\hmid\ast\eval\ast
-   $}
-   \UnaryInfC{$
-   \leftside{\sendtype{(\two)}\terminate}\eval \lambda x. cx\hmid
-   \rightside{\sendtype{(\two)}\terminate}\eval \inl\ast\otimes \ast \hmid
-   (\sendterm{y'}{\inl\ast}\ast)[\lambda x.cx/y']\eval\ast\hmid
-   (\recvterm y z z)[\inl\ast\otimes\ast / y]\eval\inl\ast
-   $}
-   \AxiomC{}
-   \UnaryInfC{$\leftside\terminate\eval\ast\hmid
-   \rightside\terminate\eval \ast$}
-   \BinaryInfC{$
-   \leftside{\sendtype{(\two)}\terminate}\eval \lambda x. cx\hmid
-   \rightside{\sendtype{(\two)}\terminate}\eval \inl\ast\otimes \ast \hmid
-   (\sendterm{y'}{\inl\ast}\ast)[\lambda x.cx/y']\eval\ast\hmid
-   (\recvterm y z z)[\inl\ast\otimes\ast / y]\eval\inl\ast
-   \hmid
-   \leftside\terminate\eval\ast\hmid
-   \rightside\terminate\eval \ast
-   $}
-   \UnaryInfC{\small $
-   \leftside{\sendtype{(\two)}\terminate}\eval \lambda x. cx\hmid
-   \rightside{\sendtype{(\two)}\terminate}\eval \inl\ast\otimes \ast \hmid
-   \leftside{\terminate}\eval\ast\hmid
-   \rightside{\terminate}\eval\ast\hmid
-   (\sendterm{y'}{\inl\ast}\ast)[\lambda x.cx/y']\eval\ast\hmid
-   (\recvterm y z z)[\inl\ast\otimes\ast / y]\eval\inl\ast
-   \hmid
-   \leftside\terminate\eval\ast\hmid
-   \rightside\terminate\eval \ast
-   $}
-   \UnaryInfC{$
-   \rightside{\sendtype{(\two)}\terminate}\eval \inl\ast\otimes \ast \hmid
-   \leftside{\recvtype{(\sendtype{(\two)}\terminate)}\terminate}\eval \lambda
-   x.dx\hmid
-   \rightside{\recvtype{(\sendtype{(\two)}\terminate)}\terminate}\eval\lambda
-   x.cx\otimes \ast\hmid
-   $}
-   \noLine
-   \UnaryInfC{$
-   (\recvterm{x'}z{\sendterm{z}{\inl\ast}\ast})[\lambda x.cx\otimes \ast/y']\eval\ast\hmid
-   (\sendterm{x}{\leftside{\sendtype{(\two)}\terminate}}{\recvterm y z
-   z})[\lambda x.dx / x][\inl\ast\otimes\ast / y]\eval\inl\ast
-   $}
-   \doubleLine
-   \UnaryInfC{$
-   (\recvterm{x'}{z}{\sendterm z{\inl\ast}{\ast}})
-   [\rightside{\recvtype{(\sendtype{(\two)}{\terminate})}{\terminate}}/x']
-   \eval \ast
-   \hmid
-   (\sendterm{x}{\leftside{\sendtype{(\two)}\terminate}}{\recvterm y z z})
-   [\leftside{\recvtype{(\sendtype{(\two)}\terminate)}\terminate}/x]
-   [\rightside{\sendtype{(\two)}\terminate}/y]
-   \eval \inl\ast
-   $}
-   \UnaryInfC{$
-   (\recvterm{x'}{z}{\sendterm z{\inl\ast}{\ast}})
-   [\rightside{\recvtype{(\sendtype{(\two)}{\terminate})}{\terminate}}/x']
-   \otimes
-   (\sendterm{x}{\leftside{\sendtype{(\two)}\terminate}}{\recvterm y z z})
-   [\leftside{\recvtype{(\sendtype{(\two)}\terminate)}\terminate}/x]
-   [\rightside{\sendtype{(\two)}\terminate}/y]
-   \eval \ast\otimes \inl\ast
-   $}
-   \UnaryInfC{$
-   \letin{\bothside{\recvtype{(\sendtype{(\two)}{\terminate})}{\terminate}}}{x'\otimes
-   x}{
-   \letin{\bothside{\sendtype{(\two)}\terminate}}{y'\otimes y}{
-   (\recvterm{x'}{z}{\sendterm z{\inl\ast}{\ast}})
-   \otimes
-   (\sendterm{x}{y'}{\recvterm y z z})
-   }
-   }
-   \eval \ast\otimes \inl\ast
-   $}
-   \DisplayProof
-   \caption{An example of evaluation relation.}
-  \end{sidewaysfigure}
+  % \begin{sidewaysfigure}
+  %  \centering
+  %  \AxiomC{}
+  %  \UnaryInfC{$\leftside\terminate\eval \ast\hmid
+  %  \rightside\terminate\eval\ast$}
+  %  \AxiomC{}
+  %  \UnaryInfC{$\ast\eval\ast$}
+  %  \UnaryInfC{$\inl\ast\eval\inl\ast$}
+  %  \AxiomC{}
+  %  \UnaryInfC{$\ast\eval\ast$}
+  %  \BinaryInfC{$\inl\ast\eval\inl\ast\hmid\ast\eval\ast$}
+  %  \BinaryInfC{$
+  %  \leftside\terminate\eval \ast\hmid
+  %  \rightside\terminate\eval\ast
+  %  \hmid
+  %  \inl\ast\eval\inl\ast\hmid\ast\eval\ast
+  %  $}
+  %  \UnaryInfC{$
+  %  \leftside{\sendtype{(\two)}\terminate}\eval \lambda x. cx\hmid
+  %  \rightside{\sendtype{(\two)}\terminate}\eval \inl\ast\otimes \ast \hmid
+  %  (\sendterm{y'}{\inl\ast}\ast)[\lambda x.cx/y']\eval\ast\hmid
+  %  (\recvterm y z z)[\inl\ast\otimes\ast / y]\eval\inl\ast
+  %  $}
+  %  \AxiomC{}
+  %  \UnaryInfC{$\leftside\terminate\eval\ast\hmid
+  %  \rightside\terminate\eval \ast$}
+  %  \BinaryInfC{$
+  %  \leftside{\sendtype{(\two)}\terminate}\eval \lambda x. cx\hmid
+  %  \rightside{\sendtype{(\two)}\terminate}\eval \inl\ast\otimes \ast \hmid
+  %  (\sendterm{y'}{\inl\ast}\ast)[\lambda x.cx/y']\eval\ast\hmid
+  %  (\recvterm y z z)[\inl\ast\otimes\ast / y]\eval\inl\ast
+  %  \hmid
+  %  \leftside\terminate\eval\ast\hmid
+  %  \rightside\terminate\eval \ast
+  %  $}
+  %  \UnaryInfC{\small $
+  %  \leftside{\sendtype{(\two)}\terminate}\eval \lambda x. cx\hmid
+  %  \rightside{\sendtype{(\two)}\terminate}\eval \inl\ast\otimes \ast \hmid
+  %  \leftside{\terminate}\eval\ast\hmid
+  %  \rightside{\terminate}\eval\ast\hmid
+  %  (\sendterm{y'}{\inl\ast}\ast)[\lambda x.cx/y']\eval\ast\hmid
+  %  (\recvterm y z z)[\inl\ast\otimes\ast / y]\eval\inl\ast
+  %  \hmid
+  %  \leftside\terminate\eval\ast\hmid
+  %  \rightside\terminate\eval \ast
+  %  $}
+  %  \UnaryInfC{$
+  %  \rightside{\sendtype{(\two)}\terminate}\eval \inl\ast\otimes \ast \hmid
+  %  \leftside{\recvtype{(\sendtype{(\two)}\terminate)}\terminate}\eval \lambda
+  %  x.dx\hmid
+  %  \rightside{\recvtype{(\sendtype{(\two)}\terminate)}\terminate}\eval\lambda
+  %  x.cx\otimes \ast\hmid
+  %  $}
+  %  \noLine
+  %  \UnaryInfC{$
+  %  (\recvterm{x'}z{\sendterm{z}{\inl\ast}\ast})[\lambda x.cx\otimes \ast/y']\eval\ast\hmid
+  %  (\sendterm{x}{\leftside{\sendtype{(\two)}\terminate}}{\recvterm y z
+  %  z})[\lambda x.dx / x][\inl\ast\otimes\ast / y]\eval\inl\ast
+  %  $}
+  %  \doubleLine
+  %  \UnaryInfC{$
+  %  (\recvterm{x'}{z}{\sendterm z{\inl\ast}{\ast}})
+  %  [\rightside{\recvtype{(\sendtype{(\two)}{\terminate})}{\terminate}}/x']
+  %  \eval \ast
+  %  \hmid
+  %  (\sendterm{x}{\leftside{\sendtype{(\two)}\terminate}}{\recvterm y z z})
+  %  [\leftside{\recvtype{(\sendtype{(\two)}\terminate)}\terminate}/x]
+  %  [\rightside{\sendtype{(\two)}\terminate}/y]
+  %  \eval \inl\ast
+  %  $}
+  %  \UnaryInfC{$
+  %  (\recvterm{x'}{z}{\sendterm z{\inl\ast}{\ast}})
+  %  [\rightside{\recvtype{(\sendtype{(\two)}{\terminate})}{\terminate}}/x']
+  %  \otimes
+  %  (\sendterm{x}{\leftside{\sendtype{(\two)}\terminate}}{\recvterm y z z})
+  %  [\leftside{\recvtype{(\sendtype{(\two)}\terminate)}\terminate}/x]
+  %  [\rightside{\sendtype{(\two)}\terminate}/y]
+  %  \eval \ast\otimes \inl\ast
+  %  $}
+  %  \UnaryInfC{$
+  %  \letin{\bothside{\recvtype{(\sendtype{(\two)}{\terminate})}{\terminate}}}{x'\otimes
+  %  x}{
+  %  \letin{\bothside{\sendtype{(\two)}\terminate}}{y'\otimes y}{
+  %  (\recvterm{x'}{z}{\sendterm z{\inl\ast}{\ast}})
+  %  \otimes
+  %  (\sendterm{x}{y'}{\recvterm y z z})
+  %  }
+  %  }
+  %  \eval \ast\otimes \inl\ast
+  %  $}
+  %  \DisplayProof
+  %  \caption{An example of evaluation relation.}
+  % \end{sidewaysfigure}
 
 % \section{Toward Determinacy}
 
@@ -1504,11 +1587,10 @@ $u\in\semo{\G\tr\tj t\phi}$.
 %    \fix{complete}
 %   \end{proof}
 
-\subsection{Dummy Deadlocks and Real Deadlocks}
+\subsection{Dummy Deadlocks}
 
 Using \thref{typing_process} and \thref{typing_connection},
 we can build the following type derivation.
-\fix{use the translation and use the correct something}
  \begin{center}
   \AxiomC{}
   \UnaryInfC{$\tr\tj 0\one$}
@@ -1532,10 +1614,11 @@ we can build the following type derivation.
   }
   \DisplayProof
  \end{center}
-However, the typed process
-\[
+ Thus by \thref{convergence}, the typed process has an evaluation.
+ However, the typed process
+ \[
  \nu x.x(y).\recvterm x y 0
-\]
+ \]
  is deadlocked in the traditional semantics of
 process calculi because the process waits for a value from $x$ before
 sending a value to $x$.
@@ -1550,24 +1633,24 @@ Similarly, for the process above, we never know what value is passed
 along channel~$x$, but we can still evaluate the while process.
 We call this situation \textit{dummy deadlocks}\index{deadlock!dummy}.
 
-On the other hand,
-the same trick cannot be used for the following process.
-\fix{add example}
-This is an example of real deadlocks.
-Indeed, this process is not typable.
-
 \section{Proof Nets}
 \label{sec:proofnets}
 
+In order to find a remedy for the lack of determinacy,
+we have to study the structure of proofs.
+For that, a technique called proof nets is promising.
+Generally, proof nets are straightforward for the multiplicative
+fragments but complicated for additive and exponential fragments.
 Since the Amida axiom $(\phi\limp\psi)\otimes(\psi\limp\phi)$
 does not contain additives ($\with,\oplus$) or exponential ($!$),
-we can focus on the multiplicative connectives.
+we can focus on the multiplicative connectives ($\limp$ and $\otimes$).
 The fragment is called IMLL (intuitionistic multiplicative fragment of
-linear logic).  We also use the unit $\one$ for technical reasons.
+linear logic~\fix{cite}).  We also use the unit $\one$ for technical reasons.
 We first describe the IMLL proof nets and their properties.
 Then we add Amida links and see it characterizes the Amida logic.
 
-The Amida links are named after the Amida lottery,
+The Amida links are named after the Amida lottery (see
+Subsubsection~\ref{amidalot}).
 
 \subsection{IMLL Essential Nets}
 
@@ -1579,12 +1662,11 @@ multiplicative linear}\index{intuitionistic multiplicative linear logic|see{logi
 intuitionistic multiplicative linear}}). The exposition here is strongly
 influenced by \citet{murawski2003}.
 
-We can translate a pair $\phi, p$ of
+We can translate
 a polarity $p\in\{+,-\}$ and an IMLL formula~$\phi$ into
 a \textit{polarized MLL formula}\index{formula!polarized
-MLL}\index{polarized MLL formula|see{formula}}
-as follows
-(from \fix{cite Ong and Lamarche}).
+MLL}\index{polarized MLL formula|see{formula}} $\imtrans{\phi}^p$
+following \citet{lamarche2008,murawski2003}.
 We omit the definition of polarized MLL formulae because all grammar is
 exposed in the translation below.
 \begin{align*}
@@ -1610,8 +1692,7 @@ For example, the Amida axiom can be translated into a polarized MLL formula.
 
 Any polarized MLL formula can be translated further into
 a finite rooted tree with these branches and polarized atomic formulae
-($X^-, X^+, \one^+,\bot^-$) at the leaves. \fix{rules for atomic units
-are they OK?}
+($X^-, X^+, \one^+,\bot^-$) at the leaves.
  \begin{center}
   \includegraphics[scale=0.4]{rules-original.eps}
  \end{center}
@@ -1644,15 +1725,18 @@ formulae so that the essential net is uniquely determined.}.
  \begin{example}[An essential net of the Amida axiom] \label{essential-amida}
   Here is one of the essential nets of
   the Amida axiom $(X^-\parr^+Y^+)\otimes^+(Y^-\parr^+ Y^+)$.
-  \fix{add}
+   \begin{center}
+    \includegraphics[scale=0.4]{amida-essential.eps}
+   \end{center}
  \end{example}
-
+ However, the essential net in \thref{essential-amida} is rejected by
+ the following correctness criterion.
   \begin{definition}[Correct essential nets]
 \begin{enumerate}
  \item Any leaf labelled with $X^+$ (resp. $Y^-$) is connected to a
        unique leaf labelled with $X^-$ (resp. $Y^+$).
-       Any leaf labelled with $\bot^-$ is connected to an up-edge
-       ($\one^+$ does not have to be connected to anything.)
+       Any leaf labelled with $\bot^-$ is connected to a $\bot$-branch
+       ($\one^+$ does not have to be connected to anything).
  \item The directed graph formed by up-edge, down-edge, axiom edges and
        $\bot$-branches is acyclic.
  \item \label{conditionL}
@@ -1664,9 +1748,10 @@ The essential net in Example~\ref{essential-amida} is not correct for
 condition~\ref{conditionL}.  Actually, Amida axiom does not have
 any correct essential net.
 
- \begin{theorem}[Soundness and completeness of the esseential nets for
+ \begin{theorem}[Esseential nets for
   IMLL by~\citet{lamarche2008,murawski2003}]
-  An IMLL formula~$\phi$ is provable iff there exists a correct essential net
+  \label{essential-ok}
+  An IMLL formula~$\phi$ is provable in IMLL iff there exists a correct essential net
   of $\phi$.
  \end{theorem}
  \begin{proof}
@@ -1678,7 +1763,8 @@ any correct essential net.
 
  Actually, Lamarche also considers the cut rule\footnote{As well as
  additive operators and exponentials.} in essential nets, thus
- we can use the following generalized axioms (as macros) and cuts:
+ we can include the following general axioms (as macros) and cuts (as
+ primitives) and still use \thref{essential-ok}:
  \begin{center}
   \includegraphics[scale=0.4]{general-axiom-cut.eps}\enspace.
  \end{center}
@@ -1686,12 +1772,13 @@ any correct essential net.
 \subsection{Amida Nets}
 
  \begin{definition}[Amida nets]
+  \label{def:amidanets}
 For a hypersequent~$\hyper$,
 \textit{Amida nets}\index{Amida nets} of $\hyper$ are inductively
   defined as
 \begin{itemize}
  \item an essential net of $\hyper$ is an Amida net of $\hyper$
- \item for an Amida net of $\hyper$ with two different $+$~edges,
+ \item for an Amida net of $\hyper$ with two different up-edges,
 	\begin{center}
 	 % twoedges
 	 \includegraphics[scale=0.4]{twoedges.eps}
@@ -1703,11 +1790,11 @@ For a hypersequent~$\hyper$,
        yields an Amida net of $\hyper$,
        where the above component has two paths $e_{0d} e_a e_{1u}$
        and $e_{1d} e_a e_{0u}$.
- \item for an Amida net of $\hyper$ with a $+$~edge,
+ \item for an Amida net of $\hyper$ with a up-edge,
 	\begin{center}
 	 \includegraphics[scale=0.4]{oneedge.eps}
 	\end{center}
-       replacing these with
+       replacing this with
 	\begin{center}
 	 \includegraphics[scale=0.4]{oneedge_amida.eps}
 	\end{center}
@@ -1718,9 +1805,11 @@ For a hypersequent~$\hyper$,
 \end{itemize}
  \end{definition}
 
-  \begin{definition}[Correct Amida nets]
-   \fix{define correct Amida nets}
-  \end{definition}
+ \begin{definition}[Correct Amida nets]
+  A correct Amida net is an Amida net satisfying the three conditions
+  of Definition~\ref{def:amidanets} where ``connected'' should be read
+  ``connected by a path.''
+ \end{definition}
 
  The Amida edge is not merely a crossing of vertical edges.
  See the difference between
@@ -1749,20 +1838,24 @@ This difference causes Amida nets to validate Amida axiom.
 
 \subsection{Soundness and Completeness of Amida nets}
 
-\fix{define some words below}
-
- \begin{proposition}[Completeness]
+ \begin{theorem}[Completeness of Amida nets]
   If a hypersequent $\hyper$ is derivable,
   there is a correct Amida net for $\hyper$.
- \end{proposition}
- \begin{proposition}
+ \end{theorem}
+ \begin{proof}
+  Inductively on hypersequent derivations.
+  The Sync rule is translated into
+   \begin{center}
+    \fix{fill}
+   \end{center}
+ \end{proof}
+ \begin{theorem}[Soundness of Amida nets]
   Inductively on the derivation of $\hyper$,
   we can translate a sequent calculus proof into a correct Amida net.
- \end{proposition}
-
- Soundness is more complicated.
-Inverse, from a correct Amida net, first we move the Amida edges upwards
-until they are just below axiom edges.
+ \end{theorem}
+ \begin{proof}
+  From a correct Amida net, first we move the Amida edges upwards
+  until they are just below axiom edges.
 
 The translation moves are as follows.
  \begin{center}
@@ -1815,6 +1908,8 @@ that consists of only Sync rules.
 
 After we encode the top and the middle layer, encoding the bottom layer
 is the same as \fix{Lamarche's theorem which}
+ \end{proof}
+
 
 
 We expect that it is possible to add Amida edges to
@@ -1825,16 +1920,16 @@ the full intuitionistic logic following
 
 \section{Related Work}
 
+\subsection{Linear Logic and Session Types}
+
 One promising approach is using session types~\citep{honda-session}.
 Session types aims at typing channels and processes in $\pi$-calculus so
 that the process execution is deterministic and not ending in deadlock.
 In general session type systems are not based on well-known logic.
 
 
-\fix{mention join calculus here or in related work}
 
-
-\subsection{Pfenning}
+\subsubsection{Pfenning}
 
 \citet{pfenning2010} provide a type system for a fragment of $\pi$-calculus.
 Their type system imposes too strong a discipline
@@ -1961,8 +2056,6 @@ one, which can be typed and evaluated in our framework as well.
   clients.
  \end{example}
 
-\subsection{Linear Logic and Session Types}
-
 \subsubsection{Wadler}
 
 \citet{wadler2012propositions} gave a type system for a process
@@ -2034,6 +2127,12 @@ One of their typing rules
  This is similar to the double binder $\nu x_L x_R$ appearing in
  \citet{gay2010}.
 
+ \subsection{Join calculus}
+\fix{mention join calculus here or in related work}
+
+\subsection{Delimited Continuation}
+\fix{fill}
+
  \subsection{Logic Programming}
 
  There are at least two ways to interpret logics computationally.
@@ -2075,7 +2174,7 @@ $\sigma_{ABCD}\colon (A\limp B)\otimes (C\limp D)\rightarrow (A\limp D) \otimes
    The preorder formed by objects as integers and morphisms as the usual
    order among integers~$\le$
    forms a symmetric monoidal closed category with swaps
-   when we interpret $\otimes$ as addition,
+   when we interpret $\otimes$ as addition and
    $m \limp n$ as $n-m$.
   \end{example}
   On the other hand,

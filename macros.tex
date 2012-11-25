@@ -138,10 +138,8 @@
 \newcommand{\bbot}{
     \mathord{\reflectbox{\rotatebox[origin=c]{-90}{$\models$}}}}
 
-\newcommand{\form}{\mathop{\text{Form}}}
-
 \newcommand{\ruleT}[1]{\LeftLabel{(T)}\UnaryInfC{${#1}$}}
-\newcommand{\powerset}[1]{{\mathcal P({#1})}}
+\newcommand{\powerset}[1]{{2^{#1}}}
 \newcommand{\proj}[0]{\operatorname{proj}}
 \newcommand{\len}[0]{\operatorname{len}}
 \newcommand{\cl}[0]{\operatorname{cl}}
@@ -247,8 +245,8 @@
 
 \newcommand{\terminate}{\mathsf{end}}
 
-\newcommand{\sendtype}[2]{\mathop{!}{#1}{#2}}
-\newcommand{\recvtype}[2]{\mathop{?}{#1}{#2}}
+\newcommand{\sendtype}[2]{\mathop{!}\kern -2pt{#1}\hskip 2pt{#2}}
+\newcommand{\recvtype}[2]{\mathop{?}\kern -2pt{#1}\hskip 2pt{#2}}
 
 \newcommand{\sendterm}[3]{{#1}\langle{#2}\rangle.{#3}}
 \newcommand{\recvterm}[3]{{{#1}({#2}).{#3}}}
