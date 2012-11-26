@@ -33,7 +33,7 @@ of type \texttt{IO
 a}\footnote{The arrow \texttt{->} shows implication $\imp$ and the tuple
 () shows the unit type $\one$.}.
 The former command consumes an argument of type~\texttt{a} and
-the argument appears from the latar command.
+the argument appears from the latter command.
 However, if programmers make mistakes, these commands can
 cause a deadlock in execution time even if the program passes the type
 checking.
@@ -49,7 +49,7 @@ linear types can specify a portion of program to be used
 just once.
 
 Linear logic is used by \citet{wadler2012propositions} and
-\citet{pfenning2010} to encode sessino types, but our type system can
+\citet{pfenning2010} to encode session types, but our type system can
 type processes
 which Wadler
 and Pfenning's system cannot.
@@ -338,7 +338,7 @@ The typing rules are in Figure~\ref{fig:exchange:rules}.
  type~$\phi$ is inhabited.  In other words,
  $\phi$ is provable in Amida logic i.e. $\phi$ is a theorem of Amida
  logic.
- \begin{example}
+ \begin{example}[Derivation of Amida axiom]
 The formula $(\phi\limp\psi)\otimes(\psi\limp\phi)$ is proved by
 the following derivation.
  \begin{center}
@@ -458,6 +458,7 @@ Another example shows how we can type the term $\co c(c x)$.
 
  \begin{corollary}[Incompatibility of additive disjunctive unit with Amida
   logic]
+  \label{no-falsehood}
   If there is a formula~$\zero$ such that $\zero\tr\phi$ is derivable
   for any formula~$\phi$, then $\zero$ is provable (and as a consequence
   any formula is provable i.e. the resulting logic is inconsistent).
@@ -526,7 +527,7 @@ Another example shows how we can type the term $\co c(c x)$.
 \subsection{Evaluation}
 
 As a programming language, Amida calculus is equipped with an
-operational semantics that evaluates a closed hyperterm into a sequence
+operational semantics that evaluates a closed hyper-term into a sequence
 of canonical forms.
 The set of canonical forms remains the same as Abramsky's
 LF~\citep{abramsky1993computational}:
@@ -665,7 +666,7 @@ $\tr\tj t \phi$ is derivable,
 there exists a canonical form~$v$ so that $t\eval v$ is derivable.
 Since the proof of convergence is inductive over
 the typing derivations, we have to generalize the statement for
-hypersequents with multiple compontents.
+hypersequents with multiple components.
 
 For that we first assign a set of closed terms to each type.
 \newcommand{\terms}{\mathcal{T}}
@@ -1109,11 +1110,11 @@ $u\in\semo{\G\tr\tj t\phi}$.
     $\phi\limp \one$.
     We can generalize this phenomenon to the more complicated session
     types.
-     \begin{theorem}[Session realizers]
+     \begin{proposition}[Session realizers]
       For any linear type~$\phi^\ell$\kern -2pt, the hypersequent
       $\tr\tj{t}{\phi^\ell}\hmid \tr\tj{u}{\overline{\phi^\ell}}$
       is derivable for some terms $t$ and $u$.
-     \end{theorem}
+     \end{proposition}
       \begin{proof}
        Induction on $S$.
        \begin{description}
@@ -1696,7 +1697,7 @@ a finite rooted tree with these branches and polarized atomic formulae
  \begin{center}
   \includegraphics[scale=0.4]{rules-original.eps}
  \end{center}
-For brevity, we sometimes write only the top connectives of labelling
+For brevity, we sometimes write only the top connectives of labeling
 formulae.
 In that case, these branching nodes are denoted like this.
  \begin{center} %rules
@@ -1714,7 +1715,7 @@ When we add axiom edges, $\bot$-branches (shown below)
 and some other operator nodes (shown above)
 we obtain an
 essential net of $\phi$.
-Due to the arbitrarity of choosing axioms and $\bot-$-branches,
+Due to the arbitrariness of choosing axioms and $\bot-$-branches,
 there are more than one essential nets for a formula%
 \footnote{\citet{murawski2003} restricts the class of formulae to linearly balanced
 formulae so that the essential net is uniquely determined.}.
@@ -1880,7 +1881,7 @@ These translations have two properties.
 For checking the first condition, it is enough to follow the paths
 (crossing all Amida edges).
 For the second condition, it is enough to follow the vertical edges
-except the Amida edges.
+ignoring the Amida edges.
 
 The $\otimes$ move introduces Amida edges only above the branching rules.
 Although the $\parr$ move introduces an Amida edge below a
@@ -1907,15 +1908,12 @@ A loop-less Amida lottery is an encoding of a hypersequent derivation
 that consists of only Sync rules.
 
 After we encode the top and the middle layer, encoding the bottom layer
-is the same as \fix{Lamarche's theorem which}
+can be done in the same way as \citet{lamarche2008}'s approach.
  \end{proof}
-
-
 
 We expect that it is possible to add Amida edges to
 the full intuitionistic logic following
-\citet{groote1999}
-\fix{cite de groote / cite Lamarche}
+\citet{lamarche2008}.
 
 
 \section{Related Work}
@@ -1996,7 +1994,7 @@ one, which can be typed and evaluated in our framework as well.
   }
   \]
   We can derive a sequent $\tj{s}{\overline{SP}}\tr\tj{Serv}\one$.
-  \fix{how}
+  \fix{really?}
 
   Using this, we can also implement a server that can replicate itself
   and serve many clients.  Below, $SP$ abbreviates $ServerProto$.
@@ -2097,7 +2095,7 @@ our abbreviations are largely taken from Wadler's translations.
 
 \citet{giunti2010} gives a type system for the pi calculus, which is
 extremely similar to our type system.
-They say ``the goale of this work is to equip types with a contsructor
+They say ``the goale of this work is to equip types with a constructor
 able to denote the two ends of a same
 channel.''~\citep[Introduction]{giunti2010}
 One of their typing rules
@@ -2115,11 +2113,11 @@ One of their typing rules
   \DisplayProof\enspace.
  \end{center}
  Usually, the Curry--Howard correspondence is followed from logical world
- to the programming world: for an alraedy known logic, a new lambda
+ to the programming world: for an already known logic, a new lambda
  calculus is invented (e.g.~\fix{lambda mu kakutani kimura pfenning alex
  sympson so on}).  However, in our case, it seems that we have just
  found a logic called Amida logic that corresponds to an already known
- typing descipline invented by \citet{giunti2010}.
+ typing discipline invented by \citet{giunti2010}.
  It will be worthwhile to compare their system with our type system.
 
  \subsubsection{Double Binder}
@@ -2212,7 +2210,7 @@ calculus.  Since our operational semantics seems more liberal,
 if we limit it, we do not lose type safety.  However, if we do not
 choose a suitable class of reductions, the reduction can be
 nondeterministic.
-The reconcilation of lienarity and pi-calculus style operational
+The reconciliation of linearity and pi-calculus style operational
 semantics has already been considered by
 \citet{kobayashi-pierce-turner} so we expect their work to be a
 guidance toward finding a more traditional operational semantics.

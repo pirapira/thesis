@@ -1,6 +1,6 @@
 \chapter{Introduction}
 
-\subsection{Our Contributions}
+\section{Our Contributions}
 
 We propose hyper-lambda calculi.
 Instead of lambda terms in ordinary lambda calculi,
@@ -9,7 +9,6 @@ We give two such examples:
 one models synchronous send--receive communication (Chapter~\ref{ch:exchange}) and
 the other models asynchronous waitfree
 read--write communication (Chapter~\ref{ch:lambda}).
-We also give an example of hyper-lambda calculi style programming in Haskell.
 The two hyper-lambda calculi are in Curry--Howard correspondence with
 hypersequent formulation of logics: Amida logic and G\"odel--Dummett
 logic.
@@ -27,7 +26,7 @@ results contain new phenomena.
 This thesis is intended to contain such concrete discoveries
 about specific intermediate and substructural logics.
 
-The famous logic among th two,
+The more famous logic among the two,
 G\"odel--Dummett logic, is
 a typical intermediate logic logic known from 1950's.
 Our method is the Curry--Howard correspondence, also known from 1940's.
@@ -36,16 +35,23 @@ of distributed computation extensively studied in 1990's.
 Since both sides of the correspondence is already known,
 the discovery is a replay of Curry's surprise.
 
-Of course, there have been many instances of Curry--Howard correspondence.
+The less known logic, Amida logic, is our original.
+After developing the hyper-lambda calculus for Amida logic,
+we found that the resulting programming language is similar to one of
+session type systems by \citet{giunti2010} although they were not aware
+of the underlying logic.  The temporal order of discoveries is unusual
+because usually logic is found first and then programming languages are
+developed using Curry--Howard correspondence.  Amida logic is found
+after the programming language.
 
 We list our contributions from the most important:
 \begin{enumerate}
  \item developing a lambda calculus using
-       a hypersequent calculus (Chapters~\ref{ch:lambda,ch:exchange});
+       a hypersequent calculus (Chapters~\ref{ch:lambda}, \ref{ch:exchange});
  \item identifying the computational ability of the
        G\"odel--Dummett logic with waitfreedom (Chapter~\ref{ch:lambda});
  \item encoding session types using a seemingly unknown axiom
-       $(p\limp q)\otimes(q\limp p)$ (which we call Amida axiom) on top
+       $(\phi\limp \psi)\otimes(\psi\limp \phi)$ (which we call Amida axiom) on top
        of the multiplicative additive fragment of intuitionistic linear
        logic (Chapter~\ref{ch:exchange}),
  \item discovery of Amida logic (Chapter~\ref{ch:exchange});
@@ -184,13 +190,18 @@ one proposition implies the other or the other implies one.
 We investigate whether this syntactic similarity is reflected
 in the dynamic semantics of logics: namely, the lambda calculi.
 
-Our third contribution is
+Our third contribution is about encoding of session types into a linear
+type system.  Although the approach is similar to \citet{pfenning2010} and
+\citet{wadler2012propositions}'s work, our Amida calculus has an
+additional axiom so that it can type some procsses which Pfenning or
+Wadler's type systems cannot.
 
-Our fourth contribution is
-
-Our fifth contribution is
-
-\fix{turn this into a table, linear or intuitionistic, conjunction or disjunction}
+Our fourth contribution is a side-effect of the third contribution.
+The type system we developed for our third contribution is a seemingly
+unknown logic with peculiar properties.  Semantically, the falsehood is
+imcompatible with Amida logic (\thref{no-falsehood}).
+Syntactically, the correct proof structure can be characterized with
+Amida edges, which is similar to the structure of Amida lottery.
 The previous works treated the computational interpretations of
 disjunctive formulae like $(\phi\imp\psi)\lor(\psi\imp\phi)$ or
 $(\phi\limp\psi)\oplus(\psi\limp\phi)$.  In this chapter, we try
@@ -200,12 +211,22 @@ If we add the axiom $(\phi\imp\psi)\land(\psi\imp\phi)$ to the
 intuitionistic propositional logic,
 we can prove any formula.  However in the lattar case, the change does
 not make the system meaningless.
-In this chapter, we treat
+In Chapter~\ref{ch:exchange}, we treat
 the axioms of the form $(\phi\limp\psi)\otimes(\psi\limp\phi)$
-on top of IMLL2, the second order formulation of intuitionistic
-multiplicative linear
+on top of IMALL, intuitionistic
+multiplicative additiver linear
 logic.  In essence, the axiom allows two processes to wait for one
 another and then exchange information.
+
+Our fifth contribution is using conjunctive hypersequents.
+Hypersequents have been around since \citet{avron91}, but
+in all cases, different components in a hypersequent were interpreted
+disjunctively.
+In our formalization of Amida logic in Chapter~\ref{ch:exchange},
+we use conjunctive hypersequents, where different components are
+interpreted conjunctively.
+This is the first application of such conjunctive hypersequents.
+
 
 The content of Chapter~\ref{ch:lambda} appears in
 a conference paper by the author \citep{hiraiflops2012}
@@ -213,9 +234,4 @@ although we have applied substantial modifications since then.
 
 % \section{An Introduction for Computer Scientists}
 
-% \section{An Introduction for Proof Theorists}
-
-% \section{An Introduction for Functional Programmers}
-
-% \section{An Introduction for Philosophers}
 

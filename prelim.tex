@@ -26,13 +26,9 @@
    partial map that maps $x$ to $f(x)$ or $g(x)$ when one of these is
    defined, or otherwise to nothing.
 
-  For a symbol or a sequence of symbols $p$,
-  $p^+$ denotes repetition of $p$ more than zero times and
-  $p^*$ denotes repetition of $p$ more than or equal to zero times.
-  \fix{are these notations ever used?}
   We use BNF (Backus Naur Form) for giving inductive definitions for sets
   of sequents of symbols.
- \begin{example}[BNF]
+ \begin{example}[An example of BNF]
   When we say we define formulae~$\phi$ by BNF:
   \[
    \phi::= \bot \mid p\mid (\phi\imp\phi)
@@ -94,8 +90,6 @@ After his notation, we still use $\vdash$ for judgements in our formal
 systems.
 The view of logical formulae as graphical objects
 will be inherited to proof nets (Section~\ref{sec:proofnets}).
-
-\fix{Try proving Dummett's axiom in Begriffschrift}
 
 \subsection{Intuitionistic Propositional Logic}
 
@@ -364,8 +358,7 @@ interpretation}
 (BHK\index{BHK|see{Brouwer--Heyting--Kolmogorov interpretation}})
 interpretation reads: ``a proof of the
 implication $\varphi\supset\psi$ is a construction which permits us to
- transform any proof of $\varphi$ into a proof of $\psi$''~\fix{cite
- troelstra 大学で}.
+ transform any proof of $\varphi$ into a proof of $\psi$''~\cite[Ch.~1, 3.1.]{troelstra1988constructivism}.
 The BHK
 interpretation does not specify what is a proof or what kind of
 transformation witnesses implication.
@@ -508,7 +501,7 @@ derivation~\citep[p.~36]{prawitz1965} can be reduced
  \footnote{A maximal segment can contain many occurrences of the same
  formula without being influenced by any inference rules.
  Such ``syntactic beaurocracy'' can be removed by proof nets.
- See Section~\ref{sec:proofnets} for an example}.
+ See Section~\ref{sec:proofnets} for an example.}.
  A derivation without maximal segments is called normal.
  And Prawitz proved the existence of a normal derivation of $\G\vdash A$
  given any derivation of $\G\vdash A$.
@@ -519,9 +512,9 @@ derivation~\citep[p.~36]{prawitz1965} can be reduced
  and the normal form in the typed lambda
  calculi under Curry--Howard isomorphism.
 
-\subsubsection{Tonk}
+\subsubsection{Prior's Tonk}
 
-Arthur Prior \fix{cite} invented a logical connective called tonk.
+\citet{prior60} invented a logical connective called tonk.
  \begin{center}
 \AxiomC{$\phi$}
 \UnaryInfC{$\phi \text{ tonk }\psi$}
@@ -554,13 +547,17 @@ inversion principle requires this reduction:
  \end{center}
 The reduct is considered nonsense because if there are any theorems all
 formulae must be theorems.  This is an argument refuting the tonk operator.
-However, in Chapter~3, we pursue the possibility of compensating the
+However, in Chapter~\ref{ch:exchange},
+we pursue the possibility of compensating the
 nonsense by the dual nonsense, namely:
  \begin{center}
   \AxiomC{$\phi\qquad \psi$}
   \UnaryInfC{$\psi\qquad \phi$}
   \DisplayProof\enspace.
  \end{center}
+ Prior's paper is titled ``the runabout inference-ticket.''
+ In Chapter~\ref{ch:exchange}, we are going to consider the roundtrip
+ inference-ticket.
 
 
 \subsection{Curry--Howard Isomorphism}
@@ -573,11 +570,10 @@ Type derivations of static objects associtating lambda terms to types.
 The reduction on terms gives dynamics, defining which term reduce
 to which.  Static type derivations can guarantee dynamic properties of
 programs such as strong normalization \fix{cite},
-deadlock freedom \fix{cite}
-and so on.
+deadlock freedom \fix{cite} and so on.
 
 The Curry--Howard isomorphism\index{Curry--Howard isomorphism}
- is originally a correspondence between
+is originally a correspondence between
 intuitionistic propositional logic proofs and typed lambda terms, but
 the technical term has obtained a more general meaning spanning over the
 correspondence between proofs and programs in general.
@@ -709,7 +705,11 @@ substructural logics albeit it has quantification over propositional variables.
 
 \citet{landin1965} noticed some similarities between ALGOL~60 syntax and
 the untyped lambda calculus.
-\fix{ML OCaml SML SML\# Haskell F\#}
+Since then, many programming languages came out of the Curry--Howard
+isomorphism.  Most notably the so-called ML family languages like
+Standard ML~\citep{milner1997definition},
+OCaml~\citep{minsky2011}, SML\#~\citep{ohori2011},
+Haskell~\citep{marlow2010haskell}, F\#~\citep{beginf} and so on.
 
 However, none has employed Dummett's axiom
 $(\phi\imp\psi)\lor(\psi\imp\phi)$
@@ -733,7 +733,7 @@ and conjunction~$\wedge$.}
 		    y &\text{ if } x < y
 		  \end{cases}\enspace.
 \end{align*}
-\fix{make it a table}
+%\fix{make it a table}
 He axiomatized the logic by adding $(p\supset q)\lor(q\supset p)$ on top
 of the axioms for the intuitionistic propositional logic.
 Thomas~\citep{thomas1962} axiomatized
@@ -741,7 +741,7 @@ Thomas~\citep{thomas1962} axiomatized
  formula~$F_{n+1}$,
  which is rewritten using only implications but no disjunction or conjunction.
 
-\subsubsection{Sonobe}
+\subsubsection{Sonobe's Gentzen-Style Calculus}
 
 \citet{sonobe} presented a sequent calculus for G\"odel--Dummett logic
 and proved cut-elimination theorem for it.
@@ -754,7 +754,7 @@ derivation and then find the computational content of the original
 proof.  However, the author has never seen an attempt of determining
 the computational interpretatin of Sonobe's cut-elimination.
 
-\subsubsection{Avron}
+\subsubsection{Avron's Hypersequents}
 
 \citet{avron91} invented the hypersequent calculus.
 A \textit{hypersequent}\index{hypersequent} is a nonempty, finite sequence of sequents:
@@ -788,13 +788,21 @@ quotation).
 
 \subsection{Waitfreedom}
 
-\subsubsection{Lamport}
+A waitfree protocol over shared memory~\cite{herlihy1991wait}
+ assigns a program to each process so that no process waits for another process.
+Some tasks can be solved by a~well-chosen waitfree protocol while the others cannot.
+For example,
+ it is waitfreely impossible for both of two processes to attain the input value of the other
+ process.
+ On the other hand, it is waitfreely possible for
+ either one of two processes to attain the input value of the other process.
 
-\subsubsection{Gafni}
-
-\subsubsection{Herlihy and Shavit}
-
-\subsubsection{Saks and Zaharoglow}
+Herlihy and Shavit~\cite{herlihy1999topological} characterised waitfree computation using
+simplicial topology.
+Using their characterisation,
+Gafni and Koutsoupias~\cite{gafni1999three}
+ showed that it is undecidable whether a task is waitfreely solvable
+ or not.
 
 \subsection{Intermediate (Superintuitionistic) Logics}
 
@@ -803,7 +811,8 @@ a \textit{logic}\index{logic} is a set of logical formulae which is
 closed by
 substitution and modus ponens%
 \footnote{There are, however, logics not closed for substitution such as
-dynamic epistemic logic \fix{cite} and inquisive logic \fix{cite}.  Thus
+dynamic epistemic logic~\citep{ditmarsch2007dynamic} and
+inquisitive logic~\citep{ciardelli2011}.  Thus
 in general it would be fair to say that a logic is a set of logical
 formulae.}.
 Elements of a logic is called \textit{theorems}\index{theorem}.
@@ -882,7 +891,7 @@ and found a consistent formulation (in the sense there exists a model to
 each finite subtheory).
 However, in the case of axiomatic set theory with comprehension,
 \citet{hajek2005} showed that having induction over natural numbers is
-contradictory.  \fix{mention Yatabe}
+contradictory\footnote{\citet{yatabe2009} found an easier proof of this.}.
 
 Computationally inclined research on intermediate logics can be found
 in proof searching.  For the typical intermediate logic G\"odel--Dummett
@@ -1008,7 +1017,8 @@ propositional logic:
  we sometimes use them as nouns: ``multiplicatives'' for the
  multiplicative operators and ``additives'' for the additive operators.
 
- Although additive implication can be defined \fix{cite troelstra},
+ Although additive implication can be defined \fix{cite troelstra
+ 大学で昼間みつける},
  the multiplicative implication~$\limp$ has a more important role
  because our interpretation of $\tr$ symbol in a sequent is the
  multiplicative implication
@@ -1054,13 +1064,21 @@ which started with~\citet{girard1987} and \citet{danos-regnier}.
  in an obfuscated way.
  Japanese schoolchildren use \textit{Amida lotteries}\index{Amida lotteries}
  for assigning seats, jobs, teams and so on to classmates.
+ The diagram defines a permutation.
+ From a top end, one can find the counterpart by following the vertical
+ line, but one has to cross the bridge whenever one finds one and then
+ after crossing the bridge, one has to go down the vertical line.
+ An example is given in Figure~\ref{amida-lottery}.
 
-\fix{add}
+ \begin{figure}[h]
+  \centering
+  \includegraphics[scale=0.6]{amida.eps}
+  \caption[An example of Amida lotteries.]{An example of Amida
+  lotteries.  Nozomi clears blackboards; Ken waters flowers; Yuko chairs
+  meetings; and Taro feeds Hamsters.}
+  \label{amida-lottery}
+ \end{figure}
 
-The diagram defines a permutation.
-From a top end, one can find the counterpart by following the vertical
-line, but one has to cross the bridge whenever one finds one and then
-after crossing the bridge, one has to go down the vertical line.
 
 \section{To the Next Chapters}
 

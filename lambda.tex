@@ -4,7 +4,7 @@
 \chapter{An Asynchronous Hyper-Lambda Calculus}
 \label{ch:lambda}
 
-\subsection{Summary}
+\section{Summary}
 
 We define a typed lambda calculus based on Avron's hypersequent
 calculus~\citep{avron91} for G\"odel--Dummett logic.
@@ -43,7 +43,6 @@ Such a term
 $\tj{M}{(\varphi\supset\psi)\vee(\psi\supset\varphi)}$ must choose
 $M\reduction \linl\cdots$ or $M\reduction \linr\cdots$.
 We devise a nondeterministic lambda calculus in Sect.~\ref{lgd}.
-\fix{unify $\lambda$ or lambda, maybe later}
 In this lambda calculus, terms can contain operators that read from and
 write to the store, or memory.
 In essence, the nondeterminism arises from the scheduling of concurrent
@@ -61,7 +60,6 @@ So, the computation is nondeterministic.
 The contribution of this chapter is capturing
 the nondeterminism of waitfreedom using the nondeterministic
 $\lambda$-calculus for G\"odel--Dummett logic.
-\fix{unify, waitfreedom or waitfree computation}
 In Section~\ref{lgd},
 we define a lambda calculus and prove some of its properties.
 In Section~\ref{waitfreedom}, we define typed waitfreedom.
@@ -137,12 +135,12 @@ does not map any other processes to local formulae.
 % I considered removing this notation,
 % but that would make the contexts awkward, so
 % I chose not changing it for now.
-\fix{this sentence is awkward}
+% \fix{this sentence is awkward}
 We name such global formulae that map only one process as singleton
 global formulae.
 The unary operators $[0], [1],\ldots$ are called \textit{modalities}%
 \index{modality}.
-\fix{example, with $\sqcup$}
+%\fix{example, with $\sqcup$}
 Informally, the local formulae describe datatypes used by each process.
 The global formulae describe inputs or outputs of all
 processes together.
@@ -327,15 +325,12 @@ $[0]((\varphi\supset\psi)\vee(\psi\supset\varphi))$ is provable (Figure~\ref{fig
  for external.
  A rule $[i]\wedge\intro$ is omitted because the inner global rule
  $\wedge\intro$ is more general.
+  There is no disjunction elimination in the inner global rules lest it
+ is difficult (if possible) to translate the rule into
+ waitfree computation.
  }
 \label{fig:logic}
 \end{figure}
-
-\fix{put this sentence somewhere appropriate}
- There are no disjunction elimination in the inner global rules lest it
- is difficult (if possible) to translate the rule into
- waitfree computation.
-
 
 \subsection{Term Assignment}
 \label{term}
@@ -343,7 +338,7 @@ $[0]((\varphi\supset\psi)\vee(\psi\supset\varphi))$ is provable (Figure~\ref{fig
 We assume distinct, countably infinite sets of \textit{variables}\index{variable},
 \textit{locations}\index{location}
 and
-\textit{processes}\index{process}. \fix{processes should be placed earlier?}
+\textit{processes}\index{process}.% \fix{processes should be placed earlier?}
 Locations are denoted by~$c,d,\ldots$; process~$i,j, \ldots$ and variables~$x,
 y, \ldots$.
 Later, locations will be used to specify a location in a store
@@ -817,7 +812,7 @@ To complete the definition of \lgd,
 
 We require all reductions to be congruences.
 A binary relation~$R$ on configurations is a \textit{congruence}\index{congruence}
-when \fix{add more conditions for exchanges}
+when
 \begin{itemize}
  \item $\concreteconf{S_0}{\hypert_0} R \concreteconf{S_1}{\hypert_1}$ implies
        $\concreteconf{S_0}{\hypert_0\hmid \hypert} R
@@ -825,14 +820,23 @@ when \fix{add more conditions for exchanges}
  \item $\concreteconf{S_0}{\hypert_0\hmid \m{M_0}} R
        \concreteconf{S_1}{\hypert_1 \hmid \m{M_1}}$ implies
        $\concreteconf{S_0}{\hypert_0\hmid \m{M_0}\sqcup \m{N}} R
-       \concreteconf{S_1}{\hypert_1\hmid \m{M_1}}$, and
+       \concreteconf{S_1}{\hypert_1\hmid \m{M_1}}$
  \item $\concreteconf{S_0}{\hypert_0\hmid \{i\mapsto M_0\}\sqcup
        \m{M_0}} R \concreteconf{S_1}{\hypert_1\hmid \imapsto{M_1}\sqcup
        \m{M_1}}$ implies
        $\concreteconf{S_0}{\imapsto{C[M_0]}\sqcup \m{M_0}} R
-       \concreteconf{S_1}{\imapsto{C[M_1]}\sqcup \m{M_1}}$.
-       \fix{what is C}
-       \fix{how about exchange}
+       \concreteconf{S_1}{\imapsto{C[M_1]}\sqcup \m{M_1}}$ for any
+       context~$C$
+ \item $\concreteconf{S}{\hypert_0\hmid \m{M}\hmid \m{N} \hmid \hypert_1}
+       R \concreteconf{S'}{\hypert'}$
+       implies
+       $\concreteconf{S}{\hypert_0\hmid \m{N}\hmid \m{M} \hmid \hypert_1}
+       R \concreteconf{S'}{\hypert'}$ and
+ \item $\concreteconf{S}{\hypert} R \concreteconf{S'}{\hypert_0\hmid
+       \m{M}\hmid \m{N}\hmid \hypert_1}$
+       implies
+       $\concreteconf{S}{\hypert} R \concreteconf{S'}{\hypert_0\hmid
+       \m{N}\hmid \m{M}\hmid \hypert_1}$.
 \end{itemize}
 
 \begin{definition}[Basic reduction]
@@ -2651,7 +2655,7 @@ the problem is solvable by a term.
  the two-party participating set problem%
  \footnote{To be exact, the construction for solving the $n$-party
  participating set problem using 2-party participating set problem
- is the same as a sorting network \fix{cite something} for sorting $n$
+ is the same as a sorting network~\citep{batcher1968} for sorting $n$
  elements.}.
  It suffices to show a \lgd\, term solving the two-party participating
  set problem.
@@ -2773,8 +2777,6 @@ two-party participating set problem.
 
 \section{Related Work}
 \label{related}
-
-  \fix{herlihyのコの字型の例?}
 
 Sonobe~\cite{sonobe} gives sequent calculi for intermediate logics $S_i$
 and proved cut-elimination theorem for them.  As a special case he gives

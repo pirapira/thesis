@@ -6,7 +6,7 @@
  pair of communication primitives exchanging their inputs.
  In the synchronous case, both sides succeed.  In the asynchronous case,
  at least one side obtains the other side's input.
- The synchronous calculus denotes message-passing communication
+ The synchronous calculus implements message-passing communication
  and session types;
  the asynchronous calculus characterizes shared-memory waitfree
  communication.
@@ -16,72 +16,33 @@
  Logically, the processes are interpreted conjunctively
  in the synchronous case but disjunctively in the asynchronous case.
  The synchronous calculus is based on our original Amida logic:
- $(\phi\limp\psi)\otimes(\psi\limp\phi)$ on top of intuitionistic linear
+ $(\phi\limp\psi)\otimes(\psi\limp\phi)$ on top of maltiplicative
+ additive fragment of intuitionistic linear
  logic;
  the asynchronous calculus is based on G\"odel--Dummett logic:
  $(\phi\imp\psi)\lor(\psi\imp\phi)$ on top of intuitionistic logic.
- These calculi are in Curry--Howard correspondence with the
- hypersequent-style natural deduction.
+ The hyper-lambda calculi are in Curry--Howard correspondence with the
+ deduction systems for these logics.
 \end{eabstract}
 
 \begin{jabstract}
- ハイパーシーケント計算に基くハイパーラムダ計算を提案する。
- ラムダ計算がラムダ項を実行する。
- ハイパーラムダ計算はラムダ項の列を実行する。
- ラムダ項の列は並列実行されるスレッドを表す。
- ハイパーラムダ計算の有用性を示すために
- 二つの例を示す。
-
- 最初の例は、チャネルを経由した
- 同期通信のためのハイパーラムダ計算である。
- ハイパーラムダ項に属する
- すべてのスレッドの実行が
- 成立することを型システムが保証する。
- 型システムとして未知の論理を採用する。
- 直観主義線形論理に公理$(\phi\limp\psi)\otimes(\psi\limp\phi)$を追加した
- 論理についてCurry--Howard対応をとってハイパーラムダ計算としてみたところ、
- プロセス計算のプロセスやセッション型をマクロとして実装できた。
-
- 次の例は、共有メモリを経由した
- 非同期通信のためのハイパーラムダ計算である。
- ハイパーラムダ項に属する
- 少くとも一つのスレッドの実行が
- 成立することを型システムが保証する。
- 型システムは、1950年代から知られている
- ゲーデル・ダメット論理である。
- ゲーデル・ダメット論理についてCurry--Howard対応をとって
- ハイパ−ラムダ計算としてみたところ、
- 分散計算の問題クラスであるwaitfree計算を特徴づけられた。
- ゲーデル・ダメット論理もwaitfree計算も，それぞれの分野で重要であるのに，
- これらの関連は，これまで知られていなかった．
-
- ゲーデル・ダメット論理は中
- 間論理(直観主義論理と古典論理の間の論理)の一つである．Waitfree計算は，プロセスが他の
- プロセスを待てないという制限で決まる，分散計算のクラスである．
- 本研究の貢献は，ゲーデル・ダメット論理の型付きラムダ計算を定義して，
- ちょうどwaitfree計算で解ける問題だけを解けると示したことである．
- 本研究は，
- 共有メモリの一貫性を，型システムで特徴づけた初めての研究であって，
- 興りつつある「非明示メモリ一貫性」と呼ぶべき研究分野の重要な一歩である．
-
- 著者は修士論文で，ゲーデル・ダメット論理と共有メモリ一貫性の一種である
- 逐次一貫性との意味論的な関連に気づいていた．
- しかし，本研究の手法も問題も
- Arnon Avronの1991年の論文によるところが大きい．
- まず，その論文でAvronが提案したハイパーシーケントが，
- 本研究の型付きラムダ計算の基礎である．
- さらに，その論文でAvronが提起した問題
- 「ハイパーシーケントでカット除去できる論理の計算的意味はなにか」
- が，本研究で探求する問題である．
- この二十年来の問題の典型例であるゲーデル・ダメット論理の場合に，解答を
- 与える．ゲーデル・ダメット論理の計算的意味は，waitfree計算であると示す．
-
- 技術的に，本研究は型付きラムダ計算の研究である．
- 示した定理は，
- 型が付いた項の簡約が無限に続かないことと，
- 型が付いた項の簡約が失敗を表す項で終わらないことと，
- 型が付いた項で解ける問題がwaitfreeに解ける問題と
- 一致することの三つである．
-
- \fix{最終的に英語に合わせればいい}
+ ハイパーラムダ計算を提案する．
+ ハイパーラムダ項はラムダ項の有限列で，並列プロセスを表す．
+ 同期と非同期と二つのハイパーラムダ計算を与える．
+ 両者ともに，互いに入力を交換する通信子の対を用いる．
+ 同期ハイパーラムダ計算では，通信子双方が成功する．
+ 非同期ハイパーラムダ計算では，通信子の少くとも片方がもう片方の入力を獲得
+ する．
+ 同期ハイパーラムダ計算はメッセージパッシング通信とセッション型を実装し，
+ 非同期ハイパーラムダ計算は共有メモリのwaitfree計算を特徴づける．
+ 型付きハイパーラムダ項のプロセスどものうち，同期ハイパーラムダ計算では全
+ てが成功するが，非同期ハイパーラムダ計算では少くとも一つが成功する．
+ 論理的にプロセスどもは，同期ハイパーラムダ計算では連言で，
+ 非同期ハイパーラムダ計算では選言で解釈される．
+ 同期ハイパーラムダ計算は本論文創案のアミダ論理に基づく: 直観主義線形論理
+ の乗法的加法的断片に公理$(\phi\limp\psi)\otimes(\psi\limp\phi)$を加えた
+ 論理である．非同期ハイパーラムダ計算はゲーデル・ダメット論理に基づく:
+ 直観主義論理に公理$(\phi\imp\psi)\lor(\psi\imp\phi)$を加えた論理である．
+ これらのハイパーラムダ計算は，それぞれの論理の演繹体系とカリー・ハワー
+ ド対応にある．
 \end{jabstract}
