@@ -634,9 +634,8 @@ We add the semantics for channels.
   \caption[The definition of evaluation relation of the Amida
   calculus]{The definition of evaluation relation of the Amida calculus.
   $\hypere$ is possibly empty evaluation hypersequence.
-  The whole system is based on Abramsky's LF
-  \citep{abramsky1993computational}, but differently from it,
-  we evaluate closed subterms even when they are in the scope of $\lambda$.
+  The whole system is based on Abramsky's LF.
+  Note that the results of evaluation are always canonical forms.
   }
   \label{fig:eval}
  \end{figure}
@@ -1925,8 +1924,6 @@ Session types aims at typing channels and processes in $\pi$-calculus so
 that the process execution is deterministic and not ending in deadlock.
 In general session type systems are not based on well-known logic.
 
-
-
 \subsubsection{Pfenning}
 
 \citet{pfenning2010} provide a type system for a fragment of $\pi$-calculus.
@@ -2091,11 +2088,11 @@ In other respects,
 Wadler's type system is similar to ours;
 our abbreviations are largely taken from Wadler's translations.
 
-\subsubsection{Giunti and Vasconcelos}
+\subsubsection{Giunti and Vasconcelos's Type System}
 
 \citet{giunti2010} gives a type system for the pi calculus, which is
 extremely similar to our type system.
-They say ``the goale of this work is to equip types with a constructor
+They say ``the goal of this work is to equip types with a constructor
 able to denote the two ends of a same
 channel.''~\citep[Introduction]{giunti2010}
 One of their typing rules
@@ -2128,8 +2125,12 @@ One of their typing rules
  \subsection{Join calculus}
 \fix{mention join calculus here or in related work}
 
-\subsection{Delimited Continuation}
-\fix{fill}
+ \subsection{Continuations}
+ The evaluation $\co c[C[cv]]\eval v$ reminds us of the call-with-current-continuation
+ primitive~\citep{rees1986} and shift/reset primitives~\citep{danvy1990,asai2007}.
+ The appearence of these classical type system primitives is not
+ surprising because Amida logic validates $((p\limp q)\limp q)\limp p$,
+ which is a stronger form of the law of double negation.
 
  \subsection{Logic Programming}
 

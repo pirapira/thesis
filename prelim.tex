@@ -294,10 +294,13 @@ In short, in some of those settings, $(p\otimes q)\limp p$ is
 not a theorem because we are not allowed to throw away $q$.
 
 In the final sentence, \citet{godelprop} states what is known as
-disjunction property\index{disjunction property} today: ``besides, the
+disjunction property\index{disjunction property} today%
+\footnote{Disjunction property can be proved by soundness and
+completeness with respect to Kripke models.  There is another, syntactic
+technique called Aczel's slash~\citep[Ch.~3. 5.7.]{troelstra1988constructivism}.}: ``besides, the
 following holds with full
 generality: a formula of the form $A\lor B$ can only be provable in $H$
-if either $A$ or $B$ is provable in $H$'', where $H$ is Heyting's calculus.
+if either $A$ or $B$ is provable in $H$,'' where $H$ is Heyting's calculus.
 According to this statement, it is obvious that Dummett's axiom
 $(p\supset q) \lor (q\supset p)$ is not provable.
 
@@ -1017,20 +1020,15 @@ propositional logic:
  we sometimes use them as nouns: ``multiplicatives'' for the
  multiplicative operators and ``additives'' for the additive operators.
 
- Although additive implication can be defined \fix{cite troelstra
- 大学で昼間みつける},
+ Although additive implication can be defined~\citep[Ch.~4]{troelstra1992},
  the multiplicative implication~$\limp$ has a more important role
  because our interpretation of $\tr$ symbol in a sequent is the
- multiplicative implication
+ multiplicative implication as the following invertible rule shows:
   \begin{center}
    \AxiomC{$\G,\phi\tr\psi$}
    \UnaryInfC{$\G\tr\phi\limp\psi$}
    \DisplayProof
-   \hfill
-   \AxiomC{$\G\tr\phi\limp\psi$}
-   \AxiomC{$\D\tr\phi$}
-   \BinaryInfC{$\G,\D\tr\psi$}
-   \DisplayProof\enspace.
+   \enspace.
   \end{center}
 
  % Depending on the formulation, there can be two
