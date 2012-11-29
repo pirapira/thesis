@@ -191,7 +191,6 @@ here, the hypersequent $\G\tr\phi\hmid \D\tr\psi$ is interpreted as the
 conjunction of components:
 $(\bigotimes\G\limp\phi)\otimes (\bigotimes\D\limp\psi)$ where
 $\bigotimes\G$ stands for the $\otimes$-conjunction of elements of $\G$.
-\fix{define somewhere conjunction of elements of a sequence}
 The conjunctive treatment is our original, and finding an application
 of conjunctive hypersequents is one of our contributions.
 
@@ -392,12 +391,16 @@ Another example shows how we can type the term $\co c(c x)$.
  The typing system is has two strong properties about the missing structural rules:
  weakening and contraction.
  We first state the property about specialized contraction rules.
+ Informally, if one can duplicate a proof of $\phi$ into two,
+ then, one can obtain a proof of $\phi$ from nothing by first borrowing
+ a proof of $\phi$, second duplicating the proof into two and finally
+ returning one of the two proofs.
  \begin{proposition}
   For any formula~$\phi$, if the specialized contraction rule (here, we
   omit variables and terms)
    \begin{center}
     \AxiomC{$\hyper\hmid\phi,\G\tr\psi$}
-    \LL{C}
+    \LL{\rm C}
     \UnaryInfC{$\hyper\hmid\phi,\phi,\G\tr\psi$}
     \DisplayProof
    \end{center}
@@ -584,7 +587,7 @@ We add the semantics for channels.
   \AxiomC{}
   \UnaryInfC{$\lambda x.t\eval \lambda x.t$}
   \DisplayProof
-  \ruleskip
+  \hfill
   \AxiomC{$\hypere\hmid t\eval v\hmid u\eval w$}
   \UnaryInfC{$\hypere\hmid ct\eval w\hmid \co cu\eval v$}
   \DisplayProof
@@ -593,6 +596,10 @@ We add the semantics for channels.
   \hypere'$}
   \LL{ex}
   \UnaryInfC{$\hypere\hmid s\eval s'\hmid t\eval t'\hmid \hypere'$}
+  \DisplayProof
+  \hfill
+  \AxiomC{}
+  \UnaryInfC{$\lpair{t,u}\eval \lpair{t,u}$}
   \DisplayProof
   \ruleskip
   \AxiomC{$\hypere\hmid
@@ -858,6 +865,20 @@ $u\in\semo{\G\tr\tj t\phi}$.
     $t\eval v$ is derivable for some canonical form~$v$.
    \end{corollary}
 
+   Convergence holds because of subtle considerations of typing rules.
+   One of those subtle considerations is
+   the restriction that $\with$R rule only applies to singleton hypersequents.
+   \begin{example}
+    There are no canonical terms $v$ such that $(c\ast) \otimes \lpair{\co
+    c (\inl\ast), \co c (\inr \ast)} \eval v$ is derivable.
+    By convergence, the term $ (c\ast) \otimes \lpair{\co
+    c (\inl\ast), \co c (\inr \ast)} $ is not typable.
+    Figure~\ref{fig:exchange:rules} allowed applying $\with$R rule to
+    multi-component hypersequents, the term would be typable and
+    thence, convergence would not hold.
+   \end{example}
+
+   Convergence has an important implication: the consistency of Amida logic.
    \begin{corollary}[Consistency of Amida logic]
     \label{consistent-amida}
     $\tr\tj{t}{X}$ is not derivable for any term~$t$.
@@ -1066,7 +1087,7 @@ $u\in\semo{\G\tr\tj t\phi}$.
        {\sendterm x y{\recvterm {y'}z{\ign {x,y} z}}}\two$}
        \DisplayProof
        \caption{A typed process.}
-       \ref{fig:typed-process}
+       \label{fig:typed-process}
       \end{sidewaysfigure}
      Here is another process that takes an input~$w'$ from channel~$x'$, where
      the input $w'$ itself is expected to be a channel.
@@ -1645,7 +1666,7 @@ Since the Amida axiom $(\phi\limp\psi)\otimes(\psi\limp\phi)$
 does not contain additives ($\with,\oplus$) or exponential ($!$),
 we can focus on the multiplicative connectives ($\limp$ and $\otimes$).
 The fragment is called IMLL (intuitionistic multiplicative fragment of
-linear logic~\fix{cite}).  We also use the unit $\one$ for technical reasons.
+linear logic.  We also use the unit $\one$ for technical reasons.
 We first describe the IMLL proof nets and their properties.
 Then we add Amida links and see it characterizes the Amida logic.
 
@@ -1844,10 +1865,18 @@ This difference causes Amida nets to validate Amida axiom.
  \end{theorem}
  \begin{proof}
   Inductively on hypersequent derivations.
-  The Sync rule is translated into
+  The Sync rule is translated into a crossing with an Amida edge:
    \begin{center}
-    \fix{fill}
+    \AxiomC{$\G\tr\phi\hmid\D\tr\psi$}
+    \UnaryInfC{$\G\tr\psi\hmid\D\tr\phi$}
+    \DisplayProof
+    \quad
+    $\mapsto$
+    \quad
+    $\vcenter{\hbox{\includegraphics[scale=0.4]{sync-trans.eps}}}$
    \end{center}
+  where the crossing exchanges the formulae and the Amida edge keeps the
+  path connections vertically straight.
  \end{proof}
  \begin{theorem}[Soundness of Amida nets]
   Inductively on the derivation of $\hyper$,
@@ -1860,7 +1889,7 @@ This difference causes Amida nets to validate Amida axiom.
 The translation moves are as follows.
  \begin{center}
 \includegraphics[scale=0.4]{tensor-move.eps}
-\\
+\vskip 3cm
 \includegraphics[scale=0.35]{parr-move.eps}
  \end{center}
 These translations have two properties.
@@ -1943,7 +1972,8 @@ the process~$P$ should be typable as
  \vdash P::x:(A\limp B)\otimes(B\limp A)\enspace.
 \]
 However, such typing is not possible because $(A\limp B)\otimes (B\limp
-A)$ is not a theorem of \fix{name} (DILL), the logic their type system
+A)$ is not a theorem of dual intuitionistic lienar logic (DILL), the
+logic their type system
 is based on.
 In our type system, the following sequent is derivable
 \begin{align*}
@@ -1991,7 +2021,6 @@ one, which can be typed and evaluated in our framework as well.
   }
   \]
   We can derive a sequent $\tj{s}{\overline{SP}}\tr\tj{Serv}\one$.
-  \fix{really?}
 
   Using this, we can also implement a server that can replicate itself
   and serve many clients.  Below, $SP$ abbreviates $ServerProto$.
@@ -2110,9 +2139,9 @@ One of their typing rules
   \DisplayProof\enspace.
  \end{center}
  Usually, the Curry--Howard correspondence is followed from logical world
- to the programming world: for an already known logic, a new lambda
- calculus is invented (e.g.~\fix{lambda mu kakutani kimura pfenning alex
- sympson so on}).  However, in our case, it seems that we have just
+ to the programming world: for already known logics, new lambda
+ calculi are invented (e.g.~\citep{lambdamu,murphy,abe2007,kimurakakutani2011}).
+ However, in our case, it seems that we have just
  found a logic called Amida logic that corresponds to an already known
  typing discipline invented by \citet{giunti2010}.
  It will be worthwhile to compare their system with our type system.
@@ -2122,15 +2151,20 @@ One of their typing rules
  This is similar to the double binder $\nu x_L x_R$ appearing in
  \citet{gay2010}.
 
- \subsection{Join calculus}
-\fix{mention join calculus here or in related work}
+ \subsection{Join Calculus}
+
+ The join calculus~\citep{join} is a process calculus which is used as a basis for a
+ language JoCaml~\citep{fournet2002jocaml}.
+ An implicit typing system~\citep{fournet1997} allowed the join calculus
+ to be successfully merged with an ML family language OCaml, but the
+ type system does not guarantee that all messages are consumed.
 
  \subsection{Continuations}
  The evaluation $\co c[C[cv]]\eval v$ reminds us of the call-with-current-continuation
  primitive~\citep{rees1986} and shift/reset primitives~\citep{danvy1990,asai2007}.
  The appearence of these classical type system primitives is not
  surprising because Amida logic validates $((p\limp q)\limp q)\limp p$,
- which is a stronger form of the law of double negation.
+ which is a stronger form of the double negation elimination.
 
  \subsection{Logic Programming}
 
@@ -2200,7 +2234,7 @@ where $d_{ABCD}$ is induced by adjunction between $\otimes$ and $\limp$
  (B\otimes D)$, which is provided by symmetric monoidal closed
  properties.
 
-\subsection{Multiparty, recursions, \ldots}
+\subsection{Multiparty, Recursions, \ldots}
 Our type system has a drawback of having only finitely many processes.
 We expect it straightforward to overcome this weak point by
 add recursions in our type system.
@@ -2223,10 +2257,8 @@ For that, intuitionistic epistemic logic~\citet{hirailpar,hiraimaster}
 will be useful.
 
 In order to implement this lambda calculus, we need linear types.
-The uniqueness type of Clean~\fix{cite} is not enough because
+The uniqueness type of Clean~\citep{parle1991} is not enough because
 their type system allows weakening.
-
-\fix{compare with linear ML}
 
 \section{Conclusion}
 

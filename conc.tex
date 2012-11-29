@@ -1,0 +1,82 @@
+\chapter{Conclusion}
+
+\subsection{}
+
+We gave two inventions: hyper-lambda calculi and Amida logic.
+Our conclusions and future work spans from mathematical logic, computer
+science and philosophy.
+
+\section{From Logical Perspectives}
+
+We have seen two particular hyper-lambda calculi for two logics.
+\citet{alg} classified axioms according to their syntactic complexities
+and identified classes of axioms that can be translated into structural
+sequent calculus rules and structural hypersequent calculus rules.
+According to their classification, the prelinearity axiom
+$(\phi\limp\psi)\oplus(\psi\limp\phi)$ and Amid axiom
+$(\phi\limp\psi)\otimes(\psi\limp\phi) $belong to $\mathcal P_2$, a
+claess whose elements can be translated into a finite set of
+hypersequent structural rules.
+Other classes $\mathcal N_2$ and $\mathcal P_3$ of axioms can also be
+translated into finite sets of hypersequent structural rules,
+thus, we expect the technique of hyper-lambda calculi applicable to
+logics with these axioms on top of $\mathbf{FLe}$.
+
+One particular logic worth trying is
+the logic characterized by Kripke models with bounded width \fix{cite
+[5] from terui}.
+Since G\"odel--Dummett logic is a special case of the bounding width~1,
+the generalization of width $k$ will provide waitfree computation on
+weaker shared memory consistency.  Further,
+an ambitious goal is to develop a general framework with which we can
+develop hyper-lambda calculi for all logics characterized by axioms in
+class $\mathcal P_3$.
+Since the cut-elimination proof in \citep{alg} is algebraic,
+we are yet to know the computational meaning of the cut-elimination.
+Aforementioned framework would clarify the computational meaning of the
+cut-elimination of hypersequent calculi.
+
+\section{From Computer Science Perspectives}
+
+\subsection{Implementation}
+
+Since Amida logic is incompatible with contraction or weakening,
+implementing Amida calculus on top of Haskell or OCaml would not be a
+good way to exploint the safety of Amida calculus.
+Although Clean~\citep{parle1991} offers uniqueness types,
+uniqueness types only reject contraction but accept weakening, so Clean
+is not suitable either.
+The most promising framework is linear ML%
+\footnote{Although there are no
+publications available, there is an implementation at
+\url{https://github.com/pikatchu/LinearML}\enspace.},
+whose type system is based on linear logic.
+
+\subsection{Reasoning about Hyper-Lambda Terms}
+
+\subsection{Understanding Waitfreedom}
+
+\section{From Philosophical Perspectives}
+
+Mathematical logic first succeeded in formalizing mathematics.
+After that, there have been many attempts to investigate analytic
+philosophy
+using formal logics: relevance logic, modal epistemic
+logics~\citep{sep-logic-epistemic},
+dynamic epistemic logic~\citep{ditmarsch2007dynamic},
+inquisitive logic~\citep{ciardelli2011},
+deontic logics~\citep{von1951deontic} and
+so on.  Among those investigations, in some cases, substructural logics
+play important roles.  For example, relevance logic is a famous
+substructural logic lacking weakening and inquisive logic is a weak
+logic (a logic possibly without substitution-closedness) between
+intuitionistic and classical logics~\citep{ciardelli2011}.
+Amida logic can provide a way to express
+exchanges and indebtedness.  Amida axiom $(\phi\limp
+\psi)\otimes(\psi\limp\phi)$
+can describe two agents' exchange of $\phi$ and $\psi$ between two agents
+or one agent's borrowing of $\phi$ for $\psi$ and returning $\phi$ for
+$\psi$.
+Since analysis of pattern of exchange is an important subject of
+anthropology~\citep{kula1920}, Amida logic can provide a
+basis for describing social and cultural phenomena.

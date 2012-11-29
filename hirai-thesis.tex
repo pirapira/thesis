@@ -1,9 +1,11 @@
-\documentclass[doctor,final]{iscs-thesis}
+\documentclass[doctor%,final
+]{iscs-thesis}
 
 \usepackage[numbers,sort&compress]{natbib}
 \def\NAT@spacechar{~}% NEW
 
 %\usepackage{cleverref}
+\usepackage{hyperref}
 \usepackage{stmaryrd,setspace,float}
 \usepackage[counterclockwise]{rotating}
 \usepackage{enumitem}
@@ -30,7 +32,8 @@
 
 \usepackage{rotating}
 
-\usepackage{bussproofs,stmaryrd} %, showlabels}
+\usepackage{bussproofs,stmaryrd}
+\usepackage{showlabels}
 \EnableBpAbbreviations
 
 %%% from haskell symposium submitted paper
@@ -86,6 +89,7 @@ For definitions, see Index at the end of the thesis.
 \input{exchange.tex}
 \input{lambda.tex}
 % \input{seqcon.tex}
+\input{conc.tex}
 \appendix
 
 % \input{pole.tex}

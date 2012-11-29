@@ -1384,6 +1384,13 @@ We can deal with the permutative reductions following de
  there are no infinite sequence of abort reductions.
 \end{proof}
 
+Strong normalization and non-abortfullness hold even for reductions
+where $\comodL$ operators are copied or discarded.  This is different
+from the situation in Chapter~\ref{ch:exchange} where
+when communicating terms $c$ are discarded, the peer $\co c$ runs into a
+deadlock.  The difference is the reason why we can use intuitionistic
+propositional logic in this chapter rather than linear (or affine) logics.
+
 % \fix{subformula property around here state in 6min}
 
 % \fix{prove subfmla in 90min}
@@ -2884,9 +2891,11 @@ assume everywhere.  If we are to study a weaker shared memory
 consistency in the same approach as here,
 we have to study a weaker logic.
 
-In Chpater~\ref{ch:exchange}, we study an axiom
+In Chpater~\ref{ch:exchange}, we studied an axiom
 $(\phi\limp\psi)\otimes(\psi\limp\phi)$.
-We developed a lambda calculus for this.
+Apart from this, we also tried developing a lambda calculus for
+$(\phi\limp\psi)\oplus(\psi\limp\phi)$ on top of a second-order
+formulation of intuitionistic linear logic.
 After doing that, we noticed that adequacy of parametricity argument
 can be carried out using induction on just two type derivations;
 if we did the same for the second-order variant of \lgd,\,it would take
