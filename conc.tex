@@ -41,16 +41,44 @@ cut-elimination of hypersequent calculi.
 \subsection{Implementation}
 
 Since Amida logic is incompatible with contraction or weakening,
-implementing Amida calculus on top of Haskell or OCaml would not be a
+straightforward implementation Amida calculus on top of Haskell or OCaml
+would not be a
 good way to exploint the safety of Amida calculus.
 Although Clean~\citep{parle1991} offers uniqueness types,
 uniqueness types only reject contraction but accept weakening, so Clean
 is not suitable either.
-The most promising framework is linear ML%
+
+One promising framework on which to implement Amida calculus is linear ML%
 \footnote{Although there are no
 publications available, there is an implementation at
-\url{https://github.com/pikatchu/LinearML}\enspace.},
+\texttt{https://github.com/pikatchu/LinearML}\enspace.},
 whose type system is based on linear logic.
+
+Another way is using the type level programming technique of Haskell.
+\citet{DBLP:journals/corr/abs-1110-4163} implemented session types on top
+of Haskell using the type level programming technique using
+\texttt{Session} monad.  Since Haskell types can contain arbitrary trees
+of symbols, they were able to encode session type information in Haskell
+types.
+Logically, this corresponds to having atomic formulae with complicated
+structure so that we can encode session information in atomic formulae.
+The advantage would be usability of existing Haskell infrastructure
+including the optimizing compilers, execution environments, and
+libraries.
+The disadvantage, which the first author of
+\citep{DBLP:journals/corr/abs-1110-4163} told me personally,
+is error messages hard to read.
+Since Haskell compiler is not aware of session types and just reports
+pattern-matching errors in the encoding of session types, the error
+messages are about the encoding not about the originally intended
+session types.
+
+% move to related work part
+% Interestingly, their implementation uses heterogeneous
+% lists~\citep{hetero}, which is similar to hyper-lambda terms because both
+% heterogeneous lists and hyper-lambda terms are lists of programs of
+% possibly different types.
+
 
 \subsection{Reasoning about Hyper-Lambda Terms}
 

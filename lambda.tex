@@ -1595,7 +1595,6 @@ A \textit{process snapshot}\index{process snapshot} of $i\in\processes$ is a tup
 $\tuple{p,m}$ where $p$ is either a program or $\abort$ and $m$ is a
 program variable content for $i$.
 We let $S_i$ denote the set of process snapshots for~$i$.
-\fix{define shared memory snapshot}
 A \textit{system snapshot}\index{system snapshot}
 is a pair $\tuple{\vec s, \vec v}$ of a process snapshot and a shared
 memory snapshot, where $\vec s = \tuple{s_0,
@@ -1659,10 +1658,7 @@ of~$\processes$,
 which looks like $\sigma = \sigma_0\sigma_1\sigma_2\cdots$.
 We say $i$ is \textit{nonfaulty}\index{nonfaulty} (resp.~faulty\index{faulty}) in
 $\sigma$ if it appears infinitely (resp. only finitely many) often.
-When every process is nonfaulty, the schedule is \textit{fair}\index{fair}%
-\footnote{The difference of strong fairness and weak fairness does not
-arise here.  \fix{cite something}
-}.
+When every process is nonfaulty, the schedule is \textit{fair}\index{fair}.
  \begin{example}[An example of schedules]
   \label{ex:schedules}
   When $\processes$ is a singleton $\{0\}$, there is only one schedule
@@ -2086,7 +2082,7 @@ we are going to translate a typed hyperterm into a protocol inductively
 on the type derivation.
 To make induction work, we use the following auxiliary notions.
 An \textit{investigator}\index{investigator} is a partial map from processes
-to program variables.  \fix{is every use of the word investigator ok?}
+to program variables.
 % A system snapshot satisfies a global formula%
 % \index{satisfy!system snapshot ---s a global formula}~$\m\varphi$
 % iff \fix{fill}.
@@ -2137,7 +2133,6 @@ And $(p)_j$ denotes $(q_i)_{i\in\processes}$ where $q_j = p$ and $q_i =
 Below, we always choose fresh program variables.
 The definition is inductive over the type derivation, which is
 essentially compilation from lambda terms to imperative programs:
-\fix{specify where we rename variables}
 \begin{description}
  \item[$ij$-com]
       \begin{align*}
@@ -2153,9 +2148,10 @@ essentially compilation from lambda terms to imperative programs:
        \jmapsto{(\comodR) N}} \\=&
        \semoi{\overline{\hypert_0}\hmid \imapsto{M}} \hmid
        \semoi{\overline{\hypert_1}\hmid \jmapsto{N}}
-       \hmid\\& \{j\mapsto\p y\}\hmid \{i\mapsto \p x\}\enspace,
+       \hmid\\& \{j\mapsto\p y\}\hmid \{i\mapsto \p x\}
       \end{align*}
-      \fix{say something about freshness}
+      where $\p x$ and $\p y$ are new variables not used in induction
+      hypotheses (we omit writing this restriction on each case below),
  \item[EW] \begin{align*}
  \semo{\hypert\hmid \abort}=\semo{\hypert}\enspace,\quad
  \semoi{\hypert\hmid\abort}=&\semoi{\hypert}\hmid \emptyset\enspace,\quad
@@ -2187,7 +2183,6 @@ essentially compilation from lambda terms to imperative programs:
        \semoi{\overline{\hypert}\hmid \left(\cotuple{M'_i,N'_i}\right)_{i \in I}}
        \hmid \{i\mapsto \p k_i\}_{i\in I}
       \end{align*}
-      \fix{explain?}
  \item[EE]
       \begin{align*}
        \semo{\hypert \hmid \m{N} \hmid \m{M} \hmid \hypert'}
@@ -2422,7 +2417,7 @@ We set $g,d,t_i$ accordingly so that the program is typed.
    1\mapsto \cotuple{{xor((\comodR)y,y)},y}
    \}}
    \\
-   =&\{0\mapsto\p u,1\mapsto v\}
+   =&\{0\mapsto\p u,1\mapsto \p v\}
   \end{align*}
   The last two equations translates the global term that solves the
   exclusive-or problem (Example~\ref{ex:xor}) for the same argument as
