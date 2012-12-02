@@ -10,13 +10,13 @@ one models synchronous send--receive communication (Chapter~\ref{ch:exchange}) a
 the other models asynchronous waitfree
 read--write communication (Chapter~\ref{ch:lambda}).
 The two hyper-lambda calculi are in Curry--Howard correspondence with
-hypersequent formulation of logics: Amida logic and G\"odel--Dummett
+hypersequent formulation of logics: Abelian logic and G\"odel--Dummett
 logic.
 G\"odel--Dummett logic is an intermediate logic.
 An intermediate logic is a logic \textit{between} classical and
 intuitionistic logics, where `between' is defined using the
 set-theoretic inclusion of valid logical formulae of each logic.
-Amida logic is a substructural logic.
+Abelian logic is a substructural logic.
 
 \citet{hosoi-ono} declared that they chose to study intermediate
 logics in
@@ -35,13 +35,12 @@ of distributed computation extensively studied in 1990's.
 Since both sides of the correspondence is already known,
 the discovery is a replay of Curry's surprise.
 
-The less known logic, Amida logic, is our original.
-After developing the hyper-lambda calculus for Amida logic,
+After developing the hyper-lambda calculus for Abelian logic,
 we found that the resulting programming language is similar to one of
 session type systems by \citet{giunti2010} although they were not aware
 of the underlying logic.  The temporal order of discoveries is unusual
 because usually logic is found first and then programming languages are
-developed using Curry--Howard correspondence.  Amida logic is found
+developed using Curry--Howard correspondence.  Abelian logic is found
 after the programming language.
 
 We list our contributions from the most important:
@@ -54,7 +53,7 @@ We list our contributions from the most important:
        $(\phi\limp \psi)\otimes(\psi\limp \phi)$ (which we call Amida axiom) on top
        of the multiplicative additive fragment of intuitionistic linear
        logic (Chapter~\ref{ch:exchange}),
- \item discovery of Amida logic (Chapter~\ref{ch:exchange});
+ \item discovery of a new aximatization of Abelian logic (Chapter~\ref{ch:exchange});
  \item using conjunctive hypersequents for the first time (Chapter~\ref{ch:exchange}).
 \end{enumerate}
 
@@ -137,8 +136,9 @@ In computer science, such phenomena is called nondeterminism caused by schedulin
   \textsf{GD} stands for G\"odel--Dummett logic, for which
   a lambda calculus will be given in
   Chapter~\ref{ch:lambda}.
-  \textsf{Amida} stands for the Amida logic, an original logic
-  defined in Chapter~\ref{ch:exchange}.
+  \textsf{Abelian} stands for Abelian
+  logic~\citep{casari1989,metcalfe2002}\fix{cite another from 駒場}
+  treated in Chapter~\ref{ch:exchange}.
   \textsf{FLe} is for the full Lambek calculus with exchange
   rule~\citep[p.86]{residuated}, which is also known as the
   intuitionistic
@@ -147,6 +147,10 @@ In computer science, such phenomena is called nondeterminism caused by schedulin
   additive fragment of linear logic.  For these fragments of linear
   logic,
   \citet{abramsky1993computational} gave lambda calculi.
+  \textsf{MALL}$^-$~\citep{metcalfe2006}
+  is a fragment of \textsf{MALL} without
+  units $\top,0,\bot$\footnote{These are the units for additive disjunction,
+  additive conjunction and multiplicative disjunction.}.
   \textsf{FLew} stands for the full Lambek calculus with exchange and
   weakening,
   which is also known as intuitionistic affine logic.
@@ -201,9 +205,8 @@ additional axiom so that it can type some procsses which Pfenning or
 Wadler's type systems cannot.
 
 Our fourth contribution is a side-effect of the third contribution.
-The type system we developed for our third contribution is a seemingly
-unknown logic with peculiar properties.  Semantically, the falsehood is
-imcompatible with Amida logic (\thref{no-falsehood}).
+The type system we developed for our third contribution is seemingly
+unknown axiomatization of Abelian logic~\citep{casari1989}.
 Syntactically, the correct proof structure can be characterized with
 Amida edges, which is similar to the structure of Amida lottery.
 The previous works treated the computational interpretations of
@@ -226,7 +229,7 @@ Our fifth contribution is using conjunctive hypersequents.
 Hypersequents have been around since \citet{avron91}, but
 in all cases, different components in a hypersequent were interpreted
 disjunctively.
-In our formalization of Amida logic in Chapter~\ref{ch:exchange},
+In our formalization of Abelian logic in Chapter~\ref{ch:exchange},
 we use conjunctive hypersequents, where different components are
 interpreted conjunctively.
 This is the first application of such conjunctive hypersequents.

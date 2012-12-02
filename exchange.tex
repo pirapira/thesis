@@ -57,8 +57,8 @@ and Pfenning's system cannot.
 From the intuitionistic linear logic,
 the only addition is Amida axiom\index{axiom!Amida}\index{Amida axiom|see{axiom}}
 $(\phi\limp\psi)\otimes(\psi\limp\phi)$.
-We call the resulting logic Amida logic.
-In Amida logic, we can express $\pi$-calculus-like processes as macros.
+We will see that the resulting logic is identical to Abelian logic~\citep{casari1989}.
+In Abelian logic, we can express $\pi$-calculus-like processes as macros.
 Our initial motivation was just studying the axiom
 $(\phi\limp\psi)\otimes(\psi\limp\phi)$%
 \footnote{Takeuti Izumi asked about conjunctions
@@ -206,7 +206,7 @@ The typing rules are in Figure~\ref{fig:exchange:rules}.
   \hfill
   \AxiomC{$\hypert$}
   \AxiomC{$\hypert'$}
-  \LL{merge}
+  \LL{Merge}
   \BinaryInfC{$\hypert\hmid\hypert'$}
   \DisplayProof
   % cut XXX is this necessary?; yes
@@ -335,7 +335,7 @@ The typing rules are in Figure~\ref{fig:exchange:rules}.
  \end{figure}
  When $\tr\tj t\phi$ is derivable,
  type~$\phi$ is inhabited.  In other words,
- $\phi$ is provable in Amida logic i.e. $\phi$ is a theorem of Amida
+ $\phi$ is provable in Abelian logic i.e. $\phi$ is a theorem of Abelian
  logic.
  \begin{example}[Derivation of Amida axiom]
 The formula $(\phi\limp\psi)\otimes(\psi\limp\phi)$ is proved by
@@ -347,7 +347,7 @@ the following derivation.
   \AxiomC{}
   \LL{Ax}
   \UnaryInfC{$\tj{y}{\psi}\tr\tj{y}{\psi}$}
-  \LL{merge}
+  \LL{Merge}
   \BinaryInfC{$\tj{x}{\phi}\tr\tj{x}{\phi} \hmid
   \tj{y}{\psi}\tr\tj{y}{\psi}$}
   \LL{Sync}
@@ -372,7 +372,7 @@ Another example shows how we can type the term $\co c(c x)$.
   \AxiomC{}
   \LL{Ax}
   \UnaryInfC{$\tj{y}{\psi}\tr\tj{y}{\psi}$}
-  \LL{merge}
+  \LL{Merge}
   \BinaryInfC{$\tj{x}{\phi}\tr\tj{x}{\phi} \hmid
   \tj{y}{\psi}\tr\tj{y}{\psi} $}
   \LL{Sync}
@@ -388,6 +388,8 @@ Another example shows how we can type the term $\co c(c x)$.
  \end{center}
  \end{example}
 
+
+\subsection{Interaction with Contraction and Weakening}
  The typing system is has two strong properties about the missing structural rules:
  weakening and contraction.
  We first state the property about specialized contraction rules.
@@ -408,7 +410,7 @@ Another example shows how we can type the term $\co c(c x)$.
   $\phi\tr\phi\otimes\phi$, thanks to $\otimes$R rule and
   $\otimes$L rule.} admissible for any possibly-empty hypersequent~$\hyper$,
   context~$\G$ and formula~$\phi$, then, $\phi$ is
-  a theorem of Amida logic.
+  a theorem of Abelian logic.
  \end{proposition}
  \begin{proof}
   By the following derivation (again we omit variables and terms).
@@ -419,14 +421,14 @@ Another example shows how we can type the term $\co c(c x)$.
    \AxiomC{}
    \LL{Ax}
    \UnaryInfC{$\phi\tr\phi$}
-   \LL{merge}
+   \LL{Merge}
    \BinaryInfC{$\tr\one\hmid \phi\tr\phi$}
    \LL{Sync}
    \UnaryInfC{$\tr\phi\hmid \phi\tr\one$}
    \AxiomC{}
    \LL{Ax}
    \UnaryInfC{$\phi\tr\phi$}
-   \LL{merge}
+   \LL{Merge}
    \BinaryInfC{$\tr\phi\hmid \phi\tr\one\hmid\phi\tr\phi$}
    \LL{$\otimes$R}
    \UnaryInfC{$\tr\phi\hmid \phi,\phi\tr\one\otimes\phi$}
@@ -441,7 +443,7 @@ Another example shows how we can type the term $\co c(c x)$.
    \UnaryInfC{$\one,\phi\tr\phi$}
    \LL{$\otimes$L}
    \UnaryInfC{$\one\otimes\phi\tr\phi$}
-   \LL{merge}
+   \LL{Merge}
    \BinaryInfC{$\tr\one\otimes\phi \hmid \one\otimes\phi\tr\phi$}
    \LL{Cut}
    \UnaryInfC{$\tr\phi$}
@@ -450,7 +452,7 @@ Another example shows how we can type the term $\co c(c x)$.
   where C marks the step where the specialized contraction is used.
  \end{proof}
 
- \begin{corollary}[Amida logic proves any exponential formula]
+ \begin{corollary}[Abelian logic proves any exponential formula]
   If we are to introduce the bang modality~\citep{girard1987} of linear
   logic, then any formula of the form $!\phi$ is a theorem.
  \end{corollary}
@@ -459,30 +461,29 @@ Another example shows how we can type the term $\co c(c x)$.
   linear logic.
  \end{proof}
 
- \begin{corollary}[Incompatibility of additive disjunctive unit with Amida
-  logic]
+ \begin{corollary}[Incompatibility of additive disjunctive unit, \fix{cite}]
   \label{no-falsehood}
   If there is a formula~$\zero$ such that $\zero\tr\phi$ is derivable
   for any formula~$\phi$, then $\zero$ is provable (and as a consequence
   any formula is provable i.e. the resulting logic is inconsistent).
  \end{corollary}
- Further, this implies that Amida logic is incompatible with second
+ Further, this implies that Abelian logic is incompatible with second
  order universal quantification so that the parametricity argument for session
  types by \citet{cairesrelational} is not applicable.
  \begin{corollary}[Incompatibility of second order universal
-  quantification with Amida logic]
-  If we add the second order universal quantification to Amida logic,
+  quantification with Abelian logic]
+  If we add the second order universal quantification to Abelian logic,
   the resulting logic is inconsistent.
  \end{corollary}
  \begin{proof}
   $\forall X.X\tr\phi$ is derivable for any $\phi$.
  \end{proof}
- Although various extensions to Amida logic yields inconsistency,
- the Amida logic itself is consistent (see \thref{smcc} or
+ Although various extensions to Abelian logic yields inconsistency,
+ the Abelian logic itself is consistent (see \thref{smcc} or
  \thref{consistent-amida}).
 
  Next we state the property about the weakening rule.
- \begin{proposition}[Incompatibility of weakening with Amida logic]
+ \begin{proposition}[Incompatibility of weakening with Abelian logic, \fix{cite}]
   If we add the weakening rule
    \begin{center}
     \AxiomC{$\hyper\hmid \G\tr\psi$}
@@ -490,7 +491,7 @@ Another example shows how we can type the term $\co c(c x)$.
     \UnaryInfC{$\hyper\hmid \phi,\G\tr\psi$}
     \DisplayProof
    \end{center}
-  to Amida logic (where we omit variables and terms), the resulting
+  to Abelian logic (where we omit variables and terms), the resulting
   logic is inconsistent.
  \end{proposition}
  \begin{proof}
@@ -503,7 +504,7 @@ Another example shows how we can type the term $\co c(c x)$.
    \AxiomC{}
    \LL{Ax}
    \UnaryInfC{$\phi\tr\phi$}
-   \LL{merge}
+   \LL{Merge}
    \BinaryInfC{$\tr\one\hmid\phi\tr\phi$}
    \LL{Sync}
    \UnaryInfC{$\tr\phi\hmid\phi\tr\one$}
@@ -518,7 +519,7 @@ Another example shows how we can type the term $\co c(c x)$.
   where W marks the usage of weakening.
  \end{proof}
 
- To summarize, anything below is inconsistent with Amida logic.
+ To summarize, anything below is inconsistent with Abelian logic.
  \begin{itemize}
   \item a formula $\zero$ for which $\tr\zero\limp\phi$ is derivable for
 	all $\phi$
@@ -868,7 +869,7 @@ $u\in\semo{\G\tr\tj t\phi}$.
    Convergence holds because of subtle considerations of typing rules.
    One of those subtle considerations is
    the restriction that $\with$R rule only applies to singleton hypersequents.
-   \begin{example}
+   \begin{example}[The reason for restriction on $\with$R]
     There are no canonical terms $v$ such that $(c\ast) \otimes \lpair{\co
     c (\inl\ast), \co c (\inr \ast)} \eval v$ is derivable.
     By convergence, the term $ (c\ast) \otimes \lpair{\co
@@ -878,8 +879,8 @@ $u\in\semo{\G\tr\tj t\phi}$.
     thence, convergence would not hold.
    \end{example}
 
-   Convergence has an important implication: the consistency of Amida logic.
-   \begin{corollary}[Consistency of Amida logic]
+   Convergence has an important implication: the consistency of Abelian logic.
+   \begin{corollary}[Consistency of Abelian logic (known to \citet{casari1989})]
     \label{consistent-amida}
     $\tr\tj{t}{X}$ is not derivable for any term~$t$.
    \end{corollary}
@@ -1140,7 +1141,7 @@ $u\in\semo{\G\tr\tj t\phi}$.
        \begin{description}
 	\item[(end)] \AxiomC{} \LL{Ax }\UnaryInfC{$\tr\tj\ast\one$}
 	     \AxiomC{} \LL{Ax} \UnaryInfC{$\tr\tj\ast\one$}
-	     \LL{merge}
+	     \LL{Merge}
 	     \BinaryInfC{$\tr\tj\ast\one\hmid\tr\tj\ast\one$}
 	     \DisplayProof is what we seek.
 	\item[($\sendtype{\psi}{\phi^\ell}$)]
@@ -1157,7 +1158,7 @@ $u\in\semo{\G\tr\tj t\phi}$.
 	       \LL{IH}
 	       \UnaryInfC{$\tr\tj{t'}{\phi^\ell}\hmid \tr
 	       \tj{u'}{\overline{\phi^\ell}}$}
-	       \LL{merge}
+	       \LL{Merge}
 	       \BinaryInfC{$\tj{x}{\psi}\tr\tj{x}{\psi}\hmid \tr\tj{t'}{\phi^\ell}\hmid \tr
 	       \tj{u'}{\overline{\phi^\ell}}$}
 	       \LL{$\otimes$R}
@@ -1205,7 +1206,7 @@ $u\in\semo{\G\tr\tj t\phi}$.
       If have two terms that uses free variables of type $\phi^\ell$ and
       $\overline{\phi^\ell}$,
       we can replace those free variables by session realizers.
-       \begin{corollary}[Binding both ends of a channel]
+       \begin{corollary}[Binding Both Ends of a Channel]
 	If
 	$\hypert\hmid \G,\tj{x}{\phi^\ell}\tr\tj{t}{\psi}\hmid
 	\D,\tj{y}{\overline{\phi^\ell}}\tr\tj{u}{\theta}$
@@ -1654,6 +1655,162 @@ Similarly, for the process above, we never know what value is passed
 along channel~$x$, but we can still evaluate the while process.
 We call this situation \textit{dummy deadlocks}\index{deadlock!dummy}.
 
+\section{Correctness with Respect to Abelian Logic}
+
+Here we compare the logic of Amida calculus and Abelian logic.
+First, we show that all Abelian logic theorems are inhabited in Amida
+calculus (completeness of Amdia calculus).
+After that, we show that all types inhabited in Amida calculus are
+theorems of Abelian logic.
+
+\subsection{Completeness of Amida Calculus Type System}
+
+According to \citet{metcalfe2002}, Abelian logic is axiomatized by the
+following axioms \textbf{A1} to \textbf{A10} and deduction rules mp and $\with$I.  An abbreviation $\phi
+\multimapboth \psi$ which is defined to denote $(\phi\limp \psi)\with (\psi\limp\phi)$.
+\begin{description}
+ \item[A1] $((\phi\oplus\psi)\limp\theta)\multimapboth
+      ((\phi\limp\theta)\with(\psi\limp\theta))$
+ \item[A2]
+      $((\phi\otimes\psi)\limp\theta)\multimapboth(\phi\limp(\psi\limp\theta))$
+ \item[A3]
+      $(\phi\limp\psi)\limp((\psi\limp\theta)\limp(\phi\limp\theta))$
+ \item[A4]
+      $((\phi\limp\psi)\with(\phi\limp\theta))\limp(\phi\limp(\psi\with\theta))$
+ \item[A5]
+      $(\phi\with(\psi\oplus\theta))\limp ((\phi\with\psi)\oplus
+      (\phi\with\theta))$
+ \item[A6]
+      $\phi\multimapboth (\one\limp\phi)$
+ \item[A7]
+      $(\phi\with\psi)\limp\phi$
+ \item[A8]
+      $(\phi\with\psi)\limp\psi$
+ \item[A9]
+      $\phi\limp((\phi\limp\psi)\limp\psi)$
+ \item[A10]
+      $((\phi\limp\psi)\limp\psi)\limp\phi$
+ \item[mp]
+      If $\phi\limp\psi$ and $\phi$ are theorems, $\psi$ is also a
+      theorem
+ \item[$\with$I] If $\phi$ and $\psi$ are theorems, $\phi\with\psi$ is
+      also a theorem.
+\end{description}
+
+\begin{theorem}[Completeness of Amida Calculus with Respect to Abelian Logic]
+ A theorem of Abelian logic is inhabited in Amida calculus.
+\end{theorem}
+\begin{proof}
+ All axioms are inhabited in Amida calculus and
+ the Amida calculus rules satisfy the properties mp and $with$I.
+ Especially, a term with type \textbf{A10} can be derived as
+  \begin{center}
+   \AxiomC{}
+   \LL{Ax}
+   \UnaryInfC{$\tj{x}{\phi}\tr\tj{x}{\phi}$}
+   \AxiomC{}
+   \LL{Ax}
+   \UnaryInfC{$\tj{y}{\psi}\tr\tj{y}{\psi}$}
+   \LL{Merge}
+   \BinaryInfC{$\tj{x}{\phi}\tr\tj{x}{\phi}\hmid\tj{y}{\psi}\tr\tj{y}{\psi}$}
+   \LL{Sync}
+   \UnaryInfC{$\tj{x}{\phi}\tr\tj{cx}{\psi}\hmid\tj{y}{\psi}\tr\tj{\co
+   cy}{\phi}$}
+   \LL{$\limp$R}
+   \UnaryInfC{$\tr\tj{\lambda x.cx}{\phi\limp\psi}\hmid\tj{y}{\psi}\tr\tj{\co
+   cy}{\phi}$}
+   \LL{$\limp$L}
+   \UnaryInfC{$\tj{z}{(\phi\limp\psi)\limp\psi}\tr\tj{\co c(z(\lambda
+   x.cx))}{\phi}$}
+   \LL{$\limp$R}
+   \UnaryInfC{$\tr\tj{\lambda z.\co c(z(\lambda
+   x.cx))}{((\phi\limp\psi)\limp\psi)\limp\phi}$}
+   \DisplayProof
+  \end{center}
+ \fix{try other rules}.
+\end{proof}
+
+\subsection{Soundness of Amida Calculus Type System}
+
+For soundness, a different axiomatization of Abelian logic in
+\citep{metcalfe2006} is more useful.
+\begin{description}
+ \item[L1] $\phi\limp\phi$
+ \item[L2]
+      $(\phi\limp\psi)\limp((\psi\limp\theta)\limp(\phi\limp\theta))$
+ \item[L3]
+      $(\phi\limp(\psi\limp\theta))\limp(\psi\limp(\phi\limp\theta))$
+ \item[L4]
+      $((\phi\otimes\psi)\limp\theta)\multimapboth
+      (\phi\limp(\psi\limp\theta))$
+ \item[L5]
+      $(\phi\with\psi)\limp\phi$
+ \item[L6]
+      $(\phi\with\psi)\limp\psi$
+ \item[L7]
+      $((\phi\limp\psi)\with(\phi\limp\theta))\limp
+      (\phi\limp(\psi\with\theta))$
+ \item[L8]
+      $\phi\limp(\phi\oplus\theta)$
+ \item[L9]
+      $\psi\limp(\phi\oplus\theta)$
+ \item[L10]
+      $((\phi\limp\theta)\with(\psi\limp\theta))\limp((\phi\oplus\psi)\limp\theta)$
+ \item[L11]
+      $\phi\multimapboth(\one\limp\phi)$
+ \item[L12]
+      $((\phi\limp\one)\limp\one)\limp\phi$
+ \item[C1] $\one\multimapboth (\one\otimes\one)$
+ \item[C2] $(\phi\limp\phi)\limp\one$
+ \item[mp]
+      If $\phi\limp\psi$ and $\phi$ are theorems, $\psi$ is also a
+      theorem
+ \item[$\with$I] If $\phi$ and $\psi$ are theorems, $\phi\with\psi$ is
+      also a theorem.
+\end{description}
+
+\begin{theorem}[Soundness of Amida Calculus with Respect to Abelian
+ Logic]
+ An inhabited type in Amida calculus is a theorem of Abelian logic.
+\end{theorem}
+\begin{proof}
+ The IMALL deduction rules are straightforwardly obtained by combining
+ L1--L12, $\with$I and mp.
+ The Amida axiom $(\phi\limp\psi)\otimes (\psi\limp\phi)$ is a theorem
+ in Abelian logic by the following argument.
+ \begin{enumerate}
+  \item \label{sss} By C2, $((\phi\limp\one)\limp(\phi\limp\one))\limp\one$ is a
+	theorem of Abelian logic.
+  \item \label{ttt} By L4, L5 and mp,
+	$(((\phi\limp\one)\otimes\phi)\limp\one) \limp
+	((\phi\limp\one)\limp(\phi\limp\one))$ is a theorem of Abelian
+	logic.
+  \item \label{kkk} By \ref{sss}., \ref{ttt}., L2 and mp,
+	$ (((\phi\limp\one)\otimes\phi)\limp\one) \limp \one $ is a
+	theorem of Abelian logic.
+  \item \label{lll} By \ref{kkk}., L12 and mp,
+	$(\phi\limp \one)\otimes\phi$ is a theorem of Abelian logic.
+  \item \label{mmm} By a symmetric argument, $(\psi\limp\one)\otimes\psi$ is also a
+	theorem of Abelian logic.
+  \item \label{nnn} By \ref{lll}., \ref{mmm}., L1, L4 and mp, $((\phi\limp
+	\one)\otimes\phi)\otimes((\psi\limp\one)\otimes\psi)$ is a
+	theorem of Abelian logic.
+  \item \label{ooo} Since Abelian logic contains IMALL without additive units,
+	$((\phi\limp\one)\otimes\psi)\limp(\phi\limp\psi)$ is a theorem
+	of Abelian logic.
+  \item \label{ppp} By a symmetric argument,
+	$((\psi\limp\one)\otimes\phi)\limp(\psi\limp\phi)$ is also a
+	theorem of Abelian logic.
+  \item Combining \ref{nnn}., \ref{ooo}., \ref{ppp}., a theorem
+	$(\phi\limp\psi)\limp(\theta\limp\tau)\limp(\phi\otimes\theta)\limp(\psi\otimes\tau)$
+	and
+	mp, we obtain $(\phi\limp\psi)\otimes(\psi\limp\phi)$ as a
+	theorem of Abelian
+	logic.
+ \end{enumerate}
+\end{proof}
+
+
 \section{Proof Nets}
 \label{sec:proofnets}
 
@@ -1668,7 +1825,7 @@ we can focus on the multiplicative connectives ($\limp$ and $\otimes$).
 The fragment is called IMLL (intuitionistic multiplicative fragment of
 linear logic.  We also use the unit $\one$ for technical reasons.
 We first describe the IMLL proof nets and their properties.
-Then we add Amida links and see it characterizes the Amida logic.
+Then we add Amida links and see it characterizes Abelian logic.
 
 The Amida links are named after the Amida lottery (see
 Subsubsection~\ref{amidalot}).
@@ -1946,6 +2103,15 @@ the full intuitionistic logic following
 
 \section{Related Work}
 
+\subsection{Analytic Calculus for Abelian Logic}
+
+\citet{metcalfe2002} gave a labelled sequent calculus for Abelian logic.
+\citet{metcalfe2006} gave a hypersequent caluclus for Abelian logic and
+proved cut-elimination theorem for the hypersequent calculus.
+His formulation is different from here because Metcalfe's system does
+not use conjunctive hypersequents.  He sticks to the traditional
+hypersequent formulation where components are interpreted disjunctively.
+
 \subsection{Linear Logic and Session Types}
 
 One promising approach is using session types~\citep{honda-session}.
@@ -2142,7 +2308,8 @@ One of their typing rules
  to the programming world: for already known logics, new lambda
  calculi are invented (e.g.~\citep{lambdamu,murphy,abe2007,kimurakakutani2011}).
  However, in our case, it seems that we have just
- found a logic called Amida logic that corresponds to an already known
+ found a connection between
+ an already known logic called Abelian logic and an already known
  typing discipline invented by \citet{giunti2010}.
  It will be worthwhile to compare their system with our type system.
 
@@ -2163,7 +2330,7 @@ One of their typing rules
  The evaluation $\co c[C[cv]]\eval v$ reminds us of the call-with-current-continuation
  primitive~\citep{rees1986} and shift/reset primitives~\citep{danvy1990,asai2007}.
  The appearence of these classical type system primitives is not
- surprising because Amida logic validates $((p\limp q)\limp q)\limp p$,
+ surprising because Abelian logic validates $((p\limp q)\limp q)\limp p$,
  which is a stronger form of the double negation elimination.
 
  \subsection{Logic Programming}
@@ -2202,7 +2369,7 @@ $\sigma_{ABCD}\colon (A\limp B)\otimes (C\limp D)\rightarrow (A\limp D) \otimes
  (C\limp B)$, with naturality conditions.
  Before considering equality among morphisms,
  we know there is a non-trivial example.
-  \begin{example}[A symmetric monoidal closed category with swaps]
+  \begin{example}[Integer Model of {\citep[p.~107]{residuated}}]
    \label{smcc}
    The preorder formed by objects as integers and morphisms as the usual
    order among integers~$\le$
@@ -2260,9 +2427,70 @@ In order to implement this lambda calculus, we need linear types.
 The uniqueness type of Clean~\citep{parle1991} is not enough because
 their type system allows weakening.
 
+\subsection{Cut Elimination}
+
+In Amida calculus, there is a hypersequent (without terms) which
+can be derived with the cut rule but not without cut rules.
+For example,
+$X, Y\tr X\hmid \tr Y$ can be derived with a cut rule application:
+ \begin{center}
+  \AxiomC{}
+  \LL{Ax}
+  \UnaryInfC{$Y\tr Y$}
+  \AxiomC{}
+  \LL{Ax}
+  \UnaryInfC{$X\tr X$}
+  \LL{$\limp$R}
+  \UnaryInfC{$\tr X\limp X$}
+  \LL{Merge}
+  \BinaryInfC{$Y\tr Y\hmid \tr X\limp X$}
+  \LL{Sync}
+  \UnaryInfC{$Y\tr X\limp X\hmid \tr Y$}
+  \AxiomC{}
+  \LL{Ax}
+  \UnaryInfC{$X\tr X$}
+  \AxiomC{}
+  \LL{Ax}
+  \UnaryInfC{$X\tr X$}
+  \LL{Merge}
+  \BinaryInfC{$X\tr X\hmid X\tr X$}
+  \LL{$\limp$L}
+  \UnaryInfC{$X\limp X, X\tr X$}
+  \LL{Cut}
+  \BinaryInfC{$X,Y\tr X\hmid \tr Y$}
+  \DisplayProof
+ \end{center}
+However, the conclusion is not derivable without the cut rule.
+
+On the other hand, if we translate the conclusion naively to a formula
+$\tr (X\limp (Y\limp X))\otimes Y$,
+then the formula is derivable without cut.
+\begin{center}
+ \AxiomC{}
+ \LL{Ax}
+ \UnaryInfC{$X\tr X$}
+ \AxiomC{}
+ \LL{Ax}
+ \UnaryInfC{$Y\tr Y$}
+ \LL{Merge}
+ \BinaryInfC{$X\tr X\hmid Y\tr Y$}
+ \LL{Sync}
+ \UnaryInfC{$X\tr Y\hmid Y\tr X$}
+ \LL{$\limp$R}
+ \UnaryInfC{$X\tr Y\hmid \tr Y\limp X$}
+ \LL{Sync}
+ \UnaryInfC{$X\tr Y\limp X\hmid \tr Y$}
+ \LL{$\otimes$R}
+ \UnaryInfC{$X\tr (Y\limp X)\otimes Y$}
+ \DisplayProof
+\end{center}
+Since there is a cut-free deduction system for Abelian
+logic~\citep{metcalfe2006},
+we consider it natural to expect the same property for Amida calculus.
+
 \section{Conclusion}
 
-We found Amida logic, which can be characterized by Amida axiom
+We found Abelian logic, which can be characterized by Amida axiom
 $(\phi\limp\psi)\otimes(\psi\limp\phi)$ on top of IMALL.
 The logic has an application for encoding process calculi and session type
 system.

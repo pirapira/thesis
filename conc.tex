@@ -2,7 +2,8 @@
 
 \subsection{}
 
-We gave two inventions: hyper-lambda calculi and Amida logic.
+We gave two inventions: hyper-lambda calculi and a new axiomatization of
+Abelian logic.
 Our conclusions and future work spans from mathematical logic, computer
 science and philosophy.
 
@@ -13,8 +14,8 @@ We have seen two particular hyper-lambda calculi for two logics.
 and identified classes of axioms that can be translated into structural
 sequent calculus rules and structural hypersequent calculus rules.
 According to their classification, the prelinearity axiom
-$(\phi\limp\psi)\oplus(\psi\limp\phi)$ and Amid axiom
-$(\phi\limp\psi)\otimes(\psi\limp\phi) $belong to $\mathcal P_2$, a
+$(\phi\limp\psi)\oplus(\psi\limp\phi)$ and Amida axiom
+$(\phi\limp\psi)\otimes(\psi\limp\phi)$ belong to $\mathcal P_2$, a
 claess whose elements can be translated into a finite set of
 hypersequent structural rules.
 Other classes $\mathcal N_2$ and $\mathcal P_3$ of axioms can also be
@@ -23,8 +24,7 @@ thus, we expect the technique of hyper-lambda calculi applicable to
 logics with these axioms on top of $\mathbf{FLe}$.
 
 One particular logic worth trying is
-the logic characterized by Kripke models with bounded width \fix{cite
-[5] from terui}.
+the logic characterized by Kripke models with bounded width~\citep{Ciabattoni01042001}.
 Since G\"odel--Dummett logic is a special case of the bounding width~1,
 the generalization of width $k$ will provide waitfree computation on
 weaker shared memory consistency.  Further,
@@ -40,7 +40,7 @@ cut-elimination of hypersequent calculi.
 
 \subsection{Implementation}
 
-Since Amida logic is incompatible with contraction or weakening,
+Since Abelian logic is incompatible with contraction or weakening,
 straightforward implementation Amida calculus on top of Haskell or OCaml
 would not be a
 good way to exploint the safety of Amida calculus.
@@ -84,6 +84,14 @@ session types.
 
 \subsection{Understanding Waitfreedom}
 
+Although the definition of waitfreedom is operational
+(Section~\ref{waitfreedom}),
+there is a topological characterization~\citep{Herlihy99,Saks:1993vq} of
+waitfreely solvable problems using contractibity.
+Since we have obtained a logical characterization, studying the direct
+connection between the logical and topological characterizations would
+be interesting.
+
 \section{From Philosophical Perspectives}
 
 Mathematical logic first succeeded in formalizing mathematics.
@@ -99,12 +107,12 @@ play important roles.  For example, relevance logic is a famous
 substructural logic lacking weakening and inquisive logic is a weak
 logic (a logic possibly without substitution-closedness) between
 intuitionistic and classical logics~\citep{ciardelli2011}.
-Amida logic can provide a way to express
+Abelian logic can provide a way to express
 exchanges and indebtedness.  Amida axiom $(\phi\limp
 \psi)\otimes(\psi\limp\phi)$
 can describe two agents' exchange of $\phi$ and $\psi$ between two agents
 or one agent's borrowing of $\phi$ for $\psi$ and returning $\phi$ for
 $\psi$.
 Since analysis of pattern of exchange is an important subject of
-anthropology~\citep{kula1920}, Amida logic can provide a
+anthropology~\citep{kula1920}, Abelian logic can provide a
 basis for describing social and cultural phenomena.
