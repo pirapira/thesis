@@ -1,0 +1,35 @@
+\documentclass{jsarticle}
+
+\begin{document}
+論文の内容の要旨
+
+Hyper-Lambda Calculi\\
+(ハイパーラムダ計算)
+
+氏名 平井　洋一
+
+ We propose hyper-lambda calculi.  A hyper-lambda term is a finite
+ sequence of lambda terms, representing concurrent processes.  We give
+ two concrete hyper-lambda calculi: synchronous and asynchronous.  Both
+ employ a
+ pair of communication primitives exchanging their inputs.
+ In the synchronous case, both sides succeed.  In the asynchronous case,
+ at least one side obtains the other side's input.
+ The synchronous calculus implements message-passing communication
+ and session types;
+ the asynchronous calculus characterizes shared-memory waitfree
+ communication.
+ Among processes of a typed hyper-lambda term,
+ all succeed in the synchronous case while
+ at least one succeeds in the asynchronous case.
+ Logically, the processes are interpreted conjunctively
+ in the synchronous case but disjunctively in the asynchronous case.
+ The synchronous calculus is based on Abelian logic:
+ $(\phi\limp\psi)\otimes(\psi\limp\phi)$ on top of maltiplicative
+ additive fragment of intuitionistic linear
+ logic (without some units);
+ the asynchronous calculus is based on G\"odel--Dummett logic:
+ $(\phi\imp\psi)\lor(\psi\imp\phi)$ on top of intuitionistic logic.
+ The hyper-lambda calculi are in Curry--Howard correspondence with the
+ deduction systems for these logics.
+\end{document}
