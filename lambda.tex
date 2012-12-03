@@ -2473,12 +2473,11 @@ We set $g,d,t_i$ accordingly so that the program is typed.
 	  there exists an execution of $\semo{\hypert_0\hmid
 	  \imapsto{M}}$
 	  whose final system snapshot contains a process snapshot
-	  \fix{change $l$ into $p$}
-	  $s'_l$ for each process~$l\in \processes$
+	  $s'_p$ for each process~$p\in \processes$
 	  that maps program variables as:
 	  \begin{align*}
 	   \semoi{\overline{\hypert_0}\hmid \imapsto{M}}&\mapsto
-	   (V_{kl})_{0\le k < |\hypert_0|}
+	   (V_{kp})_{0\le k < |\hypert_0|}
 	  \end{align*}
 	  and moreover $s'_i$ maps $\semoi{\hypert_0\hmid
 	  \overline{\imapsto{M}}}$ to $V$ where $V$ is equal to
@@ -2488,11 +2487,11 @@ We set $g,d,t_i$ accordingly so that the program is typed.
 	  there exists an execution of $\semo{\hypert_1\hmid
 	  \jmapsto{N}}$
 	  whose final system snapshot contains a process snapshot
-	  $s''_l$ for each $l\in\processes$
+	  $s''_p$ for each $p\in\processes$
 	  that maps program variables as:
 	  \begin{align*}
 	   \semoi{\overline{\hypert_1}\hmid \jmapsto{N}}&\mapsto
-	   (V_{kl})_{|\hypert_0|\le k < |\hypert_0| + |\hypert_1|}
+	   (V_{kp})_{|\hypert_0|\le k < |\hypert_0| + |\hypert_1|}
 	  \end{align*}
 	  and moreover $s''_j$ maps $\semoi{\hypert_1\hmid
 	  \overline{\jmapsto{N}}}$ to $W$ where $W$ is
@@ -2521,7 +2520,7 @@ We set $g,d,t_i$ accordingly so that the program is typed.
 	   \left(\m{M}_k\right)
 	   \hmid \{j\mapsto {W}\}}
 	  \end{align*}
-	  for some store~$S''$ and $\m{M}_k(l) = V_{kl}$ for each $l\in
+	  for some store~$S''$ and $\m{M}_k(p) = V_{kp}$ for each $p\in
 	  \processes$.
 
 	  When we combine these induction hypotheses,

@@ -57,7 +57,8 @@ and Pfenning's system cannot.
 From the intuitionistic linear logic,
 the only addition is Amida axiom\index{axiom!Amida}\index{Amida axiom|see{axiom}}
 $(\phi\limp\psi)\otimes(\psi\limp\phi)$.
-We will see that the resulting logic is identical to Abelian logic~\citep{casari1989}.
+We will see that the resulting logic is identical to Abelian
+logic~\citep{casari1989}.
 In Abelian logic, we can express $\pi$-calculus-like processes as macros.
 Our initial motivation was just studying the axiom
 $(\phi\limp\psi)\otimes(\psi\limp\phi)$%
@@ -2119,7 +2120,7 @@ Session types aims at typing channels and processes in $\pi$-calculus so
 that the process execution is deterministic and not ending in deadlock.
 In general session type systems are not based on well-known logic.
 
-\subsubsection{Pfenning}
+\subsubsection{Pfenning's Typing System}
 
 \citet{pfenning2010} provide a type system for a fragment of $\pi$-calculus.
 Their type system imposes too strong a discipline
@@ -2166,7 +2167,7 @@ processes reduce to the canonical form~(\thref{convergence}).
 The most complicated example in \citet{pfenning2010} is the following
 one, which can be typed and evaluated in our framework as well.
 
- \begin{example}[Drink server example from \citet{pfenning2010} in Amida
+ \begin{example}[Drink Server from \citep{pfenning2010} in Amida
   calculus]
   \begin{align*}
    ServerProto &= (N\limp I \limp (N\otimes \one))\with (N\limp( I
@@ -2246,7 +2247,7 @@ one, which can be typed and evaluated in our framework as well.
   clients.
  \end{example}
 
-\subsubsection{Wadler}
+\subsubsection{Wadler's Encoding}
 
 \citet{wadler2012propositions} gave a type system for a process
 calculus based on classical linear logic.
@@ -2363,7 +2364,12 @@ One of their typing rules
 
 \subsection{Categorical Considerations}
 One might want to ask whether we can model the logic with
-a symmetric monoidal closed category~\citep{blute2004category}
+a symmetric monoidal closed
+category~\citep{blute2004category}%
+% \footnote{Abelian category must have a
+% zero object and if we can model Abelian logic with Abelian category,
+% the logic must have no theorems or all formulae are
+% theorems.}
   with identified isomorphisms
 $\sigma_{ABCD}\colon (A\limp B)\otimes (C\limp D)\rightarrow (A\limp D) \otimes
  (C\limp B)$, with naturality conditions.
@@ -2395,11 +2401,57 @@ The condition says the following diagram commutes:
     (A\limp D)\otimes (C\limp B) @>{d_{ADCB}}>> (A\otimes C)\limp (D\otimes B)
    \end{CD}
 \]
-where $d_{ABCD}$ is induced by adjunction between $\otimes$ and $\limp$
+ where $d_{ABCD}$ is induced by adjunction between $\otimes$ and $\limp$
  from a morphism
  $((A\limp B)\otimes (C\limp D))\otimes (A\otimes C)\rightarrow
  (B\otimes D)$, which is provided by symmetric monoidal closed
  properties.
+
+ Moreover, since $\phi^\ast \equiv \phi\limp\one$
+ has derivable sequents $\one \tr \phi^\ast \otimes \phi$
+ and $\phi\otimes\phi^\ast\tr \one$,
+ we can expect the semantics of $\phi^\ast$ to be the dual object of
+ that of $\phi$.
+ Indeed, checking one of the coherence condition of compact closedness
+ is evaluating the below typed term
+ \begin{center}
+  \AxiomC{$\tj t \phi$}
+  \AxiomC{}
+  \UnaryInfC{$\tr\tj{\ast}\one$}
+  \BinaryInfC{$\tr \tj t \phi \hmid \tr \tj \ast \one$}
+  \AxiomC{}
+  \UnaryInfC{$\tj x \phi \tr \tj x \phi$}
+  \AxiomC{}
+  \UnaryInfC{$\tr \tj \ast \one$}
+  \BinaryInfC{$\tj x \phi \tr \tj{cx}\one\hmid \tr \tj {\co c \ast}
+  \phi$}
+  \UnaryInfC{$\tj x \phi \tr \tj{cx} \one \hmid \tj{z}\one\tr \tj{\ign z
+  {\co c \ast}}\phi$}
+  \BinaryInfC{$\tr\tj t \phi\hmid \tj x \phi \tr \tj{cx}\one \hmid \tr
+  \tj{\ign \ast {\co c \ast}}\phi$}
+  \UnaryInfC{$\tr\tj{ct}\one \hmid \ign \ast {\co c \ast}\phi$}
+  \UnaryInfC{$\tr\tj{ct}\one \hmid \tj y \one \tr \tj {\ign y {\ign \ast
+  {\co c \ast}}} \phi$}
+  \UnaryInfC{$\tr \tj{\ign {ct}{\ign \ast {\co c \ast}}}\phi$}
+  \DisplayProof\enspace .
+ \end{center}
+ At least, if $t \eval v$ is derivable, $\ign {ct} {\ign \ast {\co c
+ \ast}}\eval v$ is also derivable.
+ \begin{center}
+  \AxiomC{$t\eval v$}
+  \AxiomC{}
+  \UnaryInfC{$\ast\eval \ast$}
+  \BinaryInfC{$t\eval v\hmid \ast\eval \ast$}
+  \UnaryInfC{$ct \eval \ast\hmid \co c\ast \eval v$}
+  \AxiomC{}
+  \UnaryInfC{$\ast\eval \ast$}
+  \BinaryInfC{$ct \eval \ast \hmid \ign \ast {\co c \ast} \eval v$}
+  \UnaryInfC{$\ign {ct} {\ign \ast {\co c \ast}}\eval v$}
+  \DisplayProof\enspace.
+ \end{center}
+ Showing the other direction is more
+ involved because of eval-subst rule, but the author expects the case
+ analysis on possible substitutions will succeed.
 
 \subsection{Multiparty, Recursions, \ldots}
 Our type system has a drawback of having only finitely many processes.

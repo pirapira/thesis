@@ -604,6 +604,9 @@ execute ls = do
 run :: JobPool -> IO ThreadPool
 run = Map.foldrWithKey threadSpawn $ return Map.empty
 \end{code}
+Since all hypersequents are of types belonging to type class
+\verb@Lconvertible@,
+they can be \verb@execute@d.
 
 \subsection{How to Construct a Hypersequent}
 Since a hypersequent represents a finite multiset of computations of which
@@ -639,11 +642,25 @@ other words, the last element of \verb@l@ is \verb@a@ and the rest is \verb@head
 This tactic of defining a type class is taken from the paper of
 heterogeneous collections~\citep{hetero}.
 By \verb@exchange@ and \verb@cycling@, we can perform all permutations of
-hypersequents.
+hypersequents\footnote{This implementation of permutations come from an
+Agda~\fix{cite} implementation of a typed
+lambda calculus for modal logic~K~\fix{cite}. Tatsuya Abe
+presented the implementation to me in Tokyo.}.
+
+First, we declare the type class \verb@HLast@.
+Here we use functional dependencies~\citep{mark_jones2000} to specify
+that the choice of type~\verb@l@ uniquely determines the types \verb@a@ and
+\verb@heads@ that satisfies \verb@HLast l a heads@ (if there exists such
+\verb@a@ and \verb@heads@ at all).
+In other words, \verb@HLast@ is actually a partial function that takes
+type~\verb@l@
+and returns types \verb@a@ and \verb@heads@.
 \begin{code}
 class HLast l a heads | l -> a, l -> heads
  where hLast :: l -> (a, heads)
-
+\end{code}
+The \verb@HLast@ is defined on hypersequents inductively.
+\begin{code}
 instance HLast (HCons a HNil) a HNil
     where hLast (HCons x HNil) = (x, HNil)
 
@@ -652,6 +669,10 @@ instance (HLast (HCons lh ll) a heads) =>
     where hLast (HCons y rest) =
               case hLast rest of
                 (x, oldheads) -> (x, HCons y oldheads)
+\end{code}
+Using this type class \verb@HLast@, we can define @cycling@ function
+which moves the last element of a hypersequent to the first position.
+\begin{code}
 cycling_ :: HLast l a heads => l -> HCons a heads
 cycling_ lst = case hLast lst of
                 (last_, heads) -> HCons last_ heads
@@ -663,6 +684,7 @@ cycling = fmap cycling_
 Finally, we provide concatenation of hypersequents with \verb@follows@
 function.
 Again, we prepare a type class called \verb@HAppend@ for this.
+This technique is also from \citet{hetero}.
 \begin{code}
 follows :: HAppend l l' l'' => IO l -> IO l' -> IO l''
 follows l0 l1 = do
@@ -685,7 +707,10 @@ In addition to simple permutations of hypersequents, we have another
 structural rule called external contraction.  When a hypersequent begins
 with two components of the same type, they can be merged into one.  The
 resulting component represents the computation of trying the original
-components one by one until one of them is successful.
+components one by one until one of them is successful or all components
+fail.
+The type of \verb@choice@ reveals that the two components of the same type
+\verb@K t a@ are squashed into a single component.
 \begin{code}
 choice :: Thread t => K t a :*: K t a :*: l -> IO (K t a :*: l)
 choice (HCons (K (_, comp0))
@@ -700,8 +725,9 @@ choice (HCons (K (_, comp0))
         Done Finished -> return $ Done Finished
 \end{code}
 
-It is possible to compose a local computation with another computation
-and obtain a new local computation.
+It is possible to compose a piece of local computation with another
+piece of computation
+and obtain a new piece of local computation.
 For that purpose, we prepare \verb@extend@ function.
 \begin{code}
 extend :: Thread t =>
@@ -741,7 +767,8 @@ peek :: Thread t =>
 peek f (K (th, content)) = content >>= f th
 \end{code}
 
-The communication rule says two threads compute something, write it to
+The most interesting
+communication rule says two threads compute something, write it to
 the shared memory, reads peer's write if possible and then continue
 computation. We split a thread's computation into two parts: one part
 up to the write and the other from the read operation. The former part is
@@ -777,14 +804,16 @@ comm x terror y serror = do
             case maybeba of
               Done thStatus -> return $ Done thStatus
               Having (tb, ta) -> do
-                _ <- tryPutMVar wbox ta
-                cval <- tryTakeMVar rbox
+                _ <- tryPutMVar wbox ta    -- writing
+                cval <- tryTakeMVar rbox   -- reading
                 case cval of
                   Nothing -> do
                     terror_result <- err th tb
                     return $ Done terror_result
                   Just cva -> return $ Having (tb, cva)
 \end{code}
+Here, both threads perform write and then read so that at least one
+direction of communication is successful.
 
 \section{Capturing Waitfreedom}
 
@@ -807,48 +836,44 @@ library unless the user uses other communication primitives explicitly.
 type FirstT = SucT ZeroT
 type SecondT = SucT FirstT
 
-hOwnId :: Thread t => IO (K t (t, t) :*: HNil)
-hOwnId = single $ return (t, t)
-
-putWithName :: Thread t => t -> String -> IO ()
-putWithName th content = putStrLn $ "Thread " ++ (show $ atid th) ++ ": " ++ content
-
 failOut :: t -> a -> IO ThreadStatus
 failOut _ _ = return TryAnotherJob
 
+hOwnId :: Thread t => IO (K t (t, t) :*: HNil)
+hOwnId = single $ return (t, t)
+putWithName :: Thread t => t -> String -> IO ()
+putWithName th content = putStrLn $ "Thread " ++ (show $ atid th) ++ ": " ++ content
 putResult :: Thread t => t -> String -> IO ThreadStatus
 putResult th str = do
   putWithName th $ "obtained " ++ str
   return Finished
-
 putOneResult :: (Thread t, Thread s) => s -> t -> IO ThreadStatus
 putOneResult owner content = putResult owner $ show $ [atid content]
+putTwoResults :: (Thread s, Thread t, Thread u) => u -> (s,t) -> IO ThreadStatus
+putTwoResults owner (c0, c1) = putResult owner $ show $ [atid c0, atid c1]
 
 two :: (Thread s, Thread t) => IO (K s (s, t) :*: (K t (t, s) :*: HNil))
 two = comm hOwnId failOut hOwnId failOut
 
-putTwoResults :: (Thread s, Thread t, Thread u) => u -> (s,t) -> IO ThreadStatus
-putTwoResults owner (c0, c1) = putResult owner $ show $ [atid c0, atid c1]
-
-duplicateTwo :: t -> a -> IO (a,a)
-duplicateTwo _ x = return (x,x)
-
-twoBeforeComm :: IO (
-                        K ZeroT ((ZeroT, FirstT), (ZeroT, FirstT)) :*:
-                        K FirstT ((FirstT, ZeroT), (FirstT, ZeroT)) :*:
-                        HNil)
+twoBeforeComm :: IO (K ZeroT ((ZeroT, FirstT), (ZeroT, FirstT)) :*:
+                     K FirstT ((FirstT, ZeroT), (FirstT, ZeroT)) :*: HNil)
 twoBeforeComm = two >>= (duplicateTwo -*- duplicateTwo -*- return)
+  where duplicateTwo _ x = return (x,x)
 
 three__ :: IO (K FirstT ((FirstT, ZeroT), (FirstT, ZeroT)) :*:
                  K ZeroT ((ZeroT, FirstT), SecondT) :*:
                  K SecondT (SecondT, (ZeroT, FirstT)) :*: HNil)
 three__ = cycling $ comm twoBeforeComm putTwoResults hOwnId failOut
 
-printThreeResults0 :: (Thread u, Thread s, Thread t, Thread v) => u -> (s,(t,v)) -> IO ThreadStatus
-printThreeResults0 owner (c0, (c1, c2)) = putResult owner $ show $ [atid c0, atid c1, atid c2]
+printThreeResults0 :: (Thread u, Thread s, Thread t, Thread v) =>
+                      u -> (s,(t,v)) -> IO ThreadStatus
+printThreeResults0 owner (c0, (c1, c2)) = putResult owner $
+                      show $ [atid c0, atid c1, atid c2]
 
-printThreeResults1 :: (Thread u, Thread s, Thread t, Thread v) => u -> ((s,t),v) -> IO ThreadStatus
-printThreeResults1 owner ((c0, c1), c2) = putResult owner $ show $ [atid c0, atid c1, atid c2]
+printThreeResults1 :: (Thread u, Thread s, Thread t, Thread v) =>
+                      u -> ((s,t),v) -> IO ThreadStatus
+printThreeResults1 owner ((c0, c1), c2) = putResult owner $
+                      show $ [atid c0, atid c1, atid c2]
 
 three :: IO (K FirstT ThreadStatus :*: K SecondT ThreadStatus :*:
              K ZeroT  ThreadStatus :*: K SecondT ThreadStatus :*: HNil)
@@ -1118,10 +1143,7 @@ time-consuming manner.  Since our library
 interface captures waitfreedom, it is possible to build a less
 time-consuming implementation for this interface.
 
-
-\fix{X10}
-
-\section{Future Work}
+\section{Future Work and Conclusion}
 
 \citet*{alg} showed a class of logics can be defined using
 hypersequent derivation rules.  It will be interesting to see what kind
@@ -1149,3 +1171,14 @@ the natural deduction for
 intuitionistic propositional logic, containing disjunction.
 Lindley's proof was formalized in Nominal Isabelle by
 \citet{Doczkal2009}.
+
+Moreover, in order to obtain performance, we have to change the run time
+system of Haskell.  Since the current implementation uses MVar mechanism
+that involve spin-locks, it must be unnecessarily slow.  In theory, waitfree
+computation can be implemented without locks.  In practice also, with
+sequential consistency, we can implement waitfree computation without
+locks.
+
+Anyway, since we have shown that hypersequent based waitfree computation
+is implementable.  This at least supports the proof of
+\thref{th:soundness}.

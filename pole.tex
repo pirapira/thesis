@@ -11,7 +11,7 @@ Indeed in their formalism, reduction of one term can wait
 for another, making synchronization.
 However,
 one can find no communication among different
-concurrent elements of an executable.\fix{need a section for this}
+concurrent elements of an executable.
 In this chapter, we show that logical axioms can specify how
 concurrent processes exchange information asynchronously.
 
@@ -63,23 +63,6 @@ semantics involving asynchronnous communication using stores and
 In Sect.~\ref{sec:as-logic}, we compare our type system with MTL.
 In sections~\ref{sec:discuss} and \ref{sec:conclude}, we give discussions
 and our conclusion.
-% \fix{is schedule needed? maybe not.}
-% with schedule, the operational semantics becomes deterministic
-
-\section{Motivation}
-
-\fix{describe danos and krivine}
-
-\fix{describe what is interesting}
-
-\fix{should say something about the asynchronous}
-
-\begin{itemize}
- \item enabling us to what $X\supset X$ does.
- \item deeper understanding of asynchronity
-\end{itemize}
-
-start weak
 
 %%% 2. terms types and _models_?
 \section{Asynchronous Semantics}
@@ -1591,7 +1574,7 @@ with the prelinearity
 axiom representing the same kind of communication schemes as we have
 shown.
 
-Hijek's \fix{spelling} basic fuzzy logic (BL) is very similar to MTL.
+H\'{a}jek's \fix{cite} basic fuzzy logic (BL) is very similar to MTL.
 Actually from MTL, BL can be obtained by adding
 $(\phi\otimes(\phi\limp\psi)) \limp (\psi\otimes(\psi\limp\phi))$ (or a
 symmetric axiom).  Thus, we have to find the computational meaning of
