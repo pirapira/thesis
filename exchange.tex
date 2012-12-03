@@ -534,11 +534,11 @@ Another example shows how we can type the term $\co c(c x)$.
 As a programming language, Amida calculus is equipped with an
 operational semantics that evaluates a closed hyper-term into a sequence
 of canonical forms.
-The set of canonical forms remains the same as Abramsky's
+We add more canonical forms to those of Abramsky's
 LF~\citep{abramsky1993computational}:
 \[
  \lpair{t,u}\qquad \ast\qquad v\otimes w\qquad \lambda
- x.t\qquad \inl{v}\qquad\inr{w}
+ x.t\qquad \inl{v}\qquad\inr{w}\qquad cv
 \]
 where $v$ and $w$ are canonical forms.
 
@@ -592,6 +592,10 @@ We add the semantics for channels.
   \hfill
   \AxiomC{$\hypere\hmid t\eval v\hmid u\eval w$}
   \UnaryInfC{$\hypere\hmid ct\eval w\hmid \co cu\eval v$}
+  \DisplayProof
+  \hfill
+  \AxiomC{$\hypere\hmid t\eval v$}
+  \UnaryInfC{$\hypere\hmid ct \eval cv$}
   \DisplayProof
   \ruleskip
   \AxiomC{   $\hypere\hmid t\eval t'\hmid s\eval s'\hmid
@@ -682,18 +686,21 @@ We denote by $\terms$ the set of closed terms.
 Given $\semo{X}_0\in 2^\terms$ for each propositional variable~$X$,
 we define $\semo{\phi}$ as an element of ${2^\terms}$
 as follows:
-\begin{align*}
- \semo{X} &= \semo{X}_0\\
- \semo{\one} &= \{t\in \terms \mid t\eval \ast\} \\
- \semo{\phi\otimes \psi}&= \{t\in\terms \mid t\eval v\otimes w,\quad
- v\in\semo{\phi},\quad w\in \semo{\psi}\}\\
- \semo{\phi\limp\psi}&= \{t\in\terms \mid t\eval \lambda x.v,\quad
- \forall u\in\semo{\phi}.(tu\in\semo{\psi})\}\\
- \semo{\phi\with\psi}&= \{t\in\terms \mid t\eval\lpair{v,w},\quad
- v\in\semo{\phi}, w\in\semo{\psi}\}\\
- \semo{\phi\oplus\psi}&= \{t\in\terms\mid (t\eval \inl{v}, v\in
- \semo{\phi})\text{ or }(t\eval\inr{w}, w \in \semo{\psi})\}\enspace.
-\end{align*}
+
+% OPTION one: seems easy but difficult after all
+% \newcommand{\modify}{\{t\in \terms \mid t\eval c v\}\cup }
+% \begin{align*}
+%  \semo{X} &= \modify\semo{X}_0\\
+%  \semo{\one} &= \modify\{t\in \terms \mid t\eval \ast\} \\
+%  \semo{\phi\otimes \psi}&= \modify\{t\in\terms \mid t\eval v\otimes w,\quad
+%  v\in\semo{\phi},\quad w\in \semo{\psi}\}\\
+%  \semo{\phi\limp\psi}&= \modify \{t\in\terms \mid t\eval \lambda x.v,\quad
+%  \forall u\in\semo{\phi}.(tu\in\semo{\psi})\}\\
+%  \semo{\phi\with\psi}&= \modify \{t\in\terms \mid t\eval\lpair{v,w},\quad
+%  v\in\semo{\phi}, w\in\semo{\psi}\}\\
+%  \semo{\phi\oplus\psi}&= \modify \{t\in\terms\mid (t\eval \inl{v}, v\in
+%  \semo{\phi})\text{ or }(t\eval\inr{w}, w \in \semo{\psi})\}\enspace.
+% \end{align*}
 
 For a context~$\G = \tj{x_0}{\phi_0},\ldots,\tj{x_n}{\phi_n}$,
 notation~$\semo{\G}$ denotes the set of sequences $u_0,\ldots,u_n$
@@ -739,7 +746,7 @@ $u\in\semo{\G\tr\tj t\phi}$.
     By induction hypothesis,
     \[
     \vec O\eval \vec{w'}\hmid t[\vec g/\G]\eval
-    w_0\hmid u[w/x][\vec d/\D]\eval w
+    w_0\hmid u[w/x][\vec d/\D]\eval w_1
     \]
     is derivable for any $w \in \semo{\psi}$.
     Since $w_0$ is in $\semo{\phi}$ and $v$ is in
@@ -856,6 +863,7 @@ $u\in\semo{\G\tr\tj t\phi}$.
 	 \lpair{t,u}[\vec g/\G]\eval \lpair{t,u}[\vec g/\G]
 	 \]
 	 is derivable.
+    \item[($\limp$R)] \fix{add}
     \item[Other rules]
 	 Other cases are immediate.
    \end{description}
@@ -867,31 +875,18 @@ $u\in\semo{\G\tr\tj t\phi}$.
     $t\eval v$ is derivable for some canonical form~$v$.
    \end{corollary}
 
-   Convergence holds because of subtle considerations of typing rules.
-   One of those subtle considerations is
-   the restriction that $\with$R rule only applies to singleton hypersequents.
-   \begin{example}[The reason for restriction on $\with$R]
-    There are no canonical terms $v$ such that $(c\ast) \otimes \lpair{\co
-    c (\inl\ast), \co c (\inr \ast)} \eval v$ is derivable.
-    By convergence, the term $ (c\ast) \otimes \lpair{\co
-    c (\inl\ast), \co c (\inr \ast)} $ is not typable.
-    Figure~\ref{fig:exchange:rules} allowed applying $\with$R rule to
-    multi-component hypersequents, the term would be typable and
-    thence, convergence would not hold.
-   \end{example}
-
-   Convergence has an important implication: the consistency of Abelian logic.
-   \begin{corollary}[Consistency of Abelian logic (known to \citet{casari1989})]
-    \label{consistent-amida}
-    $\tr\tj{t}{X}$ is not derivable for any term~$t$.
-   \end{corollary}
-    \begin{proof}
-     Assume $\tr\tj{t}{X}$ is derivable.
-     Take $\semo{X}_0$ to be empty.
-     Then, by \thref{thm:generalconvergence},
-     $t\eval t'$ is derivable for some $t'$ in $\semo{X}$.
-     However, $\semo{X}$ was taken empty.
-    \end{proof}
+   % Convergence has an important implication: the consistency of Abelian logic.
+   % \begin{corollary}[Consistency of Abelian logic (known to \citet{casari1989})]
+   %  \label{consistent-amida}
+   %  $\tr\tj{t}{X}$ is not derivable for any term~$t$.
+   % \end{corollary}
+   %  \begin{proof}
+   %   Assume $\tr\tj{t}{X}$ is derivable.
+   %   Take $\semo{X}_0$ to be empty.
+   %   Then, by \thref{thm:generalconvergence},
+   %   $t\eval t'$ is derivable for some $t'$ in $\semo{X}$.
+   %   However, $\semo{X}$ was taken empty.
+   %  \end{proof}
 
     \subsection{Lack of Determinacy}
 
