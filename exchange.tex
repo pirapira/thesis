@@ -93,9 +93,9 @@ We address some questions.
  \item Due to addition of Amida axiom, is it the case that
        every type is inhabited\footnote{A type $\phi$ is inhabited iff
        there is a closed term~$t$ with $\tr \tj{t}{\phi}$ derivable
-       using the derivation rules in Figure~\ref{fig:exchange:rules}}?
+       using the derivation rules in Figure~\ref{fig:exchange:rules}.}?
        In other words,
-       is the resulting type system consistent (Section~\ref{sec:convergence})?
+       is the resulting type system consistent (Section~\ref{correct-abelian})?
  \item How can we generalize the channels to serve more complicated
        protocols than one--shot send--receive communication (Section~\ref{sec:session-process})?
  \item Can we implement process calculi and session types using these communication
@@ -349,9 +349,7 @@ The typing rules are in Figure~\ref{fig:exchange:rules}.
   \label{fig:exchange:rules}
  \end{figure}
  When $\tr\tj t\phi$ is derivable,
- type~$\phi$ is \textit{inhabited}\index{inhabited}.  In other words,
- $\phi$ is provable in Abelian logic i.e. $\phi$ is a theorem of Abelian
- logic.
+ type~$\phi$ is \textit{inhabited}\index{inhabited}. 
  \begin{example}[Derivation of Amida axiom]
 The formula $(\phi\limp\psi)\otimes(\psi\limp\phi)$ is proved by
 the following derivation.
@@ -425,7 +423,7 @@ Another example shows how we can type the term $\co c(c x)$.
   $\phi\tr\phi\otimes\phi$, thanks to $\otimes$R rule and
   $\otimes$L rule.} admissible for any possibly-empty hypersequent~$\hyper$,
   context~$\G$ and formula~$\phi$, then, $\phi$ is
-  a theorem of Abelian logic.
+  inhabited in Amida calculus.
  \end{proposition}
  \begin{proof}
   By the following derivation (again we omit variables and terms).
@@ -467,7 +465,7 @@ Another example shows how we can type the term $\co c(c x)$.
   where C marks the step where the specialized contraction is used.
  \end{proof}
 
- \begin{corollary}[Abelian logic proves any exponential formula]
+ \begin{corollary}[Any exponential formula would be inhabited in Amida calculus]
   If we are to introduce the bang modality~\citep{girard1987} of linear
   logic, then any formula of the form $!\phi$ is a theorem.
  \end{corollary}
@@ -476,29 +474,56 @@ Another example shows how we can type the term $\co c(c x)$.
   linear logic.
  \end{proof}
 
- \begin{corollary}[Incompatibility of additive disjunctive unit, \fix{cite}]
+ We state another fact, which is known to
+ \citet{casari1989} who wrote ``in the $\ell$-logic there are no
+ ``additive extrema''
+ \begin{corollary}[Incompatibility of additive disjunctive unit]
   \label{no-falsehood}
   If there is a formula~$\zero$ such that $\zero\tr\phi$ is derivable
   for any formula~$\phi$, then $\zero$ is provable (and as a consequence
   any formula is provable i.e. the resulting logic is inconsistent).
  \end{corollary}
- Further, this implies that Abelian logic is incompatible with second
+ Further, this implies that Amida calculus is incompatible with second
  order universal quantification so that the parametricity argument for session
  types by \citet{cairesrelational} is not applicable.
- \begin{corollary}[Incompatibility of second order universal
-  quantification with Abelian logic]
-  If we add the second order universal quantification to Abelian logic,
+ The second order universal quantification adds a form of type $\forall
+ X\phi$ and two type derivation rules:
+  \begin{center}
+   \AxiomC{$\hypert \hmid \G\tr \tj{t}{\phi}$}
+   \LL{$\forall$R}
+   \UnaryInfC{$\hypert\hmid \G\tr\tj{t}{\forall X.\phi}$}
+   \DisplayProof
+   \hskip 3cm
+   \AxiomC{$\hypert\hmid \tj{x}{\psi[\theta/X]},\G\tr \tj{t}{\phi}$}
+   \LL{$\forall$L}
+   \UnaryInfC{$\hypert\hmid \tj{x}{\forall X.\psi}, \G\tr\tj{t}{\phi}$}
+   \DisplayProof
+  \end{center}
+ \begin{corollary}[Incompatibility of Second Order Universal
+  Quantification]
+  If we add the second order universal quantification to Amida calculus,
   the resulting logic is inconsistent.
  \end{corollary}
  \begin{proof}
+  \thref{no-falsehood} is applicable because
   $\forall X.X\tr\phi$ is derivable for any $\phi$.
  \end{proof}
- Although various extensions to Abelian logic yields inconsistency,
- the Abelian logic itself is consistent (see \thref{smcc} or
- \thref{consistent-amida}).
+ Although various extensions to Amida calculus yields inconsistency,
+ we will see that Amida calculus itself is consistent because it
+ characterizes Abelian logic (\thref{complete-to-Abelian},
+ \thref{sound-to-abelian}).
 
  Next we state the property about the weakening rule.
- \begin{proposition}[Incompatibility of weakening with Abelian logic, \fix{cite}]
+ After seeing that Amida calculus characterizes Abelian logic,
+ the fact is an
+ immediate consequence of completeness of Abelian logic with respect to
+ $\mathbb{Z}$~\fix{cite the thing from 駒場}, but we can now give a computational
+ interpretation:
+ of the communicating pair $c\colon \phi\limp\psi$ and $\co c\colon
+ \psi\limp\phi$,
+ with the help of weakening, we can throw away one side and still use the
+ other side.
+ \begin{proposition}[Incompatibility of weakening with Abelian logic]
   If we add the weakening rule
    \begin{center}
     \AxiomC{$\hyper\hmid \G\tr\psi$}
@@ -534,7 +559,7 @@ Another example shows how we can type the term $\co c(c x)$.
   where W marks the usage of weakening.
  \end{proof}
 
- To summarize, anything below is inconsistent with Abelian logic.
+ To summarize, anything below is inconsistent with Amida calculus.
  \begin{itemize}
   \item a formula $\zero$ for which $\tr\zero\limp\phi$ is derivable for
 	all $\phi$
@@ -567,7 +592,7 @@ where $S$ is a finite set of variables.
 We ignore the difference between $(\hypere_0\hmid \hypere_1)\hmid
 \hypere_2$ and $\hypere_0\hmid(\hypere_1\hmid\hypere_2)$.
 
-Now we define evaluation as a set of evaluation hypersequents
+Now we define evaluation as a set of evaluation seequences
 (Figure~\ref{fig:eval}).
 Most rules are similar to those of Abramsky's
 LF~\citep{abramsky1993computational}.
@@ -622,15 +647,15 @@ We add the semantics for channels.
   \DisplayProof
   \ruleskip
   \AxiomC{$\hypere\hmid
-  t\eval\lpair{t_0,t_1}\hmid t_0\eval v_0
-  \hmid  u[v_0/x]\eval w$}
+  t\eval\lpair{t_0,t_1}
+  \hmid  u[t_0/x]\eval w$}
   \UnaryInfC{$\hypere \hmid
   \letin t {\lpair{x,\_}} u\eval w$}
   \DisplayProof
   \ruleskip
   \AxiomC{$\hypere
-  \hmid t\eval\lpair{t_0,t_1}\hmid t_1\eval v_1
-  \hmid  u[v_1/y]\eval w$}
+  \hmid t\eval\lpair{t_0,t_1}
+  \hmid  u[t_1/y]\eval w$}
   \UnaryInfC{$\hypere \hmid
   \letin t {\lpair{\_,y}} u\eval w$}
   \DisplayProof
@@ -654,34 +679,17 @@ We add the semantics for channels.
   \DisplayProof
   \caption[The definition of evaluation relation of the Amida
   calculus]{The definition of evaluation relation of the Amida calculus.
-  $\hypere$ is possibly empty evaluation hypersequence.
+  $\hypere$ is possibly empty evaluation sequence.
   The whole system is based on Abramsky's LF.
   Note that the results of evaluation are always canonical forms.
   }
   \label{fig:eval}
  \end{figure}
 
-\begin{example}[Evaluation of a term communicating with its subterm]
- \label{inner-something}
- The rule eval-subst in \thref{fig:eval} is not in Abramsky's
- LF~\citep{abramsky1993computational}.  However, it is necessary to give
- the following evaluation.
-  \begin{center}
-   \AxiomC{}
-   \UnaryInfC{$\ast\eval\ast$}
-   \AxiomC{$t\eval v$}
-   \BinaryInfC{$\ast\eval\ast\hmid t\eval v$}
-   \UnaryInfC{$c\ast\eval v\hmid \co ct\eval\ast$}
-   \LL{eval-subst}
-   \UnaryInfC{$c(\co c t)\eval v$}
-   \DisplayProof
-  \end{center}
-\end{example}
-
 \section{Type Safety}
 
  \begin{proposition}[Safety]
-  \label[safety]
+  \label{safety}
   If $\tr \tj{t_0}{\phi_0} \hmid \cdots \hmid \tr \tj{t_n}{\phi_n}$ and
   $t_0\eval v_0\hmid \cdots t_n\eval v_n$ are
   derivable, then
@@ -691,34 +699,100 @@ We add the semantics for channels.
   are also derivable.
  \end{proposition}
  \begin{proof}
-  By induction on evaluation.
-  \fix{fill, use \thref{split}}
+  By induction on evaluation using propositions below.
+  We classify the situation by the last rule used.
+  \begin{description}
+   \item[(Merge)]
+	By \thref{split}, we can use the induction hypothesis.
+   \item[($\letin t {\lpair{x,\_}} u$)]
+	By \thref{inv-with-l}, we can use the induction hypothesis.
+   \item[(Other cases)]
+	Similar to above.
+  \end{description}
  \end{proof}
 
- Two hypersequents $\hypert$ and $\hypert'$ are channel disjoint iff
+ Two hypersequents $\hypert$ and $\hypert'$ are channel-disjoint iff
  it is not the case that $\hypert$ contains $c$ and $\hypert'$ contains
  $\co c$ for any channel~$c$.
  \begin{proposition}[Split]
   \label{split}
-  If $\hypert\hmid \hypert'$ is derivable for two channel disjoint
+  If a type derivation leading to $\hypert\hmid \hypert'$ exists for two
+  channel-disjoint
   hypersequents,
   both $\hypert$ and $\hypert'$ are derivable separately.
  \end{proposition}
  \begin{proof}
-  \fix{fill}
+  By induction on the type derivation.  Notice that all type derivation
+  rules except Sync touches only one component.  Notice also that all
+  typing rules preserves channels from top-to-bottom, i.e., if a
+  component in the assumption of a rule contains a channel, then there
+  is a unique corresponding component in the conclusion of the rule
+  containing the same channel.
+ \end{proof}
+
+ \begin{proposition}[Inversion on $\with$L]
+  \label{inv-with-l}
+  If $\hypert\hmid \G\tr\tj{\letin t {\lpair{x,\_}} u}\theta$
+  is derivable, then there is a partition of $\G$ into $\G_0$ and $\G_1$
+  (up to exchange) such that $\hypert\hmid \G_0\tr \tj t {\phi\with\psi}
+  \hmid \G_1,\tj{x}{\phi}\tr\tj u \theta$ is derivable.
+ \end{proposition}
+ \begin{proof}
+   By induction on the original derivation.
  \end{proof}
 
   \subsection{Lack of Convergence}
 
-  \fix{describe convergence}
-  There are two difficult cases for obtaining convergence.
+  Convergence states that whenever a closed term~$t$ is typed $\tr\tj
+  t\phi$, then an evaluation $t\eval v$ is also derivable.
+  It is a desirable property so that \citet{abramsky1993computational}
+  proves it for LF, but
+  there are at least two kinds of counter examples for obtaining
+  convergence of Amida calculus.
 
 \subsubsection{Nested Channel Pairs}
 
+Consider a typed term:
+ \begin{center}
+  \AxiomC{}
+  \LL{Ax}
+  \UnaryInfC{$\tj x \one\tr\tj x \one$}
+  \AxiomC{}
+  \LL{$\one$R}
+  \UnaryInfC{$\tr \tj \ast \one$}
+  \LL{$\oplus$R}
+  \UnaryInfC{$\tr\tj{\inl\ast}{\one\oplus\one}$}
+  \LL{Merge}
+  \BinaryInfC{$\tj{x}\one\tr\tj{x}\one\hmid
+  \tr\tj{\inl\ast}{\one\oplus\one}$}
+  \LL{Sync}
+  \UnaryInfC{$\tj{x}{\one}\tr\tj{cx}{\one\oplus\one}\hmid \tr \tj{\co
+  c(\inl\ast)}{\one}$}
+  \LL{Cut}
+  \UnaryInfC{$\tr\tj{c(\co c(\inl \ast))}{\one\oplus\one}$}
+  \DisplayProof
+ \end{center}
+ with no evaluation.  In order to evaluate this closed term,
+ we can add the following eval-subst rule:
+\begin{center}
   \AxiomC{$\hypere\hmid t\eval v\hmid u[v/x]\eval w$}
   \LL{eval-subst}
   \UnaryInfC{$ \hypere\hmid u[t/x] \eval w $}
   \DisplayProof
+\end{center}
+so that the following evaluation is possible
+  \begin{center}
+   \AxiomC{}
+   \UnaryInfC{$\ast\eval\ast$}
+   \AxiomC{}
+   \UnaryInfC{$\ast\eval\ast$}
+   \UnaryInfC{$\inl\ast\eval \inl\ast$}
+   \BinaryInfC{$\ast\eval\ast\hmid \inl\ast\eval \inl \ast$}
+   \UnaryInfC{$c\ast\eval \inl\ast\hmid \co c(\inl\ast)\eval\ast$}
+   \LL{eval-subst}
+   \UnaryInfC{$c(\co c (\inl\ast))\eval \inl\ast$}
+   \DisplayProof\enspace.
+\end{center}
 
   However, adding eval-subst rule breaks the proof of
   \thref{safety}.
@@ -744,21 +818,31 @@ Consider a typed term:
  \end{center}
 If convergence holds, there must be an evaluation
 \[
- \lambda x.cx\eval \lambda x.cx\hmid \co c \ast \eval ?\enspace.
+ \lambda x.cx\eval \lambda x.cx\hmid \co c \ast \eval \,?\enspace.
 \]
 However, since the bound variable~$x$ is not yet replaced by a closed
 term, there is no closed canonical form ? satisfying the evaluation relation.
 
-  \subsection{Lack of Determinacy}
+  \subsection{Determinacy}
 
   Determinacy states that if $t\eval v$ and $t\eval w$ hold,
   then $v$ and $w$ are identical.
-  The Amida calculus lacks determinacy.
-  To demonstrate that, we need a term~$t$ with $t\eval v$ where $t$
-  and $v$ are different. For example, take $t = (\lambda x. x)\ast$
-  and $v = \ast$.
-  Then, both $\lambda y.t\eval \lambda y.t$ and $\lambda y.t\eval
-  \lambda y.v$ are derivable.
+  Since our evaluation is given to possibly multiple terms at the same
+  time, it is easier to prove a more general version.
+  \begin{theorem}[General Determinacy of Amida calculus]
+   If
+   \[
+    t_0\eval v_0\hmid t_1\eval v_1\hmid \cdots \hmid t_n\eval v_n
+   \]
+   and
+   \[
+    t_0\eval w_0\hmid t_1\eval w_1\hmid \cdots \hmid t_n\eval w_n
+   \]
+   hold, then each $v_i$ is identical to $w_i$.
+  \end{theorem}
+  \begin{proof}
+   \fix{fill}
+  \end{proof}
 
   \section{Sessions and Processes}
   \label{sec:session-process}
@@ -1466,53 +1550,8 @@ term, there is no closed canonical form ? satisfying the evaluation relation.
 %    \fix{complete}
 %   \end{proof}
 
-\subsection{Dummy Deadlocks}
-
-Using \thref{typing_process} and \thref{typing_connection},
-we can build the following type derivation.
- \begin{center}
-  \AxiomC{}
-  \UnaryInfC{$\tr\tj 0\one$}
-  \UnaryInfC{$\tj{x_R}{\terminate}\tr\tj{\ign {x_R} 0}{\one}$}
-  \UnaryInfC{$\tj{x_L}{\terminate},\tj{x_R}{\terminate}
-  \tr\tj{\ign{x_L,x_R}{0}}{\one}
-  $}
-  \AxiomC{}
-  \UnaryInfC{$\tj{y}\two\tr\tj y \two$}
-  \BinaryInfC{$\tj{y}\two,\tj{x_L}{\terminate},
-  \tj{x_R}{\sendtype{(\two)}\terminate}\tr
-  \tj{\sendterm{x_R}{y}{\ign{x_L,x_R}{0}}}{\one}$}
-  \UnaryInfC{
-  $\tj{x_L}{\recvtype{(\two)}\terminate},\tj{x_R}{\sendtype{(\two)} \terminate}
-  \tr\tj
-  {\recvterm {x_L}{y}{\sendterm{x_R}{y}{\ign {x_L,x_R} 0}}}\one$
-  }
-  \UnaryInfC{
-  $\tr\tj{\nu\tj{x}{\recvtype{(\two)}\terminate}.
-  \recvterm {x_L}{y}{\sendterm{x_R}{y}{\ign {x_L,x_R} 0}}}{\one}$
-  }
-  \DisplayProof
- \end{center}
- Thus by \thref{convergence}, the typed process has an evaluation.
- However, the typed process
- \[
- \nu x.x(y).\recvterm x y 0
- \]
- is deadlocked in the traditional semantics of
-process calculi because the process waits for a value from $x$ before
-sending a value to $x$.
-However, we can give an evaluation to this process.
-
-The situation is essentially similar to $\co c(c)t$ (\thref{inner-something}).
-When we want the output of channel $c$, we can look at $\co c$'s input,
-which is $t$.  However, when we want the output of $\co c$, we have to
-look at the input of $c$, which is again the output of $\co c$.  Thus we
-can never know the output of $\co c$.
-Similarly, for the process above, we never know what value is passed
-along channel~$x$, but we can still evaluate the while process.
-We call this situation \textit{dummy deadlocks}\index{deadlock!dummy}.
-
 \section{Correctness with Respect to Abelian Logic}
+\label{correct-abelian}
 
 Here we compare the logic of Amida calculus and Abelian logic.
 First, we show that all Abelian logic theorems are inhabited in Amida
@@ -1554,7 +1593,9 @@ following axioms \textbf{A1} to \textbf{A10} and deduction rules mp and $\with$I
       also a theorem.
 \end{description}
 
-\begin{theorem}[Completeness of Amida Calculus with Respect to Abelian Logic]
+\begin{theorem}[Completeness of Amida Calculus with Respect to Abelian
+ Logic]
+ \label{complete-to-Abelian}
  A theorem of Abelian logic is inhabited in Amida calculus.
 \end{theorem}
 \begin{proof}
@@ -1628,6 +1669,7 @@ For soundness, a different axiomatization of Abelian logic in
 
 \begin{theorem}[Soundness of Amida Calculus with Respect to Abelian
  Logic]
+ \label{sound-to-abelian}
  An inhabited type in Amida calculus is a theorem of Abelian logic.
 \end{theorem}
 \begin{proof}
@@ -1671,9 +1713,8 @@ For soundness, a different axiomatization of Abelian logic in
 \section{Proof Nets}
 \label{sec:proofnets}
 
-In order to find a remedy for the lack of determinacy,
-we have to study the structure of proofs.
-For that, a technique called proof nets is promising.
+Toward evaluating all typed terms, a technique called proof nets seems
+promising.
 Generally, proof nets are straightforward for the multiplicative
 fragments but complicated for additive and exponential fragments.
 Since the Amida axiom $(\phi\limp\psi)\otimes(\psi\limp\phi)$
@@ -2015,10 +2056,8 @@ open channel~$x$ that emits
 a channel to/from which one can send~$B$ and receive~$A$, receives a
 value of $B$ and
 sends a value of $A$.
-This example shows that our type system is strictly more flexible than
+This example shows that our type system is can type strictly more terms than
 the type system in \citet{pfenning2010}.
-Moreover, we still ensure deadlock freedom in the sense that all typed
-processes reduce to the canonical form~(\thref{convergence}).
 
 The most complicated example in \citet{pfenning2010} is the following
 one, which can be typed and evaluated in our framework as well.

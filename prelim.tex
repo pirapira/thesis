@@ -369,7 +369,7 @@ transformation witnesses implication.
 
 \subsection{Natural Deduction and Sequent Calculus}
 
-\subsubsection{Gentzen}\index{Gentzen}
+\subsubsection{Gentzen's Deduction Systems}\index{Gentzen}
 
 The deduction system of \citet{heyting1930} characterizes what is still
 called intuitionistic propositional logic today. However, Heyting's
@@ -452,12 +452,12 @@ rules for $\wedge$
   The elimination rules are rewriten so that they operate on the left
   side of sequents and they are called the left rules.
 
-  In Chapter~\ref{ch:example}, we will use hypersequent calculus for
+  In Chapter~\ref{ch:exchange}, we will use hypersequent calculus for
   presenting Abelian logic.
   In Chapter~\ref{ch:lambda}, we will use hypersequent-stye natural deduction
   for preseinting G\"odel--Dummett logic.
 
-\subsubsection{Prawitz}
+\subsubsection{Prawitz's Analysis of Natural Deduction}
 
 \citet{gentzen} did not prove the subformula property immediately for
 natural deduction.  He proved the subformula property for sequent
@@ -1041,6 +1041,34 @@ propositional logic:
  interpretations for the intuitionistic linear logic and the classical
  linear logic.  Since we will extend his linear lambda calculus in
  Chapter~\ref{ch:exchange}, we are going to elaborate on this there.
+
+ \subsubsection{Abelian Logic}
+
+ \fix{cite meyer and Slaney} and \citet{casari1989} found Abelian logic independently.
+ \citet{casari1989} mentions arguments about comparative propositions in
+ treated in Aristotle's \textit{Topics}:
+  \begin{quote}
+   $x$ is more (less, as much as) $A$ than $y$
+  \end{quote}
+ and so on~\citep[p.~161]{casari1989}.
+ One semantics of Abelian logic interpretes a logical formula as an
+ element of an Abelian group.  There,
+ the interpretation of $\one$ is the unit;
+ the interpretation of $\otimes$ is the operation of the group; and
+ the interpretation of $\cdot\limp\one$ is the inverse element.
+ Abelian logic is an important example in algebraic semantics of logics
+ because Abelian logic is complete with respect to the lattice-ordered
+ group $\mathbb Z$ of integers~\citep[pp.~107--108]{residuated}.
+ \citet{metcalfe2002} gave a deduction system for Abelian logic,
+ which ``almost''~\citep[after Def.~8]{metcalfe2002} has the subformula property.
+ \citet{metcalfe2006} gave a hypersequent calculus for Abelian logic and
+ proves cut-elimination~\citep[Thm.~5]{metcalfe2006} for the
+ hypersequent calculus.
+ In chapter \ref{ch:exchange}, we provide a lambda-calculus based on
+ another hypersequent calculus.  Our formulation use conjunctive
+ hypersequents, which allow us to encode a process calculus in our
+ hyper-lambda calculus in a straightforward way
+ (Section~\ref{sec:session-process}).
 
  \subsubsection{Proof Nets and Amida Lotteries}
  \label{amidalot}
