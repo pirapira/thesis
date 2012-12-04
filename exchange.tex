@@ -35,7 +35,7 @@ a}\footnote{The arrow \texttt{->} shows implication $\imp$ and the tuple
 The former command consumes an argument of type~\texttt{a} and
 the argument appears from the latter command.
 However, if programmers make mistakes, these commands can
-cause a deadlock in execution time even if the program passes the type
+cause a deadlock during execution even after the program passes type
 checking.
 This is because the type system of Haskell allows programmers to
 use only one of $(\phi\imp \one)$ and $\phi$.
@@ -73,39 +73,41 @@ $\cdots u  \cdots t \cdots$: in words,
 $c$ outputs $\co c$'s input and vice versa.
 We can obtain the send--receive communication when we specialize the
 axiom as $(\phi\limp \one)\otimes(\one\limp\phi)$; the left hand side
-$\tj{c}{\phi\limp\one}$ is the sending primitive and
-the right hand side $\tj{\co c}{\one \limp\phi}$ is the receiving
+${c}$ of type ${\phi\limp\one}$ is the sending primitive and
+the right hand side ${\co c}$ of type ${\one \limp\phi}$ is the receiving
 primitive.
 
-When we want to use these primitives anywhere in lambda terms,
-there is one problem: what happens to $\co c(c t)$?
-In this case, we do not know the output of $c$ because the output of $c$
-comes from $\bar c$'s input, which is the output of $c$.
-Fortunately, we just want to know the output of $\co c$, which is the
-input of $c$, that is, $t$.
-In a more complicated case $\co c(\co d(c (d t)))$,
-we can reason the output of $\co c$ as the input of $c$ as the output of
-$d$ as the input of $\co d$ as the output of $c$ as the input of $\co c$
-as the output of $\co d$ as the input of $d$, which is $t$.
+% When we want to use these primitives in lambda terms,
+% there is one problem: what happens to $\co c(c t)$?
+% In this case, we do not know the output of $c$ because the output of $c$
+% comes from $\bar c$'s input, which is the output of $c$.
+% Fortunately, we just want to know the output of $\co c$, which is the
+% input of $c$, that is, $t$.
+% In a more complicated case $\co c(\co d(c (d t)))$,
+% we can reason the output of $\co c$ as the input of $c$ as the output of
+% $d$ as the input of $\co d$ as the output of $c$ as the input of $\co c$
+% as the output of $\co d$ as the input of $d$, which is $t$.
 
-We have more questions.
+We address some questions.
 \begin{itemize}
- \item Due to addition of the axiom, is it the case that
-       every type is inhabited?  In other words,
-      is the resulting type system consistent (Section~\ref{sec:convergence})?
+ \item Due to addition of Amida axiom, is it the case that
+       every type is inhabited\footnote{A type $\phi$ is inhabited iff
+       there is a closed term~$t$ with $\tr \tj{t}{\phi}$ derivable
+       using the derivation rules in Figure~\ref{fig:exchange:rules}}?
+       In other words,
+       is the resulting type system consistent (Section~\ref{sec:convergence})?
  \item How can we generalize the channels to serve more complicated
        protocols than one--shot send--receive communication (Section~\ref{sec:session-process})?
- \item Can we implement process calculi using these communication
+ \item Can we implement process calculi and session types using these communication
        primitives (Section~\ref{sec:session-process})?
 \end{itemize}
+Actually, addition of Amida axiom yields Abelian logic~\citep{casari1989}.
 
 After following these practical questions,
-we proceed to developing a proof net structure for the logic
+we proceed to developing a proof net structure for the resulting logic
 (Section~\ref{sec:proofnets}).
-It turns out that the the ``Amida lottery,'' which is a traditional
+It turns out that the ``Amida lottery,'' which is a traditional
 Japanese way of making arbitrary permutations, provides the answer.
-
-
 
 \section{Definitions}
 
@@ -118,11 +120,17 @@ We define a type~$\phi$ by BNF:
  \phi\oplus\phi\mid \phi\with\phi\enspace.
 \]
 A \textit{formula}\index{formula} is a type.
+As the typing rules (Figure~\ref{fig:exchange:rules}) reveal,
+$\otimes$ is multiplicative conjunction,
+$\limp$ is multiplicative implication,
+$\otimes$ is additive disjunction and
+$\with$ is additive conjunction.
 
 \subsection{Terms and Free Variables}
 
-Following Abramsky's linear lambda calculus
-LF~\citep{abramsky1993computational}, we first define patterns
+We assume coutably infinitely many variables $x, y, z, \ldots$.
+Before defining terms, following Abramsky's linear lambda calculus
+LF~\citep{abramsky1993computational}, we define patterns
 binding sets of variables:
 \begin{itemize}
  \item $\ast$ is a pattern binding $\emptyset$,
@@ -145,8 +153,8 @@ with involution satisfying $\co c\neq c$ and $\co{\co c} = c$.
  \item if $t$ is a term with free variables $S\cup \{x\}$ and $x$ is not
        in $S$, then $\lambda x.t$ is a term with free variables~$S$,
  \item if $t$ is a term with free variables~$S$, $p$ is a pattern
-       binding $S'$, $u$ is a term with free variables $S'\cup S''$ and
-       $S\cap S'' = S'\cap S'' = \emptyset$, then,
+       binding $S'$, $u$ is a term with free variables $S'\cup S''$ and equalities
+       $S\cap S'' = S'\cap S'' = \emptyset$ hold, then,
        $\letin t p u$ is a term with free variables $S\cup S''$,
  \item if $t$ is a term with free variables $S$,
        $u$ is a term with free variables $S''\cup \{x\}$,
@@ -156,7 +164,10 @@ with involution satisfying $\co c\neq c$ and $\co{\co c} = c$.
  \item channels are terms with free variables~$\emptyset$.
 \end{itemize}
 Note that a term with free variables $S$ is not a term with free
-variables $S'$ when $S\neq S'$.  Only the last clause is original,
+variables $S'$ when $S$ and $S'$ are different.
+In other words, the set of free variables $FV(t)$ is uniquely defined
+for a term~$t$.
+Only the last clause is original,
 introducing channels, which are our communication primitives.
 We introduce an abbreviation
 \begin{align*}
@@ -183,9 +194,9 @@ A \textit{hypersequent}\index{hypersequent} is inductively defined as
  \mid\, (\hypert\hmid \hypert)
 \end{align*}
 where $\G$ is a context.
+Each $\G\tr\tj{t}{\phi}$ is called a \textit{component}\index{component}
+of a hypersequent.
 In this chapter, we interpret the components conjunctively.
-We name this technique the \textit{conjunctive
-hypersequent}\index{hypersequent!conjunctive}.
 Differently from the previous
 papers~\citep{avron91,Baaz01122003,avrontableau,avron96},
 here, the hypersequent $\G\tr\phi\hmid \D\tr\psi$ is interpreted as the
@@ -194,6 +205,8 @@ $(\bigotimes\G\limp\phi)\otimes (\bigotimes\D\limp\psi)$ where
 $\bigotimes\G$ stands for the $\otimes$-conjunction of elements of $\G$.
 The conjunctive treatment is our original, and finding an application
 of conjunctive hypersequents is one of our contributions.
+We name this technique the \textit{conjunctive
+hypersequent}\index{hypersequent!conjunctive}.
 
 The typing rules are in Figure~\ref{fig:exchange:rules}.
  \begin{figure}
@@ -319,10 +332,11 @@ The typing rules are in Figure~\ref{fig:exchange:rules}.
   %
   \ruleskip
   % oplus L
-  \AxiomC{$\hypert \hmid \G,\tj{x}{\phi}\tr\tj{u}{\theta}\hmid
-  \G,\tj{y}{\psi}\tr\tj{v}{\theta}$}
+  \AxiomC{$\G,\tj{x}{\phi}\tr\tj{u}{\theta}
+  $}
+  \AxiomC{$\G,\tj{y}{\psi}\tr\tj{v}{\theta}$}
   \LL{$\oplus$L}
-  \UnaryInfC{$\hypert\hmid\G,\tj{z}{\phi\oplus\psi}\tr\tj{\mat{z}{x}{u}{y}{v}}{\theta}$}
+  \BinaryInfC{$\G,\tj{z}{\phi\oplus\psi}\tr\tj{\mat{z}{x}{u}{y}{v}}{\theta}$}
   \DisplayProof
   %
   \ruleskip
@@ -330,12 +344,12 @@ The typing rules are in Figure~\ref{fig:exchange:rules}.
   \caption[The typing rules of the Amida calculus]
   {The typing rules of the Amida calculus.
   Most rules are taken from Abramsky~\citep{abramsky1993computational}.
-  The Sync rule is original.   $\with$R only
+  The Sync rule is original.   Rules $\with$R and $\oplus$L are only
   applicable to singleton hypersequents.}
   \label{fig:exchange:rules}
  \end{figure}
  When $\tr\tj t\phi$ is derivable,
- type~$\phi$ is inhabited.  In other words,
+ type~$\phi$ is \textit{inhabited}\index{inhabited}.  In other words,
  $\phi$ is provable in Abelian logic i.e. $\phi$ is a theorem of Abelian
  logic.
  \begin{example}[Derivation of Amida axiom]
@@ -581,21 +595,20 @@ We add the semantics for channels.
   \UnaryInfC{$\hypere\hmid \letin t {x\otimes y} u \eval v'$}
   \DisplayProof
   \ruleskip
+  % merge
   \AxiomC{$\hypere$}
   \AxiomC{$\hypere'$}
   \BinaryInfC{$\hypere\hmid \hypere'$}
   \DisplayProof
-  \hfill
+  (For any channel~$c$, it is not the case that $\hypere$ contains $c$
+  and $\hypere'$ contains $\co c$.)
+  \ruleskip
   \AxiomC{}
   \UnaryInfC{$\lambda x.t\eval \lambda x.t$}
   \DisplayProof
   \hfill
   \AxiomC{$\hypere\hmid t\eval v\hmid u\eval w$}
   \UnaryInfC{$\hypere\hmid ct\eval w\hmid \co cu\eval v$}
-  \DisplayProof
-  \hfill
-  \AxiomC{$\hypere\hmid t\eval v$}
-  \UnaryInfC{$\hypere\hmid ct \eval cv$}
   \DisplayProof
   \ruleskip
   \AxiomC{   $\hypere\hmid t\eval t'\hmid s\eval s'\hmid
@@ -639,11 +652,6 @@ We add the semantics for channels.
   \AxiomC{$\hypere\hmid t\eval \inr{v}\hmid u'[v/y]\eval w$}
   \UnaryInfC{$\hypere\hmid \mat t x u y {u'}\eval w$}
   \DisplayProof
-  \ruleskip
-  \AxiomC{$\hypere\hmid t\eval v\hmid u[v/x]\eval w$}
-  \LL{eval-subst}
-  \UnaryInfC{$ \hypere\hmid u[t/x] \eval w $}
-  \DisplayProof
   \caption[The definition of evaluation relation of the Amida
   calculus]{The definition of evaluation relation of the Amida calculus.
   $\hypere$ is possibly empty evaluation hypersequence.
@@ -670,237 +678,90 @@ We add the semantics for channels.
   \end{center}
 \end{example}
 
-\section{Convergence}
-\label{sec:convergence}
+\section{Type Safety}
 
-Convergence states that if
-$\tr\tj t \phi$ is derivable,
-there exists a canonical form~$v$ so that $t\eval v$ is derivable.
-Since the proof of convergence is inductive over
-the typing derivations, we have to generalize the statement for
-hypersequents with multiple components.
-
-For that we first assign a set of closed terms to each type.
-\newcommand{\terms}{\mathcal{T}}
-We denote by $\terms$ the set of closed terms.
-Given $\semo{X}_0\in 2^\terms$ for each propositional variable~$X$,
-we define $\semo{\phi}$ as an element of ${2^\terms}$
-as follows:
-
-% OPTION one: seems easy but difficult after all
-% \newcommand{\modify}{\{t\in \terms \mid t\eval c v\}\cup }
-% \begin{align*}
-%  \semo{X} &= \modify\semo{X}_0\\
-%  \semo{\one} &= \modify\{t\in \terms \mid t\eval \ast\} \\
-%  \semo{\phi\otimes \psi}&= \modify\{t\in\terms \mid t\eval v\otimes w,\quad
-%  v\in\semo{\phi},\quad w\in \semo{\psi}\}\\
-%  \semo{\phi\limp\psi}&= \modify \{t\in\terms \mid t\eval \lambda x.v,\quad
-%  \forall u\in\semo{\phi}.(tu\in\semo{\psi})\}\\
-%  \semo{\phi\with\psi}&= \modify \{t\in\terms \mid t\eval\lpair{v,w},\quad
-%  v\in\semo{\phi}, w\in\semo{\psi}\}\\
-%  \semo{\phi\oplus\psi}&= \modify \{t\in\terms\mid (t\eval \inl{v}, v\in
-%  \semo{\phi})\text{ or }(t\eval\inr{w}, w \in \semo{\psi})\}\enspace.
-% \end{align*}
-
-For a context~$\G = \tj{x_0}{\phi_0},\ldots,\tj{x_n}{\phi_n}$,
-notation~$\semo{\G}$ denotes the set of sequences $u_0,\ldots,u_n$
-of closed terms
-such that each $u_i$ is in $\semo{\phi_i}$.
-For a sequent $\G\tr\tj{t}{\phi}$, notation $\semo{\G\tr\tj{t}{\phi}}$ denotes
-the set consisting of terms $t[\vec g/G]$ for some $\vec g\in\semo{\G}$.
-For a hypersequent $\hypert$,
-$\semo\hypert$ is defined in a component-wise way: the set
-$\semo{\hypert\hmid\G\tr\tj t\phi}$ contains any {\kern
--6pt}$\hmid${\kern -6pt}-delimited
-sequence of terms
-$\vec O \hmid u$ such that $\vec O\in\semo{\hypert}$ and
-$u\in\semo{\G\tr\tj t\phi}$.
-
- \begin{proposition}[General Convergence]
-  \label{thm:generalconvergence}
-  If
-  $\G_0\tr\tj{t_0}{\phi_0}\hmid\cdots\hmid \G_n\tr\tj{t_n}{\phi_n}$
-  is derivable,
-  for any $(\vec{u^i}) \in \semo{\G_i}$ for ${0\le i \le n}$,
-  there exist canonical forms $(v_i\in\semo{\phi_i})_{0\le i\le n}$ so
-  that $t_0[\vec{u^0}/ \G_0]\eval v_0\hmid\cdots\hmid
-  t_n[\vec{u^n}/\G_n]\eval v_n$ is derivable.
+ \begin{proposition}[Safety]
+  \label[safety]
+  If $\tr \tj{t_0}{\phi_0} \hmid \cdots \hmid \tr \tj{t_n}{\phi_n}$ and
+  $t_0\eval v_0\hmid \cdots t_n\eval v_n$ are
+  derivable, then
+  \[
+   \tr\tj{v_0}{\phi_0} \hmid \cdots \hmid \tr \tj{v_n}{\phi_n}
+  \]
+  are also derivable.
  \end{proposition}
-  \begin{proof}
-   By induction on the type derivation.  In this proof we use $\eval$
-   for $\eval$.
-   \begin{description}
-    \item[(IE)]
-	 Since terms in $\semo{\phi}$ and $\semo{\psi}$ do not contain
-	 free variables.
-    \item[($\limp$L)] The derivation ends as
-    \begin{center}
-     \AxiomC{$\hypert\hmid \G\tr\tj{t}{\phi}\hmid \tj{x}{\psi},
-     \D\tr\tj{u}{\theta}$}
-     \UnaryInfC{$\hypert\hmid
-     \G,\tj{f}{\phi\limp\psi},\D\tr\tj{u[(ft)/x]}{\theta}$}
-     \DisplayProof\enspace.
-    \end{center}
-    Take any $\vec O\in\semo{\hypert}$, $\vec g\in\semo{\G}$, $\vec
-    d\in\semo{\D}$ and $v\in\semo{\phi\limp\psi}$.
-    By induction hypothesis,
-    \[
-    \vec O\eval \vec{w'}\hmid t[\vec g/\G]\eval
-    w_0\hmid u[w/x][\vec d/\D]\eval w_1
-    \]
-    is derivable for any $w \in \semo{\psi}$.
-    Since $w_0$ is in $\semo{\phi}$ and $v$ is in
-    $\semo{\phi\limp\psi}$,
-    $fw_0$ is in $\semo\psi$.
-    Thus,
-    \[
-    \vec O\eval\vec{w'}\hmid t[\vec g/\G]\eval w_0\hmid
-    u[(vw_0)/x][\vec d/\D]\eval w_1
-    \]
-    is derivable.
-    The last term $u[(vw_0)/x][\vec d/\D]$ is identical to
-    $u[vy/x][w_0/y][\vec d/\D]$.
-    Thus, by eval-subst in Figure~\ref{fig:eval},
-    \[
-    \vec O\eval\vec{w'}\hmid u[fy/x][t/y][\vec d/\D]\eval w_1
-    \]
-    is derivable.
-    \item[(Cut)] Essentially the same as and simpler than ($\limp$L).
-    \item[(Sync)]
-	 The derivation ends as
-	  \begin{center}
-	 \AxiomC{$\hypert\hmid \G\tr\tj{t}{\phi}\hmid \D\tr\tj{u}{\psi}$}
-	 \UnaryInfC{$\hypert\hmid \G\tr\tj{ct}{\psi}\hmid \D\tr\tj{\co
-	 cu}{\phi}$}
-	 \DisplayProof\enspace.
-	  \end{center}
-	 Take any $\vec O\in\semo{\hypert}$, $\vec g\in \semo{\G}$ and $\vec
-	 d\in\semo{\D}$.
-	 By induction hypothesis, the evaluation
-	 \[
-	 \vec O\eval \vec{v'}\hmid t[\vec g/\G] \eval v\hmid u[\vec
-	 d/\D]\eval w
-	 \]
-	 is derivable.
-	 Thus,
-	 \[
-	 \vec O\eval \vec{v'}\hmid (ct)[\vec g/\G] \eval w\hmid (\co cu)[\vec
-	 d/\D]\eval v
-	 \]
-	 is also derivable.
-    \item[($\otimes$L)]
-	 The derivation ends as
-	  \begin{center}
-	   \AxiomC{$\hypert\hmid\G,\tj{x}{\phi},\tj{y}{\psi}\tr\tj{t}\theta$}
-	   \UnaryInfC{$\hypert\hmid\G,\tj{z}{\phi\otimes
-	   \psi}\tr\tj{\letin z {x\otimes y} t}{\theta}$}
-	   \DisplayProof\enspace.
-	  \end{center}
-	 Take any $v\in \semo{\phi\otimes\psi}$, $\vec g\in \semo{\G}$
-	 and $\vec O\in\semo{\hypert}$.
-	 By definition of $\semo{\phi\otimes\psi}$,
-	 $v\eval v_0\otimes v_1$ is derivable for some
-	 $v_0\in\semo{\phi}$
-	 and $v_1\in\semo{\psi}$.
-	 By induction hypothesis,
-	 \[
-	  \vec{O}\eval\vec{o}\hmid t[\vec g/\G][v_0/x][v_1/y]\eval w
-	 \]
-	 is derivable for some $\vec o$ and $w\in\semo{\theta}$.
-	 Since
-	 \[
-	  \vec O\eval \vec o\hmid v\eval v_0\otimes v_1\hmid
-	 t[\vec g/\G][v_0/x][v_1/y]\eval w
-	 \]
-	 is derivable, so is
-	 \[
-	  \vec O\eval \vec o \hmid (\letin z {x\otimes y} t)[\vec
-	 g/\G][v/z] \eval w\enspace.
-	 \]
-    \item[($\with$L$_0$)]
-	 The derivation ends as
-	 \begin{center}
-	  \AxiomC{$\hypert\hmid\G,\tj{x}{\phi}\tr\tj{t}{\theta}$}
-	  \UnaryInfC{$\hypert\hmid\G,\tj{z}{\phi\with\psi}\tr\tj{
-	  \letin z {\lpair{x,\_}} t
-	  }{\theta}$}
-	  \DisplayProof\enspace.
-	 \end{center}
-	 Take any $\vec g\in\semo{\G}$, $s\in\semo{\phi\with\psi}$
-	 and $O\in\semo{\hypert}$
-	 By definition of $s$, $s\eval \lpair{v_0,v_1}$ is derivable
-	 for some
-	 $v_0\in\semo{\phi}$ and $v_1\in\semo{\psi}$.
-	 By induction hypothesis,
-	 \[
-	 O\eval \vec{o} \hmid t[\vec g/\G][v_0/x]\eval w
-	 \]
-	 is derivable for some $\vec o$ and $w\in\semo{\theta}$.
-	 Thus,
-	 \[
-	 O\eval \vec o\hmid \letin z {\lpair{x,\_}} t \eval w
-	 \]
-	 is also derivable.
-    \item[($\with$L$_1$)] Symmetric to above.
-    \item[($\with$R)]
-	 The derivation ends as
-	 \begin{center}
-	  \AxiomC{$\G\tr\tj{t}{\phi}$}
-	  \AxiomC{$\G\tr\tj{u}{\psi}$}
-	  \BinaryInfC{$\G\tr\tj{\lpair{t,u}}{\phi\with\psi}$}
-	  \DisplayProof\enspace.
-	 \end{center}
-	 By induction hypothesis,
-	 $t[\vec g/\G]\eval v$ and
-	 $u[\vec g/\G]\eval w$
-	 are derivable for some
-	 $v\in\semo{\phi}$ and $w\in\semo{\psi}$.
-	 Thus, $t[\vec g/\G]\in\semo{\phi}$ and
-	 $u[\vec g/\G]\in\semo{\psi}$ hold.
-	 We now conclude $\lpair{t,u}[\vec g/\G]$ is in
-	 $\semo{\phi\with\psi}$ because
-	 \[
-	 \lpair{t,u}[\vec g/\G]\eval \lpair{t,u}[\vec g/\G]
-	 \]
-	 is derivable.
-    \item[($\limp$R)] \fix{add}
-    \item[Other rules]
-	 Other cases are immediate.
-   \end{description}
-  \end{proof}
+ \begin{proof}
+  By induction on evaluation.
+  \fix{fill, use \thref{split}}
+ \end{proof}
 
-   \begin{corollary}[Convergence of the Amida calculus]
-    \label{convergence}
-    If $\tr\tj{t}{\phi}$ is derivable,
-    $t\eval v$ is derivable for some canonical form~$v$.
-   \end{corollary}
+ Two hypersequents $\hypert$ and $\hypert'$ are channel disjoint iff
+ it is not the case that $\hypert$ contains $c$ and $\hypert'$ contains
+ $\co c$ for any channel~$c$.
+ \begin{proposition}[Split]
+  \label{split}
+  If $\hypert\hmid \hypert'$ is derivable for two channel disjoint
+  hypersequents,
+  both $\hypert$ and $\hypert'$ are derivable separately.
+ \end{proposition}
+ \begin{proof}
+  \fix{fill}
+ \end{proof}
 
-   % Convergence has an important implication: the consistency of Abelian logic.
-   % \begin{corollary}[Consistency of Abelian logic (known to \citet{casari1989})]
-   %  \label{consistent-amida}
-   %  $\tr\tj{t}{X}$ is not derivable for any term~$t$.
-   % \end{corollary}
-   %  \begin{proof}
-   %   Assume $\tr\tj{t}{X}$ is derivable.
-   %   Take $\semo{X}_0$ to be empty.
-   %   Then, by \thref{thm:generalconvergence},
-   %   $t\eval t'$ is derivable for some $t'$ in $\semo{X}$.
-   %   However, $\semo{X}$ was taken empty.
-   %  \end{proof}
+  \subsection{Lack of Convergence}
 
-    \subsection{Lack of Determinacy}
+  \fix{describe convergence}
+  There are two difficult cases for obtaining convergence.
 
-    Determinacy states that if $t\eval v$ and $t\eval w$ hold,
-    then $v$ and $w$ are identical.
-    The Amida calculus lacks determinacy.
-    To demonstrate that, we need a term~$t$ with $t\eval v$ where $t$
-    and $v$ are different. For example, take $t = (\lambda x. x)\ast$
-    and $v = \ast$.
-    Then, both $\lambda y.t\eval \lambda y.t$ and $\lambda y.t\eval
-    \lambda y.v$ are derivable.
+\subsubsection{Nested Channel Pairs}
 
-    \section{Sessions and Processes}
-    \label{sec:session-process}
+  \AxiomC{$\hypere\hmid t\eval v\hmid u[v/x]\eval w$}
+  \LL{eval-subst}
+  \UnaryInfC{$ \hypere\hmid u[t/x] \eval w $}
+  \DisplayProof
+
+  However, adding eval-subst rule breaks the proof of
+  \thref{safety}.
+
+\subsubsection{Channels Trapped in Lambda Abstraction Body}
+
+Consider a typed term:
+ \begin{center}
+  \AxiomC{}
+  \LL{Ax}
+  \UnaryInfC{$\tj x X\tr\ tj x X$}
+  \AxiomC{}
+  \LL{$\one$R}
+  \UnaryInfC{$\tr\tj\ast\one$}
+  \LL{Merge}
+  \BinaryInfC{$\tj x X\tr \tj x X\hmid \tr \tj \ast\one$}
+  \LL{Sync}
+  \UnaryInfC{$\tj x X\tr \tj {cx} \one \hmid \tr \tj {\co c \ast} X$}
+  \LL{$\limp$R}
+  \UnaryInfC{$\tr \tj{\lambda x.cx}{X\limp \one}\hmid \tr \tj{\co c
+  \ast} X$}
+  \DisplayProof\enspace.
+ \end{center}
+If convergence holds, there must be an evaluation
+\[
+ \lambda x.cx\eval \lambda x.cx\hmid \co c \ast \eval ?\enspace.
+\]
+However, since the bound variable~$x$ is not yet replaced by a closed
+term, there is no closed canonical form ? satisfying the evaluation relation.
+
+  \subsection{Lack of Determinacy}
+
+  Determinacy states that if $t\eval v$ and $t\eval w$ hold,
+  then $v$ and $w$ are identical.
+  The Amida calculus lacks determinacy.
+  To demonstrate that, we need a term~$t$ with $t\eval v$ where $t$
+  and $v$ are different. For example, take $t = (\lambda x. x)\ast$
+  and $v = \ast$.
+  Then, both $\lambda y.t\eval \lambda y.t$ and $\lambda y.t\eval
+  \lambda y.v$ are derivable.
+
+  \section{Sessions and Processes}
+  \label{sec:session-process}
 
     In order to see the usefulness of the communication primitive
     $c\otimes \co c$,
@@ -2448,7 +2309,7 @@ The condition says the following diagram commutes:
  involved because of eval-subst rule, but the author expects the case
  analysis on possible substitutions will succeed.
 
-\subsection{Multiparty, Recursions, \ldots}
+\subsection{Adding Multiparty, Recursions, \ldots}
 Our type system has a drawback of having only finitely many processes.
 We expect it straightforward to overcome this weak point by
 add recursions in our type system.
@@ -2534,6 +2395,17 @@ then the formula is derivable without cut.
 Since there is a cut-free deduction system for Abelian
 logic~\citep{metcalfe2006},
 we consider it natural to expect the same property for Amida calculus.
+
+\subsection{Computational Meaning of Excluded Middle}
+
+Since Amida calculus characterizes Abelian logic,
+there is a closed term~$t$ with $\tr \tj{t}{(X\limp \one)\otimes X}$
+derivable.  By analysing this term, we can determine the computational
+content of the law of excluded middle.
+We tried looking at one such term~$t$, but it involved channels
+contained in lambda abstraction bodies and additive pairs.
+
+\fix{add the proof if we have time, should be impressive}
 
 \section{Conclusion}
 
