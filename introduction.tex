@@ -28,7 +28,7 @@ about specific intermediate and substructural logics.
 
 The more famous logic among the two,
 G\"odel--Dummett logic, is
-a typical intermediate logic logic known from 1950's.
+a typical intermediate logic known from 1950's.
 Our method is the Curry--Howard correspondence, also known from 1940's.
 Our result is characterization of waitfreedom, a concept in the theory
 of distributed computation extensively studied in 1990's.
@@ -79,7 +79,7 @@ $\G\vdash\phi\hmid \D\vdash\psi
 implication, and then the whole hypersequent is interpreted as the
 disjunction of all those implications.
 When we interpret proofs as programs, we take the components as
-concurrent processeses.  Following the original disjunctive
+concurrent processes.  Following the original disjunctive
 interpretation of components, we regard the proof tree as the guarantee of
 success of at least one process.
 
@@ -123,7 +123,7 @@ strategy or limit the set of reductions.
 The lack of unique normal forms in the classical propositional proofs
 has puzzled logicians for decades.
 The most famous example is Lafont's
-example~\citep[B.1.]{girard1989proofs} which provides a way to equate
+example~\citep[B.1.]{girard1989proofs}, which provides a way to equate
 any two proofs for the same formula (if we equate proofs before and
 after cut-elimination).
 In computer science, such phenomena is called nondeterminism caused by scheduling.
@@ -177,7 +177,7 @@ In computer science, such phenomena is called nondeterminism caused by schedulin
   \label{fig:lattice}
  \end{figure}
 Dynamic behaviour involves time.
-One simple notion of time is that of totally-ordered events where
+One simple notion of time is that of totally ordered events where
 one event happens before the other or the other before one.
 This sentence is syntactically similar to Dummett's axiom that states
 one proposition implies the other or the other implies one.
@@ -187,10 +187,10 @@ in the dynamic semantics of logics: namely, the lambda calculi.
 Our third contribution is about encoding of session types into a linear
 type system.  Although the approach is similar to \citet{pfenning2010} and
 \citet{wadler2012propositions}'s work, our Amida calculus has an
-additional axiom so that it can type some procsses which Pfenning or
+additional axiom so that it can type some processes that Pfenning or
 Wadler's type systems cannot.
 
-Our fourth contribution is a side-effect of the third contribution.
+Our fourth contribution is a side effect of the third contribution.
 The type system we developed for our third contribution is seemingly
 unknown axiomatization of Abelian logic~\citep{casari1989}.
 Syntactically, the correct proof structure can be characterized with
@@ -202,12 +202,12 @@ replacing these disjunctions with conjunctions.
 In the former case, the change renders the logic inconsistent.
 If we add the axiom $(\phi\imp\psi)\land(\psi\imp\phi)$ to the
 intuitionistic propositional logic,
-we can prove any formula.  However in the lattar case, the change does
+we can prove any formula.  However in the latter case, the change does
 not make the system meaningless.
 In Chapter~\ref{ch:exchange}, we treat
 the axioms of the form $(\phi\limp\psi)\otimes(\psi\limp\phi)$
 on top of IMALL, intuitionistic
-multiplicative additiver linear
+multiplicative additive linear
 logic.  In essence, the axiom allows two processes to wait for one
 another and then exchange information.
 

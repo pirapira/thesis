@@ -338,7 +338,7 @@ $[0]((\varphi\supset\psi)\vee(\psi\supset\varphi))$ is provable (Figure~\ref{fig
 We assume distinct, countably infinite sets of \textit{variables}\index{variable},
 \textit{locations}\index{location}
 and
-\textit{processes}\index{process}.% \fix{processes should be placed earlier?}
+\textit{processes}\index{process}. % \fix{processes should be placed earlier?}
 Locations are denoted by~$c,d,\ldots$; process~$i,j, \ldots$ and variables~$x,
 y, \ldots$.
 Later, locations will be used to specify a location in a store
@@ -386,7 +386,7 @@ terms.  For example, a global term $\{0\mapsto \lambda x.x, 1\mapsto
 y\}$ maps process~$0$ to local term $\lambda x.x$ and process~$1$ to
 local term $y$.
 We can substitute a local term for a variable in a global term.
-The substitution is defined elmeentwise: i.e.,
+The substitution is defined elementwise: i.e.,
 the result of the substitution $\m{M}[N/x]$ maps a process~$i$ to $(\m{M}(i))[N/x]$.
 A closed global term is a global term whose image only contains closed local terms.
 Informally, the local terms represent parts of
@@ -1089,7 +1089,7 @@ normal (the choice of $\lstore$ is irrelevant).
  store under the location~$d$.
  From the second line to the third line, process~0 fails to read from
  location~$c$ so that a reader construct is turned into an $\abort$.
- This failure occures because process~0 tries to read before process~1
+ This failure occurs because process~0 tries to read before process~1
  writes.  In a different scheduling (or, evaluation strategy) such a
  failure can be avoided.  The degree of nondeterminism is essential to
  characterize waitfreedom later.
@@ -1161,7 +1161,7 @@ into a weakening occurrence (using Proposition~\ref{process-change} stated below
 \end{center}
  where $\G^j$ denotes the context obtained by replacing every modality
  in $\G$ with $j$.
- In the lattar case, we can do the symmetric.
+ In the latter case, we can do the symmetric.
 
 After these rewritings for all appearing locations,
 we obtain a derivation not containing any locations.
@@ -1297,7 +1297,7 @@ $ \lstore_\infty(c)= \epsilon$ if $\lstore_k(c)=\epsilon$ for all
  $k\in\omega$ and
 $ \lstore_\infty(c)=M $ if $\lstore_k(c)=M$ for some $k\in\omega$.
 Since store contents are never overwritten,
-$\lstore_\infty$ is well-defined.
+$\lstore_\infty$ is well defined.
 Moreover,
 $\lstore_i(c)$ and $\lstore_\infty(c)$ coincide unless
 $\lstore_i(c)=\epsilon$.
@@ -1364,7 +1364,7 @@ strictly shortens the term under operation.
  makes an infinite reduction sequence where every occurring term is
  in the pure fragment.
  Moreover,
- the result of the translation is also well-typed.
+ the result of the translation is also well typed.
  A typing derivation of the resulting hyperterm can be obtained by
  replacing com rules with EW rules and changing the process number in
  types of some variables (c.f. the proof of \thref{nab}).
@@ -1457,7 +1457,7 @@ task $R\subseteq \prod_{i\in \processes}\left(\lterm(\iota_i)\right)\times
    x,y,z\in\{\true,\false\}\}\enspace.
   \end{align*}
   The equation above says the task allows two different kinds of
-  behaviour.  The first clause says if process~0 receives $x$ and
+  behavior.  The first clause says if process~0 receives $x$ and
   process~1 receives $y$ as their inputs, and process~0 outputs $x\xor
   y$; then whatever process~1 outputs, the two processes are considered
   to have solved the task.  The second clause poses a symmetric
@@ -1503,7 +1503,7 @@ memory.
 
 \newcommand{\Wg}{W_{\mathrm g}}
 \newcommand{\Wd}{W_{\mathrm d}}
-A program is \textit{well-formed}\index{well-formed program} when
+A program is \textit{well formed}\index{well formed program} when
 a program variable (resp. location) first appears in a $\p x\leftarrow E$
 (resp. $c\leftarrow E$)
 sentence, and
@@ -2446,7 +2446,7 @@ We set $g,d,t_i$ accordingly so that the program is typed.
    \begin{proof}
     By induction on the typing derivation for $\hypert$.
     All cases are more or less straightforward, of which the most
-    compilicated cases are com rule and EC rule.
+    complicated cases are com rule and EC rule.
     \begin{description}
      \item[$ij$-com]
 	  Assume that there is an execution of
@@ -2483,7 +2483,7 @@ We set $g,d,t_i$ accordingly so that the program is typed.
 	  \overline{\imapsto{M}}}$ to $V$ where $V$ is equal to
 	  $V_{|\hypert_0|+|\hypert_1|+1,i}$ unless
 	  $V_{|\hypert_0|+|\hypert_1|+1,i}$ is $\epsilon$.
-	  Simillarly,
+	  Similarly,
 	  there exists an execution of $\semo{\hypert_1\hmid
 	  \jmapsto{N}}$
 	  whose final system snapshot contains a process snapshot
@@ -2861,7 +2861,7 @@ because it is valuable to
 remove unnecessary synchronization while keeping the program correct
 in high performance computing.
 
-An anonymous refree pointed out that the introduction of
+An anonymous referee pointed out that the introduction of
 modalities [$i$] is interesting on its own.
 We have not investigated the semantics of these modalities.
 
@@ -2886,7 +2886,7 @@ assume everywhere.  If we are to study a weaker shared memory
 consistency in the same approach as here,
 we have to study a weaker logic.
 
-In Chpater~\ref{ch:exchange}, we studied an axiom
+In Chapter~\ref{ch:exchange}, we studied an axiom
 $(\phi\limp\psi)\otimes(\psi\limp\phi)$.
 Apart from this, we also tried developing a lambda calculus for
 $(\phi\limp\psi)\oplus(\psi\limp\phi)$ on top of a second-order

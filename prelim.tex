@@ -86,7 +86,7 @@ to stating $B$ implies $A$.
 It was Bertrand Russell who called this implication the material
 implication,
 according to~\citet{sep-conditionals}.
-After his notation, we still use $\vdash$ for judgements in our formal
+After his notation, we still use $\vdash$ for judgments in our formal
 systems.
 The view of logical formulae as graphical objects
 will be inherited to proof nets (Section~\ref{sec:proofnets}).
@@ -103,7 +103,7 @@ Brouwer\index{Brouwer} was skeptical about the value of formalization of
 mathematics and considered the studies of formal axiomatized logic as
 ``mathematics of the second and third order''%
 ~\citep[p.~10]{stigt1998}.
-Nontheless, Brouwer approved publication of his student Arend Heyting's
+Nonetheless, Brouwer approved publication of his student Arend Heyting's
 work on defining a set of logical formulae as the intuitionistic
 propositional logic.
 
@@ -149,7 +149,7 @@ There are more formulae given by the following rules~\cite{heyting1930}:
 Following the intuitionists' belief
 that ``it is in principle impossible to set up a system of formulas that
 would be equivalent to intuitionistic mathematics, for the
-possiblitities of thought cannot be reduced to a finite number of rules
+possibilities of thought cannot be reduced to a finite number of rules
 set up in advance,''~\citep{heyting1930} he did not pursue completeness
 results for the deduction system
 except a remark mentioning Glivenko's
@@ -307,7 +307,7 @@ $(p\supset q) \lor (q\supset p)$ is not provable.
 Although Troelstra~\cite[p.~223]{goedelcollected} writes ``the reasons
 for studying intermediate logics are mainly technical,'' we find that
 one typical intermediate logic, G\"odel--Dummett logic, has a
-computational interpretation which has already been known: waitfreedom.
+computational interpretation that has already been known: waitfreedom.
 The connection between G\"odel--Dummett logic and waitfreedom will be
 treated in Chapter~\ref{ch:lambda}.
 
@@ -383,10 +383,10 @@ are alternative formulations of intuitionistic (and classical)
 propositional logic by \citet{gentzen} where we only have to
 mention subformulae of the formula being proven.
 The desirable property is called subformula property\index{subformula property}.
-The two proof systems are called natural deduciton\index{natural
+The two proof systems are called natural deduction\index{natural
 deduction} and sequent calculus\index{sequent calculus}.
 
-In contrast to the sytem of \citet{heyting1930} where a proof yields a
+In contrast to the system of \citet{heyting1930} where a proof yields a
 finite set of ``correct formulae,'' a proof in natural deduction and
 sequent calculus yields a pair of assumptions and conclusions.
 \citet{gentzen} used the form
@@ -449,13 +449,13 @@ rules for $\wedge$
   In sequent calculus, the introduction rules stay the same but called
   the right rules because they operate on the right hand side of
   sequents.
-  The elimination rules are rewriten so that they operate on the left
+  The elimination rules are rewritten so that they operate on the left
   side of sequents and they are called the left rules.
 
   In Chapter~\ref{ch:exchange}, we will use hypersequent calculus for
   presenting Abelian logic.
-  In Chapter~\ref{ch:lambda}, we will use hypersequent-stye natural deduction
-  for preseinting G\"odel--Dummett logic.
+  In Chapter~\ref{ch:lambda}, we will use hypersequent-style natural deduction
+  for presenting G\"odel--Dummett logic.
 
 \subsubsection{Prawitz's Analysis of Natural Deduction}
 
@@ -503,7 +503,7 @@ derivation~\citep[p.~36]{prawitz1965} can be reduced
  introduction and elimination rules and defined maximal segments%
  \footnote{A maximal segment can contain many occurrences of the same
  formula without being influenced by any inference rules.
- Such ``syntactic beaurocracy'' can be removed by proof nets.
+ Such ``syntactic bureaucracy'' can be removed by proof nets.
  See Section~\ref{sec:proofnets} for an example.}.
  A derivation without maximal segments is called normal.
  And Prawitz proved the existence of a normal derivation of $\G\vdash A$
@@ -559,7 +559,7 @@ nonsense by the dual nonsense, namely:
   \DisplayProof\enspace.
  \end{center}
  Prior's paper is titled ``the runabout inference-ticket.''
- In Chapter~\ref{ch:exchange}, we are going to consider the roundtrip
+ In Chapter~\ref{ch:exchange}, we are going to consider the round-trip
  inference-ticket.
 
 
@@ -569,7 +569,7 @@ At the core of computer science lies the interplay of static formalism
 and dynamic behaviour.  We can find examples in typed lambda calculi,
 where static formalism of type derivations interacts with dynamic
 behaviour of lambda terms.
-Type derivations of static objects associtating lambda terms to types.
+Type derivations of static objects associating lambda terms to types.
 The reduction on terms gives dynamics, defining which term reduce
 to which.  Static type derivations can guarantee dynamic properties of
 programs such as strong normalization~\citep{girard1989proofs} and more
@@ -604,7 +604,7 @@ The footnote~28 of \citep{curry1942} reads:
   in any of the former postulates we change $F$ to $P$ and drop the
   combinator we have the corresponding postulate for $P$
  \end{quote}
- where a postulate for $F$ is is something like $\tr F X Y f$ which
+ where a postulate for $F$ is something like $\tr F X Y f$ which
  represents the statement that $f$ belongs to the
  class of functions from $X$ to $Y$; and $P$ is the implicational
  fragment of the intuitionistic propositional logic.
@@ -652,7 +652,7 @@ and the corresponding Postulate~(FC):
 
  Henceforth, we do not give deduction system of a logic and
  typing rules for a typed lambda calculi separately because
- the former can be obtained from the lattar by this correspondence.
+ the former can be obtained from the latter by this correspondence.
 The
 precise statements for the correspondence appear in
 \citet[9E]{curry1974combinatory}, a section titled ``analogies with
@@ -668,7 +668,7 @@ the reductions in the lambda calculus corresponds to the reductions of
 proofs that
 removes detours.
 For example, suppose a natural deduction proof introduces an implication and then
-immidiately eliminate the
+immediately eliminate the
 implication.  This proof can be encoded as a lambda term whose outermost
 structure is a $\beta$-redex: $(\lambda x. M)N$.
  The result of the $\beta$-reduction $M[N/x]$ encodes a proof tree using
@@ -696,7 +696,7 @@ calculus
 that witnesses Dummett's axiom.
 After the intermediate logics, the generalization went further to
 substructural
-logics~\citep{residuated}, which contains all the intermedaite logics as
+logics~\citep{residuated}, which contains all the intermediate logics as
 well as the
 (intuitionistic) multiplicative
 additive fragment of linear logic.
@@ -755,7 +755,7 @@ After looking at \lgd\,in Chapter~\ref{ch:lambda},
 we can translate a proof in Sonobe's system into a \lgd\,typing
 derivation and then find the computational content of the original
 proof.  However, the author has never seen an attempt of determining
-the computational interpretatin of Sonobe's cut-elimination.
+the computational interpretation of Sonobe's cut-elimination.
 
 \subsubsection{Avron's Hypersequents}
 
@@ -765,8 +765,8 @@ A \textit{hypersequent}\index{hypersequent} is a nonempty, finite sequence of se
 \G_0\tr\phi_0\hmid \G_1\tr\phi_1\hmid \cdots \hmid \G_n\tr\phi_{n-1}
 \quad (n > 0)\enspace.
 \]
-When we say a \textit{possibly-empty}\index{possibly-empty}
-hypersequent\index{hypersequent!possibly-empty}, we allow $n$ to be 0.
+When we say a \textit{possibly empty}\index{possibly empty}
+hypersequent\index{hypersequent!possibly empty}, we allow $n$ to be 0.
 We use metavariable $\hyper$ for a hypersequent.
 For G\"odel--Dummett logic, \citet{avron91} formulated the communication
 rule\index{rule!communication}\index{communciation rule}
@@ -800,9 +800,10 @@ For example,
  On the other hand, it is waitfreely possible for
  either one of two processes to attain the input value of the other process.
 
-Herlihy and Shavit~\cite{herlihy1999topological} characterised waitfree computation using
+Herlihy and Shavit~\cite{herlihy1999topological} characterized waitfree
+computation using
 simplicial topology.
-Using their characterisation,
+Using their characterization,
 Gafni and Koutsoupias~\cite{gafni1999three}
  showed that it is undecidable whether a task is waitfreely solvable
  or not.
@@ -846,7 +847,7 @@ In a survey paper, Hosoi and Ono~\cite{hosoi-ono} says:
   that it is not a \textit{logic} on which some kind of mathematics can
   or must be constructed.  So, the second approach seems to be
   reasonable for us, and we have been mostly working with the intension
-  of grasping the albebraic structure of the whole system of the
+  of grasping the algebraic structure of the whole system of the
   intermediate logic\footnote{Emphases by the authors of the original
   paper.}.
  \end{quote}
@@ -920,7 +921,7 @@ obtained by \citet{sonobe} and \citet{avron91}.
 \label{linear}
 
 In sequent calculus or the sequent style natural deduction, when we
-apply most rules, we need to make pattern-matching on the logical
+apply most rules, we need to make pattern matching on the logical
 formulae.
 For example, in order to apply this $\land$L rule of sequent calculus
 for classical logic,
@@ -1016,7 +1017,7 @@ propositional logic:
  the whole context in all branches).
  The example above shows how the additive and multiplicative
  conjunctions are different.
- The words multiplicative and addtive are originally adjectives but
+ The words multiplicative and additive are originally adjectives but
  we sometimes use them as nouns: ``multiplicatives'' for the
  multiplicative operators and ``additives'' for the additive operators.
 
@@ -1052,8 +1053,8 @@ propositional logic:
    $x$ is more (less, as much as) $A$ than $y$
   \end{quote}
  and so on~\citep[p.~161]{casari1989}.
- One semantics of Abelian logic interpretes a logical formula as an
- element of an Abelian group.  There,
+ One semantics of Abelian logic interprets a logical formula as an
+ element of a lattice-ordered Abelian group~\citep[3.4.2.]{residuated}.  There,
  the interpretation of $\one$ is the unit;
  the interpretation of $\otimes$ is the operation of the group; and
  the interpretation of $\cdot\limp\one$ is the inverse element.

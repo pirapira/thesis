@@ -50,9 +50,7 @@ just once.
 
 Linear logic is used by \citet{wadler2012propositions} and
 \citet{pfenning2010} to encode session types, but our type system can
-type processes
-which Wadler
-and Pfenning's system cannot.
+type processes that Wadler and Pfenning's system cannot.
 
 From the intuitionistic linear logic,
 the only addition is Amida axiom\index{axiom!Amida}\index{Amida axiom|see{axiom}}
@@ -128,7 +126,7 @@ $\with$ is additive conjunction.
 
 \subsection{Terms and Free Variables}
 
-We assume coutably infinitely many variables $x, y, z, \ldots$.
+We assume countably infinitely many variables $x, y, z, \ldots$.
 Before defining terms, following Abramsky's linear lambda calculus
 LF~\citep{abramsky1993computational}, we define patterns
 binding sets of variables:
@@ -421,7 +419,7 @@ Another example shows how we can type the term $\co c(c x)$.
    \end{center}
   is\footnote{This condition is equivalent to derivability of
   $\phi\tr\phi\otimes\phi$, thanks to $\otimes$R rule and
-  $\otimes$L rule.} admissible for any possibly-empty hypersequent~$\hyper$,
+  $\otimes$L rule.} admissible for any possibly empty hypersequent~$\hyper$,
   context~$\G$ and formula~$\phi$, then, $\phi$ is
   inhabited in Amida calculus.
  \end{proposition}
@@ -508,7 +506,7 @@ Another example shows how we can type the term $\co c(c x)$.
   \thref{no-falsehood} is applicable because
   $\tj{x}{\forall X.X}\tr\tj{x}{\phi}$ is derivable for any $\phi$.
  \end{proof}
- Although various extensions to Amida calculus yields inconsistency,
+ Although various extensions to Amida calculus yield inconsistency,
  we will see that Amida calculus itself is consistent because it
  characterizes Abelian logic (\thref{complete-to-Abelian},
  \thref{sound-to-abelian}).
@@ -595,7 +593,7 @@ where $S$ is a finite set of variables.
 We ignore the difference between $(\hypere_0\hmid \hypere_1)\hmid
 \hypere_2$ and $\hypere_0\hmid(\hypere_1\hmid\hypere_2)$.
 
-Now we define evaluation as a set of evaluation seequences
+Now we define evaluation as a set of evaluation sequences
 (Figure~\ref{fig:eval}).
 Though most rules are similar to those of Abramsky's
 LF~\citep{abramsky1993computational},
