@@ -418,7 +418,7 @@ type AbstractThreadId = Int
 \end{code}
 Using these, we have many types of type class \verb@Thread@:
 \verb@ZeroT@, \verb@SucT ZeroT@, \verb@SucT (SucT ZeroT)@ and so on.
-This technique is called type level natural numbers~\fix{cite someone}.
+This technique is called type level natural numbers.
 
 Thread~\verb@t@'s computation of type~\verb@a@ is represented as \verb@K t a@.
 Internally, it is a pair of thread and a computation of \verb@JobStatus a@.
@@ -643,8 +643,8 @@ This tactic of defining a type class is taken from the paper of
 heterogeneous collections~\citep{hetero}.
 By \verb@exchange@ and \verb@cycling@, we can perform all permutations of
 hypersequents\footnote{This implementation of permutations come from an
-Agda~\fix{cite} implementation of a typed
-lambda calculus for modal logic~K~\fix{cite}. Tatsuya Abe
+Agda~\citep{agda} implementation of a typed
+lambda calculus for modal logic~K. Tatsuya Abe
 presented the implementation to me in Tokyo.}.
 
 First, we declare the type class \verb@HLast@.

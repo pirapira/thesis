@@ -506,7 +506,7 @@ Another example shows how we can type the term $\co c(c x)$.
  \end{corollary}
  \begin{proof}
   \thref{no-falsehood} is applicable because
-  $\forall X.X\tr\phi$ is derivable for any $\phi$.
+  $\tj{x}{\forall X.X}\tr\tj{x}{\phi}$ is derivable for any $\phi$.
  \end{proof}
  Although various extensions to Amida calculus yields inconsistency,
  we will see that Amida calculus itself is consistent because it
@@ -517,8 +517,8 @@ Another example shows how we can type the term $\co c(c x)$.
  After seeing that Amida calculus characterizes Abelian logic,
  the fact is an
  immediate consequence of completeness of Abelian logic with respect to
- $\mathbb{Z}$~\fix{cite the thing from 駒場}, but we can now give a computational
- interpretation:
+ $\mathbb{Z}$~\citep[p.~272]{meyer-slaney-1989}, but we can now give a
+ computational interpretation:
  of the communicating pair $c\colon \phi\limp\psi$ and $\co c\colon
  \psi\limp\phi$,
  with the help of weakening, we can throw away one side and still use the
@@ -540,31 +540,34 @@ Another example shows how we can type the term $\co c(c x)$.
   \begin{center}
    \AxiomC{}
    \LL{Ax}
-   \UnaryInfC{$\tr\one$}
+   \UnaryInfC{$\tr\tj\ast\one$}
    \AxiomC{}
    \LL{Ax}
-   \UnaryInfC{$\phi\tr\phi$}
+   \UnaryInfC{$\tj x\phi\tr\tj x\phi$}
    \LL{Merge}
-   \BinaryInfC{$\tr\one\hmid\phi\tr\phi$}
+   \BinaryInfC{$\tr\tj \ast\one\hmid\tj x \phi\tr\tj x\phi$}
    \LL{Sync}
-   \UnaryInfC{$\tr\phi\hmid\phi\tr\one$}
+   \UnaryInfC{$\tr\tj{c\ast}\phi\phi\hmid\tj x\phi\tr\tj{\co{c} x}\one$}
    \LL{$\limp$R}
-   \UnaryInfC{$\tr\phi\hmid\tr\phi\limp\one$}
+   \UnaryInfC{$\tr\tj{c\ast}\phi\hmid\tr\tj{\lambda x.\co c x}{\phi\limp\one}$}
    \LL{W}
-   \UnaryInfC{$\phi\limp\one\tr\phi\hmid\tr\phi\limp\one$}
+   \UnaryInfC{$\tj{f}{\phi\limp\one}\tr\tj{c\ast}\phi\hmid\tr\tj{\lambda
+   x.\co c x}{\phi\limp\one}$}
    \LL{Cut}
-   \UnaryInfC{$\tr\phi$}
+   \UnaryInfC{$\tr\tj{c\ast}\phi$}
    \DisplayProof
   \end{center}
   where W marks the usage of weakening.
+  The resulting term $c\ast$ sends $\ast$ somewhere and waits for a
+  response that is never obtained.
  \end{proof}
 
- To summarize, anything below is inconsistent with Amida calculus.
+ To summarize, anything below is inconsistent with Amida calculus:
  \begin{itemize}
-  \item a formula $\zero$ for which $\tr\zero\limp\phi$ is derivable for
-	all $\phi$
-  \item second order universal quantification
-  \item contraction rule
+  \item a formula $\zero$ such that $\tr\zero\limp\phi$ is derivable for
+	all $\phi$,
+  \item second order universal quantification,
+  \item contraction rule, or
   \item weakening rule.
  \end{itemize}
 
@@ -577,12 +580,12 @@ We add more canonical forms to those of Abramsky's
 LF~\citep{abramsky1993computational}:
 \[
  \lpair{t,u}\qquad \ast\qquad v\otimes w\qquad \lambda
- x.t\qquad \inl{v}\qquad\inr{w}\qquad cv
+ x.t\qquad \inl{v}\qquad\inr{w}
 \]
 where $v$ and $w$ are canonical forms.
 
 An \textit{evaluation
-hypersequent}\index{hypersequent!evaluation}\index{evaluation
+sequence}\index{hypersequent!evaluation}\index{evaluation
 hypersequent}~$\hypere$ is defined by the following
 grammar:
 \[
@@ -594,9 +597,9 @@ We ignore the difference between $(\hypere_0\hmid \hypere_1)\hmid
 
 Now we define evaluation as a set of evaluation seequences
 (Figure~\ref{fig:eval}).
-Most rules are similar to those of Abramsky's
-LF~\citep{abramsky1993computational}.
-We add the semantics for channels.
+Though most rules are similar to those of Abramsky's
+LF~\citep{abramsky1993computational},
+we add the semantics for channels.
 
  \begin{figure}
   \centering
@@ -623,8 +626,9 @@ We add the semantics for channels.
   % merge
   \AxiomC{$\hypere$}
   \AxiomC{$\hypere'$}
+  \LL{Merge}
   \BinaryInfC{$\hypere\hmid \hypere'$}
-  \DisplayProof
+  \DisplayProof\\
   (For any channel~$c$, it is not the case that $\hypere$ contains $c$
   and $\hypere'$ contains $\co c$.)
   \ruleskip
@@ -690,13 +694,14 @@ We add the semantics for channels.
 
  \begin{proposition}[Safety]
   \label{safety}
-  If $\tr \tj{t_0}{\phi_0} \hmid \cdots \hmid \tr \tj{t_n}{\phi_n}$ and
-  $t_0\eval v_0\hmid \cdots t_n\eval v_n$ are
+  If terms $t_0,\ldots,t_n$ have a hypersequent
+   $\tr \tj{t_0}{\phi_0} \hmid \cdots \hmid \tr \tj{t_n}{\phi_n}$ and
+  an evaluation sequence $t_0\eval v_0\hmid \cdots t_n\eval v_n$
   derivable, then
   \[
    \tr\tj{v_0}{\phi_0} \hmid \cdots \hmid \tr \tj{v_n}{\phi_n}
   \]
-  are also derivable.
+  is also derivable.
  \end{proposition}
  \begin{proof}
   By induction on evaluation using propositions below.
@@ -751,6 +756,7 @@ We add the semantics for channels.
   convergence of Amida calculus.
 
 \subsubsection{Nested Channel Pairs}
+\label{eval-subst}
 
 Consider a typed term:
  \begin{center}
@@ -862,22 +868,22 @@ term, there is no closed canonical form ? satisfying the evaluation relation.
     \citet{wadler2012propositions}'s translations and descriptions.
     \begin{align*}
      \sendtype\phi\psi&\equiv \phi\limp\psi &\text{
-     output value of $\phi$ then behave as $\psi$} \\
-     \recvtype\phi\psi&\equiv \phi\otimes\psi &\text{input value of
+     output a value of $\phi$ then behave as $\psi$} \\
+     \recvtype\phi\psi&\equiv \phi\otimes\psi &\text{input a value of
      $\phi$ then behave as $\psi$}\\
      \oplus\{l_i\colon \phi_i\}_{i\in I} &\equiv {\phi_0}\with
-     \cdots \with {\phi_n}, \quad I = \{0,\ldots,n\} & \text{select from behaviors
+     \cdots \with {\phi_n}, \quad I = \{0,\ldots,n\} & \text{select from
      $\phi_i$ with label $l_i$}\\
      \with\{l_i\colon \phi_i\}_{i\in I} &\equiv {\phi_0}\oplus
      \cdots \oplus {\phi_n}, \quad I = \{0,\ldots,n\}& \text{offer choice of
-     behaviors $\phi_i$ with label $l_i$}
+     $\phi_i$ with label $l_i$}
      \\
      \terminate &\equiv \one &\text{terminator}
     \end{align*}
     where $I$ is a finite downward-closed set of natural numbers like
     $\{0,1,2,3\}$.
-    As \citet{wadler2012propositions} notes, the encoding looks
-    opposite, but as \citet{wadler2012propositions} explains, we are
+    As Wadler~\citep{wadler2012propositions} notes, the encoding looks
+    opposite, but as Wadler~\citep{wadler2012propositions} explains, we are
     typing channels instead of processes.
 
     The grammar
@@ -1600,7 +1606,8 @@ following axioms \textbf{A1} to \textbf{A10} and deduction rules mp and $\with$I
 \end{theorem}
 \begin{proof}
  All axioms are inhabited in Amida calculus and
- the Amida calculus rules satisfy the properties mp and $with$I.
+ the Amida calculus rules satisfy the properties \textbf{mp} and
+ $\with$\textbf{I}.
  Especially, a term with type \textbf{A10} can be derived as
   \begin{center}
    \AxiomC{}
@@ -1667,6 +1674,8 @@ For soundness, a different axiomatization of Abelian logic in
       also a theorem.
 \end{description}
 
+These axioms and rules are enough to prove that all inhabited types of
+Amida calculus.
 \begin{theorem}[Soundness of Amida Calculus with Respect to Abelian
  Logic]
  \label{sound-to-abelian}
@@ -1709,6 +1718,20 @@ For soundness, a different axiomatization of Abelian logic in
  \end{enumerate}
 \end{proof}
 
+As a corollary of soundness and completeness,
+some previous literature~\citet{meyer-slaney-1989,casari1989} on
+Abelian logics provides as some facts.
+\begin{corollary}
+ If $\phi\otimes\phi$ is inhabited, so is $\phi$.
+\end{corollary}
+\begin{corollary}
+ The law of excluded middle $\phi\otimes(\phi\limp \one)$ is inhabited.
+\end{corollary}
+\begin{corollary}
+ Prelinearity is inhabited $(\phi\limp\psi)\oplus(\psi\limp\phi)$ is inhabited.
+\end{corollary}
+\fix{do it or delete this sentence.}
+The terms of these types will be shown in Subsection~\ref{computational-meaning}.
 
 \section{Proof Nets}
 \label{sec:proofnets}
@@ -1720,7 +1743,7 @@ fragments but complicated for additive and exponential fragments.
 Since the Amida axiom $(\phi\limp\psi)\otimes(\psi\limp\phi)$
 does not contain additives ($\with,\oplus$) or exponential ($!$),
 we can focus on the multiplicative connectives ($\limp$ and $\otimes$).
-The fragment is called IMLL (intuitionistic multiplicative fragment of
+The fragment is called \textit{IMLL} (intuitionistic multiplicative fragment of
 linear logic.  We also use the unit $\one$ for technical reasons.
 We first describe the IMLL proof nets and their properties.
 Then we add Amida links and see it characterizes Abelian logic.
@@ -1742,9 +1765,9 @@ We can translate
 a polarity $p\in\{+,-\}$ and an IMLL formula~$\phi$ into
 a \textit{polarized MLL formula}\index{formula!polarized
 MLL}\index{polarized MLL formula|see{formula}} $\imtrans{\phi}^p$
-following \citet{lamarche2008,murawski2003}.
+following \citet{lamarche2008} and \citet{murawski2003}.
 We omit the definition of polarized MLL formulae because all grammar is
-exposed in the translation below.
+exposed in the translation below:
 \begin{align*}
  \imtrans{\one}^+ = \one^+ \qquad & \imtrans{\one}^- = \bot^- \\
  \imtrans{X}^+ = X^+      \qquad & \imtrans{X}^- = X^- \\
@@ -1901,7 +1924,7 @@ Although Amida edges cross the paths,
 they do not transmit labels.
 This difference causes Amida nets to validate Amida axiom.
  \begin{example}[Amida net for the Amida axiom]
-  The Amida net for the Amida axiom $(X\limp Y)\otimes(Y\limp X)$.
+  Here is a correct Amida net for the Amida axiom $(X\limp Y)\otimes(Y\limp X)$.
    \begin{center}
     \includegraphics[scale=0.4]{amida-axiom.eps}
    \end{center}
@@ -1995,7 +2018,7 @@ can be done in the same way as \citet{lamarche2008}'s approach.
  \end{proof}
 
 We expect that it is possible to add Amida edges to
-the full intuitionistic logic following
+the IMALL$^-$ essential nets following
 \citet{lamarche2008}.
 
 
@@ -2056,12 +2079,10 @@ open channel~$x$ that emits
 a channel to/from which one can send~$B$ and receive~$A$, receives a
 value of $B$ and
 sends a value of $A$.
-This example shows that our type system is can type strictly more terms than
-the type system in \citet{pfenning2010}.
+This example shows that our type system is can type some terms that
+the type system in \citet{pfenning2010} cannot.
 
-The most complicated example in \citet{pfenning2010} is the following
-one, which can be typed and evaluated in our framework as well.
-
+The most complicated example in \citet{pfenning2010} involves a drink server.
  \begin{example}[Drink Server from \citep{pfenning2010} in Amida
   calculus]
   \begin{align*}
@@ -2132,9 +2153,14 @@ one, which can be typed and evaluated in our framework as well.
   In words, the client first chooses the server's second protocol, which
   is price quoting, and asks the price of the tea, receives the price
   and terminates.
-
-
-  We can combine the server with two clients.
+  We can combine the server with either of these clients.
+  However, since we lack the exponential modality, our type system
+  cannot type any term with $!ServerProto$.  There we cannot beat
+  Pfenning's type system.
+  In order to do that, we might want to tolerate inconsistency and
+  add $\mu$ and $\nu$ operators
+  from the modal $\mu$-calculus, like \citet{mumall} did, and express
+  $!ServerProto$ as $\nu X. (SeverProto\otimes X)$.
    \begin{center}
    \end{center}
 
@@ -2168,8 +2194,7 @@ Wadler uses classical linear logic rather than intuitionistic linear
 logic.
 He justifies the choice for ``greater simplicity and symmetry.''
 Adding Amida axiom to the classical linear logic is a future direction.
-One looming difficulty is as follows.
-In classical multiplicative linear logic,
+One difficulty looms.  In classical multiplicative linear logic,
 adding Amida edges to proof nets seems harder than the intuitionistic case
 because classical MLL proof nets have no direction on edges.
 After a path crosses an Amida edge, the author has no idea which
@@ -2436,6 +2461,7 @@ logic~\citep{metcalfe2006},
 we consider it natural to expect the same property for Amida calculus.
 
 \subsection{Computational Meaning of Excluded Middle}
+\label{computational-meaning}
 
 Since Amida calculus characterizes Abelian logic,
 there is a closed term~$t$ with $\tr \tj{t}{(X\limp \one)\otimes X}$
@@ -2448,10 +2474,21 @@ contained in lambda abstraction bodies and additive pairs.
 
 \section{Conclusion}
 
-We found Abelian logic, which can be characterized by Amida axiom
+We found a new aximatization of Abelian logic, which can be
+characterized by Amida axiom
 $(\phi\limp\psi)\otimes(\psi\limp\phi)$ on top of IMALL.
-The logic has an application for encoding process calculi and session type
-system.
-As a technique, we first used conjunctive hypersequents,
+The axiomatization has an application for encoding process calculi and
+session type system.
+As a technique, we used conjunctive hypersequents for the first time,
 where components in a hypersequent are interpreted conjunctively rather
 than disjunctively.
+The resulting hyper-lambda calculus is somewhat hard to treat
+theoretically.
+If we need convergence, we need the eval-subst rule in the evaluation rule
+(Subsection~\ref{eval-subst}),
+which poses a threat to type safety.
+Moreover, there are some inhatited types like $\phi\oplus
+(\phi\limp\one)$ and $(\phi\limp\psi)\oplus(\psi\limp\phi)$,
+whose constructive justification is hard to see.
+Plausibly, the situation can be remedied by extending the Amida net
+approach treated in Section~\ref{sec:proofnets}.

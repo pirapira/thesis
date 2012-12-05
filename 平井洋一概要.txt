@@ -11,7 +11,7 @@
 ６．論文題目              Hyper-Lambda Calculi
 　　　　　　　　　　　　　　(ハイパーラムダ計算)
 
-７．ＵＲＬ　　　　　　　　　http://yoichihirai.com/thesis
+７．ＵＲＬ　　　　　　　　　http://pira.jp/thesis
 
 ８．提出ファイルの仕様等
 　　(1)オリジナル文書ファイル 平井洋一要旨.pdf/e-pTeX 3.1415926-p3.3-110825-2.4/MacOS 10.7.5
