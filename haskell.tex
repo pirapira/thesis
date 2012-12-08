@@ -231,7 +231,7 @@ main = execute content
 \end{figure*}
 
 We show an example program written with this library
-(Fig.~\ref{fig:example}).  This is a concrete realization of the
+(Figure~\ref{fig:example}).  This is a concrete realization of the
 simplest nontrivial waitfree computation described at the end of Subsection~\ref{subsect:wf}.
 
 \paragraph{The external behavior.}
@@ -972,7 +972,7 @@ is later.  In general, either \verb@ZeroT@--\verb@SecondT@ or
 concatenate the three competitions as one derivation.
 Both of the two thread competition is similar to the simplest nontrivial
 waitfree protocol already explained so we omit the details.  The whole
-program is shown in Fig.~\ref{fig:complete}.
+program is shown in Figure~\ref{fig:complete}.
 \begin{spec}
 main :: IO ()
 main = execute $three `follows` twoMid `follows` twoLast

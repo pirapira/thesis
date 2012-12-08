@@ -2,7 +2,6 @@
 ]{iscs-thesis}
 
 \usepackage[numbers,sort&compress]{natbib}
-\def\NAT@spacechar{~}% NEW
 
 %\usepackage{cleverref}
 %\usepackage{hyperref}  % causes compile error
@@ -42,6 +41,13 @@
 \usepackage{amscd}
 
 \usepackage[amsmath,standard,thref,thmmarks]{ntheorem}
+
+
+\makeatletter
+% \def\NAT@spacechar{\ }% OLD
+\def\NAT@spacechar{~}% NEW
+\makeatother
+
 
 % \doublespacing
 
