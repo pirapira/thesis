@@ -50,7 +50,7 @@
 \section{History}
 
 We briefly review the history of mathematical logic and computer science
-to the extent relevant to the content of this thesis.
+to the extent relevant to this thesis.
 Especially, we focus on the treatments of Dummett's axiom $(a\imp
 b)\lor(b\imp a)$ using the techniques in the history.
 We confine ourselves to the developments of propositional logic and
@@ -60,8 +60,8 @@ mathematics.
 \subsection{Birth of Formal Logic}
 
 Implication is an important concept.
-One treatment of implications called the material
-implication\index{implication!material}.
+One treatment of implications is called the \textit{material
+implication}\index{implication!material}.
 The material implication can be traced back at least to
 Frege's \textit{Begriffsschrift}~\citep{frege} in 1879.\index{Frege}
 There, in the
@@ -570,7 +570,7 @@ and dynamic behaviour.  We can find examples in typed lambda calculi,
 where static formalism of type derivations interacts with dynamic
 behaviour of lambda terms.
 Type derivations of static objects associating lambda terms to types.
-The reduction on terms gives dynamics, defining which term reduce
+The reduction on terms gives dynamics, defining which term reduces
 to which.  Static type derivations can guarantee dynamic properties of
 programs such as strong normalization~\citep{girard1989proofs} and more
 specific properties using parametricity arguments~\citep{reynolds1983types}.
@@ -578,7 +578,8 @@ specific properties using parametricity arguments~\citep{reynolds1983types}.
 The Curry--Howard isomorphism~\index{Curry--Howard isomorphism}
 is originally a correspondence between
 intuitionistic propositional logic proofs and typed lambda terms, but
-the technical term has obtained a more general meaning spanning over the
+the name combination Curry--Howard has obtained a more general meaning
+spanning over the
 correspondence between proofs and programs in general.
 The phrase ``computational interpretation'' is most often used for
 the Curry--Howard
@@ -674,14 +675,16 @@ structure is a $\beta$-redex: $(\lambda x. M)N$.
  The result of the $\beta$-reduction $M[N/x]$ encodes a proof tree using
  the same assumptions as the original and concluding the same formula as
  the original, yet without the aforementioned detour.
- a proof of implication allows transformation of proofs
+ A proof of implication allows transformation of proofs
 by means of
 substitution.  The encoding of proofs as lambda terms is traditionally
 called the Curry--Howard isomorphism.
 % The situation is similar to axiomatized geometry where lines and points
 % could be tables and chairs \fix{(cite)}.
-The former explanation of implications is justified in classical propositional logic.
-The latter view is most naturally materialized in the situation of
+
+The material implications is justified in classical propositional logic.
+The latter view on implication, provided by BHK-interpretation, is most
+naturally embodied in the situation of
 intuitionistic propositional logic.  The last century saw their
 generalization called intermediate logics~\citep{umezawa} (or superintuitionistic
 logics\index{logic!superintuitionistic}), of which a typical example is
@@ -830,11 +833,11 @@ that contains the intuitionistic propositional logic.  A logic is
 \textit{consistent}\index{consistent} when it does not
 contain all logical formulae.
 
-Early intermediate logicians seems to have focused on algebraic aspects
+Early intermediate logicians seem to have focused on algebraic aspects
 on intermediate logics in general.
 Troelstra~\cite[p.~223]{goedelcollected} writes ``the reasons
 for studying intermediate logics are mainly technical.''
-In a survey paper, Hosoi and Ono~\cite{hosoi-ono} says:
+In a survey paper, Hosoi and Ono~\cite{hosoi-ono} say:
  \begin{quote}
   The study of intermediate logics seems to have two aspects: One is to
   study particularities of a certain logic, and the other is to take the
@@ -857,7 +860,7 @@ property.
 The Craig interpolation property holds for a logic $L$ iff $\alpha
 \imp\beta\in L$ implies existence of a formula $\chi$ such that
 $\alpha\imp\chi, \chi\imp\beta\in L$ and $\chi$ only contains propositional
-variables that appears in both $\alpha$ and $\beta$.
+variables that appear in both $\alpha$ and $\beta$.
 The seven logics include the intuitionistic propositional logic, the logic of
 the weak excluded middle,
 G\"odel--Dummett logic
@@ -878,7 +881,7 @@ Abelian logic, on the other hand, is not an intermediate logic
 because it lacks structural rules called weakening and contraction.  Such logics are
 called substructural logics, whose history will be followed in \ref{linear}.
 
-We have to note that there has been some attempts to apply some
+We have to note that there have been attempts to apply some
 intermediate logics for mathematical reasoning, especially the truth
 theory.
 \citet{Hajek:TheJournalOfSymbolicLogic:2000} tried to use \L{}ukasiewicz
@@ -888,6 +891,7 @@ The idea is assigning the truth value 0.5 to the sentence
 the truth value~$x$, a sentence that claims falsehood of the first
 sentence should have the truth value $1-x$.  When the first and second
 sentences are identical, it should have the truth value~$0.5$.
+Using \L{}ukasiewicz logic,
 \citet{Hajek:TheJournalOfSymbolicLogic:2000} worked in Peano arithmetic
 and found a consistent formulation (in the sense there exists a model to
 each finite subtheory).
@@ -897,7 +901,7 @@ contradictory\footnote{\citet{yatabe2009} found an easier proof of this.}.
 
 Computationally inclined research on intermediate logics can be found
 in proof searching.  For the typical intermediate logic G\"odel--Dummett
-logic, there has been many proof searching implementations.
+logic, there have been many proof searching implementations.
 Currently, the fastest solver the author is aware of
 is Fiorino's EPDL~\citep{Fiorino20103633}.
 Fiorino benchmarked his and other implementations
@@ -909,7 +913,7 @@ logic, which is based on Lorenzen game~\cite{curryhoward} and essentially
 proof searching bottom-to-up.  The game contains concurrent subgames but
 he gave no explicit mentions on waitfree computation.
 
-On the other approach of proof reduction, there has been no lambda
+On the other approach of proof reduction, there have been no lambda
 calculi or programming languages based
 on intermediate logics, despite the fact cut-elimination results are
 obtained by \citet{sonobe} and \citet{avron91}.
@@ -1080,13 +1084,13 @@ ways (like which rule to apply first and exchanges of elements in a
 sequent).
 The succinct representation comes with the cost of specifying
 the correctness condition for such graphical structures.
-There has been intensive study on proof nets,
+There have been intensive studies on proof nets,
 which started with~\citet{girard1987} and \citet{danos-regnier}.
 
  We are going to treat the intuitionistic version of
  multiplicative linear logic, and its proof nets are based on Amida
  lotteries.
- The Amida lottery is a traditional way to generate permutations on a set%
+ The Amida lottery is a traditional way to generate permutations on a set
  in an obfuscated way.
  Japanese schoolchildren use \textit{Amida lotteries}\index{Amida lotteries}
  for assigning seats, jobs, teams and so on to classmates.

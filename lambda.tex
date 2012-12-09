@@ -46,7 +46,7 @@ We devise a nondeterministic lambda calculus in Sect.~\ref{lgd}.
 In this lambda calculus, terms can contain operators that read from and
 write to the store, or memory.
 In essence, the nondeterminism arises from the scheduling of concurrent
-processes: which process can write to the store before which process
+processes: which process writes to the store before which process
 reads from the store.
 
 On the other hand, waitfreedom is a class of distributed computation
@@ -67,12 +67,12 @@ Finally in Section~\ref{comparison},
 we prove that the lambda calculus characterizes typed waitfreedom.
 In other words, we show that the
 $\lambda$-terms in the lambda calculus can solve a typed input-output
-problems if and only if it is waitfreely solvable.
+problem if and only if it is waitfreely solvable.
 
 \section{\lgd}
 \label{lgd}
 
-In this section, we define a typed lambda calculus based on
+In this section, we define a typed lambda calculus \lgd\, based on
 hypersequents.
 This constitutes the second contribution of this thesis.
 Moreover, the lambda calculus is one side of the Curry--Howard
@@ -82,10 +82,10 @@ We first present a proof system for G\"odel--Dummet logic.
 Then we turn the proof system into typing rules for $\lambda$-terms
 of~\lgd, give a set of reductions and prove strong-normalization and
 non-abortfullness.
-We show the proof system using the hypersequent
+We show that the proof system using the hypersequent
 style~\citep{avron91}.
 In the usual sequent calculi, each reasoning step concludes a sequent
-$\G\vdash\phi$ where $\G$ is a sequence of formulae.
+$\G\vdash\phi$ where $\G$ is a possibly empty sequence of formulae.
 By contrast,
 in the hypersequent calculi, each reasoning step concludes a
 hypersequent, which is a finite, non-empty sequence of sequents.
@@ -116,7 +116,8 @@ variable|see{variable}}\index{variable!propositional}.  We define \textit{local
 formulae}\index{formula!local}\index{local formula|see{formula}}
 $\varphi, \psi$ (also called \textit{local types}\index{type!local}\index{local
 type|see{type}}) by the following BNF, where $I$ is a propositional
-variable\footnote{We include $\bot$ because G\"odel--Dummett logic has
+variable\footnote{We include $\bot$ in the definition of local formulae
+because G\"odel--Dummett logic has
 $\bot$ although $\bot$ is not necessary to encode waitfree computation.}%
 :
 \[
@@ -124,6 +125,7 @@ $\bot$ although $\bot$ is not necessary to encode waitfree computation.}%
  (\varphi\vee\psi)\enspace.
 \]
 We omit parentheses when no ambiguity occurs.
+We assume countably inifinitely many \textit{processes}\index{process}.
 A \textit{global formula}\index{formula!global}\index{global
 formula|see{formula}}
 (also called a \textit{global type}\index{type!global}\index{global type|see{type}})
@@ -136,14 +138,14 @@ does not map any other processes to local formulae.
 % but that would make the contexts awkward, so
 % I chose not changing it for now.
 % \fix{this sentence is awkward}
-We name such global formulae that map only one process as singleton
+We name such global formulae that map only one process as a singleton
 global formulae.
 The unary operators $[0], [1],\ldots$ are called \textit{modalities}%
 \index{modality}.
 %\fix{example, with $\sqcup$}
 Informally, the local formulae describe datatypes used by each process.
-The global formulae describe inputs or outputs of all
-processes together.
+The global formulae describe inputs or outputs of possibly multiple
+processes.
 
 A \textit{context}\index{context} (denoted by $\Gamma$ and $\Delta$ possibly
 subscripted) is a potentially empty
@@ -335,13 +337,12 @@ $[0]((\varphi\supset\psi)\vee(\psi\supset\varphi))$ is provable (Figure~\ref{fig
 \subsection{Term Assignment}
 \label{term}
 
-We assume distinct, countably infinite sets of \textit{variables}\index{variable},
-\textit{locations}\index{location}
-and
-\textit{processes}\index{process}. % \fix{processes should be placed earlier?}
+We assume distinct, countably infinite sets of
+\textit{variables}\index{variable} and
+\textit{locations}\index{location}.
 Locations are denoted by~$c,d,\ldots$; process~$i,j, \ldots$ and variables~$x,
 y, \ldots$.
-Later, locations will be used to specify a location in a store
+Later, locations will be used to specify a location in a store.
 A location in a store can hold a term or be empty.
 Like in the $\lambda$-calculus, some terms reduces to other
 terms, but in this calculus, terms may interact with stores (like
@@ -377,21 +378,25 @@ on $M$:
  \FV(\inr{M})&= \FV(M)\\
  \FV(\lambda x.M)&= \FV(M) \setminus \{x\}\\
  \FV((M N))&= \FV(M)\cup \FV(N)\\
- \FV(\mat M x N y O)&= \FV(M)\cup (\FV(N)\setminus \{x\}) \cup (\FV(O)\setminus\{y\})
+ \FV(\mat M x N y O)&= \FV(M)\cup (\FV(N)\setminus \{x\}) \cup
+ (\FV(O)\setminus\{y\})\enspace.
 \end{align*}
-A closed local term is a local term that has no free variables.
+A \textit{closed local term}\index{term!closed local} is a local term
+that has no free variables.
 
-A global term is a partial map from processes to local
+A \textit{global term}\index{term!global} is a partial map from
+processes to local
 terms.  For example, a global term $\{0\mapsto \lambda x.x, 1\mapsto
 y\}$ maps process~$0$ to local term $\lambda x.x$ and process~$1$ to
 local term $y$.
 We can substitute a local term for a variable in a global term.
 The substitution is defined elementwise: i.e.,
 the result of the substitution $\m{M}[N/x]$ maps a process~$i$ to $(\m{M}(i))[N/x]$.
-A closed global term is a global term whose image only contains closed local terms.
+A \textit{closed global term}\index{term!closed global} is a global term
+whose image only contains closed local terms.
 Informally, the local terms represent parts of
 programs executed by the processes.
-Especially, $(\comod c c)t$ and $\reader c$ denote processes' communication.
+Especially, $(\comod c c)t$ and $\reader c$ cause processes to communicate.
 
 Using these terms, we annotate the hypersequent system in Figure~\ref{fig:logic}.
 We extend a sequent
@@ -599,7 +604,7 @@ annotated as in Figure~\ref{fig:typed}.
  \DisplayProof
 \ruleskip
  \caption[The typing rules of \lgd.]
- {Term assignment.
+ {Term assignment on the \lgd\,type system.
  Metavariable $\m M$ stands for global terms.
  When we remove variables and terms, we obtain the derivation rules for
  the underlying logic (Figure~\ref{fig:logic}).
@@ -612,12 +617,12 @@ annotated as in Figure~\ref{fig:typed}.
 
  \begin{example}[A typing of a global term.]
 The global term
-$
+  \[
 \{0\mapsto
 \cotuple{\lpair{(\comodL)x, x}, x}
 ,1\mapsto
 \cotuple{\lpair{(\comodR)y, y}, y}
-\}$
+\}  \]
  can be typed (Figure~\ref{fig:typed2}).
  \end{example}
 
@@ -789,23 +794,24 @@ From a hypersequent $\G_0\tr\tj{\m{M_0}}{\m{\phi_0}}\hmid \cdots \hmid
 \G_n\tr\tj{\m{M_n}}{\m{\phi_n}}$,
 we can construct a hyperterm $(\m{M_i})_{0\le i \le n}$.
 The hyperterm $(\m{M_i})_{0\le i \le n}$ is typeable when the
-aforementioned hypersequent is typeable for some $\G_i$'s and $\m{\phi_i}$'s.
+aforementioned hypersequent is derivable for some $\G_i$'s and $\m{\phi_i}$'s.
 
 A \textit{store}\index{store} maps a location to a pure closed term or $\epsilon$,
 where a \textit{pure term}\index{pure term|see{term}}\index{term!pure} is a term
 without $\comod c c$ or $\reader c$.
-For a store~$S$, the updated store $S[c\mapsto x]$ maps $c$ to
+For a store~$S$, the \textit{updated store}\index{update} $S[c\mapsto x]$ maps $c$ to
 $x$ and $d$ to $S(d)$ if $d$ is different from~$c$.
 A \textit{configuration}\index{configuration} is a pair $\conf{}\hypert$ of a
 store~$\lstore$ and a hyperterm~$\hypert$.
 A \textit{typed configuration}\index{typed configuration} is a
 configuration $(\epsilon, \mathcal O)$ where $\epsilon$ is the empty
-store and $\mathcal O$ is typeable.
+store and $\mathcal O$ is a typeable hypersequent.
 
 To complete the definition of \lgd,
  we define the \textit{reductions} $\reduce_\spadesuit$ of
  configurations for $\spadesuit\in\{\mathrm B, \mathrm W, \mathrm R, \mathrm A,
- \mathrm P\}$.
+ \mathrm P\}$, where B stands for basic, W for write, R for read, A for
+ abort and P for permutative reductions.
  We consider terms up to $\alpha$-equivalence and implicitly
  require all instances
  of $\rightsquigarrow_\spadesuit$ to avoid free variable captures.
@@ -814,31 +820,34 @@ We require all reductions to be congruences.
 A binary relation~$R$ on configurations is a \textit{congruence}\index{congruence}
 when
 \begin{itemize}
- \item $\concreteconf{S_0}{\hypert_0} R \concreteconf{S_1}{\hypert_1}$ implies
+ \item $\concreteconf{S_0}{\hypert_0} R \concreteconf{S_1}{\hypert_1}$ implies\\
        $\concreteconf{S_0}{\hypert_0\hmid \hypert} R
        \concreteconf{S_1}{\hypert_1\hmid \hypert}$,
  \item $\concreteconf{S_0}{\hypert_0\hmid \m{M_0}} R
-       \concreteconf{S_1}{\hypert_1 \hmid \m{M_1}}$ implies
+       \concreteconf{S_1}{\hypert_1 \hmid \m{M_1}}$ implies\\
        $\concreteconf{S_0}{\hypert_0\hmid \m{M_0}\sqcup \m{N}} R
        \concreteconf{S_1}{\hypert_1\hmid \m{M_1}}$
  \item $\concreteconf{S_0}{\hypert_0\hmid \{i\mapsto M_0\}\sqcup
        \m{M_0}} R \concreteconf{S_1}{\hypert_1\hmid \imapsto{M_1}\sqcup
-       \m{M_1}}$ implies
+       \m{M_1}}$ implies\\
        $\concreteconf{S_0}{\imapsto{C[M_0]}\sqcup \m{M_0}} R
        \concreteconf{S_1}{\imapsto{C[M_1]}\sqcup \m{M_1}}$ for any
        context~$C$
  \item $\concreteconf{S}{\hypert_0\hmid \m{M}\hmid \m{N} \hmid \hypert_1}
        R \concreteconf{S'}{\hypert'}$
-       implies
+       implies\\
        $\concreteconf{S}{\hypert_0\hmid \m{N}\hmid \m{M} \hmid \hypert_1}
        R \concreteconf{S'}{\hypert'}$ and
  \item $\concreteconf{S}{\hypert} R \concreteconf{S'}{\hypert_0\hmid
        \m{M}\hmid \m{N}\hmid \hypert_1}$
-       implies
+       implies\\
        $\concreteconf{S}{\hypert} R \concreteconf{S'}{\hypert_0\hmid
        \m{N}\hmid \m{M}\hmid \hypert_1}$.
 \end{itemize}
 
+The first kind of reductions, basic reductions, are what one would
+expect from typed lambda calculi based on intuitionistic propositional
+logic with implication, conjunction and disjunction.
 \begin{definition}[Basic reduction]
  The basic reduction $\breduce$ is the smallest congruence containing
  the followings:
@@ -863,8 +872,8 @@ If a term writes to an empty location, the location is filled with the
 local term written by the term.
  If a term writes to a full location of
 a store, it does not abort but the store is not updated.  In fact, the
-store contents are never updated after being written.
-This property will be used in the proof of \thref{first:sn}.
+contents of locations are never updated after being written.
+This property will be used in the proof of \thref{first:sn} (Strong normalization).
 The formal definition of the reductions follows.
 \begin{definition}[Write reduction]
  The write reduction $\wreduce$ is the smallest congruence
@@ -885,9 +894,9 @@ We require this because our aim is to model asynchronous communication.
 If we allow stores to contain terms with free variables,
 the term $(\lambda x. (\comodL x)) M$ can store $x$ in the store and
 another process can read $x$ from the store.
-If $(\lambda x.\cdots)M$ reduces after that,
+After that, if $(\lambda x.\cdots)M$ reduces,
 then, $x$ becomes $M$ suddenly in the other process.
-We want to avoid this phenomenon because it is synchronous.
+We want to avoid this phenomenon because it is synchronous communication.
 
 We require the same condition in the second clause as well because
 otherwise, whether a configuration admits a write reduction or not
@@ -906,33 +915,36 @@ the term changes into $\abort$.
  containing the
  followings:
 \begin{itemize}
-   \item $\conf{[c\mapsto M]}{\imapsto{\reader c}}\rreduce 
+   \item $\conf{[c\mapsto M]}{\imapsto{\reader c}}\rreduce
       \conf{[c\mapsto M]}{\imapsto{M}}$
    \item $\conf{[c\mapsto \epsilon]}{\imapsto{\reader c}}
        \rreduce \conf{[c\mapsto \epsilon]}{\imapsto{\abort}}$
 \end{itemize}
 \end{definition}
 
-The special term $\abort$ means failure, so, a term containing $\abort$
-also reduces to abort except $\cotuple{M,N}$.  The concurrent
-construction $\cotuple{M,N}$ runs $M$ and $N$ concurrently and throws
+The special term $\abort$ means failure, so, a term containing $\abort$,
+except $\cotuple{M,N}$, also reduces to $\abort$.  The \textit{concurrent
+construction}\index{concurrent
+construction}\index{construction!concurrent} $\cotuple{M,N}$ runs $M$
+and $N$ concurrently and throws
 away those subterms that reduces to $\abort$.
 To be specific, the term $\cotuple{M,N}$ reduces to $\linl{M}$
 or $\linr{N}$ with $\mathsf{inl}$ and
 $\mathsf{inr}$ labels showing which components failed.
 The reduction rules are not symmetric with regard to the left component
-and the right component of the concurrent construct $[M, M]$ because
+and the right component of the concurrent construct $[M,N]$ because
 when both components succeed, the whole construct reduces to
 the left component.
-\begin{definition}[Abort reduction]
+\begin{definition}[Abort propagation reduction]
  The abort propagation reduction $\areduce$ is the smallest
  congruence containing the
  followings:
 \begin{itemize}
  \item  $\conf{}{\imapsto{\cotuple{\abort, M}}}\areduce
- \conf{}{\imapsto{M}}$, and
+ \conf{}{\imapsto{M}}$;
+ \item
    $\conf{}{\imapsto{\cotuple{M,\abort}}}\areduce
- \conf{}{{M}}$
+ \conf{}{{M}}$;
  \item $\conf{}{\imapsto{\cotuple{M,N}}}\areduce \conf{}{\imapsto{M}}$ where
        $M$ and $N$ do not contain $\abort$, $\comodL$ or $\reader c$
        for any locations $c,d$;
@@ -957,7 +969,8 @@ C[\bullet] N \mid
 For example, $(S, \cotuple{\abort,\abort})$ reduces to $(S,
 \abort)$.
 
-In order to avoid the situation where
+In order to avoid the situation where computation is blocked by
+a syntactic barricade,
 we add yet another kind of reduction rules called permutative
  reductions.
 \begin{definition}[Permutative reduction]
@@ -1005,14 +1018,13 @@ A configuration~$\mathcal{C}$ is \textit{normal}\index{normal} when
 there is no configuration
 $\mathcal{D}$ with $\mathcal{C}\reduce \mathcal{D}$.
 A term~$M$ is \textit{normal}\index{normal} when the configuration $\conf{}{M}$ is
-normal (the choice of $\lstore$ is irrelevant).
+a normal configuration (the choice of $\lstore$ is irrelevant).
 
 \begin{example}[Reductions of \lgd]
  We take the term shown in
  Figure~\ref{fig:typed2} and replace $x$ with $v$ and $y$ with $w$ where
  $v$ and $w$ are pure closed terms.
- Below, an underlined subterm is a redex.  A redex is a subterm that
- pattern-matches a reduction rule.
+ Below, an underlined subterm is a redex.
  \begin{align*}
   &\left(\{\}, \{
   0\mapsto\cotuple{\lpair{\underline{(\comodL)v},v},v},
@@ -1081,7 +1093,7 @@ normal (the choice of $\lstore$ is irrelevant).
   \right)
  \end{align*}
  The overall effect is the transfer of term~$v$ from process~0 to
- process~1.  In the beginning, $v$ only appeared in the process~0's
+ process~1.  In the beginning, $v$ only appears in the process~0's
  local term but not in process~1's local term.  In the end, the
  term~$v$ appears in both processes' local terms.
  From the first line to the second line,
@@ -1149,7 +1161,7 @@ a communication rule occurrence
    {\imapsto{(\comodL)M}}{[i]\tau}\hmid
    \Delta\tr \tj{\jmapsto{(\comodR)N}}{[j]\psi}$}
 \end{center}
-into a weakening occurrence (using Proposition~\ref{process-change} stated below)
+into a weakening occurrence (using Proposition~\ref{process-change} proved below)
 \begin{center}
  \AxiomC
  {$\hypert_0\hmid  \Gamma^j, \Delta^j\tr \tj M{[j]\psi}$}
