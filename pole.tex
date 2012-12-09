@@ -4,11 +4,13 @@
 \subsection{Summary}
 %%% abstract
 \citet{danos-krivine} state that
-disjunctive tautologies
-such as the excluded middle and the symmetric excluded middle
-are the types of synchronization schemes.
+disjunctive tautologies\footnote{A \textit{tautology}\index{tautology}
+is a theorem of classical propositional logic.}
+such as the excluded middle $\phi\vee(\phi\imp\bot)$
+and the symmetric excluded middle $(\phi\imp\psi)\vee(\psi\imp\phi)$
+represent synchronization schemes.
 Indeed in their formalism, reduction of one term can wait
-for another, making synchronization.
+for another term, making synchronization.
 However,
 one can find no communication among different
 concurrent elements of an executable.
@@ -26,18 +28,15 @@ We interpret the disjunction~$\oplus$ in the prelinearity axiom
 nondeterministically: whether
 one process can give information to the other or
 vice versa.
-In Sect.~\ref{sec:sync}, where processes make synchronization,
+In Section~\ref{sec:sync}, where processes make synchronization,
 we externally specify such nondeterministic choice.
-In Sect.~\ref{sec:async}, where processes do not make synchronization,
+In Section~\ref{sec:async}, where processes do not make synchronization,
 the nondeterminism appears automatically as a slower process cannot pass
 information to a faster one.
 We adapt \citet{danos-krivine}'s realizability argument to our
 synchronous case and give simulation from the
-asynchronous case to the synchronous case.
+synchronous case to the asynchronous case.
 
-We also
-develop a simulation from the synchronous semantics to the
-asynchronous one.
 The asynchronous semantics here is closely related to
 the hyper-lambda calculus for G\"odel--Dummett logic presented in
 Chapter~\ref{ch:lambda}.
@@ -53,14 +52,14 @@ equations or using the step-index technique~\citep{ahmed2006}.
 Although dealing with general references and parametricity
 is manageable~\citep{birkedal2009relational},
 we choose a simpler, indirect approach.
-In Sect.~\ref{sec:sync} we apply the classical realizability argument to
+In Section~\ref{sec:sync} we apply the classical realizability argument to
 an operational semantics where
 communication is made
 synchronously.
-In Sect.~\ref{sec:async} we deal with the
+In Section~\ref{sec:async} we deal with the
 operational
 semantics involving asynchronous communication using stores and
-In Sect.~\ref{sec:as-logic}, we compare our type system with MTL.
+In Section~\ref{sec:as-logic}, we compare our type system with MTL.
 In sections~\ref{sec:discuss} and \ref{sec:conclude}, we give discussions
 and our conclusion.
 
@@ -68,18 +67,48 @@ and our conclusion.
 \section{Asynchronous Semantics}
 \label{sec:async}
 
-In this section we give another operational semantics involving
-asynchronous shared memory communication, which is similar to Hirai's
-hyper-lambda calculus for G\"odel--Dummett logic~\citep{hiraiflops2012}.
-An \textit{a-term}\index{term!a-term} (asynchronous term)~$t$ is an s-term or
-$\reader c$.
+In this section, we give another operational semantics involving
+asynchronous shared memory communication, which is similar to the
+hyper-lambda calculus for G\"odel--Dummett logic (Chapter~\ref{ch:lambda}).
+We consider a programming language, which is a modification of
+Danos and Krivine~\citep{danos-krivine}'s.
+We assume a set~$\pvar$ of propositional variables whose cardinality is
+countably infinite.
+We also assume countably infinitely many locations with involution
+satisfying $\co c\neq c$ and $\co{\co c} = c$.
+Metavariable~$c$ runs over locations.
+An \textit{a-term}\index{term!a-term} (asynchronous term)~$t$ is defined
+by BNF:
+\begin{align*}
+ t::= \,&x
+ \mid (t)t
+ \mid \lambda x.t
+ \mid \mat t x t x t
+ \mid \inl t
+ \mid \inr t
+ \mid \\ &
+ (t\conc t)
+ \mid \comod c c
+ \mid \reader c
+ \mid \abort
+\end{align*}
+where $x$ is a variable and $c$ is a location.  The variable occurrences
+except in the first clause are binding.
+An \textit{a-stack}\index{stack!a-stack} (asynchronous stack)~$\pi$ is
+defined by BNF:
+\[
+ \pi ::= \epsilon
+ \mid t\cdot \pi
+ \mid \mats x t \pi x t \pi
+ \enspace.
+\]
 The definition of a-stacks is not changed from that of s-stacks except
 that the s-terms in the definition are replaced by a-terms.
 We write the set of a-terms as $\aLambda$ and a-stacks~$\aPi$.
 A \textit{store}\index{store} maps a location to an a-term, $\bot$ or $\top$.
 The \textit{empty store}\index{store!empty}%
 \index{empty store|see{store}}~$S_\epsilon$ maps any location to $\bot$.
-For a store $S$, we define a store $S[c\mapsto x]$ to be
+For a store $S$, we define the updated store $S[c\mapsto x]$ to be
 the same as $S$ except that $S[c\mapsto x](c)$ is $x$ whatever $S(c)$ is.
 An \textit{a-executable}\index{executable!a-executable} (asynchronous executable)
 is a finite multiset on $\aLambda \times \aPi$,
@@ -136,14 +165,14 @@ that satisfy:
 	    \ared'
 	    \emptyset,S[c\mapsto \top]
 	    $
-	    \enspace; and
- \item[(local-global)] If $e_0, S_0\ared'e_1, S_1$ then $e_0, S_0\ared e_1,
+	    \enspace;
+ \item[(local-global)] if $e_0, S_0\ared'e_1, S_1$ then $e_0, S_0\ared e_1,
       S_1$\enspace; and
  \item[(dist)]
 	    $[(t\conc u),\pi\conc e],S   \ared' [t,\pi\conc u,\pi\conc
       e\conc e],S$\enspace.
 \end{description}
-Differently from the synchronous case in Sect.~\ref{sec:sync},
+Differently from the synchronous case in Section~\ref{sec:sync},
 we do not use an external schedule relation on locations.
 Instead, nondeterminism appears spontaneously.
 Indeed, we can implement something similar to Lafont's
@@ -186,15 +215,20 @@ and to $[u,\pi], S_\epsilon$ (Figure~\ref{fig:lafont}).
  \label{fig:lafont}
 \end{figure}
 
-\begin{proposition}
- Let $e$ be an s-executable.
- If $e\sred e'$ then $e, S_\epsilon \ared e', S_\epsilon$.
-\end{proposition}
+\begin{corollary}[Prelinearity as a Communication Scheme]
+ \label{spec:prelin-cor}
+ Let $g$ have type ${\forall X\forall
+ Y((X\limp Y)\oplus (Y\limp X))}$.
+ Then, the s-executable
+ \[
+ [g, \mats{z}{z}{x\cdot\pi_Y}{w}{w}{y\cdot\pi_X}]
+ \]
+ reduces to a multiset containing an element of
+ $\{(x,\pi_X), (y,\pi_Y)\}$.
+\end{corollary}
 \begin{proof}
- Most reduction rules are common.  Rules (com0) and (com1) are
- simulated in Figure~\ref{fig:lafont}.  Rule (com2) can be simulated similarly.
+  By \thref{spec:prelin-cor} and \thref{simu} below.
 \end{proof}
-This transfers the semantics of prelinearity (Prop.~\ref{spec:prelin}) to the asynchronous case.
 
 \section{Synchronous Semantics}
 \label{sec:sync}
@@ -239,7 +273,7 @@ defined by BNF:
 \]
 We write the set of s-terms as $\sLambda$ and s-stacks~$\sPi$.
 For s-terms~$s,t$ and a variable~$x$, $s[t/x]$ denotes the result of
-substitution of $t$ for free $x$'s in $s$.  When more than one
+substitution of $t$ for free occurrences of $x$ in $s$.  When more than one
 substitutions are concatenated, e.g. $s[t/x][t'/y]$, the substitutions
 are applied at the same time not one after another.
 When we use this
@@ -301,7 +335,7 @@ We say $e$ reduces to $e'$ when $e\sred e'$ holds.
 Below, we sometimes omit the outermost parentheses (i.e. [ and ]) for multisets.
 Rules (cong), (push) and (store) come from
 \citet{danos-krivine}.  (dist) also appears there but we changed it so
-that the proof for adequacy (Thm.~\ref{c:adequacy}) goes through in the
+that the proof for adequacy (Theorem~\ref{c:adequacy}) goes through in the
 case (EC, \textminus).
 
 % I want to write these rules are non-blocking here.
@@ -313,20 +347,20 @@ case (EC, \textminus).
 
 \subsection{Statics}
 For a set~$S$,
-$\form(S)$ is the set of $S$-formulae~$\phi$:
+$\form(S)$ is the set of $S$-\textit{formulae}\index{formula!$S$}~$\phi$:
 \[
 \phi::= s \mid X \mid \phi\limp\phi\mid \phi\oplus\phi\mid
 \forall X \phi
 \]
-where $s\in S$, $X\in \pvar$. The $X$ in the
+where $s\in S$ and $X\in \pvar$. The $X$ in the
 last clause is binding.
 The connective $\forall$ connects stronger than $\oplus$, which is
 stronger than $\limp$.
 Repeated $\limp$'s,
-$\phi_0\limp\phi_1\limp\cdots\limp\phi_n$, is defined inductively on~$n$
+$\phi_0\limp\phi_1\limp\cdots\limp\phi_n$, are defined inductively on~$n$
 as
 $\phi_0\limp(\phi_1\limp\cdots\limp\phi_n)$.
-A type is an element of $\form(\emptyset)$.
+A \textit{type}\index{type} is an element of $\form(\emptyset)$.
 
 A \textit{sequent}\index{sequent} $\sequent{\G}{\tj t\phi}$ consists of a
 context~$\G$ and an s-term~$t$ associated with a type~$\phi$.
@@ -337,7 +371,6 @@ appear in both $\G$ and $\D$.
 A \textit{hypersequent}\index{hypersequent} is a finite sequence of sequents.
 In a hypersequent, we also assume that no variable appears more than once in
 the contexts%
-due to space limitations
 \footnote{The condition is different from that of
 Chapter~\ref{ch:lambda}.  This is due to different forms of the
 external contraction (EC) rule.}%
@@ -346,7 +379,7 @@ external contraction (EC) rule.}%
 An $\NMTL$ \textit{derivation}\index{derivation!MTL2} is a tree composed of the derivation
 rules in Figure~\ref{fig:pole-typing}
 whose top rules are Ax.
-A hypersequent is derivable in $\NMTL$ when there is an $\NMTL$
+A hypersequent is \textit{derivable}\index{derivable} in $\NMTL$ when there is an $\NMTL$
 derivation ending at the hypersequent.
 An s-term~$t$ has type~$\phi$ when $\tr\tj{t}{\phi}$ is derivable.
 A type~$\phi$ is provable when there is an s-term~$t$ with type~$\phi$.
@@ -441,7 +474,7 @@ A type~$\phi$ is provable when there is an s-term~$t$ with type~$\phi$.
 \ruleskip
 %
   \caption{Typing derivation rules of $\NMTL$.  $\mathcal H$ and
-  $\mathcal H'$ stand for hypersequents.}
+  $\mathcal H'$ stand for hypersequents. In EW, $\mathcal H$ cannot be empty.}
   \label{fig:pole-typing}
  \end{figure}
 For example, there is an s-term typed with the prelinearity axiom (Figure~\ref{fig:prelin-term}).
@@ -520,8 +553,7 @@ condition~\ref{conc-closed}.~is different from that of Danos and Krivine's~\cite
 There, the condition says if $e$ \textit{and} $f$ \textit{are} in
 $\bbot$, then $e\conc f$ is in $\bbot$.  Our disjunctive choice here is influenced
 by hypersequents~\citep{avron91} and hyper-lambda
-calculi~\citep{hiraiflops2012},
-where
+calculi~(Chapter~\ref{ch:lambda}), where
 components are interpreted disjunctively.
 Computationally,
 we only guarantee that at least one process of an s-executable
@@ -536,7 +568,7 @@ the set of programs $(t,e)$ such that
 for any environment $(\pi,e')\in \mathcal Z$,
 the s-executable $[t,\pi\conc e \conc e']$ is in $\bbot$.
 We use programs and environments because if we continued using
-s-terms and s-stacks, the proof of adequacy (Thm.~\ref{c:adequacy})
+s-terms and s-stacks, the proof of adequacy (Theorem~\ref{c:adequacy})
 would fail
 in the case
 ($\limp$E,~\textminus),~\ref{c:second}.
@@ -544,7 +576,7 @@ in the case
 For $\phi\in\form(2^E)$ and $|\cdot|^-_0\colon\pvar\rightarrow 2^E$\kern
 -2pt,
 we define $\nsem{\phi}\in
-2^E$ inductively:
+2^E$ inductively on $\phi$:
 \begin{align*}
  \nsem{\mathcal Z} =& \mathcal Z \text{ for } \mathcal Z\in 2^E\\
  \nsem{X}=& |X|_0^- \\
@@ -589,7 +621,7 @@ and $(\sigma,e_1)\in\nsem\psi$.
  $ [u,\sigma\conc e_{0}\conc e_{1}\conc f_{0}\conc f_{1}]$ or
  $ [t,\pi\conc u,\sigma\conc e_{0}\conc e_{1}\conc f_{0}\conc f_{1}]$,
  all of which are in $\bbot$ by condition~\ref{conc-closed}.~of
- Def.~\ref{def:pole} because
+ Definition~\ref{def:pole} because
  $[t,\pi\conc e_{0}\conc f_{1}]$ and
  $[u,\sigma\conc e_{1}\conc f_{0}]$ are in $\bbot$.
  Since $\bbot$ is closed for $\sred^{-1}$,
@@ -650,8 +682,8 @@ same time.
 \end{theorem}
 \begin{proof}
  We prove both statements at the same time by induction on the sum of
- the heights of the derivations for $\mathcal H$ and $\mathcal I$.  Here
- we identify sequents and hypersequents up to exchange.
+ the heights of the derivations of $\mathcal H$ and $\mathcal I$.  Here
+ we identify hypersequents up to exchange.
   \begin{description}
   \item[(Ax, Ax)] When both derivations consist of only axiom rules,
        the statements follow from the definitions of $\sem{\phi}$ and
@@ -674,7 +706,7 @@ same time.
 	       equal to $t[\vec{g'}/\G']$.
 	       By induction hypothesis~\ref{c:first},
 	       $(t[\vec{g'}/\G'],e\conc e_{\mathcal H'})$ is in $\sem{\phi}$.
-	       By condition~\ref{conc-closed}.~of Def.~\ref{def:pole},
+	       By condition~\ref{conc-closed}.~of Definition~\ref{def:pole},
 	       the program in question $(t[\hat t/\hat x][\vec{g'}/\G'],
 	       e\conc \hat e\conc e_{\mathcal H'})$ is also in $\sem{\phi}$.
 	 \item
@@ -705,7 +737,7 @@ same time.
 	      in $t$,  $[t[v/\hat x][\vec g/\hat \G],\pi\conc e\conc
 	      e''\conc e_{\hatma H}]$
 	      is in $\bbot$.  By condition~\ref{conc-closed}.~of
-	      Def.~\ref{def:pole},
+	      Definition~\ref{def:pole},
 	      $\bar e$ is also in $\bbot$.
 	\end{enumerate}
    \item[(EW, \textminus)]
@@ -769,7 +801,7 @@ same time.
 		t_1[{t_0}/\hat x][\vec{g}/\G],\pi\conc{e}\conc
 	       e_0\conc{e_1}\conc e_{\mathcal H'}\enspace.
 	       \]
-	       By (load), \fix{no load}
+	       By (load),
 	       we have $({t_0}, e_0)\in\sem{\phi_0}$ so, by
 	       induction hypothesis~\ref{c:first},
 	       the reduct is in $\bbot$.
@@ -955,9 +987,11 @@ same time.
               $\bbot$.
               Since $\bbot$ is closed for $\rev\sred$,
               the s-executable
-              $\inl{t'}[\vec g/\G], \mats {\hat x}v{\pi_0}{\hat
+	      \[
+	      \inl{t'}[\vec g/\G], \mats {\hat x}v{\pi_0}{\hat
               y}w{\pi_1}
-              \conc{e\conc e_{\mathcal H}}\conc e''$
+              \conc{e\conc e_{\mathcal H}}\conc e''
+	      \]
               is also in $\bbot$.
               This shows the statement because we chose an arbitrary
               element of $\nsem{\phi_0\oplus\phi_1}$.
@@ -969,8 +1003,10 @@ same time.
 	      $(v,w,e')\in\sempair{\theta,\tau}$,
               $(\vec g, e)\in\sem{\hat\G}$,
               $(\vec d, f)\in\sem{\hat\D}$,
-              $(\mats{\hat x}{\hat v}{\pi_0}{\hat y}w{\pi_1}, e'')\in
-              \nsem{\phi_0\oplus\phi_1}$ and
+              \[
+	       (\mats{\hat x}{\hat v}{\pi_0}{\hat y}w{\pi_1}, e'')\in
+              \nsem{\phi_0\oplus\phi_1}
+	      \] and
               $(\sigma,f'')\in\nsem{\psi}$.
               We have to show that the following s-executable is in
               $\bbot$:
@@ -1170,7 +1206,7 @@ same time.
 	      $\eHo\in\semo{\mathcal H_1}$,
 	      $(\vec{g_0},{e_0})\in\sem{\G_0}$ and
 	      $(\vec{g_1},{e_1})\in\sem{\G_1}$.
-	      By Prop.~\ref{comod-type}, we have
+	      By Proposition~\ref{comod-type}, we have
 	      $(\comodL,\comodR,\emptyset)\in\sempair{\phi_0\limp\phi_1,\phi_1\limp\phi_0}$.
 	      By induction hypothesis~\ref{c:second}, the s-terms
 	      $t'_0=t_0[\comodL/\hat{x}][\vec{g_0}/\G_0]$ and
@@ -1211,7 +1247,7 @@ same time.
 	     $\mathcal H$.
 	     We can use the induction hypothesis~\ref{c:second} on
 	     this derivation and the derivation of $u$.
-	     By this and Prop.~\ref{comod-type}, $(\comodL, t_1',{e_1\conc \eHo})$ is in
+	     By this and Proposition~\ref{comod-type}, $(\comodL, t_1',{e_1\conc \eHo})$ is in
 	     $\sempair{\phi_0\limp\phi_1,\phi}$.
 	     So, program $p =(\comodL,[t_1',\pi'\conc{e_1\conc \eHo\conc
 	     e'''}])$ is in
@@ -1280,7 +1316,7 @@ same time.
  \end{proof}
 Note that \ref{c:first} uses \ref{c:second} in (Com,~\textminus)
 and \ref{c:second} uses \ref{c:first} in ($\limp$E,~\textminus) and
-(IW,~\textminus) in the proof of Thm.~\ref{c:adequacy}.
+(IW,~\textminus) in the proof of Theorem~\ref{c:adequacy}.
 
 \begin{proposition}
  \label{prop:exec-on-pole}
@@ -1291,8 +1327,10 @@ and \ref{c:second} uses \ref{c:first} in ($\limp$E,~\textminus) and
 
 \begin{proposition}[Prelinearity as a Communication Scheme]
  \label{spec:prelin}
- Let $g$ have type ${\forall X\forall
- Y((X\limp Y)\oplus (Y\limp X))}$.
+ Let $g$ have type \[
+{\forall X\forall
+ Y((X\limp Y)\oplus (Y\limp X))}\enspace.
+		   \]
  Then, the s-executable
  \[
  [g, \mats{z}{z}{x\cdot\pi_Y}{w}{w}{y\cdot\pi_X}]
@@ -1303,22 +1341,34 @@ and \ref{c:second} uses \ref{c:first} in ($\limp$E,~\textminus) and
 \begin{proof}
  We denote by $\bbot$ the set of s-executables that reduce to a multiset
  containing an element of $\{(x,\pi_X), (y,\pi_Y)\}$.
- By Prop.~\ref{prop:exec-on-pole}, $\bbot$ is a pole.
+ By Proposition~\ref{prop:exec-on-pole}, $\bbot$ is a pole.
  Take $\nsem{X}_0 = \{(\pi_X,\emptyset)\}$ and
       $\nsem{Y}_0 = \{(\pi_Y,\emptyset)\}$.
  We have $x\in\sem{X}$ and $y\in\sem{Y}$.
  By definition of $\nsem{\cdot}$,
  $\mats{z}{z}{x\cdot\pi_Y}{w}{w}{y\cdot\pi_X}$ is in $\nsem{(X\limp
  Y)\oplus (Y\limp X)}$\kern -1.5pt.
- By adequacy (Thm.~\ref{c:adequacy}), $\left[g,
+ By adequacy (Theorem~\ref{c:adequacy}), $\left[g,
  \mats{z}{z}{x\cdot\pi_Y}{w}{w}{y\cdot\pi_X}\right]$ is in $\bbot$.
 \end{proof}
+
+\begin{proposition}
+ \label{simu}
+ Let $e$ be an s-executable.
+ If $e\sred e'$ then $e, S_\epsilon \ared e', S_\epsilon$.
+\end{proposition}
+\begin{proof}
+ Most reduction rules are common.  Rules (com0) and (com1) are
+ simulated in Figure~\ref{fig:lafont}.  Rule (com2) can be simulated similarly.
+\end{proof}
+This transfers the semantics of prelinearity
+(Proposition~\ref{spec:prelin}) to the asynchronous case.
 
 \begin{example}[A term performing information exchange.]
  \label{spec-ex}
  Since $g = (\inl{\comodL}\conc\inr{\comodR})$ has the type
  $\forall X\forall Y((X\limp Y)\oplus (Y\limp X))$ (Figure~\ref{fig:prelin-term}),
- $g$ satisfies the condition of Prop.~\ref{spec:prelin}.
+ $g$ satisfies the condition of Proposition~\ref{spec:prelin}.
  Indeed, by (dist),
  $\left[g, \mats{z}{z}{x\cdot\pi_Y}{w}{w}{y\cdot\pi_X}\right]$
  reduces to
@@ -1368,7 +1418,7 @@ and \ref{c:second} uses \ref{c:first} in ($\limp$E,~\textminus) and
 There is a well-known substructural logic called monoidal t-norm logic
 (MTL), which validates the prelinearity axiom
 $(\phi\limp\psi)\oplus(\psi\limp\phi)$.  Actually, $\NMTL$ characterizes
-MTL (Props.~\ref{prop:sound} and \ref{prop:comp}).
+MTL (Propositions.~\ref{prop:sound} and \ref{prop:comp}).
 
 The MTL formulae can be defined as%
 \footnote{From the literature~\citep{handbook:fuzzy}, the connectives
@@ -1382,7 +1432,7 @@ As an abbreviation, we can introduce $\phi\land\psi =  (\phi\otimes(\phi\limp\ps
 The translation of $\wedge$ is a tailor-made one for MTL,
  which is taken from \citep[p.~48]{handbook:fuzzy}.
  The origin of the translation
-can be traced back to \citet[Lem.~6.5]{Cintula200740}.}%
+can be traced back to \citet[Lemma~6.5]{Cintula200740}.}%
 .
 We take a hypersequent formulation of MTL by
 \citet{baaz2004analytic}, whose rules we show in Figure~\ref{fig:hlbck}.
@@ -1422,7 +1472,7 @@ We take a hypersequent formulation of MTL by
   \hfill
   \AxiomC{$\mathcal H$}
   \LL{(EW)}
-  \useq{\mathcal H\hmid G}{\phi}
+  \useq{\mathcal H\hmid \G}{\phi}
   \DisplayProof
   \ruleskip
   \aseq{\mathcal H\hmid\G,\phi,\psi}{\chi}
@@ -1461,7 +1511,7 @@ We take a hypersequent formulation of MTL by
   \citet{baaz2004analytic} so we took them from \citet{ono-komori-1985}.
   Exchange rules  are implicit.
   The (cut) rule is eliminatable by
-  \citet[Thm.~3.2]{baaz2004analytic}.}
+  \citet[Theorem~3.2]{baaz2004analytic}.}
   \label{fig:hlbck}
  \end{figure}
 
@@ -1474,13 +1524,13 @@ induction on $\phi$:
  (\phi\otimes\psi)^\bullet & = \forall
  X((\phi^\bullet\limp\psi^\bullet\limp X)\limp X) \text{ where }X\text{ do
  not appear in }\phi\otimes\psi\nonumber\\
- (\phi\oplus\psi)^\bullet &= \phi^\bullet \oplus \psi^\bullet
+ (\phi\oplus\psi)^\bullet &= \phi^\bullet \oplus \psi^\bullet\quad.
 \end{align*}
 We state that any MTL formula~$\phi$ is a theorem in $\HLBCK$ iff
  $\phi^\bullet$ is a theorem in $\NMTL$.
  In order to reason inductively on hypersequent derivations, we extend
  the translation $(\cdot)^\bullet$ to sequents and hypersequents.
- We define $(\G\tr\phi)^\bullet$ to be $\G^\bullet\supset\phi^\bullet$
+ We define $(\G\tr\phi)^\bullet$ to be $\G^\bullet\limp\phi^\bullet$
  where
  $\G^\bullet$ is the $\otimes$-conjunction of translations of the
  elements of $\G$.
@@ -1518,7 +1568,7 @@ substituting an MTL formula for each bound propositional variable in $\phi$.
     (\phi\oplus\psi)^\circ &= \phi^\circ \oplus \psi^\circ\enspace.
    \end{align*}
    Both claims are immediate.  Assume $\phi^\bullet$
-   is provable in $\NMTL$.  By the first claim and Prop.~\ref{prop:sound-ind},
+   is provable in $\NMTL$.  By the first claim and Proposition~\ref{prop:sound-ind},
    $\phi^\circ$ is provable in $\HLBCK$.  By the second claim, $\phi$ is
    provable in $\HLBCK$.
   \end{proof}
@@ -1549,14 +1599,14 @@ processes is (dist), which spawns processes that never communicate.
 Sharing their purpose
 ``interpretation of logical rules as programming
 instructions''~\citep{danos-krivine},
-we continue to seek generalization over substructural
+we continue to seek generalization to other substructural
 logics.
 
 The asynchronous semantics given here is similar to that of a
 hyper-lambda calculus \lgd\,by
 \citet{hiraiflops2012}.
 We conjecture that our classical realizability argument here is
-applicable to \lgd\,as well, but for that, due to contraction,
+applicable to \lgd\,as well, but for that, due to contraction rule,
 we have to generalize the statement of adequacy to involve arbitrarily
 many derivations.
 
@@ -1574,7 +1624,7 @@ axiom representing the same kind of communication schemes as we have
 shown.
 
 H\'{a}jek's basic fuzzy logic (BL) is very similar to
-MTL~\citep{chavalovsky2012}.
+MTL~\citep{chvalovsky2012}.
 Actually from MTL, BL can be obtained by adding
 $(\phi\otimes(\phi\limp\psi)) \limp (\psi\otimes(\psi\limp\phi))$ (or a
 symmetric axiom).  Thus, we have to find the computational meaning of

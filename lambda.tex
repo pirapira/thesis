@@ -18,6 +18,9 @@ but also valuable as a basis for distributed programming languages.
 In other words, we extend
 Curry--Howard isomorphism~\cite{curryhoward} to G\"odel--Dummett logic and
 waitfreedom.
+The content of this chapter appeared in a conference paper by
+\citet{hiraiflops2012} although substantial modification has been
+applied since.
 
 On one hand, G\"odel--Dummett logic~\cite{dummett59}
 is one of the intermediate logics
@@ -42,7 +45,7 @@ with some terms witnessing those formulae.
 Such a term
 $\tj{M}{(\varphi\supset\psi)\vee(\psi\supset\varphi)}$ must choose
 $M\reduction \linl\cdots$ or $M\reduction \linr\cdots$.
-We devise a nondeterministic lambda calculus in Sect.~\ref{lgd}.
+We devise a nondeterministic lambda calculus in Section~\ref{lgd}.
 In this lambda calculus, terms can contain operators that read from and
 write to the store, or memory.
 In essence, the nondeterminism arises from the scheduling of concurrent
