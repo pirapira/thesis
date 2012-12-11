@@ -418,6 +418,10 @@ variable has the same type even if it appears in different components.
 The typing rules for the terms are given in Figure~\ref{termassign}.
 For example, the proof in Figure~\ref{fig:dummett-modal} can be
 annotated as in Figure~\ref{fig:typed}.
+Each derivation has a unique hypersequent at the bottom, which is called the
+\textit{endhypersequent}\index{endhypersequent} of the derivation.
+A hypersequent is \textit{derivable}\index{derivable} when there is a
+derivation whose endsequent is identical to the hypersequent.
 \begin{sidewaysfigure}
  \centering
 \AxiomC{}
@@ -1152,7 +1156,7 @@ proof is simpler.
  (i)  no ${\reader c} \reduce {\abort}$ occurs, or
  (ii) no ${\reader d} \reduce {\abort}$ occurs.
 
-If the former is the case, we can rewrite
+In case~(i), we can rewrite
 a communication rule occurrence
 \begin{center}
  \BinaryRule
@@ -1167,7 +1171,7 @@ a communication rule occurrence
 into a weakening occurrence (using Proposition~\ref{process-change} proved below)
 \begin{center}
  \AxiomC
- {$\hypert_0\hmid  \Gamma^j, \Delta^j\tr \tj M{[j]\psi}$}
+ {$\hypert_0\hmid  \Gamma^j, \Delta^j\tr \tj {\jmapsto{M}}{[j]\psi}$}
  \UnaryInfC
  {$\hypert_0\hmid \tr \tj {\imapsto\abort}
  {[i]\tau}\hmid
@@ -1176,14 +1180,14 @@ into a weakening occurrence (using Proposition~\ref{process-change} proved below
 \end{center}
  where $\G^j$ denotes the context obtained by replacing every modality
  in $\G$ with $j$.
- In the latter case, we can do the symmetric.
+ In case~(ii), we can do the symmetric.
 
 After these rewritings for all appearing locations,
 we obtain a derivation not containing any locations.
-Moreover, the end hypersequent of the resulting derivation has a component
+Moreover, the endhypersequent of the rewritten derivation has a component
 not containing $\abort$.
 The reductions of the original hyperterm can be simulated by the
-resulting hyperterm.  And, even after reductions, the resulting
+rewritten hyperterm.  And, even after reductions, the resulting
 hyperterm has a component not containing $\abort$.
 \end{proof}
 
@@ -1203,12 +1207,14 @@ $\tj{x_0}{[j]\phi_0}, \tj{x_1}{[j]\phi_1},
   \begin{proposition}
    \label{process-change}
   When $\mathcal O \hmid \G_0,\D_0\tr\tj{\m{M}}{\m\phi}$ is derivable,
-  $\mathcal O\hmid \G_0^m, \D_0^m\tr\tj{\mmapsto{M'}}{\phi^{+m}}$ is also
+  \[
+   \mathcal O\hmid \G_0^m, \D_0^m\tr\tj{\mmapsto{M'}}{\phi^{+m}}
+  \] is also
   derivable for some local term~$M'$.
   \end{proposition}
   \begin{proof}
    By induction on the height of derivation.
-   All rules except com and EC rules are trivial because
+   All rules except com and EC are trivial because
    they do not interact
    with the modalities.  For EC rule, we have to apply the induction
    hypothesis twice to change modalities in two components.
@@ -1222,17 +1228,17 @@ $\tj{x_0}{[j]\phi_0}, \tj{x_1}{[j]\phi_1},
    \Delta\tr\tj{(\comodR)N}{[j]\varphi}$}\enspace.
    \]
    We have to consider three cases:  first, when
-   $\G_0,\D_0\tr\tj{\m M}{\m \phi}$ is in $[\mathcal O_0, \mathcal O_1]$;
-   second, when $\G_0,\D_0\tr\tj{\m{M}}{\m{\phi}}$ is identical to
+   $\G_0,\D_0\tr\tj{\m M}{\m \phi}$ in the statement is in $[\mathcal O_0, \mathcal O_1]$;
+   second, when $\G_0,\D_0\tr\tj{\m{M}}{\m{\phi}}$ in the statement is identical to
    $\G\tr\tj{(\comodL)M}{[i]\psi} $; and third,
-   when $\G_0,\D_0\tr\tj{\m{M}}{\m{\phi}}$ is identical to
+   when $\G_0,\D_0\tr\tj{\m{M}}{\m{\phi}}$ in the statement is identical to
    $\D\tr\tj{(\comodR)N}{[j]\varphi}$.
    The second and third cases are symmetric.  In the first case, $\m{M}$ is
    actually a concurrent construct $([P_i,Q_i])_{i\in I}$. We can apply the
    induction hypothesis to $P$ and $Q$ and combine them
    again~$\mmapsto{\cotuple{P', Q'}}$.
    In the second case, we can use the induction hypothesis on the left branch%
-   \footnote{One crucial thing is the choice of the form of the com rule.
+   \footnote{One crucial thing is our choice of the form of the com rule.
    If we use the com' rule by Avron~\cite{avron91}, the proof does not
    proceed because the contexts $\G$ and $\D$ are duplicated as
    \[
@@ -1252,8 +1258,8 @@ $\tj{x_0}{[j]\phi_0}, \tj{x_1}{[j]\phi_1},
 \subsubsection{Strong Normalization}
 \newcommand{\sreduce}{\leadsto}
 
-For proving strong normalization, we use an auxiliary relation which is
-similar to the reduction $\reduce$, which is so similar that we denote
+For proving strong normalization, we use an auxiliary relation, which is
+similar to the reduction $\reduce$.  We denote
 the relation by $\leadsto$.  The $\leadsto$ relation (symmetric
 reduction) is also a
 congruence.  All reductions are symmetric reductions.
@@ -1292,7 +1298,7 @@ same effect, we might be able to use other strong normalization
 }%
 .
 
-We assume an infinite sequence of reductions, namely,
+We assume an infinitely long sequence of reductions, namely,
 $
 \conf{_0}{\hypert_0}
 \reduce
@@ -1301,16 +1307,17 @@ $
 \conf{_2}{\hypert_2}
 \reduce\cdots
 $.
-From this, we are going to construct an infinite sequence of
+From this, we are going to construct an infinitely long sequence of
 symmetric reductions in the pure fragment.
 
 For that, we first
 build an infinite reduction sequence with constant stores.
 Using the original infinite sequence, we define a pair of stores called the
 \textit{store prophecy}\index{store!--- prophecy} $\lstore_\infty$ where
-$ \lstore_\infty(c)= \epsilon$ if $\lstore_k(c)=\epsilon$ for all
+$ \lstore_\infty(c)$ is defined to be $\epsilon$ if
+ $\lstore_k(c)=\epsilon$ holds for all
  $k\in\omega$ and
-$ \lstore_\infty(c)=M $ if $\lstore_k(c)=M$ for some $k\in\omega$.
+$ \lstore_\infty(c) $ is defined to be $M $ if $\lstore_k(c)=M$ holds for some $k\in\omega$.
 Since store contents are never overwritten,
 $\lstore_\infty$ is well defined.
 Moreover,
@@ -1343,19 +1350,20 @@ invariant inductively on the number of steps
        Otherwise, $O'$ must be $\abort$.
        Thus, the invariant
        holds for $k+1$.
- \item a write reduction $\conf{[c\mapsto \epsilon]}{\imapsto{(\comodR)M}} \wreduce
-	\conf{[c\mapsto M]}{\imapsto{\reader d}}
+ \item a write reduction $\conf{[c\mapsto \epsilon]}{\hypc{}{(\comodR)M}} \wreduce
+	\conf{[c\mapsto M]}{\hypc{}{\reader d}}
 	$ is translated into
-       $\conf{_\infty}{\imapsto{(\comodR)M}} \wreduce
-	\conf{_\infty}{\imapsto{\reader d}}
+       $\conf{_\infty}{\hypc'{(\comodR)M}} \wreduce
+	\conf{_\infty}{\hypc'{\reader d}}
 	$;
  \item an $\abort$ reduction of the form
-       $\hypc{}{C[\abort]} \areduce \hypc{}{\abort}$ can be translated
+       $\conf{_k}{\hypc{}{C[\abort]}} \areduce
+       \conf{_{k+1}}{\hypc{}{\abort}}$ can be translated
        either to a similar reduction or no reduction if the $\abort$ in
-       the redex is replaced by another term in the $\mathcal{M'}_k$.
-       Note that even in that case, the result $\mathcal{M'}_{k+1}$ can
+       the redex is replaced by another term in the ${\hypert'}_k$.
+       Note that even in that case, the result ${\hypert'}_{k+1}$ can
        be obtained by replacing some $\abort$ occurrences in
-       $\mathcal{M}_{k+1}$ with other terms;
+       $\hypert_{k+1}$ with other terms;
  \item any other reduction $\conf{_k}{\hypc{}{M}} \bpreduce
        \conf{_{k+1}}{\hypc{}{N}}$
        is translated into one similar reduction
@@ -1365,8 +1373,8 @@ invariant inductively on the number of steps
 Here, we have to show that the translated sequence of symmetric
 reductions is infinite.
 For that, we can use the facts that there are only finite
-number of mentioned locations each of which allows only one write,
- and that an $\abort$ propagation always
+number of mentioned locations and that each location allows only one
+ write, and that an $\abort$ propagation always
 strictly shortens the term under operation.
 
  After that, we can replace
@@ -1375,35 +1383,35 @@ strictly shortens the term under operation.
  Since $\reader c$ either reduces to $\lstore_\infty(c)$ or $\abort$,
  replacing it with $\lstore_\infty(c)$ will only ``shorten'' the reduction
  sequence for at most one read step.
- Replacing every such occurrences
- makes an infinite reduction sequence where every occurring term is
- in the pure fragment.
+ Replacing all readers
+ makes an infinite reduction sequence in the pure fragment.
  Moreover,
  the result of the translation is also well typed.
  A typing derivation of the resulting hyperterm can be obtained by
  replacing com rules with EW rules and changing the process number in
- types of some variables (c.f. the proof of \thref{nab}).
+ global types of some variables (c.f. the proof of \thref{nab}).
 
 We are aiming at reducing the problem to the strong normalization result
 by de Groote~\cite{Philippe2002js}.
-Since we have eliminated $(\comodL)M$ or $(\comodR)N$ occurrences,
-the remaining difference is small: some $\abort$ propagation reductions
- and some permutative reductions involving $\cotuple{\term,\term'}$.
+Since we have eliminated $(\comodL)M$ and $(\comodR)N$ occurrences,
+the remaining difference from \citet{Philippe2002js}'s lambda calculus
+ is small: some abort propagation reductions
+ and some permutative reductions involving $\cotuple{M,N}$.
 We just have to make sure that there are no infinite reduction sequences
 that consist of these two kinds of reductions only.
 We can deal with the permutative reductions following de
  Groote~\cite{Philippe2002js}'s strategy for introducing~$\bot$.
- There are no infinite sequence of $\abort$ reductions keeping the
- number of $[t,t]$ constructions; and an abort reduction cannot increase
- the number of $[t,t]$ constructions in a configuration.  Combined,
- there are no infinite sequence of abort reductions.
+ There are no infinite sequence of abort propagation reductions keeping the
+ number of $[M,N]$ constructions; and an abort propagation reduction cannot increase
+ the number of $[M,N]$ constructions in a configuration.  Combined,
+ there are no infinite sequence of abort propagation reductions.
 \end{proof}
 
 Strong normalization and non-abortfullness hold even for reductions
 where $\comodL$ operators are copied or discarded.  This is different
 from the situation in Chapter~\ref{ch:exchange} where
-when communicating terms $c$ are discarded, the peer $\co c$ runs into a
-deadlock.  The difference is the reason why we can use intuitionistic
+discarding term~$c$ causes the peer $\co c$ to
+deadlock.  This is why the reason why we can use intuitionistic
 propositional logic in this chapter rather than linear (or affine) logics.
 
 % \fix{subformula property around here state in 6min}
@@ -1419,6 +1427,7 @@ some of the input-output problems~\cite{Moran:1987ep,Biran:1988hh}.
 If a waitfree protocol solves an input-output problem, then the protocol
 belongs to the waitfreedom.
 We define the typed version of waitfreedom.
+Since these definitions are involved, we supplied many examples.
 
 \subsection{Typed Input-Output Problem}
 
@@ -1435,7 +1444,8 @@ waitfreedom,
 a single process waitfree protocol can solve any undecidable problem
 because a waitfree protocol can contain arbitrary functions.
 
-For that, we let $\lterm(\varphi)$ denote the set of closed, pure terms of
+In order to define the set of inputs and outputs, we let
+$\lterm(\varphi)$ denote the set of closed, pure terms of
 type~$\varphi$,
 and $\lval(\varphi)$ denote the set of normal terms in $\lterm(\varphi)$.
 For a finite set of processes~$\processes$,
@@ -1445,6 +1455,8 @@ $(\iota_i)_{i\in \processes}$, each process's output type $(o_i)_{i\in
 \processes}$, and a
 task $R\subseteq \prod_{i\in \processes}\left(\lterm(\iota_i)\right)\times
  \prod_{i\in \processes}\left(\lval(o_i)\right)$.
+ In words, a task~$R$ decides whether a pair of inputs and outputs is
+ good or not.
 
 \newcommand{\true}{\texttt{t\kern -1.2pt t}}
 \newcommand{\false}{\texttt{f\kern -1.7pt f}}
@@ -1454,9 +1466,10 @@ task $R\subseteq \prod_{i\in \processes}\left(\lterm(\iota_i)\right)\times
   Let the set~$\processes$ be $\{0,1\}$,
   the types $\iota_0$, $\iota_1$, $o_0$ and $o_1$ be
   $\bool = (\bot\imp\bot)\lor(\bot\imp\bot)$.
-  We define terms
+  We define pure, closed terms
   $\true$ to be $\inl{\lambda x.x}$ and
   $\false$ to be $\inr{\lambda x.x}$.
+  Both $\true$ and $\false$ are of type $\bool$.
   We define a binary operator exclusive-or ($\mathtt{xor}$) on
   $\{\true,\false\}$:
   $x \xor y$ is $\false$ when $x$ and $y$ are equal, $\true$ when $x$
@@ -2163,8 +2176,7 @@ Suppose $\semoi{\m{M}\hmid \m{N}} = \{0\mapsto \p x, 1\mapsto \p
   $\semoi{\m{M}\hmid \overline{\m{N}}}(0) = \p z$.
  \end{example}
 
-We let $\epsilon$ denote $(p_i)_{i\in\processes}$ where $p_i=\epsilon$
-for all $i\in\processes$.
+We let $\epsilon$ denote $(p_i = \epsilon)_{i\in\processes}$.
 Also, $(p_i)_{i\in\processes}; (q_i)_{i\in\processes}$ denotes
 $(p_i; q_i)_{i\in\processes}$ where the
 same program variable does not have multiple substitutions
@@ -2172,9 +2184,10 @@ same program variable does not have multiple substitutions
 this).
 And $(p)_j$ denotes $(q_i)_{i\in\processes}$ where $q_j = p$ and $q_i =
 \epsilon$ for all $i\neq j$.
-Below, we always choose fresh program variables.
-The definition is inductive over the type derivations, which is
-essentially compilation from lambda terms to imperative programs:
+The definition is inductive over the type derivations. What we do below is
+essentially compilation from lambda terms to imperative programs.
+After three pages, there is an example showing compilation of a concrete
+\lgd\,global term.
 \begin{description}
  \item[$ij$-com]
       \begin{align*}
@@ -2198,7 +2211,9 @@ essentially compilation from lambda terms to imperative programs:
  \semo{\hypert\hmid \abort}=\semo{\hypert}\enspace,\quad
  \semoi{\hypert\hmid\abort}=&\semoi{\hypert}\hmid \emptyset\enspace,\quad
 	   \end{align*}
- \item[EC]
+ \item[EC] (in this case, note that, in Figure~\ref{termassign},
+      $\cotuple{M_i',N_i'}$ is taken
+      to be either $\cotuple{M_i,N_i}$ or $\cotuple{N_i,M_i}$)
       \begin{align*}
          &\semo{ \hypert \hmid \left(\cotuple{M'_i,N'_i}\right)_{i\in I}
        } \\
@@ -2220,8 +2235,8 @@ essentially compilation from lambda terms to imperative programs:
        \right)_{i\in I\mid M_i \neq
        M'_i}\enspace,\\ \\
        &\semoi{ \hypert \hmid \left(\cotuple{M'_i,N'_i}\right)_{i\in I}
-       } \\
-       = &
+       }
+       =
        \semoi{\overline{\hypert}\hmid \left(\cotuple{M'_i,N'_i}\right)_{i \in I}}
        \hmid \{i\mapsto \p k_i\}_{i\in I}
       \end{align*}
@@ -2372,9 +2387,11 @@ $\semo{M}; ({\p o}_i\leftarrow \pi_i(\semoi{\overline M}(i)))_{i\in\processes}$,
 where $\pi_i$ is obtained by composing $i$~times $\pi_{\mathrm r}$ to
 $\pi_{\mathrm l}$.
 We set $g,d,t_i$ accordingly so that the program is typed.
+This concludes the translation.
  \begin{example}[Translation of a typed term into a typed protocol]
   The typing derivation in Figure~\ref{fig:solving} can be translated
-  as follows.
+  as follows.  We follow the derivation from top to bottom.  First we
+  look at the top sequents and translate the typed terms:
   \begin{align*}
    \semo{{\{0\mapsto x\}}}&= \epsilon\\
    \semoi{{\{0\mapsto x\}}} &=
@@ -2382,8 +2399,9 @@ We set $g,d,t_i$ accordingly so that the program is typed.
    \semo{{\{1\mapsto y\}}} &=
    \epsilon\\
    \semoi{{\{1\mapsto y\}}} &=
-   \{1\mapsto \p i_y\}
+   \{1\mapsto \p i_y\}\enspace.
   \end{align*}
+  Next we look one step below:
   \begin{align*}
    \semo{{\{0\mapsto (\comodL)x\}} \hmid
    {\{1\mapsto (\comodR)y\}}}
@@ -2392,8 +2410,9 @@ We set $g,d,t_i$ accordingly so that the program is typed.
    \left(c\leftarrow\p i_y; \p x \leftarrow d\right)_1\\
    \semoi{{\{0\mapsto (\comodL)x\}} \hmid
    {\{1\mapsto (\comodR)y\}}}
-   =& \{0\mapsto \p y\}\hmid \{1\mapsto \p x\}
+   =& \{0\mapsto \p y\}\hmid \{1\mapsto \p x\}\enspace
   \end{align*}
+  And so on:
 \begin{align*}
  &\semo{{\{0\mapsto xor((\comodL)x,x)\}}\hmid
   {\{1\mapsto xor((\comodR)y,y)\}}}\\
@@ -2459,16 +2478,18 @@ We set $g,d,t_i$ accordingly so that the program is typed.
    1\mapsto \cotuple{{xor((\comodR)y,y)},y}
    \}}
    \\
-   =&\{0\mapsto\p u,1\mapsto \p v\}
+   =&\{0\mapsto\p u,1\mapsto \p v\}\enspace.
   \end{align*}
   The last two equations translates the global term that solves the
   exclusive-or problem (Example~\ref{ex:xor}) for the same argument as
   in Example~\ref{ex:solv}.
  \end{example}
 
+ We have to show that the translation is correct in the following sense.
   \begin{proposition}
    \label{general-sound}
-   For a typed hypersequent~$\hypert$, let $\semoi{\hypert} = f_0\hmid
+   For a derivable typed hypersequent~$\hypert$, let $\semoi{\hypert} =
+   f_0\hmid
    f_1\hmid\cdots \hmid f_n$ so that each $f_j$ is a partial map
    from processes in $\processes$ to program variables.
    Assume that there is an execution of $\semo{\hypert}$ whose
@@ -2488,7 +2509,7 @@ We set $g,d,t_i$ accordingly so that the program is typed.
    \begin{proof}
     By induction on the typing derivation for $\hypert$.
     All cases are more or less straightforward, of which the most
-    complicated cases are com rule and EC rule.
+    complicated cases are $ij$-com rule and EC rule.
     \begin{description}
      \item[$ij$-com]
 	  Assume that there is an execution of
@@ -2501,7 +2522,7 @@ We set $g,d,t_i$ accordingly so that the program is typed.
 	   y\leftarrow d)_j
 	  \end{align*}
 	  whose final system snapshot contains process snapshots~$s_l$
-	  that map program variables as:
+	  for each process~$l\in\processes$ that map program variables as:
 	  \begin{align*}
 	   \semoi{\overline{\hypert_0}\hmid \imapsto{M}}&\mapsto
 	   (V_{kl})_{0\le k < |\hypert_0|}\\
@@ -2510,6 +2531,9 @@ We set $g,d,t_i$ accordingly so that the program is typed.
 	  \end{align*}
 	  Moreover, we assume $s_i(\p x) = V_{|\hypert_0|+|\hypert_1|+1,i}$
 	  and $s_j(\p y) = V_{|\hypert_0| + |\hypert_1|,j}$.
+	  In order to use the induction hypotheses, we have to transform
+	  our assumptions to the assumptions needed by the induction
+	  hypotheses on the branches of $ij$-com rule.
 
 	  By the form of the programs,
 	  there exists an execution of $\semo{\hypert_0\hmid
@@ -2614,6 +2638,7 @@ We set $g,d,t_i$ accordingly so that the program is typed.
 	  \]
 	  and moreover $s_i(\p k_i)$ is $V_{|\hypert|,i}$ for each $i\in
 	  I$.
+
 	  By the form of the programs, there exists an execution of
 	  $\semo{\hypert\hmid (M_i)_{i\in I}\hmid (N_i)_{i\in I}}$
 	  whose final system snapshot $\tuple{\vec{s'}, \vec{v'}}$
@@ -2627,8 +2652,8 @@ We set $g,d,t_i$ accordingly so that the program is typed.
 		 $\semoi{\hypert\hmid (M_i)_{i\in I}\hmid
 		 \overline{(N_i)_{i\in I}}}$ to $W_i$ where
 		 $V_i$ is identical to $V_{|\hypert|,i}$ or
-		 $V_i$ is $\epsilon$ and $W_i$ is identical to
-		 $V_{|\hypert|,i}$.
+		 $\epsilon$ and $W_i$ is identical to
+		 $V_{|\hypert|,i}$;
 	   \item
 		 for any $i\in I$ with $\tuple{M_i,N_i} = \tuple{N'_i,
 		 M'_i}$, the process snapshot
@@ -2638,8 +2663,8 @@ We set $g,d,t_i$ accordingly so that the program is typed.
 		 $\semoi{\hypert\hmid (M_i)_{i\in I}\hmid
 		 \overline{(N_i)_{i\in I}}}$ to $W_i$ where
 		 $W_i$ is identical to $V_{|\hypert|,i}$ or
-		 $W_i$ is $\epsilon$ and $V_i$ is identical to
-		 $V_{|\hypert|,i}$.
+		 $\epsilon$ and $V_i$ is identical to
+		 $V_{|\hypert|,i}$; and
 	   \item for any $p\in\processes$,
 		 $s'_p$ maps $\semoi{\overline{\hypert}\hmid (M_i)_{i\in
 		 I}\hmid (N_i)_{i\in I}}$ to
@@ -2668,7 +2693,7 @@ We set $g,d,t_i$ accordingly so that the program is typed.
    \end{proof}
 
  \begin{proof}[of \thref{th:soundness}]
-  Assume a global term~$\m{M}$ solves a typed input-output problem~$R$.
+  Assume that a global term~$\m{M}$ solves a typed input-output problem~$R$.
   We claim that the typed protocol
   $\semo{\m{M}}; (\p o_i\leftarrow \semoi{\m{M}}(i))_{i\in \processes}$
   solves $R$.
@@ -2684,17 +2709,18 @@ We set $g,d,t_i$ accordingly so that the program is typed.
   with $R$.
  \end{proof}
 
+ For the other direction, we can use a universal waitfree problem.
+ We just have to solve the universal problem using \lgd.
 \begin{theorem}[Completeness of \lgd\, with regard to waitfreedom]
  \label{th:completeness}
 If there exists a typed protocol that solves a typed input-output
- problem,
-the problem is solvable by a term.
+problem, the problem is solvable by a typd global term of \lgd.
 \end{theorem}
 
 \begin{proof}
 \citet{Herlihy99} showed that a finite repetition
  of the participating set
- problem universally solves any waitfreely solvable problem.
+ problem solves any waitfreely solvable problem.
  Also, $n$-party participating problem can be solved by a tournament of
  the two-party participating set problem%
  \footnote{To be exact, the construction for solving the $n$-party
@@ -2707,19 +2733,21 @@ the problem is solvable by a term.
 In the \textit{participating set problem}\index{participating set
  problem}~\cite{borowsky},
 each process~$i$ receives an id $c_i$ and
-returns a set of id's $S_i$.
+returns a set of ids $S_i$.
 The outputs must satisfy (i)~$i\in S_i$; (ii)~either $S_i\subseteq S_j$
 or $S_j\subseteq S_i$; and (iii)~$S_i\subseteq S_j$  if $i\in S_j$ for any
 $i,j\in\processes$.
 For two processes,
 $\tuple{S_0, S_1}$ can be $\tuple{\{c_0\}, \{c_0, c_1\}}$, $\tuple{\{c_0, c_1\}, \{c_1\}}$
-or
-$\tuple{\{c_0, c_1\}, \{c_0, c_1\}}$.
+or $\tuple{\{c_0, c_1\}, \{c_0, c_1\}}$.
+ The point is that the processes do not know their own ids in advance
+ but receive their own ids as inputs.
+ This is why just hardcoding processes' outputs does not work.
 
 We are going to encode the participating set problem in \lgd.
 For this, we introduce a base type called $\Id$ for process id's.
 Let there be an injection that maps a natural number~$i$ to a constant
-$C_i\colon\Id$.
+$c_i\colon\Id$.
 The additional typing rules involving $\Id$ are as follows, where $\bool = (\bot\supset\bot)\vee(\bot\supset\bot)$:
 \begin{center}
  \UnaryRule{}{}
