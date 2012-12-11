@@ -496,7 +496,7 @@
   \null\vfil
   \begin{center}\isttitlesize
     \vskip \z@\@minus60\p@
-    {\ist@hookcr\MakeUppercase{\@etitle}}\par
+    {\ist@hookcr{\@etitle}}\par
     {\@jtitle}\par
     \vskip 20\p@
     by\par

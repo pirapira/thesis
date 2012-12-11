@@ -1,13 +1,15 @@
 \chapter{Conclusion}
 
-\subsection{}
+\subsection{Overview}
 
-We gave two inventions: hyper-lambda calculi and a new axiomatization of
-Abelian logic.
-Our conclusions and future work spans from mathematical logic, computer
+We gave mainly two inventions: hyper-lambda calculi and a new
+axiomatization of Abelian logic.
+Our conclusions and future work span from mathematical logic, computer
 science and philosophy.
 
 \section{From Logical Perspectives}
+
+\subsection{Generalization}
 
 We have seen two particular hyper-lambda calculi for two logics.
 \citet{alg} classified axioms according to their syntactic complexities
@@ -36,6 +38,18 @@ we are yet to know the computational meaning of the cut-elimination.
 Aforementioned framework would clarify the computational meaning of the
 cut-elimination of hypersequent calculi.
 
+\subsection{Amida Calculus}
+
+As we saw in Subsection~\ref{amida-cut},
+the deduction system underlying Amida calculus does not enjoy
+cut-elimination in the strict sense.
+Moreover, since Amida calculus characterizes Abelian logic
+(\thref{complete-to-Abelian}),
+there are some inhabited types that are hard to justify constructively;
+for example $\phi\oplus(\phi\limp\one)$.
+The first step is going to be removing additives and studying the
+multiplicative fragment of Amida calculus.
+
 \section{From Computer Science Perspectives}
 
 \subsection{Implementation}
@@ -53,7 +67,6 @@ One promising framework on which to implement Amida calculus is linear ML%
 publications available, there is an implementation at
 \texttt{https://github.com/pikatchu/LinearML}\enspace.},
 whose type system is based on linear logic.
-
 Another way is using the type level programming technique of Haskell.
 \citet{DBLP:journals/corr/abs-1110-4163} implemented session types on top
 of Haskell using the type level programming technique using
@@ -91,7 +104,25 @@ Also, Amida edges works on paths, it should be compatible to the path
 based semantics by \citet{danos-regnier}.
 Since Amida edges define permutation on the ends of edges in a proof
 net, and hence can be represented as a matrix, it should be compatible
-to Geometry of Interaction~\fix{cite girards}.
+to Geometry of Interaction~\citep{girard1989}.
+
+\subsection{Mixing Synchronous and Asynchronous Communication}
+
+Our hyper-lambda calculus in Chapter~\ref{ch:exchange} incorporates
+synchronous communication and another hyper-lambda calculus in
+Chapter~\ref{ch:lambda} incorporates asynchronous communication.
+In order to unify these two paradigm, the most straightforward way is to
+nest hypersequents
+\[
+ t_0\hmid (t_1 \whitemid t_2) \hmid t_3 \enspace.
+\]
+where $t_1$ and $t_2$ are combined conjunctively but other delimiters
+are interpreted disjunctively.
+However, this kind of nesting representation has a limitation because of
+its tree structure.
+If we take the idea of event structure~\citep{winskel1980},
+we could make a deduction system where each inference step results in a
+coherence space whose elements are sequents.
 
 \subsection{Understanding Waitfreedom}
 
@@ -127,3 +158,12 @@ $\psi$.
 Since analysis of pattern of exchange is an important subject of
 anthropology~\citep{kula1920}, Abelian logic can provide a
 basis for describing social and cultural phenomena.
+
+Also, since Abelian logic is modeled by Abelian groups, it can express the
+sense of indebtedness or obligation in a quantitative way.
+Deontic logic~\citep{von1951deontic,sep-logic-deontic} tried to capture permission,
+obligation and so on.
+Using Abelian logic, we hope to address how much duty is imposed.
+Since Amida calculus can reduce some proofs in Abelian logic, it could
+provide a way to analyse a complicated situation where many kinds of
+obligations and permissions of different significance are interwound.

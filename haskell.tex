@@ -5,23 +5,23 @@
 
  We investigate the computational meaning of hypersequents and realize
  it as a Haskell library.
- Hypersequent calculus is introduced by mathematical
+ The hypersequent calculus is introduced by mathematical
  logicians~\citep{avron91,alg,metcalfe2006} in order
  to obtain cut-free deduction systems for more logics.
  In the previous chapters, we proposed using hypersequents
- for representing asynchronous communication.
+ for representing asynchronous or synchronous communication.
  In this chapter, we try implementing hypersequents within a programming
  language \texttt{Haskell}~\citep{marlow2010haskell}.
  Logically, a hypersequent
- means every model satisfies at least one clause of it.
+ means every model satisfies at least one component.
  Computationally, a hypersequent
- means every execution makes at least one clause
+ means every execution makes at least one component
  successful.
  We use this analogy
  for waitfreely communicating threads.  This is useful
  because typical waitfree protocols use the fact that at least one thread
  can successfully read other thread's information.
- Throughout this chapter, \texttt{Haskell} syntax is assumed
+ Throughout this chapter, \texttt{Haskell} syntax is assumed%
  \footnote{Under Haskell platform,
  \texttt{cabal install waitfree} will install this library.}.
  Another purpose of this chapter is confirming the proof of
@@ -64,9 +64,9 @@ import qualified Data.Map as Map
 \subsection{Waitfreedom}
 \label{subsect:wf}
 
-Waitfreedom is a notion arisen in the theory of asynchronous
+Waitfreedom is a notion born in the theory of asynchronous
 communication~\citep{lamport1979make,Herlihy99,Saks:1993vq}. Since
-waitfreedom provides no synchronization, it has
+waitfreedom provides no synchronization among processes, it has
 served as a basis for comparing different synchronization primitives.
 The intuition of waitfreedom is simple: a thread cannot
 wait for another thread.  Suppose there are a finite number of threads and they can
@@ -76,19 +76,19 @@ store. The problem is that the thread's movements can be arbitrarily
 slow: they can delay for unspecified amount of time and the threads
 have no control over the delay. Waitfreedom prohibits a thread from
 waiting for another; that is, a thread cannot choose to stay at the
-store until some another thread comes to the store; nor can a thread
+store until another thread comes to the store; nor can a thread
 keep visiting the store until another thread comes to the store.  The
 latter restriction can be formalized as existence of a constant natural
 number~$k$ so
 that no thread visits the store more than
 $k$-times in any execution.  So, when a thread consumes all permitted
-visits to the store, it has to give up receiving anything yet to come
-from
-other threads.
+visits to the store, the thread has to give up receiving anything yet to come
+from other threads.
 
 This notion of waitfreedom is originally imperative: involving reads from and writes to
-the memory and the ordering of events.  In other words, this definition
-describes \textit{how} waitfree computation works but it is hard to deduce from
+the memory and the ordering of events.  In other words, this description
+is about
+\textit{how} waitfree computation works but it is hard to deduce from
 this notion \textit{what} waitfree computation computes.
 The merit of using a functional programming language, especially a pure
 one like Haskell, is emphasized if the program describes \textit{what}
@@ -99,63 +99,13 @@ protocols can compute.
 Suppose a thread has a value~$v$ and another has~$w$.
 It is waitfreely impossible for the two threads to exchange their
 possessions.  Instead, there is a waitfree protocol for them to ensure
-that either $w$ is passed to the second thread or $v$ is passes to the
+that either $w$ is passed to the second thread or $v$ is passed to the
 first thread.
 In other words, only one-way communication is guaranteed.  We are going
 to exploit this property when formulating waitfree computation with hypersequents.
 
 
-\subsection{Hypersequents}
-
-Type derivations are commonly used to define what program has what
-type.  Here is a typical derivation rule.
-\begin{center}
- \AxiomC{$\Gamma\tr \tj s{A\rightarrow B}$}
- \AxiomC{$\Gamma\tr \tj t A$}
- \BinaryInfC{$\Gamma\tr \tj{st} B$}
- \DisplayProof
-\end{center}
-A sequent $\Gamma\tr \tj t A$ contains a list of typed variables on the
-left hand side ant a term~$t$ with a type~$A$ on the right hand side.
-It means, when the free variables in~$t$ are typed according to
-$\Gamma$, the whole term~$t$ can be typed as $A$.
-
-A hypersequent is a finite sequence of sequents and a derivation
-looks like this.
-\begin{center}
-\AxiomC{$\Delta\tr\tj u C\hmid \Gamma\tr \tj s {A\rightarrow B}$}
-\AxiomC{$\Theta\tr\tj v D\hmid \Gamma\tr \tj t A$}
-\BinaryInfC{$\Delta\tr\tj u C\hmid \Theta\tr\tj v D\hmid
-\Gamma\tr\tj{st}B$}
-\DisplayProof
-\end{center}
-
-The hypersequent below the line means that at least one component will be
-successful.
-More formally, a hypersequent
-$\Gamma_0\vdash\varphi_0\hmid\Gamma_1\vdash\varphi_1\hmid\cdots\hmid
-\Gamma_n\vdash\varphi_n$ is semantically equivalent to the formula
-$\left(\bigwedge\Gamma_0\rightarrow\varphi_0\right)\vee\left(\bigwedge\Gamma_1\rightarrow\varphi_1\right)\vee\cdots\vee\left(\bigwedge
-\Gamma_n\rightarrow\varphi_n\right)$.
-Since a hypersequent can be interpreted as a logical formula,
-hypersequents do not strengthen the expressivity of a logic.
-Expressivity was not the reason for introducing hypersequents, but the
-cut-elimination theorem was the motivation.
-\citet{RM} introduced hypersequents in order to give a cut-free
-Gentzen-type deduction system for a logic called \textbf{RM}.
-  \citet*{alg} found an algorithm for obtaining a hypersequent
-deduction system for each of an infinite class of axioms and further
-shown that those hypersequent deduction systems enjoy cut-elimination
-theorem.  We have developed lambda calculi in
-Chapters~\ref{ch:exchange}, \ref{ch:lambda} and \ref{ch:pole}.
-
-From this perspective, the merit of this chapter is showing the
-hyper-lambda calculi are implementable.
-Hypersequents are roughly a sequence of
-typed terms.  They are only introduced as an apparatus for obtaining
-cut-elimination theorems for more logics than simple sequents provide.
-
-\subsection{Connection}
+\subsection{Implementing Hyper-Lambda Calculus}
 
 In waitfree protocol, two threads can communicate in one-way fashion,
 and it is decided at execution time which one can send information to
@@ -170,12 +120,18 @@ obtains \verb@a@ after executing the protocol.
 \begin{center}
  \AxiomC{\tt K t a}
  \AxiomC{\tt K s b}
- \BinaryInfC{$\mathtt{K t b}\hmid \mathtt{K s a}$}
+ \BinaryInfC{$\mathtt{K\, t\, b}\hmid \mathtt{K\, s\, a}$}
  \DisplayProof
 \end{center}
 However, this derivation only contains types but not programs.  In this
 chapter, we are going to propose how to write a program belonging to this
 type in Haskell.
+
+From this perspective, the merit of this chapter is showing the
+hyper-lambda calculi are implementable.
+Hypersequents are roughly a sequence of
+typed terms.  They are only introduced as an apparatus for obtaining
+cut-elimination theorems for more logics than simple sequents provide.
 
 \section{An Example Program}
 
@@ -187,7 +143,6 @@ handle p = withSocketsDo $ do
   (h,\_,\_) <- accept s
   hSetBuffering h NoBuffering
   return h
-
 prepareHandle :: Thread t => PortID -> IO (K t Handle :*: HNil)
 prepareHandle p = single $ handle p
 
@@ -196,7 +151,6 @@ readLine th h = do
   hPutStr h $ (show $ atid th) ++ " requiring input: "
   str <- hGetLine h
   return ((h, str), str)
-
 readH :: Thread t => PortID -> IO (K t ((Handle, String), String) :*: HNil)
 readH p = prepareHandle p >>= (readLine -*- return)
 
@@ -216,7 +170,6 @@ rerror th (h, _) = hPutStrLn h $ "Thread " ++ (show $ atid th) ++
 
 content ::  IO (K ZeroT () :*: K (SucT ZeroT) () :*: HNil)
 content = comm (readH $ PortNumber 6000) rerror (readH $ PortNumber 6001) rerror >>= twoPrints
-
 main :: IO ()
 main = execute content
 \end{spec}
@@ -230,11 +183,11 @@ main = execute content
  \label{fig:example}
 \end{figure*}
 
-We show an example program written with this library
+We show an example program written with our library
 (Figure~\ref{fig:example}).  This is a concrete realization of the
 simplest nontrivial waitfree computation described at the end of Subsection~\ref{subsect:wf}.
 
-\paragraph{The external behavior.}
+\paragraph{The external behavior of the example program.}
   This program can be compiled and executed as:
 \begin{verbatim}
 % ghc --make -threaded waitfree_test.hs
@@ -242,10 +195,12 @@ simplest nontrivial waitfree computation described at the end of Subsection~\ref
 Linking waitfree_test ...
 % ./waitfree_test
 \end{verbatim}
-Then, it spawns two threads listening on port 6000 and 6001.  If we
-connect to the first thread on port 6000 and
-give input \texttt{apple}, the first thread tries to obtain the input for the other
-thread but fails to do so and aborts.  Below, we omit the outputs of
+Then, it spawns two threads listening on port 6000 and 6001.
+If we connect to the first thread on port 6000 and
+give input \texttt{apple}, the first thread tries to obtain the input
+given to the other
+thread but since the first thread cannot wait for the second,
+fails to do so and aborts.  Below, we omit the outputs of
 \texttt{telnet} for clarity.
 \begin{verbatim}
 % telnet localhost 6000
@@ -261,12 +216,12 @@ given to the first thread and displays both inputs.
 Thread 1 got: ("orange\r","apple\r")
 \end{verbatim}
 
-\paragraph{The internal behavior}
+\paragraph{The internal behavior of the example program.}
 
-Both thread 0 and 1 writes its input into the shared memory and then
+Each of threads 0 and 1 writes its input into the shared memory and then
 tries to read the other thread's input from the shared memory.  When
-a thread tries to read what the other thread has not written, the read
-is aborted.  The reading thread do not wait for the other thread's write
+a thread tries to read what the other thread has not written, the reader aborts.
+The reading thread cannot wait for the other thread's write
 operation.
 
 We assume sequential consistency.  Sequential consistency is an illusion
@@ -275,21 +230,23 @@ operations in a totally ordered sequence.  In this case, there are
 six possible such ordered sequences.
 \begin{itemize}
  \item 0 writes, 0 reads, 1 writes and 1 reads.  Then, 1 reads 0's write.
- \item 0 writes, 1 writes, 0 reads and 1 reads.  Both reads the other.
- \item 0 writes, 1 writes, 1 reads and 0 reads.  Both reads the other.
- \item 1 writes, 0 writes, 0 reads and 1 reads.  Both reads the other.
- \item 1 writes, 0 writes, 1 reads and 0 reads.  Both reads the other.
+ \item 0 writes, 1 writes, 0 reads and 1 reads.  Both reads the other's write.
+ \item 0 writes, 1 writes, 1 reads and 0 reads.  Both reads the other's write.
+ \item 1 writes, 0 writes, 0 reads and 1 reads.  Both reads the other's write.
+ \item 1 writes, 0 writes, 1 reads and 0 reads.  Both reads the other's write.
  \item 1 writes, 1 reads, 0 writes and 0 reads.  Then, 0 reads 1's write.
 \end{itemize}
-In either case, either thread 0 obtains thread 1's input or 1 obtains
+In any of these six cases, either thread 0 obtains thread 1's input or 1 obtains
 0's input.
 
-\paragraph{The source code.}
+\paragraph{The source code of the example program.}
 
 We look at the source code of this sample program in Figure~\ref{fig:example}.
 
 An obvious thing to do is to establish a TCP connection.  This is done
-by a function called \verb@handle@.
+by a function called \verb@handle@.   The input of \verb@handle@ is a
+\verb@PortID@, which is the port number.  The output of \verb@handle@ is
+a \verb@Handle@, which is a TCP connection.
 \begin{spec}
 handle :: PortID -> IO Handle
 handle p = withSocketsDo $ do
@@ -324,6 +281,8 @@ readLine th h = do
 The result of this interaction is stored in a tuple \verb@((h, str), str)@,
 whose left part contains things to be used locally, and whose right
 part contains things to be used remotely in the other thread.
+The handle \verb@h@ is kept locally at the thread while the obtained
+input \verb@str@ is duplicated.
 
 This distinction of local and remote usage is apparent in the type of
 \verb@comm@ function, which provides the simplest waitfree communication.
@@ -331,7 +290,7 @@ This distinction of local and remote usage is apparent in the type of
 comm :: (Thread s, Thread t, HAppend l l' l'') =>
          IO (K t (b,a) :*: l)
          -> IO (K s (d,c) :*: l')
-         -> IO (K t (b, c) :*: K s (d, a) :*: l'')
+         -> IO (K t (b,c) :*: K s (d,a) :*: l'')
 \end{spec}
 The \verb@comm@ function assumes that the types \verb@s@ and \verb@t@ are \verb@Thread@s and
 that a hypersequent \verb@l''@ is the concatenation of \verb@l@ and \verb@l'@.
@@ -352,6 +311,19 @@ local and remote usage, the TCP connections would be communicated
 together with the inputs so that the connections are not closed until all
 threads terminates.
 
+When we draw the type of \verb@comm@ in the hypersequent style,
+ \begin{center}
+  \AxiomC{\texttt{IO (K t (b,a) :*: l)}}
+  \AxiomC{\texttt{IO (K s (d,c) :*: l')}}
+  \BinaryInfC{\texttt{IO (K t (b,c) :*: K s (d,a) :*: l'')}}
+  \DisplayProof
+ \end{center}
+ we see some similarities and differences from the hyper-lambda calculus
+ in Chapter~\ref{ch:lambda}.  When we ignore \texttt{b} and \texttt{d},
+ then the rule is the same as $ij$-com rule in Figure~\ref{fig:logic}
+ except that the type of \verb@comm@ does
+ not have contexts.
+
 The final agenda is to output the obtained inputs.  This is done by the
 \verb@printTaken@ function.
 Similarly to \verb@readLine@ function, the \verb@printTaken@ function takes the
@@ -361,13 +333,15 @@ Everything is wrapped up into a hypersequent~\verb@content@ of the type
  \begin{center}
 \verb@IO (K ZeroT () :*: K (SucT ZeroT) () :*: HNil)@
  \end{center}
-and it is \verb@execute@d.  The content of \verb@execute@ function is explained in
+and it is \verb@execute@d.
+Here, \verb@ZeroT@ means thread 0 and \verb@SucT ZeroT@ means thread 1.
+The content of \verb@execute@ function is explained in
 the next section.
 
 \section{Implementation of the Library}
 
 \subsection{What is a Hypersequent}
-We expressed hypersequents as heterogeneous collections by \citet{hetero}
+We implemented hypersequents as heterogeneous collections by \citet{hetero}
 with a slight modification.  We required each element of such a
 heterogeneous collection to be a thread's computation.
 We expressed threads as type level natural numbers, which is obtained by
@@ -385,11 +359,11 @@ class Thread t where
     atid :: t -> AbstractThreadId
 \end{code}
 We declare a type called \verb@ZeroT@, which have a single value called
-\verb@ZeroT@ (it is a custom of Haskell community to use the same name
+\verb@ZeroT@ (it is a custom of the Haskell community to use the same name
 for a type and its unique constructor).
 The type \verb@ZeroT@ is of type class \verb@Thread@ after defining
 constant \verb@t@ to be the single value \verb@ZeroT@.
-The value \verb@ZeroT@ is going to be used as the label for the 0th thread.
+The type \verb@ZeroT@ is going to be used as the label for thread~0.
  \begin{code}
 data ZeroT = ZeroT
 instance Thread ZeroT where
@@ -417,7 +391,7 @@ instance Thread t => Thread (SucT t) where
 type AbstractThreadId = Int
 \end{code}
 Using these, we have many types of type class \verb@Thread@:
-\verb@ZeroT@, \verb@SucT ZeroT@, \verb@SucT (SucT ZeroT)@ and so on.
+\verb@ZeroT@, \verb@SucT ZeroT@ and so on.
 This technique is called type level natural numbers.
 
 Thread~\verb@t@'s computation of type~\verb@a@ is represented as \verb@K t a@.
@@ -428,7 +402,7 @@ A \verb@JobStatus@ can be \verb@Having a@,
 as the intermediate result the thread have a value of type \verb@a@.
 \verb@Done TryAnotherJob@ shows that the thread has stopped after
 failing to read shared memory content.
-\verb@Done Finished@ shows that the thread has stopped and yielded a result.
+\verb@Done Finished@ shows that the thread has stopped.
 \begin{code}
 newtype K t a = K (t, IO (JobStatus a))
 
@@ -440,7 +414,7 @@ A hypersequent is either \verb@HNil@ or \verb@HCons (K t e) l@ where \verb@l@ is
 hypersequent.  This inductive definition realizes the idea of a
 heterogeneous list of threads' computations.  This construction is an
 adaptation of \citep{hetero}.
-First we define a type class called \verb@HyperSequent@.
+First we declare a type class called \verb@HyperSequent@.
 \begin{code}
 class HyperSequent l
 \end{code}
@@ -453,7 +427,7 @@ instance HyperSequent HNil
 Third, we define the cons operation of hypersequent.
 \verb@HCons e l@ is of type \verb@HCons e l@ when \verb@e@ is of type
 \verb@e@ and \verb@l@ is of type \verb@l@.  Especially, when type
-\verb@l@ is of type class \verb@HyperSequent@, the type \verb@HCons e l@
+\verb@l@ is of type class \verb@HyperSequent@, the type \verb@HCons (K\,t\,e) l@
 is also of type class \verb@HyperSequent@ whatever the type \verb@e@ is.
 \begin{code}
 data HCons e l = HCons e l
@@ -537,18 +511,18 @@ constructJobPool :: [L] -> JobPool
 constructJobPool [] = Map.empty
 constructJobPool ((aid, action) : tl) =
   Map.insertWith (++) aid [action] rest
-     where
-       rest = constructJobPool tl
+     where rest = constructJobPool tl
 \end{code}
 
 At last, threads are spawned.  Each thread's operation is defined in
 \verb@worker@ function.  It takes two arguments.  The first argument is a
-channel containing jobs.  The other argument is a MVar cell for telling
-termination.  Although the worker threads do not wait for any other
+channel containing jobs.  The other argument is an MVar cell for telling
+termination to the main thread.  Although the worker threads do not wait for any other
 worker thread, the main thread waits for the worker threads.
 The worker tries consuming jobs in the provided \verb@JobChannel@ one by
 one until one succeeds or all fails.  After the worker consumes all jobs
-in the provided \verb@JobChannel@, 
+in the provided \verb@JobChannel@, the worker puts \texttt{()} into the
+provided MVar cell so that the main thread can notice that the worker is idling.
 \begin{code}
 worker :: JobChannel -> MVar () -> IO ()
 worker [] fin = tryPutMVar fin () >>= \_ -> return ()
@@ -562,29 +536,27 @@ worker (hd : tl) fin = do
 When the main thread spawns the worker threads, it has their
 \verb@ThreadId@s and the termination MVar cells in a finite map.
 After spawning the worker threads, the main thread waits for each
-thread to terminate and then kills it.
+worker thread to fill the MVar and then kills the worker thread.
 A value of type \verb@ThreadPool@ maps a value of
-\verb@AbstractThreadId@ into a value of \verb@ThreadId@ and a MVar.
+\verb@AbstractThreadId@ into a value of \verb@ThreadId@ and an MVar.
 A value of type \verb@ThreadId@ is provided by the Haskell
 \verb@Concurrent@ library and a value of \verb@ThreadId@ can be used to
 kill a thread.  The \verb@MVar@ is filled when the worker thread finishes the
-computation and then the main thread can see the worker thread has finihsed.
+computation and then the main thread can see the worker thread has finished.
  \begin{code}
-  type ThreadPool =
-  Map.Map AbstractThreadId (ThreadId, MVar ())
+  type ThreadPool = Map.Map AbstractThreadId (ThreadId, MVar ())
  \end{code}
  The main thread uses \verb@threadSpawn@ to register a new thread in the
  thread pool using an \verb@AbstractThreadId@ and a \verb@JobChannel@.
  \begin{code}
-threadSpawn :: AbstractThreadId -> JobChannel ->
- IO ThreadPool -> IO ThreadPool
+threadSpawn :: AbstractThreadId -> JobChannel -> IO ThreadPool -> IO ThreadPool
 threadSpawn aid ch p = do
     p' <- p
     fin <- newEmptyMVar
     thid <- forkIO $ worker ch fin
     return $ Map.insert aid (thid, fin) p'
  \end{code}
- Then, the main thread waits for all threads and kills them.
+ Then, the main thread waits for all worker threads and kills them.
 \begin{code}
 waitThread :: ThreadPool -> IO ()
 waitThread = Map.fold threadWait $ return ()
@@ -612,15 +584,14 @@ they can be \verb@execute@d.
 Since a hypersequent represents a finite multiset of computations of which
 at least one succeeds, there cannot be an empty hypersequent.  Thus, the
 simplest hypersequent is a hypersequent consisting of a single component.
-This can be build with \verb@single@ function.
+This can be built with \verb@single@ function.
 The ingredient computation is not of type \verb@IO a@ but of type
-\verb@t -> IO a@ so that the computation can display the thread's
+\verb@t -> IO a@ so that the computation can display the thread~\texttt{t}'s
 \verb@AbstractThreadId@.
 \begin{code}
 single :: Thread t => (t -> IO a) -> IO (K t a :*: HNil)
 single f = return $ HCons (remote $ f t) HNil
-  where
-    remote y = K (t, fmap Having y)
+  where remote y = K (t, fmap Having y)
 \end{code}
 
 As we want to regard a hypersequent as a multiset of components, we allow
@@ -628,10 +599,8 @@ permutation and concatenation of hypersequents.
 First, \verb@exchange@ function changes the positions of the first two
 components:
 \begin{code}
-exchange :: K t a :*: K s b :*: l ->
-            IO (K s b :*: K t a :*: l)
-exchange (HCons x (HCons y rest)) =
-  return $ HCons y $ HCons x rest
+exchange :: K t a :*: K s b :*: l -> IO (K s b :*: K t a :*: l)
+exchange (HCons x (HCons y rest)) = return $ HCons y $ HCons x rest
 \end{code}
 Second, \verb@cycling@ functions puts the last component in the first position.
 In order to implement this function, we defined a type class called
@@ -642,10 +611,11 @@ other words, the last element of \verb@l@ is \verb@a@ and the rest is \verb@head
 This tactic of defining a type class is taken from the paper of
 heterogeneous collections~\citep{hetero}.
 By \verb@exchange@ and \verb@cycling@, we can perform all permutations of
-hypersequents\footnote{This implementation of permutations come from an
-Agda~\citep{agda} implementation of a typed
+hypersequents\footnote{This implementation of permutations comes from
+Tatsuya Abe's
+implementation of a typed
 lambda calculus for modal logic~K. Tatsuya Abe
-presented the implementation to me in Tokyo.}.
+showed the Agda~\citep{agda} implementation to the author in Tokyo.}.
 
 First, we declare the type class \verb@HLast@.
 Here we use functional dependencies~\citep{mark_jones2000} to specify
@@ -670,15 +640,14 @@ instance (HLast (HCons lh ll) a heads) =>
               case hLast rest of
                 (x, oldheads) -> (x, HCons y oldheads)
 \end{code}
-Using this type class \verb@HLast@, we can define @cycling@ function
+Using this type class \verb@HLast@, we can define \verb@cycling@ function
 which moves the last element of a hypersequent to the first position.
 \begin{code}
 cycling_ :: HLast l a heads => l -> HCons a heads
 cycling_ lst = case hLast lst of
                 (last_, heads) -> HCons last_ heads
 
-cycling :: HLast l last heads =>
-  IO l -> IO (HCons last heads)
+cycling :: HLast l last heads => IO l -> IO (HCons last heads)
 cycling = fmap cycling_
 \end{code}
 Finally, we provide concatenation of hypersequents with \verb@follows@
@@ -706,7 +675,7 @@ instance (HyperSequent l, HAppend l l' l'')
 In addition to simple permutations of hypersequents, we have another
 structural rule called external contraction.  When a hypersequent begins
 with two components of the same type, they can be merged into one.  The
-resulting component represents the computation of trying the original
+resulting component represents the computation of trying the two original
 components one by one until one of them is successful or all components
 fail.
 The type of \verb@choice@ reveals that the two components of the same type
@@ -730,11 +699,9 @@ piece of computation
 and obtain a new piece of local computation.
 For that purpose, we prepare \verb@extend@ function.
 \begin{code}
-extend :: Thread t =>
-  (K t a -> IO (JobStatus b)) -> K t a -> K t b
+extend :: Thread t => (K t a -> IO (JobStatus b)) -> K t a -> K t b
 extend trans r = K (t, trans r)
 \end{code}
-
 Such transformations of local computation can be changed into
 transformations of hypersequents.
 \begin{code}
@@ -762,21 +729,21 @@ In such transformations,
 the extending function must receive the result of the previous function.
 This is achieved with the help of \verb@peek@ function.
 \begin{code}
-peek :: Thread t =>
-  (t -> JobStatus a -> IO b) -> K t a -> IO b
+peek :: Thread t => (t -> JobStatus a -> IO b) -> K t a -> IO b
 peek f (K (th, content)) = content >>= f th
 \end{code}
 
 The most interesting
-communication rule says two threads compute something, write it to
+library function \verb@comm@ makes two threads compute something, write it to
 the shared memory, reads peer's write if possible and then continue
 computation. We split a thread's computation into two parts: one part
 up to the write and the other from the read operation. The former part is
 hidden in the local computation whereas the latter part is stored in the
 hypersequent so that the types of the latest computation is visible to
 the user of the library.
-\verb@comm@ stands for communication.  \verb@comm@ combines two hypersequents with
-a communicating component from each hypersequent.
+\verb@comm@ stands for communication.  \verb@comm@ combines two
+hypersequents each containing
+a communicating component.
 It can be used in the form
 \verb@comm hypersequent1 error1 hypersequent2 error2@ where \verb@error1@ and
 \verb@error2@ specifies what to do in case of read failure.
@@ -812,7 +779,8 @@ comm x terror y serror = do
                     return $ Done terror_result
                   Just cva -> return $ Having (tb, cva)
 \end{code}
-Here, both threads perform write and then read so that at least one
+In the sixth and seventh lines counted from the bottom, both threads
+perform write and then read so that at least one
 direction of communication is successful.
 
 \section{Capturing Waitfreedom}
@@ -827,19 +795,16 @@ using this library (completeness).
 In the library code, the worker threads only use non-blocking \verb@MVar@
 operations (a blocking operation \verb@readMVar@ is used but by the main thread).
 This ensures that only waitfree computation can be implemented using this
-library unless the user uses other communication primitives explicitly.
+library unless the user explicitly uses other communication primitives from outside
+of this library.
 
 \subsection{Completeness}
 
 \begin{figure*}[t]
+ \small
 \begin{spec}
-type FirstT = SucT ZeroT
-type SecondT = SucT FirstT
-
 failOut :: t -> a -> IO ThreadStatus
 failOut _ _ = return TryAnotherJob
-
-hOwnId :: Thread t => IO (K t (t, t) :*: HNil)
 hOwnId = single $ return (t, t)
 putWithName :: Thread t => t -> String -> IO ()
 putWithName th content = putStrLn $ "Thread " ++ (show $ atid th) ++ ": " ++ content
@@ -851,44 +816,31 @@ putOneResult :: (Thread t, Thread s) => s -> t -> IO ThreadStatus
 putOneResult owner content = putResult owner $ show $ [atid content]
 putTwoResults :: (Thread s, Thread t, Thread u) => u -> (s,t) -> IO ThreadStatus
 putTwoResults owner (c0, c1) = putResult owner $ show $ [atid c0, atid c1]
-
 two :: (Thread s, Thread t) => IO (K s (s, t) :*: (K t (t, s) :*: HNil))
 two = comm hOwnId failOut hOwnId failOut
-
 twoBeforeComm :: IO (K ZeroT ((ZeroT, FirstT), (ZeroT, FirstT)) :*:
                      K FirstT ((FirstT, ZeroT), (FirstT, ZeroT)) :*: HNil)
 twoBeforeComm = two >>= (duplicateTwo -*- duplicateTwo -*- return)
   where duplicateTwo _ x = return (x,x)
-
 three__ :: IO (K FirstT ((FirstT, ZeroT), (FirstT, ZeroT)) :*:
                  K ZeroT ((ZeroT, FirstT), SecondT) :*:
                  K SecondT (SecondT, (ZeroT, FirstT)) :*: HNil)
 three__ = cycling $ comm twoBeforeComm putTwoResults hOwnId failOut
-
-printThreeResults0 :: (Thread u, Thread s, Thread t, Thread v) =>
-                      u -> (s,(t,v)) -> IO ThreadStatus
-printThreeResults0 owner (c0, (c1, c2)) = putResult owner $
-                      show $ [atid c0, atid c1, atid c2]
-
-printThreeResults1 :: (Thread u, Thread s, Thread t, Thread v) =>
-                      u -> ((s,t),v) -> IO ThreadStatus
-printThreeResults1 owner ((c0, c1), c2) = putResult owner $
-                      show $ [atid c0, atid c1, atid c2]
-
+printThreeResults0 :: (Thread u, Thread s, Thread t, Thread v) => u -> (s,(t,v)) -> IO ThreadStatus
+printThreeResults0 owner (c0, (c1, c2)) = putResult owner $ show $ [atid c0, atid c1, atid c2]
+printThreeResults1 :: (Thread u, Thread s, Thread t, Thread v) => u -> ((s,t),v) -> IO ThreadStatus
+printThreeResults1 owner ((c0, c1), c2) = putResult owner $ show $ [atid c0, atid c1, atid c2]
 three :: IO (K FirstT ThreadStatus :*: K SecondT ThreadStatus :*:
              K ZeroT  ThreadStatus :*: K SecondT ThreadStatus :*: HNil)
 three = comm three__ putTwoResults hOwnId failOut
-   >>= (printThreeResults1 -*- printThreeResults0 -*- printThreeResults1 -*- printThreeResults0 -*- return)
-
+   >>= (printThreeResults1 -*- printThreeResults0 -*- printThreeResults1
+        -*- printThreeResults0 -*- return)
 twoLast :: IO ((K FirstT ThreadStatus) :*: (K SecondT ThreadStatus) :*: HNil)
-twoLast = comm hOwnId putOneResult hOwnId putOneResult >>= (putTwoResults -*- putTwoResults -*- return)
-
+twoLast = comm hOwnId putOneResult hOwnId putOneResult >>=
+  (putTwoResults -*- putTwoResults -*- return)
 twoMid :: IO ((K ZeroT ThreadStatus) :*: (K SecondT ThreadStatus) :*: HNil)
 twoMid = comm hOwnId putOneResult hOwnId failOut >>= (putTwoResults -*- putTwoResults -*- return)
-
-main :: IO ()
 main = execute (three `follows` twoMid `follows` twoLast)
-
 \end{spec}
  \caption{An implementation for participating set problem~\citep{participating} for three
  threads.}
@@ -898,7 +850,7 @@ main = execute (three `follows` twoMid `follows` twoLast)
 
 We show the completeness by solving a problem called
 the participating set problem appearing in \citet{participating}.
-The participating set problem, threads obtain no input except their own
+In the participating set problem, threads obtain no input except their own
 id's.
 Each thread~$i$ outputs a set~$S_i$ of thread id's satisfying the
 following conditions:
@@ -912,15 +864,14 @@ of the participating set problem instances.
 
 Intuitively, this can be achieved by making every thread write its id to
 the shared memory and then read others' writes from the shared memory.
-The results are determined by competition among the threads.
+The results are determined by the speed competition among the threads.
 Thread~$i$'s output~$S_i$ contains those threads that has already
 written by the time $i$ reads.
 However, we have to decompose this intuitive solution into pieces of
-two-thread communication.
+two-thread communication in order to implement the solution using our library.
 
 As an example, we treat the three-thread case.  The three threads are
 named \verb@ZeroT@, \verb@FirstT@ and \verb@SecondT@.
-This time, we do not follow all the details but just look at the types.
 
 First, each thread computes its own id and stores it in a tuple.
 \begin{spec}
@@ -930,18 +881,16 @@ Then, \verb@ZeroT@ and \verb@FirstT@ compete.  This results in the
 following hypersequent, which means that either \verb@ZeroT@ obtains
 \verb@FirstT@'s id or \verb@FirstT@ obtains \verb@ZeroT@'s id.
 \begin{spec}
-IO (K ZeroT (ZeroT, FirstT) :*:
-    K FirstT (FirstT, ZeroT) :*: HNil)
+IO (K ZeroT (ZeroT, FirstT) :*: K FirstT (FirstT, ZeroT) :*: HNil)
 \end{spec}
 
 Before \verb@SecondT@ is put in consideration, we make the first two threads
 to duplicate their possessions so that they can retain the possessions
 and communicate the possessions at the same time.
 \begin{spec}
-twoBeforeComm :: IO (
-                        K ZeroT ((ZeroT, FirstT), (ZeroT, FirstT)) :*:
-                        K FirstT ((FirstT, ZeroT), (FirstT, ZeroT)) :*:
-                        HNil)
+twoBeforeComm :: IO ( K ZeroT ((ZeroT, FirstT), (ZeroT, FirstT)) :*:
+                      K FirstT ((FirstT, ZeroT), (FirstT, ZeroT)) :*:
+                      HNil)
 \end{spec}
 
 After \verb@SecondT@ competes with \verb@ZeroT@, we obtain the following
@@ -953,8 +902,8 @@ three__ :: IO
    K ZeroT ((ZeroT, FirstT), SecondT) :*:
    K SecondT (SecondT, (ZeroT, FirstT)) :*: HNil)
 \end{spec}
-Again, \verb@SecondT@ competes with \verb@FirstT@.  This makes a hypersequent with
-any component containing all threads.  Since at least one component succeeds,
+Finally, \verb@SecondT@ competes with \verb@FirstT@.  This makes a hypersequent with
+any component containing all thread's ids.  Since at least one component succeeds,
 at least one thread obtain all threads' ids.
 
 However, the participating set problem requires more.  The following
@@ -967,7 +916,7 @@ Thread 0: obtained [0]
 Thread 2: obtained [2]
 \end{verbatim}
 In this case threads 0 and 2 have to compete in order to decide which
-is later.  In general, either \verb@ZeroT@--\verb@SecondT@ or
+is slower.  In general, either \verb@ZeroT@--\verb@SecondT@ or
 \verb@FirstT@--\verb@SecondT@ competition is required so we do both and
 concatenate the three competitions as one derivation.
 Both of the two thread competition is similar to the simplest nontrivial
@@ -979,19 +928,19 @@ main = execute $three `follows` twoMid `follows` twoLast
 \end{spec}
 
 
-\section{Comparison with G\"odel--Dummett logic}
+\section{Comparison with G\"odel--Dummett Logic}
 
 
 \subsection{Similarity}
 
 There are many functional programming languages (OCaml, Haskell, Clean
-etc.) that employs intuitionistic logic for their type systems.
+etc.) that employ intuitionistic logic for their type systems.
 The hypersequent formulation that we employed is very similar to that of
 G\"odel--Dummett logic, which is among
 intermediate logics~\citep{umezawa} between intuitionistic and
 classical logics.
 
-G\"odel--Dummett logic (\citet{dummett59}) was originally introduced as a logic
+G\"odel--Dummett logic~\citep{dummett59} was originally introduced as a logic
 obtained by adding axioms of the form
 $(\varphi\rightarrow\psi)\vee(\psi\rightarrow\varphi)$ to
 intuitionistic propositional logic.　　
@@ -1008,27 +957,28 @@ the ``communication rule'' on hypersequent derivations:
  \DisplayProof
 \end{center}
 where $\Gamma_i$ and $\Delta_i$ are finite sets of formulae.
-This communication rule inspired me to model waitfree computation using
+This communication rule inspired the author to model waitfree computation using
 hypersequents by using a rule
 \begin{center}
 \begin{center}
- \AxiomC{$\hyper_0\hmid\mathtt{K t a}$}
- \AxiomC{$\hyper_1\hmid\mathtt{K s b}$}
- \BinaryInfC{$\hyper_0\hmid\hyper_1\hmid \mathtt{K t b}\hmid \mathtt{K s a}$}
+ \AxiomC{$\hyper_0\hmid\mathtt{K\, t\, a}$}
+ \AxiomC{$\hyper_1\hmid\mathtt{K\, s\, b}$}
+ \BinaryInfC{$\hyper_0\hmid\hyper_1\hmid \mathtt{K\, t\, b}\hmid \mathtt{K\, s\, a}$}
  \DisplayProof
 \end{center}
 \end{center}
 
-He has proved that a  sequent
+\citet{avron91} has proved that a  sequent
 derivable with cut rules is also provable without cuts
 (Gentzen's proof adopted).
 However, he still wanted to see what the corresponding typed lambda
 calculus looks like, saying ``it seems to us extremely important to determine the exact
-       computational content of them~[intermediate logics] ---
-       and {to develop corresponding `$\lambda$-calculi'} ''~\citep{avron91}.
+computational content of them~[intermediate logics]---%
+and {to develop corresponding `$\lambda$-calculi'} ''~\citep{avron91}.
 Since we are working on a constructive logic, it is natural to ask what
-chooses the left or right a term of the type
+chooses the left or right for a term of the type
 $(\varphi\supset\psi)\vee(\psi\supset\varphi)$.
+The answer is actually the execution time scheduling among threads.
 
 
 \subsection{Difference}
@@ -1050,43 +1000,13 @@ This restriction would be OK if we were only interested in making sure that
 at least one thread knows every other thread.  However, since the
 participating set problem does not allow any two threads to be ignorant
 of each other, the \verb@comm@ rule cannot provide enough communication power
-to solve participating set problem for the components of a hypersequent.
-
-When we look at the hypersequent derivations as proofs, since we are only
-interested in the constructive content, we are only looking at one
-successful component.  However, when we regard hypersequent derivations as
-communicating threads, we have to look at what every component does, not
-only the successful one.  So, the meaning of a hypersequent derivation
-should not be exactly
-$\left(\bigwedge\Gamma_0\rightarrow\varphi_0\right)\vee\left(\bigwedge\Gamma_1\rightarrow\varphi_1\right)\vee\cdots\vee\left(\bigwedge
-\Gamma_n\rightarrow\varphi_n\right)$, which assures at least one component
-succeeds.
-Rather, it would be a disjunction of all permutations of the components:
-i.e., the disjunction of all possible outputs of the participating set problem.
-And a permutation of the components can only be represented using a
-non-commutative operator.  Is the non-commutative operators of
-full Lambek calculus suffice?  If that is the case, there is a hope that
-we can study
-waitfree computation more closely using a substructural logic without
-modalities.
-However, it would require linear types to implement such treatments of
-waitfreedom.
+to solve the participating set problem for the components of a
+hypersequent if we do not have the modalities.
 
 \section{Related Work}
 
 \subsection{Computational Content of Hypersequents}
 
-\citet{RM} proposed the hypersequent calculus for obtaining
-cut-free deduction system for \textbf{RM}.
-He also obtained cut-free hypersequent calculus for G\"odel--Dummett
-logic.
-\citet*{alg} proved that there exists a cut-free hypersequent calculus
-for each logic that can be characterized by a ``simple enough'' axiom on
-top of intuitionistic propositional logic.  The class of ``simple
-enough'' axioms are called $\mathcal N_3$.  It contains infinitely many
-logical formulae including well-known axioms like weak excluded
-middle~$\neg\varphi\vee\neg\neg\varphi$,
-prelinearity~$(\varphi\rightarrow\psi)\vee(\psi\rightarrow\varphi)$ and so on.
 
 \citet{parallel} developed a so-called parallel dialogue games.  It is
 based on Lorenzen dialogue .  It is basically proof searching from
@@ -1102,14 +1022,11 @@ give meanings to all proofs.
 \subsection{High Level Treatment of Concurrency}
 
 Erlang~\citep{erlang} is a programming language designed for concurrency
-using Actor
-model by~\citet{actor}.
-Since Actor model separates the sender of a message from the message
-itself, it provides some asynchrony.  However, in Actor model and in
+using the Actor model by~\citet{actor}.
+Since the Actor model separates the sender of a message from the message
+itself, it provides some asynchrony.  However, in the Actor model and in
 Erlang, a thread can wait for a message.  Thus, these do not provide
-waitfree communication.  If we prohibit waiting in these languages,
-we have to prohibit
-receiving messages altogether.
+waitfree communication.
 
 % Newsqueak
 
@@ -1141,7 +1058,8 @@ is time-consuming.  Compared with
 synchronous communication, waitfreedom can be implemented in a less
 time-consuming manner.  Since our library
 interface captures waitfreedom, it is possible to build a less
-time-consuming implementation for this interface.
+time-consuming implementation for this interface although the current
+implementation relies on MVar cells, which internally use spin locks.
 
 \section{Future Work and Conclusion}
 
@@ -1152,25 +1070,16 @@ of computation is represented by these logics.
 The library presented in this chapter deals with both waitfree
 communication and thread management.  It would be better if we dealt with
 these different tasks separately.
- We seek to expand the notion of thread into more complicated
- processes so that we can treat dynamic
- forking and merging threads rather
- than a finite set of threads specified at compile-time.
+We seek to expand the notion of threads into more complicated
+processes so that we can treat dynamic forking and merging threads rather
+than a finite set of threads specified at compile-time.
 
 Although we were able to implement the participating set problem,
 the implementation is not short nor symmetric.
 There seems to be room for more elegant abstraction for symmetric
 protocols such as
-a rule contains more than two threads and a more direct embedding of the
+a rule containing more than two threads and a more direct embedding of the
 participating set problem.
-
-Another remaining task is to formalize the strong normalization theorem
-formally in a proof assistant like Coq or Isabelle.
-\citet{ttlifting} provided a concise proof of strong normalization of
-the natural deduction for
-intuitionistic propositional logic, containing disjunction.
-Lindley's proof was formalized in Nominal Isabelle by
-\citet{Doczkal2009}.
 
 Moreover, in order to obtain performance, we have to change the run time
 system of Haskell.  Since the current implementation uses MVar mechanism
@@ -1179,6 +1088,10 @@ computation can be implemented without locks.  In practice also, with
 sequential consistency, we can implement waitfree computation without
 locks.
 
+One possible extension of our library is adding ``all-possible-results''
+mode.  When we execute a program under this mode, the library explores
+all possible executions and returns what can happen.
+
 Anyway, since we have shown that hypersequent based waitfree computation
-is implementable.  This at least supports the proof of
-\thref{th:soundness}.
+is implementable.  This at least supports the statement of
+\thref{th:soundness} in Chapter~\ref{ch:lambda}.

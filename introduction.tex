@@ -46,7 +46,7 @@ after the programming language.
 We list our contributions from the most important:
 \begin{enumerate}
  \item developing a lambda calculus using
-       a hypersequent calculus (Chapters~\ref{ch:lambda}, \ref{ch:exchange});
+       a hypersequent calculus (Chapters~\ref{ch:exchange}, \ref{ch:lambda});
  \item identifying the computational ability of the
        G\"odel--Dummett logic with waitfreedom (Chapter~\ref{ch:lambda});
  \item encoding session types using a seemingly unknown axiom
@@ -58,7 +58,7 @@ We list our contributions from the most important:
        (Chapter~\ref{ch:exchange});
  \item giving a typed lambda calculus for monoidal t-norm logic
        (Chapter~\ref{ch:pole});
- \item implementing hyper-lambda calculus in Haskell (Chapter~\ref{ch:haskell}).
+ \item implementing a hyper-lambda calculus in Haskell (Chapter~\ref{ch:haskell}).
 \end{enumerate}
 
 Our first contribution is the technique for our second contribution.
@@ -220,6 +220,20 @@ we use conjunctive hypersequents, where different components are
 interpreted conjunctively.
 This is the first application of such conjunctive hypersequents.
 
+Our sixth contribution is giving a typed lambda calculus for monoidal
+t-norm logic.  Monoidal t-norm logic (MTL) is the affine version of
+G\"odel--Dummett logic.
+MTL is considered by some to be the weakest fuzzy logic.
+Following our method of interpreting G\"odel--Dummett logic proofs as
+waitfree protocols, we interpret the MTL proofs in our deduction system
+as asynchronously communicating processes.
+There we employ the second-order formulation and perform parametricity
+arguments.
+
+Our seventh contribution is implementing a hyper-lambda calculus in
+Haskell.
+By implementing a hyper-lambda calculus for waitfreedom,
+we obtain a empirical justification of our second contribution.
 
 The content of Chapter~\ref{ch:lambda} appears in
 a conference paper by the author \citep{hiraiflops2012}

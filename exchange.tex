@@ -41,7 +41,7 @@ However, if programmers make mistakes, these commands can
 cause a deadlock during execution even after the program passes type
 checking.
 This is because the type system of Haskell allows programmers to
-use only one of $(\phi\imp \one)$ and $\phi$.
+use only one of the sender and the receiver.
 Fundamentally, this is because the type system of Haskell
 is based on intuitionistic logic, which allows throwing away proofs.
 
@@ -442,13 +442,14 @@ Another example shows how we can type the term $\co c(c x)$.
    \end{center}
   is\footnote{This condition is equivalent to derivability of
   $\phi\tr\phi\otimes\phi$, thanks to $\otimes$R rule and
-  $\otimes$L rule.} admissible for any hypersequent~$\hypert$ and
-  context~$\G$, then, $\phi$ is
+  $\otimes$L rule.} admissible for any hypersequent~$\hypert$,
+  context~$\G$ and formula~$\psi$, then, $\phi$ is
   inhabited in Amida calculus.
  \end{proposition}
  \begin{proof}
   By the following derivation.
   \begin{center}
+   \small
    \AxiomC{}
    \LL{$\one$R}
    \UnaryInfC{$\tr\tj \ast\one$}
@@ -487,15 +488,10 @@ Another example shows how we can type the term $\co c(c x)$.
   \end{center}
   where C marks the step where the specialized contraction is used.
  \end{proof}
-
- \begin{corollary}[Any exponential formula would be inhabited in Amida calculus]
-  If we are to introduce the bang modality~\citep{girard1987} of linear
-  logic, then any formula of the form $!\phi$ is a theorem.
- \end{corollary}
- \begin{proof}
-  Since $!\phi\limp !\phi\otimes!\phi$ is a theorem in intuitionistic
-  linear logic.
- \end{proof}
+ By this proposition, if we are to introduce the bang modality~\citep{girard1987} of linear
+ logic, then any formula of the form $!\phi$ is a theorem.
+ This is because $!\phi\limp !\phi\otimes!\phi$ is a theorem in intuitionistic
+ linear logic.
 
  We state another fact, which is known to
  \citet{casari1989} who wrote ``in the $\ell$-logic there are no
@@ -506,7 +502,7 @@ Another example shows how we can type the term $\co c(c x)$.
   for any formula~$\phi$, then $\zero$ is provable (and as a consequence
   any formula is provable i.e. the resulting logic is inconsistent).
  \end{corollary}
- Further, this implies that Amida calculus is incompatible with second
+ Further, this implies that Amida calculus is incompatible with the second
  order universal quantification so that the parametricity argument for session
  types by \citet{cairesrelational} is not applicable.
  The second order universal quantification adds a form of type~$\forall
@@ -520,9 +516,9 @@ Another example shows how we can type the term $\co c(c x)$.
    \AxiomC{$\hypert\hmid \tj{x}{\psi[\theta/X]},\G\tr \tj{t}{\phi}$}
    \LL{$\forall$L}
    \UnaryInfC{$\hypert\hmid \tj{x}{\forall X.\psi}, \G\tr\tj{t}{\phi}$}
-   \DisplayProof
+   \DisplayProof\quad.
   \end{center}
- \begin{corollary}[Incompatibility of second order universal
+ \begin{corollary}[Incompatibility of the second order universal
   quantification]
   If we add the second order universal quantification to Amida calculus,
   the resulting logic is inconsistent.
@@ -585,7 +581,7 @@ Another example shows how we can type the term $\co c(c x)$.
  \begin{itemize}
   \item a formula $\zero$ such that $\tr\zero\limp\phi$ is derivable for
 	all $\phi$,
-  \item second order universal quantification,
+  \item the second order universal quantification,
   \item contraction rule, or
   \item weakening rule.
  \end{itemize}
@@ -832,7 +828,7 @@ Consider a typed term:
  \begin{center}
   \AxiomC{}
   \LL{Ax}
-  \UnaryInfC{$\tj x X\tr\ tj x X$}
+  \UnaryInfC{$\tj x X\tr \tj x X$}
   \AxiomC{}
   \LL{$\one$R}
   \UnaryInfC{$\tr\tj\ast\one$}
@@ -986,7 +982,7 @@ x.t$ of type $\one\limp\phi$ so that $\lambda x.t\eval \lambda x.t$ is derivable
     \label{processtyping}
     The session type abbreviation and the processes abbreviation allow
     us to use the typing rules in the next proposition.
-     \begin{proposition}
+     \begin{theorem}[Process Typing Rules: senders and receivers]
       \label{typing_process}
       These rules are admissible.
        \begin{center}
@@ -1013,7 +1009,7 @@ x.t$ of type $\one\limp\phi$ so that $\lambda x.t\eval \lambda x.t$ is derivable
 	\UnaryInfC{$ \tr\tj 0 \one $}
 	\DisplayProof
        \end{center}
-     \end{proposition}
+     \end{theorem}
      Before entering the proof, we note that the types of variable $x$ change in
      the rules.  This reflects the intuition of session types: the
      session type of a channel changes after some communication occurs
@@ -1218,7 +1214,7 @@ x.t$ of type $\one\limp\phi$ so that $\lambda x.t\eval \lambda x.t$ is derivable
 
        Then, in addition to \thref{typing_process},
        more typing rules are available.
-	\begin{proposition}
+	\begin{theorem}[Process typing rule: name restriction]
 	 \label{typing_connection}
 	 The following typing rule is admissible.
 	  \begin{center}
@@ -1228,7 +1224,7 @@ x.t$ of type $\one\limp\phi$ so that $\lambda x.t\eval \lambda x.t$ is derivable
 	   \G\tr\tj{\nu\tj{x}{\phi^\ell}.t[x_L/x][x_R/y]}{\psi}$}
 	   \DisplayProof
 	  \end{center}
-	\end{proposition}
+	\end{theorem}
 
 	\begin{example}[Connecting processes using the session realizers]
 	 Using the session realizers, we can connect the processes typed
@@ -1772,17 +1768,17 @@ Amida calculus.
 As a corollary of soundness and completeness,
 some previous literature~\citet{meyer-slaney-1989,casari1989} on
 Abelian logics provides as some facts.
-\begin{corollary}
+\begin{corollary}[Division by two]
  If $\phi\otimes\phi$ is inhabited, so is $\phi$.
 \end{corollary}
-\begin{corollary}
- The law of excluded middle $\phi\otimes(\phi\limp \one)$ is inhabited.
+\begin{corollary}[Excluded Middle in Amida calculus]
+ The law of excluded middle $\phi\otimes(\phi\limp \one)$ is inhabited
+ in Amida calculus.
 \end{corollary}
-\begin{corollary}
- Prelinearity is inhabited $(\phi\limp\psi)\oplus(\psi\limp\phi)$ is inhabited.
+\begin{corollary}[Prelinearity in Amida calculus]
+ Prelinearity is inhabited $(\phi\limp\psi)\oplus(\psi\limp\phi)$ is
+ inhabited in Amida calculus.
 \end{corollary}
-
-We will elaborate on this in Subsection~\ref{computational-meaning}.
 
 \section{Proof Nets}
 \label{sec:proofnets}
@@ -1866,10 +1862,9 @@ $\otimes^-$ are called \textit{operator nodes}.
 
 When we add axiom edges and $\bot$-branches (shown below)
 to the other operator nodes (shown above)
-we obtain an
-essential net of $\phi$.
+we obtain an \textit{essential net}\index{essential net} of $\phi$.
 Due to the arbitrariness of choosing axiom edges and $\bot-$-branches,
-there are more than one essential net for a formula%
+there are possibly multiple essential net for a formula%
 \footnote{\citet{murawski2003} restricts the class of formulae to linearly balanced
 formulae so that the essential net is uniquely determined.}.
  \begin{center}
@@ -2000,6 +1995,7 @@ This difference causes Amida nets to validate Amida axiom.
 \subsection{Soundness and Completeness of Amida nets}
 
  \begin{theorem}[Completeness of Amida nets]
+  \label{amida-net-complete}
   If a hypersequent $\hyper$ is derivable,
   there is a correct Amida net for $\hyper$.
  \end{theorem}
@@ -2079,7 +2075,7 @@ derivation, encoding the bottom layer
 can be done in the same way as \citet{lamarche2008}'s approach.
 \end{proof}
 
-We wonder whether that it is possible to add Amida edges to
+We wonder whether it is possible to add Amida edges to
 the IMALL$^-$ essential nets following
 \citet{lamarche2008}.
 
@@ -2441,6 +2437,7 @@ is not enough because
 their type system allows weakening.
 
 \subsection{Cut Elimination}
+\label{amida-cut}
 
 In Amida calculus, there is a hypersequent that
 can be derived with the cut rule but not without cut rules.

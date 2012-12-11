@@ -704,8 +704,7 @@ well as the
 (intuitionistic) multiplicative
 additive fragment of linear logic.
 In the later chapter, we make a typing system that lacks contraction and
-weakening, which falls outside of intermediate logics but within
-substructural logics albeit it has quantification over propositional variables.
+weakening in Chapters~\ref{ch:exchange}, \ref{ch:pole}.
 
 \subsubsection{Application to Programming Languages}
 
@@ -801,7 +800,7 @@ For example,
  On the other hand, it is waitfreely possible for
  either one of two processes to attain the input value of the other process.
 
-Herlihy and Shavit~\cite{herlihy1999topological} characterized waitfree
+Herlihy and Shavit~\cite{Herlihy99} characterized waitfree
 computation using
 simplicial topology.
 Using their characterization,
@@ -1037,12 +1036,12 @@ propositional logic:
  % Depending on the formulation, there can be two
 
  In the intuitionistic linear logic, the right side of a sequent can only
- contain at most one formula.  In this thesis we are in this
- setting.
+ contain at most one formula.
  Abramsky~\citep{abramsky1993computational} gave computational
  interpretations for the intuitionistic linear logic and the classical
  linear logic.  Since we will extend his linear lambda calculus in
- Chapter~\ref{ch:exchange}, we are going to elaborate on this there.
+ Chapter~\ref{ch:exchange}, we are going to elaborate on Abramsky's
+ lambda calculus there.
 
  \subsubsection{Abelian Logic}
 
@@ -1118,3 +1117,11 @@ Chapter~\ref{ch:lambda} deals with an asynchronous one.
 The operational semantics is simpler in the synchronous case while
 the type system is more exotic in the synchronous case.
 The asynchronous one is apt for shared--memory implementation.
+Chapter~\ref{ch:pole} treats another asynchronous hyper-lambda calculus
+based on monoidal t-norm logic.  In this chapter, we analyse the
+\textit{prelinearity
+axiom}\index{axiom!prelinearity}\index{prelinearity}
+$(\phi\limp\psi)\oplus(\psi\limp\phi)$ using the
+parametricity argument.
+Chapter~\ref{ch:haskell} implements a hyper-lambda calculus similar to
+that in Chapter~\ref{ch:lambda} using Haskell.
