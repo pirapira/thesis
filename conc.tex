@@ -4,7 +4,12 @@
 
 We gave mainly two inventions: hyper-lambda calculi and a new
 axiomatization of Abelian logic.
-Our conclusions and future work span from mathematical logic, computer
+Since we are just beginning to understand the computational semantics of
+some concrete examples of substructural logics, the remaining space is
+vast.
+Reflecting the wide applications of substructural and especially
+intermediate logics,
+our conclusions and future work span from mathematical logic, computer
 science and philosophy.
 
 \section{From Logical Perspectives}
@@ -50,9 +55,56 @@ for example $\phi\oplus(\phi\limp\one)$.
 The first step is going to be removing additives and studying the
 multiplicative fragment of Amida calculus.
 
+\subsection{G\"odel--Dummett Logic}
+
+In logical point of view, the lambda calculus in Chapter~\ref{ch:lambda}
+is too complicated for G\"odel--Dummett logic.
+For example, the notion of processes are actually not needed to study
+G\"odel--Dummett logic.  However, with the help of these additional
+constructions,
+we were able to identify the computational nature of G\"odel--Dummett
+logic as that of waitfree computation.
+In order to exploit our discovery, we have to extend the
+characterization to the realm of proof searching.  That is, designing a
+logic programming language using waitfree communication during parallel
+proof searching.
+
+\subsection{More General Fuzzy Logics}
+
+Since we have identified the computational content of the prelinearity
+axiom and obtained a lambda calculus for monoidal t-norm logic, we are
+in a good situation to study fuzzy logics in general.
+After all, the monoidal t-norm logic is the weakest fuzzy logic.
+Thus, there is a possibility to obtain a lambda calculus for any fuzzy
+logic by extending the lambda calculus in Chapter~\ref{ch:pole}.
+The next target is \L{}ukasiewicz logic.  \L{}ukasiewicz logic is so
+similar to ordinary logics that there have been attempts to formalize
+mathematics on
+it~\citep{Hajek:TheJournalOfSymbolicLogic:2000,hajek2005,yatabe2009}.
+\citet[Theorem~9]{metcalfe2002} showed that a fragment of Abelian logic
+coincides with \L{}ukasiewicz logic.
+
 \section{From Computer Science Perspectives}
 
 \subsection{Implementation}
+
+In Chapter~\ref{ch:haskell}, we implemented a hyper-lambda calculus for
+waitfree computation using Haskell~\citep{marlow2010haskell}.
+The implementation is a prototype showing that the design of \lgd\,is
+implementable.
+Internally, the implementation still uses locks but we should remove
+locks if we try to put the library to performance sensitive uses.
+In order to remove locks, we probably have to modify the runtime system
+of Haskell.
+Externally, the implementation lacks primitive support for more than two
+party communication.  Although we can implement arbitrary $n$-party
+waitfree communication using the current two-party primitive, having
+a primitive serving more parties is desirable.
+In order to provide more than two-party primitives,
+we have to define a more complicated type class, which we expect to be
+achievable.
+
+\subsection{Further Implementation}
 
 Since Abelian logic is incompatible with contraction or weakening,
 straightforward implementation Amida calculus on top of Haskell or OCaml
@@ -80,8 +132,8 @@ including the optimizing compilers, execution environments, and
 libraries.
 The disadvantage, which the first author of
 \citep{DBLP:journals/corr/abs-1110-4163} told me personally,
-is error messages hard to read.
-Since Haskell compiler is not aware of session types and just reports
+is the compiler's cryptic error messages.
+Since the used Haskell compiler is not aware of session types and just reports
 pattern-matching errors in the encoding of session types, the error
 messages are about the encoding not about the originally intended
 session types.
@@ -119,7 +171,9 @@ nest hypersequents
 where $t_1$ and $t_2$ are combined conjunctively but other delimiters
 are interpreted disjunctively.
 However, this kind of nesting representation has a limitation because of
-its tree structure.
+its tree structure: it is not clear how we can represent three threads
+$t_0, t_1$ and $t_2$ where either $e_0$ and $e_1$ succeed or $e_0$ and
+$e_2$ succeed.
 If we take the idea of event structure~\citep{winskel1980},
 we could make a deduction system where each inference step results in a
 coherence space whose elements are sequents.
@@ -149,8 +203,18 @@ play important roles.  For example, relevance logic is a famous
 substructural logic lacking weakening and inquisive logic is a weak
 logic (a logic possibly without substitution-closedness) between
 intuitionistic and classical logics~\citep{ciardelli2011}.
+
+G\"odel--Dummett logic~\citep{dummett59} was invented for algebraic
+reason, but now we found a constructive justification of Dummett's axiom
+$(\phi\imp\psi)\lor(\psi\imp\phi)$ as the result of speed-racing during
+proof reduction.  Since the semantics presented in
+Chapter~\ref{ch:lambda} seems somewhat too rigorous,
+there is room for simplification and better understanding of
+G\"odel--Dummett logic.
+
 Abelian logic can provide a way to express
-exchanges and indebtedness.  Amida axiom $(\phi\limp
+exchanges and indebtedness.
+Amida axiom $(\phi\limp
 \psi)\otimes(\psi\limp\phi)$
 can describe two agents' exchange of $\phi$ and $\psi$ between two agents
 or one agent's borrowing of $\phi$ for $\psi$ and returning $\phi$ for
@@ -158,6 +222,15 @@ $\psi$.
 Since analysis of pattern of exchange is an important subject of
 anthropology~\citep{kula1920}, Abelian logic can provide a
 basis for describing social and cultural phenomena.
+
+Dynamic epistemic logic~\citep{ditmarsch2007dynamic}, or its fragment
+called public announcement
+logic, is a modal logic that has a modality for agents' knowledge and
+announcements.  However, in the current formulation of dynamic epistemic
+logic, we cannot formalize the effect of repetitions of announcements or
+cancels of announcements.  In Abelian logic, we can multiply any formula
+with any integer, thus there is a possibility of representing repetition
+or cancels of announcements using a modal logic based on Abelian logic.
 
 Also, since Abelian logic is modeled by Abelian groups, it can express the
 sense of indebtedness or obligation in a quantitative way.

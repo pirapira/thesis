@@ -1,7 +1,7 @@
 \chapter{A Synchronous Hyper-Lambda Calculus}
 \label{ch:exchange}
 
-\section{Introduction}
+\subsection{Introduction}
 
 There is a PhD student who says:
 \begin{quotation}
@@ -503,8 +503,7 @@ Another example shows how we can type the term $\co c(c x)$.
   any formula is provable i.e. the resulting logic is inconsistent).
  \end{corollary}
  Further, this implies that Amida calculus is incompatible with the second
- order universal quantification so that the parametricity argument for session
- types by \citet{cairesrelational} is not applicable.
+ order universal quantification so that the parametricity argument is not applicable.
  The second order universal quantification adds a form of type~$\forall
  X\phi$ and two type derivation rules:
   \begin{center}
@@ -760,7 +759,7 @@ we add the semantics for channels.
   \hmid \G_1,\tj{x}{\phi}\tr\tj u \theta$ is derivable.
  \end{proposition}
  \begin{proof}
-   By induction on the original derivation. \fix{elaborate}
+   By induction on the original derivation.
  \end{proof}
 
   \subsection{Lack of Convergence}
@@ -1187,6 +1186,10 @@ x.t$ of type $\one\limp\phi$ so that $\lambda x.t\eval \lambda x.t$ is derivable
       denote them by $\leftside{\phi^\ell}, \rightside{\phi^\ell}$.
       Moreover, we use $\bothside{\phi^\ell}$ to denote the pair
       $\leftside{\phi^\ell}\otimes\rightside{\phi^\ell}$.
+      So far, a free variable with a linear type represented a channel
+      serving the corresponding session type.
+      Now, we can substitute the free variables with the session
+      realizers so that the typed processes can actually communicate.
       If have two terms that use free variables of type $\phi^\ell$ and
       $\overline{\phi^\ell}$,
       we can replace those free variables by session realizers.
@@ -1645,7 +1648,7 @@ following axioms \textbf{A1} to \textbf{A10} and deduction rules
 The most peculiar of these axioms is \textbf{A10}, which is called the
 relativisation axiom.
 
-\begin{theorem}[Completeness of Amida Calculus with Respect to Abelian
+\begin{theorem}[Completeness of Amida Calculus for Abelian
  Logic]
  \label{complete-to-Abelian}
  A theorem of Abelian logic is inhabited in Amida calculus.
@@ -1701,9 +1704,9 @@ For soundness, a different axiomatization of Abelian logic in
       $((\phi\limp\psi)\with(\phi\limp\theta))\limp
       (\phi\limp(\psi\with\theta))$
  \item[L8]
-      $\phi\limp(\phi\oplus\theta)$
+      $\phi\limp(\phi\oplus\psi)$
  \item[L9]
-      $\psi\limp(\phi\oplus\theta)$
+      $\psi\limp(\phi\oplus\psi)$
  \item[L10]
       $((\phi\limp\theta)\with(\psi\limp\theta))\limp((\phi\oplus\psi)\limp\theta)$
  \item[L11]
@@ -1721,7 +1724,7 @@ For soundness, a different axiomatization of Abelian logic in
 
 These axioms and rules are enough to prove all inhabited types of
 Amida calculus.
-\begin{theorem}[Soundness of Amida Calculus with Respect to Abelian
+\begin{theorem}[Soundness of Amida Calculus for Abelian
  Logic]
  \label{sound-to-abelian}
  An inhabited type in Amida calculus is a theorem of Abelian logic.
@@ -1934,7 +1937,8 @@ For a hypersequent~$\hyper$,
   defined as
 \begin{itemize}
  \item an essential net of $\hyper$ is an Amida net of $\hyper$
- \item for an Amida net of $\hyper$ with two different up-edges,
+ \item for an Amida net of $\hyper$ with two different\footnote{The two edges can
+       be connected by a path as long as they are different.} up-edges,
 	\begin{center}
 	 % twoedges
 	 \includegraphics[scale=0.4]{twoedges.eps}
@@ -2057,7 +2061,7 @@ recursion.
 
 Then, by these translation moves,
 the whole Amida net is decomposed vertically into three layers.
-At the top, there is a layer with only Axiom edges.
+At the top, there is a layer with only axiom edges.
 In the middle, there is a layer with only vertical edges and Amida
 edges.
 At the bottom, there is a layer which contains only ordinary
@@ -2078,25 +2082,33 @@ can be done in the same way as \citet{lamarche2008}'s approach.
 We wonder whether it is possible to add Amida edges to
 the IMALL$^-$ essential nets following
 \citet{lamarche2008}.
-
+The additives are notoriously difficult for proof nets and we do not
+expect the combination of additive connectives and Amida edges can be
+treated in a straightforward way.
 
 \section{Related Work}
 
 \subsection{Analytic Calculus for Abelian Logic}
 
 \citet{metcalfe2002} gave a labelled sequent calculus for Abelian logic.
+Some years later,
 \citet{metcalfe2006} gave a hypersequent caluclus for Abelian logic and
 proved cut-elimination theorem for the hypersequent calculus.
 His formulation is different from ours because Metcalfe's system does
 not use conjunctive hypersequents.  He sticks to the traditional
 hypersequent formulation where components are interpreted disjunctively.
+The paper \citep{metcalfe2006} is informative about some logics weaker
+than Abelian logic so that there might be a hint of getting a
+hyper-lambda calculi for these weaker logics.
 
 \subsection{Linear Logic and Session Types}
 
-One promising approach is using session types~\citep{honda-session}.
+We treated session types~\citep{honda-session}.
 Session types aim at typing channels and processes in $\pi$-calculus so
 that the process execution is deterministic and not ending in deadlock.
 In general session type systems are not based on a well-known logic.
+However, there are recent developments on encoding session types into
+linear type systems.
 
 \subsubsection{Pfenning's Typing System}
 \label{pfenning}
@@ -2273,8 +2285,7 @@ One of their typing rules
  found a connection between
  an already known logic called Abelian logic and an already known
  typing discipline invented by \citet{giunti2010}.
- It will be worthwhile to compare their system with our type system.
- \fix{compare rather now}
+ It will be worthwhile to compare their system with our type system closely.
 
  \subsection{Join Calculus}
 
@@ -2419,22 +2430,29 @@ One of their typing rules
 %  involved because of eval-subst rule, but the author expects the case
 %  analysis on possible substitutions will succeed.
 
-\subsection{Adding Multiparty, Recursions, \ldots}
+\subsection{Adding Agents, Recursions, \ldots}
 Our type system has a drawback of having only finitely many processes.
 We expect it straightforward to overcome this weak point by
 adding recursions in our type system.
 As a guidance we can take $\mu$MALL of \citet{mumall}.
 
-It is tempting to add modalities showing agents to types so that the
-modalities show agents and then study the relationship with the
+It is tempting to add modalities representing agents
+and then study the relationship with the
 multiparty session types~\citep{sync-multi-session, async-multi-session}.
 For that, intuitionistic epistemic logic by~\citet{hirailpar,hiraimaster}
 will be useful.
 
-In order to implement this lambda calculus, we need linear types.
+In order to implement this lambda calculus as a programming language, we
+need linear types.
+If we seek a quick way of implementing our hyper-lambda calculus on top
+of an existing ML family programming language, we have to choose the
+existing language carefully.
+For example, OCaml and Haskell uses intuitionistic type system so if we
+use these languages naively, Amida axiom makes the type system
+inconsistent.
 The uniqueness type of the programming language Clean~\citep{parle1991}
-is not enough because
-their type system allows weakening.
+does not allow contraction, but the uniqueness type is
+too strong because their type system allows weakening.
 
 \subsection{Cut Elimination}
 \label{amida-cut}
@@ -2470,9 +2488,10 @@ $X, Y\tr X\hmid \tr Y$ can be derived with a cut rule application:
   \BinaryInfC{$X,Y\tr X\hmid \tr Y$}
   \DisplayProof
  \end{center}
-However, the conclusion is not derivable without the cut rule.
+However, the conclusion is not derivable without the cut rule (as
+confirmed by a simple proof searching).
 
-On the other hand, if we translate the conclusion naively to a formula
+On the other hand, if we translate the conclusion to a formula
 $\tr (X\limp (Y\limp X))\otimes Y$,
 then the formula is derivable without cut.
 \begin{center}
@@ -2500,19 +2519,24 @@ we consider it natural to expect the same property for Amida calculus.
 One possible way of proving cut-elimination is translating a derivation
 of Amida calculus into \citet{metcalfe2006}'s system and applying
 \citet{metcalfe2006}'s cut-elimination and then translating the result
-back to Amida calculus.
+back to Amida calculus.  Although in that case we have to translate a
+cut-free proof in \citet{metcalfe2006}'s system into a cut-free proof in
+our type system.
 
-\subsection{Computational Meaning of Excluded Middle}
+\subsection{The Problem with Excluded Middle}
 \label{computational-meaning}
 
 Since Amida calculus characterizes Abelian logic,
-there is a closed term~$t$ with $\tr \tj{t}{(X\limp \one)\oplus X}$
-derivable.  By analysing this term, we can determine the computational
-content of the law of excluded middle.
+there is a closed term~$t$ with the sequent $\tr\tj{t}{(X\limp \one)\oplus X}$
+derivable.
 We tried looking at one such term~$t$, but it involved channels
 contained in lambda abstraction bodies and additive pairs.
+Unfortunately, the closed lambda term does not choose left or right so
+that it does not give a constructive justification to the excluded
+middle.
+Since the closed term~$t$ uses additive constructs, we expect the
+multiplicative fragment to be much more explainable.
 
-\fix{add the proof if we have time, should be impressive}
 
 \section{Conclusion}
 

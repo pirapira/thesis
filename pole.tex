@@ -651,7 +651,7 @@ However, when we try to prove \ref{c:first} by induction on derivations,
 the case for Com rule fails.  Thus we deal with two derivations at the
 same time.
 
-\begin{theorem}[Adequacy of MTL2]
+\begin{theorem}[Adequacy of NMTL2]
  \label{c:adequacy}
  Let hypersequents $\mathcal H$ and $\mathcal I$ be derivable.
  We state:
@@ -1427,7 +1427,7 @@ The MTL formulae can be defined as%
 are translated as $\&$ into $\otimes$ and $\rightarrow$ into $\limp$.}%
 :
 \[
- \phi::= \bar{0}\mid X\mid \phi\limp\psi \mid \phi\otimes \psi \mid \phi \oplus \psi\enspace.
+ \phi::= \mathbf{0}\mid X\mid \phi\limp\psi \mid \phi\otimes \psi \mid \phi \oplus \psi\enspace.
 \]
 As an abbreviation, we can introduce $\phi\land\psi =  (\phi\otimes(\phi\limp\psi))\oplus
  (\psi\otimes(\psi\limp\phi))$\footnote{
@@ -1447,7 +1447,7 @@ We take a hypersequent formulation of MTL by
   \hfill
   \AxiomC{}
   \LL{(ax)}
-  \useq{\bar 0}{\phi}
+  \useq{\mathbf 0}{\phi}
   \DisplayProof
   \hfill
   \aseq{\mathcal H\hmid\D_0,\G_0}{\phi}
@@ -1467,7 +1467,7 @@ We take a hypersequent formulation of MTL by
   \useq{\mathcal H\hmid \G,\psi}{\phi}
   \DisplayProof
   \ruleskip
-  \aseq{\mathcal H\hmid\G}{\bar{0}}
+  \aseq{\mathcal H\hmid\G}{\mathbf{0}}
   \LL{(w,r)}
   \useq{\mathcal H\hmid \G}{\phi}
   \DisplayProof
@@ -1511,8 +1511,10 @@ We take a hypersequent formulation of MTL by
   {The propositional rules in $\HLBCK$~\citep{baaz2004analytic}, which
   characterizes monoidal t-norm logic.  Axioms are not shown in
   \citet{baaz2004analytic} so we took them from \citet{ono-komori-1985}.
-  Exchange rules  are implicit.
-  The (cut) rule is eliminatable by
+  Exchange rules  are implicit: the contexts and hypersequents are
+  treated as finite sets rather than sequences.
+  If a formula is provable with the (cut) rule,
+  the formula is also provable without the (cut) rule by
   \citet[Theorem~3.2]{baaz2004analytic}.}
   \label{fig:hlbck}
  \end{figure}
@@ -1520,7 +1522,7 @@ We take a hypersequent formulation of MTL by
 We translate MTL formulae to MTL2 formulae by
 induction on $\phi$:
 \begin{align*}
- \bar{0}^\bullet &= \forall XX \nonumber\\
+ \mathbf{0}^\bullet &= \forall XX \nonumber\\
  X^\bullet &= X \nonumber\\
  (\phi\limp\psi)^\bullet &= \phi^\bullet \limp \psi^\bullet\nonumber\\
  (\phi\otimes\psi)^\bullet & = \forall
@@ -1562,7 +1564,7 @@ substituting an MTL formula for each bound propositional variable in $\phi$.
    $\HLBCK$.
    The definition of $\phi^\circ$ follows:
    \begin{align*}
-    \bar 0^\circ&= \bar 0\\
+    \mathbf 0^\circ&= \mathbf 0\\
     X^\circ &=X \\
     (\phi\limp\psi)^\circ&=\phi^\circ\limp\psi^\circ\\
     (\phi\otimes\psi)^\circ &=

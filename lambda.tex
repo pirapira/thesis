@@ -4,7 +4,7 @@
 \chapter{An Asynchronous Hyper-Lambda Calculus}
 \label{ch:lambda}
 
-\section{Summary}
+\subsection{Summary}
 
 We define a typed lambda calculus based on Avron's hypersequent
 calculus~\citep{avron91} for G\"odel--Dummett logic.
@@ -803,7 +803,7 @@ we can construct a hyperterm $(\m{M_i})_{0\le i \le n}$.
 The hyperterm $(\m{M_i})_{0\le i \le n}$ is typeable when the
 aforementioned hypersequent is derivable for some $\G_i$'s and $\m{\phi_i}$'s.
 
-A \textit{store}\index{store} maps a location to a pure closed term or $\epsilon$,
+A \textit{store}\index{store} maps a location to a pure, closed term or $\epsilon$,
 where a \textit{pure term}\index{pure term|see{term}}\index{term!pure} is a term
 without $\comod c c$ or $\reader c$.
 For a store~$S$, the \textit{updated store}\index{update} $S[c\mapsto x]$ maps $c$ to
@@ -888,16 +888,17 @@ The formal definition of the reductions follows.
  \begin{itemize}
   \item $\conf{[c\mapsto \epsilon]}{\imapsto{(\comodR)M}} \wreduce
 	\conf{[c\mapsto M]}{\imapsto{\reader d}}
-	$ where $M$ is a pure closed term
+	$ where $M$ is a pure, closed term
   \item $\conf{[c\mapsto N]}{\imapsto{(\comodR) M}} \wreduce
 	\conf{[c\mapsto	N]}{\imapsto{\reader d}}$ where $M$ is a pure
 	closed term.
  \end{itemize}
 \end{definition}
 In the first clause of this definition of write reductions, we require
-$M$ to be a pure closed
-term because a store can only contain pure closed terms.
-We require this because our aim is to model asynchronous communication.
+$M$ to be a pure, closed
+term because a store can only contain pure, closed terms.
+This restriction on store contents comes from our aim of modeling
+asynchronous communication.
 If we allow stores to contain terms with free variables,
 the term $(\lambda x. (\comodL x)) M$ can store $x$ in the store and
 another process can read $x$ from the store.
@@ -905,17 +906,20 @@ After that, if $(\lambda x.\cdots)M$ reduces,
 then, $x$ becomes $M$ suddenly in the other process.
 We want to avoid this phenomenon because it is synchronous communication.
 
-We require the same condition in the second clause as well because
-otherwise, whether a configuration admits a write reduction or not
+We require the same condition in the second clause as well although
+the store contents are not changed in the second clause.
+Otherwise, whether a configuration admits a write reduction or not
 would depend on the contents of the store, which would make the
-implementation more complicated.
+implementation more complicated.  More technically, the definition of
+normal forms would depend on the store contents, which we avoided.
 
 After the communicating term $(\comodL)$ writes to the memory,
-the term changes into a reader $\reader c$.  When the reader tries to
+the term changes into a reader~$\reader c$.  When the reader~$\reader c$
+tries to
 read when $c$ is full, the reader is replaced with the content of the
 location~$c$.
-If a term tries to read from an empty location of a store,
-the term changes into $\abort$.
+If a reader tries to read from an empty location of a store,
+the reader changes into $\abort$.
 \begin{definition}[Read reduction]
  \label{read}
  The read reduction $\rreduce$ is the smallest congruence
@@ -935,9 +939,8 @@ construction}\index{concurrent
 construction}\index{construction!concurrent} $\cotuple{M,N}$ runs $M$
 and $N$ concurrently and throws
 away those subterms that reduces to $\abort$.
-To be specific, the term $\cotuple{M,N}$ reduces to $\linl{M}$
-or $\linr{N}$ with $\mathsf{inl}$ and
-$\mathsf{inr}$ labels showing which components failed.
+To be specific, the term $\cotuple{M,N}$ reduces to ${M}$
+or ${N}$.
 The reduction rules are not symmetric with regard to the left component
 and the right component of the concurrent construct $[M,N]$ because
 when both components succeed, the whole construct reduces to
@@ -948,11 +951,11 @@ the left component.
  followings:
 \begin{itemize}
  \item  $\conf{}{\imapsto{\cotuple{\abort, M}}}\areduce
- \conf{}{\imapsto{\inr M}}$;
+ \conf{}{\imapsto{M}}$;
  \item
-   $\conf{}{\imapsto{\cotuple{\inl M,\abort}}}\areduce
+   $\conf{}{\imapsto{\cotuple{M,\abort}}}\areduce
  \conf{}{{M}}$;
- \item $\conf{}{\imapsto{\cotuple{M,N}}}\areduce \conf{}{\imapsto{\inl M}}$ where
+ \item $\conf{}{\imapsto{\cotuple{M,N}}}\areduce \conf{}{\imapsto{M}}$ where
        $M$ and $N$ do not contain $\abort$, $\comodL$ or $\reader c$
        for any locations $c,d$;
  \item  $\conf{}{\imapsto{C[\abort]}}\areduce
@@ -2480,11 +2483,15 @@ This concludes the translation.
    \\
    =&\{0\mapsto\p u,1\mapsto \p v\}\enspace.
   \end{align*}
-  The last two equations translates the global term that solves the
-  exclusive-or problem (Example~\ref{ex:xor}) for the same argument as
-  in Example~\ref{ex:solv}.
+  The last two equations result in a protocol that solves the
+  exclusive-or problem (Example~\ref{ex:xor}) for the same reason as the
+  protocol in Example~\ref{ex:solv}.
  \end{example}
 
+ Given the translation solves a typed input-output problem, we have to
+ make sure that the original global term solves the same problem.
+ Otherwise, the translation incorrectly produced a working protocol from
+ not-working a global term.
  We have to show that the translation is correct in the following sense.
   \begin{proposition}
    \label{general-sound}
@@ -2780,7 +2787,8 @@ When a finite set~$S$ is represented by a term~$M$,
 the set $S \cup \{c\}$ is represented by a term
 $\lambda x.\left(\ifte{x==c}{\linl {\bullet}}{Mx}\right)$.
 With the above construction, we define abbreviations
-like $\{c_0, c_1, c_2\}$.
+like $\{c_0, c_1, c_2\}$ although we do not equate $\{c_0, c_1, c_2\}$
+ and $\{c_0, c_2, c_1\}$.
 
 Now, we are ready to construct a hyperterm solving the two-party
 participating set problem.
@@ -2843,7 +2851,7 @@ Moreover, the same initial configuration can reduce to
  x\}}{\{0\mapsto\{y,x\}, 1\mapsto\{x,y\}\}}\enspace.
 \]
 There are no other normal forms.
-These three normal forms correspond to the three answers of the
+These three normal forms correspond to the three allowed answers of the
 two-party participating set problem.
 \end{proof}
 
@@ -2855,7 +2863,9 @@ and proved cut-elimination theorem for them.  As a special case he gives
 $S_\omega$, which coincides with G\"odel--Dummett logic.
 The proof of cut-elimination is similar to that of
 Gentzen~\cite{gentzen}, involving the mix rule.
-No lambda calculi has been developed based on Sonobe's deduction system.
+No lambda calculi has been developed based on Sonobe's deduction system,
+probably because the deduction system involves a rule having unlimited
+number of assumptions.
 
 Avron~\cite{avron91} formulates a
 hypersequent calculus for G\"odel--Dummett logic and proves
@@ -2874,7 +2884,7 @@ obviously reveal the computational content.
 
 Baaz, Ciabattoni and Ferm\"uller~\cite{natural} propose a
 hypersequent-style natural deduction for G\"odel--Dummett logic, but
-did not define reduction.
+did not define reductions.
 Ferm\"uller~\cite{parallel} gives a game semantics for G\"odel--Dummett
 logic, which is based on Lorenzen game~\cite{curryhoward} and essentially
 proof searching bottom-to-up.
@@ -2884,8 +2894,7 @@ sometimes forked and proceeds concurrently.
 However, he gives no explicit mention on waitfree computation.
 
 Among numerous typed programming languages with parallelism,
-to our knowledge, none exhibits
-the connection of G\"odel--Dummett logic and waitfreedom.
+to our knowledge, none models waitfreedom.
 Abramsky~\cite{abramsky1993computational}'s calculus $\mathsf{PE}_2$
 for classical linear logic is
 deterministic
@@ -2899,7 +2908,7 @@ $\pi$-calculus \cite{hondatokoro}
 have too strong synchronization abilities to model waitfreedom because
 a process can wait for an input.
 
-Hirai~\cite{hirailpar} compares the temporal order of waitfree
+Hirai~\cite{hirailpar,hiraimaster} compares the temporal order of waitfree
 computation and the Kripke models of a modal logic similar to
 G\"odel--Dummett logic.  The current
 work witnesses the constructive content of
@@ -2920,16 +2929,24 @@ the logics characterized by the Kripke frames of bounded
 width~\citep{Ciabattoni01042001} because \lgd\, is a special case of
 width~1.  However, the author has no immediate idea on
 developing a general hyper-lambda calculi encompassing
-all logics with cut-eliminatable hypersequent calculi.
+all logics with cut-eliminatable hypersequent calculi~\citep{alg}.
+Some high-performance computation people suggested to study a weaker
+shared memory consistency than sequential consistency; that is, to
+remove the assumption that all read and write operations on shared
+memory are lined up in a temporal total order.
+In their realm, sequential consistency is considered too strong to
+assume everywhere.  If we are to study a weaker shared memory
+consistency in the same approach as here,
+we have to study a weaker logic.
 
-We are also planning to develop a waitfree protocol verification mechanism in Coq
+It will be worthwhile to develop a waitfree protocol verification mechanism in Coq
 because it is valuable to
 remove unnecessary synchronization while keeping the program correct
 in high performance computing.
 
 An anonymous referee of FLOPS 2012 pointed out that the introduction of
 modalities [$i$] is interesting on its own.
-We have not investigated the semantics of these modalities.
+We have not investigated the logical meaning of these modalities.
 We suspect these modalities are similar to nominals in the hybrid
 logic~\citep{blackburn2000}.
 
@@ -2949,7 +2966,6 @@ If that succeeds for classical logic, it will be interesting%
 Nontheless there are some more immediate future work.
 It would be better if we explicitly implement n-party participating set
 problem using \lgd.
-
 Another remaining task is to formalize the strong normalization theorem
 formally in a proof assistant like Coq or Isabelle.
 \citet{ttlifting} provided a concise proof of strong normalization of
@@ -2957,13 +2973,6 @@ the natural deduction for
 intuitionistic propositional logic, containing disjunction.
 Lindley's proof was formalized in Nominal Isabelle by
 \citet{Doczkal2009}.
-
-Some high-performance computation people suggest to study a weaker
-shared memory consistency than sequential consistency.
-In their realm, sequential consistency is considered too strong to
-assume everywhere.  If we are to study a weaker shared memory
-consistency in the same approach as here,
-we have to study a weaker logic.
 
 In Chapter~\ref{ch:exchange}, we studied an axiom
 $(\phi\limp\psi)\otimes(\psi\limp\phi)$.

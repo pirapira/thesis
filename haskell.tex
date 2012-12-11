@@ -120,7 +120,7 @@ obtains \verb@a@ after executing the protocol.
 \begin{center}
  \AxiomC{\tt K t a}
  \AxiomC{\tt K s b}
- \BinaryInfC{$\mathtt{K\, t\, b}\hmid \mathtt{K\, s\, a}$}
+ \BinaryInfC{\texttt{K t b}$\hmid$ \texttt{K s a}}
  \DisplayProof
 \end{center}
 However, this derivation only contains types but not programs.  In this
@@ -130,8 +130,12 @@ type in Haskell.
 From this perspective, the merit of this chapter is showing the
 hyper-lambda calculi are implementable.
 Hypersequents are roughly a sequence of
-typed terms.  They are only introduced as an apparatus for obtaining
-cut-elimination theorems for more logics than simple sequents provide.
+typed terms.  At first, they were introduced as an apparatus for obtaining
+cut-elimination theorems for more logics.
+However, as we have seen in Chapters~\ref{ch:exchange}, \ref{ch:lambda}
+and \ref{ch:pole}, we can obtain programming languages out of
+hypersequent calculi.
+Thus it is natural to try implementing the programming languages.
 
 \section{An Example Program}
 
@@ -183,7 +187,7 @@ main = execute content
  \label{fig:example}
 \end{figure*}
 
-We show an example program written with our library
+We show an example program written using our library
 (Figure~\ref{fig:example}).  This is a concrete realization of the
 simplest nontrivial waitfree computation described at the end of Subsection~\ref{subsect:wf}.
 
@@ -1081,7 +1085,7 @@ protocols such as
 a rule containing more than two threads and a more direct embedding of the
 participating set problem.
 
-Moreover, in order to obtain performance, we have to change the run time
+Moreover, in order to obtain performance, we have to change the runtime
 system of Haskell.  Since the current implementation uses MVar mechanism
 that involve spin-locks, it must be unnecessarily slow.  In theory, waitfree
 computation can be implemented without locks.  In practice also, with
