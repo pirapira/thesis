@@ -1615,7 +1615,7 @@ a \textit{typed protocol}\index{typed protocol}\footnote{We formulated this defi
 
 \subsection{Typed Waitfree Computation}
 
-We define when a protocol solves a typed
+We define when a typed protocol solves a typed
 input-output problem.
 This definition is obtained by modifying \citet{Saks:1993vq}'s
 definition of input-output problems.
@@ -1917,8 +1917,8 @@ schedule~$\sigma$,
   \true$ and the decision value of process~1 is $d_1=\false$.
   The tuple $\tuple{(x_0,x_1),(d_0,d_1)}$ is in $R_{\mathtt{xor}}$.
   The same argument goes for different $(x_0,x_1)$'s.
-  Thus, the protocol solves the exclusive-or problem on schedule~$\sigma$.
-  Actually, the protocol solves the problem for all schedules.
+  Thus, the typed protocol solves the exclusive-or problem on schedule~$\sigma$.
+  Actually, the typed protocol solves the problem for all schedules.
   To see why, we can do case analysis on an arbitrarily taken schedule:
   one case where all processes produce non-$\epsilon$ outputs and the other case where
   one of the prcesses produces a non-$\epsilon$ output.  There is no possibility where no
@@ -1929,7 +1929,7 @@ schedule~$\sigma$,
   contains 0, the execution proceeds like in Table~\ref{table:exec}.
   Otherwise, the first block must contain 1 so that the execution
   proceeds like Table~\ref{table:exec} with 0 and 1 swapped.
-  In either case, the protocol solves the task.
+  In either case, the typed protocol solves the task.
   In the second case, the output producing process can
   produce whatever output to meet the task because the other process
   produces~$\epsilon$.
@@ -2136,7 +2136,7 @@ we show that the ability of the waitfree protocols and \lgd\, are the same.
 \end{theorem}
 
 In order to prove this theorem,
-we are going to translate a typed hyperterm into a protocol inductively
+we are going to translate a typed hyperterm into a typed protocol inductively
 on the type derivations.
 To make induction work, we use the following auxiliary notion.
 An \textit{investigator}\index{investigator} is a partial map from processes
@@ -2382,7 +2382,7 @@ change the form of global terms.
 When $(\tj{x_i}{[i]\iota_i})_{i\in\processes}
 \tr\tj{M}(\wwedge_{i\in \processes}[i]o_i)$ is
 derivable,
-we can define a protocol using the above translation.
+we can define a typed protocol using the above translation.
 We set $\mathtt i_i$ to be ${\p x}_{x_i}$, ${\p o}_i$ to be arbitrarily
 chosen fresh program variables, $L$ to be the set of locations
 occurring in the derivation, we set the family of programs to be
@@ -2483,14 +2483,14 @@ This concludes the translation.
    \\
    =&\{0\mapsto\p u,1\mapsto \p v\}\enspace.
   \end{align*}
-  The last two equations result in a protocol that solves the
+  The last two equations result in a typed protocol that solves the
   exclusive-or problem (Example~\ref{ex:xor}) for the same reason as the
-  protocol in Example~\ref{ex:solv}.
+  typed protocol in Example~\ref{ex:solv}.
  \end{example}
 
  Given the translation solves a typed input-output problem, we have to
  make sure that the original global term solves the same problem.
- Otherwise, the translation incorrectly produced a working protocol from
+ Otherwise, the translation incorrectly produced a working typed protocol from
  not-working a global term.
  We have to show that the translation is correct in the following sense.
   \begin{proposition}

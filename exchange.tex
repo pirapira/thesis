@@ -495,7 +495,7 @@ Another example shows how we can type the term $\co c(c x)$.
 
  We state another fact, which is known to
  \citet{casari1989} who wrote ``in the $\ell$-logic there are no
- ``additive extrema.''
+ `additive extrema.'{}''
  \begin{corollary}[Incompatibility of additive disjunctive unit]
   \label{no-falsehood}
   If there is a formula~$\zero$ such that $\zero\tr\phi$ is derivable
@@ -535,8 +535,8 @@ Another example shows how we can type the term $\co c(c x)$.
  computational interpretation:
  of the communicating pair $c\colon \phi\limp\psi$ and $\co c\colon
  \psi\limp\phi$,
- with the help of weakening, we can throw away one primitive and still use the
- other primitive.
+ with the help of weakening, we can throw away one primitive~$\co c$ and still use the
+ other primitive~$c$.
  \begin{proposition}[Incompatibility of weakening with Abelian logic]
   If we add the weakening rule
    \begin{center}
@@ -708,7 +708,13 @@ we add the semantics for channels.
 
 \section{Type Safety}
 
- \begin{proposition}[Safety]
+When we can evaluate a derivable hypersequent,
+the result is also derivable.
+Especially, this shows that whenever a communicating term is used
+the communicating term is used according to types
+shown in the Sync rule occurrence introducing the communicating term.
+
+ \begin{theorem}[Safety of Amida calculus]
   \label{safety}
   If terms $t_0,\ldots,t_n$ have a hypersequent
    $\tr \tj{t_0}{\phi_0} \hmid \cdots \hmid \tr \tj{t_n}{\phi_n}$ and
@@ -718,7 +724,7 @@ we add the semantics for channels.
    \tr\tj{v_0}{\phi_0} \hmid \cdots \hmid \tr \tj{v_n}{\phi_n}
   \]
   is also derivable.
- \end{proposition}
+ \end{theorem}
  \begin{proof}
   By induction on evaluation using propositions below.
   We classify the situation by the last rule used.
@@ -1604,7 +1610,7 @@ x.t$ of type $\one\limp\phi$ so that $\lambda x.t\eval \lambda x.t$ is derivable
 \section{Correctness with Respect to Abelian Logic}
 \label{correct-abelian}
 
-Here we compare Amida calculus and Abelian logic.
+In this section, we compare Amida calculus and Abelian logic.
 First, we show that all Abelian logic theorems are inhabited in Amida
 calculus (completeness of Amdia calculus).
 After that, we show that all types inhabited in Amida calculus are
@@ -1943,7 +1949,7 @@ For a hypersequent~$\hyper$,
 	 % twoedges
 	 \includegraphics[scale=0.4]{twoedges.eps}
 	\end{center}
-       replacing these with
+       replacing $e$ with
 	\begin{center}
 	 \includegraphics[scale=0.4]{twoedges_amida.eps}
 	\end{center}
@@ -1964,7 +1970,7 @@ For a hypersequent~$\hyper$,
        and one infinite path $\cdots e_m e_a e_m e_a \cdots$.
 \end{itemize}
  \end{definition}
- In these clauses, we call the edge labelled~$e_a$ Amida edges.
+ In these clauses, we call the edges labelled~$e_a$ Amida edges.
 
  \begin{definition}[Correct Amida nets]
   A correct Amida net is an Amida net satisfying the three conditions
@@ -1983,7 +1989,7 @@ and
 The difference is the labels at the bottom.
 Although Amida edges cross the paths,
 they do not transfer labels.
-This difference causes Amida nets to validate Amida axiom.
+This difference of labels makes Amida nets validate Amida axiom.
  \begin{example}[A correct Amida net for the Amida axiom]
   Here is a correct Amida net for the Amida axiom $(X\limp Y)\otimes(Y\limp X)$.
    \begin{center}
@@ -2154,7 +2160,7 @@ This example shows that our type system is can type some terms that
 the type system in \citet{pfenning2010} cannot.
 
 The most complicated example in \citet{pfenning2010} involves a drink server.
- \begin{example}[Drink Server from \citet{pfenning2010} in Amida
+ \begin{example}[Drink server from \citet{pfenning2010} in Amida
   calculus]
   \begin{align*}
    ServerProto &= (N\limp I \limp (N\otimes \one))\with (N\limp( I
@@ -2278,9 +2284,9 @@ One of their typing rules
   \G\tr\tj{\nu\tj{x}{\phi^\ell}.t[x_L/x][x_R/y]}{\psi}$}
   \DisplayProof\enspace.
  \end{center}
- Usually, the Curry--Howard correspondence is followed from logical world
+ In many cases, the Curry--Howard correspondence is followed from logical world
  to the programming world: for already known logics, new lambda
- calculi are invented (e.g.~\citep{lambdamu,murphy,abe2007,kimurakakutani2011}).
+ calculi are invented (e.g.~\citep{lambdamu,murphy,abe2007}).
  However, in our case, it seems that we have just
  found a connection between
  an already known logic called Abelian logic and an already known
@@ -2314,7 +2320,7 @@ One of their typing rules
  The other is proof searching.
  We have investigated Amida calculus, which embodies the proof reduction
  approach on Amida axiom.
- Than what implication does
+ Then what implication does
  Amida axiom have in
  the proof searching approach?
  Let us cite an example from \citet[A.2]{kobayashi-yonezawa}:

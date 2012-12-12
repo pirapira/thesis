@@ -1,0 +1,67 @@
+\documentclass{jsarticle}
+
+\usepackage{graphicx}
+\usepackage{amssymb,amsmath}
+\usepackage{amscd}
+
+
+\pagestyle{empty}
+
+\begin{document}
+ \begin{center}
+論文の内容の要旨
+\vskip 1cm
+
+Hyper-Lambda Calculi\\
+(ハイパーラムダ計算)
+
+\vskip 1cm
+氏名 平井　洋一
+ \end{center}
+
+\vskip 4cm
+
+ We propose hyper-lambda calculi, the typed lambda calculi based on
+ hypersequent calculi.  A hyper-lambda term is a finite
+ sequence of lambda terms, representing concurrent processes.  We give
+ two concrete hyper-lambda calculi: synchronous and asynchronous.  Both
+ employ a pair of communication primitives exchanging their inputs.
+ In the synchronous case, both sides succeed.  In the asynchronous case,
+ at least one side obtains the other side's input.
+ The synchronous calculus implements message-passing communication
+ and session types;
+ the asynchronous calculus characterizes shared-memory waitfree
+ communication.
+ Among processes of a typed hyper-lambda term,
+ all succeed in the synchronous case while
+ at least one succeeds in the asynchronous case.
+ Logically, the processes are interpreted conjunctively
+ in the synchronous case but disjunctively in the asynchronous case.
+ The synchronous calculus is based on Abelian logic:
+ $(\phi\multimap\psi)\otimes(\psi\multimap\phi)$ on top of multiplicative
+ additive fragment of intuitionistic linear
+ logic (without some units);
+ the asynchronous calculus is based on G\"odel--Dummett logic:
+ $(\phi\supset\psi)\lor(\psi\supset\phi)$ on top of intuitionistic logic.
+ The hyper-lambda calculi are in Curry--Howard correspondence with the
+ deduction systems for these logics.
+ We also treat another variant based on monoidal t-norm logic and
+ an implementation using Haskell.
+
+ Meanwhile, we discover a new representation of Abelian logic proofs
+ called Amida nets.  Amida nets are based on a special kind of directed
+ graphs called Lamarche's essential nets.
+ On top of Lamarche's essential nets,
+ we add a new kind of undirected edges called Amida edges.
+ Similarly to the Amida lotteries used by Japanese children,
+ when we follow a directed path in an Amida net, whenever we meet an
+ Amida edge, we have
+ to cross the Amida edge.  While Lamarche's essential nets characterize
+ fragments of intuitionistic linear logic, our Amida nets characterize
+ Abelian logic.  The name Amida calculus comes from the Amida lotteries.
+
+ The logics treated in this thesis, G\"odel--Dummett, monoidal t-norm
+ and Abelian logics were initially developed for algebraic interests,
+ but we reveal that these logics have computational applications as type
+ systems for concurrent processes.
+\end{document}

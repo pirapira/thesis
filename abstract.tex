@@ -1,5 +1,6 @@
 \begin{eabstract}
- We propose hyper-lambda calculi.  A hyper-lambda term is a finite
+ We propose hyper-lambda calculi, the typed lambda calculi based on
+ hypersequent calculi.  A hyper-lambda term is a finite
  sequence of lambda terms, representing concurrent processes.  We give
  two concrete hyper-lambda calculi: synchronous and asynchronous.  Both
  employ a
@@ -16,7 +17,7 @@
  Logically, the processes are interpreted conjunctively
  in the synchronous case but disjunctively in the asynchronous case.
  The synchronous calculus is based on Abelian logic:
- $(\phi\limp\psi)\otimes(\psi\limp\phi)$ on top of maltiplicative
+ $(\phi\limp\psi)\otimes(\psi\limp\phi)$ on top of multiplicative
  additive fragment of intuitionistic linear
  logic (without some units);
  the asynchronous calculus is based on G\"odel--Dummett logic:
@@ -24,11 +25,11 @@
  The hyper-lambda calculi are in Curry--Howard correspondence with the
  deduction systems for these logics.
  We also treat another variant based on monoidal t-norm logic and
- implimentation using Haskell.
+ an implementation using Haskell.
 \end{eabstract}
 
 \begin{jabstract}
- ハイパーラムダ計算を提案する．
+ ハイパーラムダ計算すなわちハイパー推件計算に基づく型付きラムダ計算を提案する．
  ハイパーラムダ項はラムダ項の有限列で，並列プロセスを表す．
  同期と非同期と二つのハイパーラムダ計算を与える．
  両者ともに，互いに入力を交換する通信子の対を用いる．

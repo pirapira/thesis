@@ -173,7 +173,8 @@ rerror th (h, _) = hPutStrLn h $ "Thread " ++ (show $ atid th) ++
                    " failed to read peer's input."
 
 content ::  IO (K ZeroT () :*: K (SucT ZeroT) () :*: HNil)
-content = comm (readH $ PortNumber 6000) rerror (readH $ PortNumber 6001) rerror >>= twoPrints
+content = comm (readH $ PortNumber 6000) rerror (readH $ PortNumber 6001) rerror
+          >>= twoPrints
 main :: IO ()
 main = execute content
 \end{spec}
@@ -826,24 +827,24 @@ twoBeforeComm :: IO (K ZeroT ((ZeroT, FirstT), (ZeroT, FirstT)) :*:
                      K FirstT ((FirstT, ZeroT), (FirstT, ZeroT)) :*: HNil)
 twoBeforeComm = two >>= (duplicateTwo -*- duplicateTwo -*- return)
   where duplicateTwo _ x = return (x,x)
-three__ :: IO (K FirstT ((FirstT, ZeroT), (FirstT, ZeroT)) :*:
-                 K ZeroT ((ZeroT, FirstT), SecondT) :*:
-                 K SecondT (SecondT, (ZeroT, FirstT)) :*: HNil)
-three__ = cycling $ comm twoBeforeComm putTwoResults hOwnId failOut
-printThreeResults0 :: (Thread u, Thread s, Thread t, Thread v) => u -> (s,(t,v)) -> IO ThreadStatus
-printThreeResults0 owner (c0, (c1, c2)) = putResult owner $ show $ [atid c0, atid c1, atid c2]
-printThreeResults1 :: (Thread u, Thread s, Thread t, Thread v) => u -> ((s,t),v) -> IO ThreadStatus
-printThreeResults1 owner ((c0, c1), c2) = putResult owner $ show $ [atid c0, atid c1, atid c2]
+printThreeResults0 :: (Thread u, Thread s, Thread t, Thread v) =>
+                      u -> (s,(t,v)) -> IO ThreadStatus
+printThreeResults0 owner (c0, (c1, c2)) = putResult owner $ show $
+  [atid c0, atid c1, atid c2]
+printThreeResults1 owner ((c0, c1), c2) = putResult owner $ show $
+  [atid c0, atid c1, atid c2]
 three :: IO (K FirstT ThreadStatus :*: K SecondT ThreadStatus :*:
              K ZeroT  ThreadStatus :*: K SecondT ThreadStatus :*: HNil)
-three = comm three__ putTwoResults hOwnId failOut
-   >>= (printThreeResults1 -*- printThreeResults0 -*- printThreeResults1
+three = comm (cycling $ comm twoBeforeComm putTwoResults hOwnId failOut)
+        putTwoResults hOwnId failOut
+        >>= (printThreeResults1 -*- printThreeResults0 -*- printThreeResults1
         -*- printThreeResults0 -*- return)
 twoLast :: IO ((K FirstT ThreadStatus) :*: (K SecondT ThreadStatus) :*: HNil)
 twoLast = comm hOwnId putOneResult hOwnId putOneResult >>=
-  (putTwoResults -*- putTwoResults -*- return)
+          (putTwoResults -*- putTwoResults -*- return)
 twoMid :: IO ((K ZeroT ThreadStatus) :*: (K SecondT ThreadStatus) :*: HNil)
-twoMid = comm hOwnId putOneResult hOwnId failOut >>= (putTwoResults -*- putTwoResults -*- return)
+twoMid = comm hOwnId putOneResult hOwnId failOut >>=
+         (putTwoResults -*- putTwoResults -*- return)
 main = execute (three `follows` twoMid `follows` twoLast)
 \end{spec}
  \caption{An implementation for participating set problem~\citep{participating} for three
@@ -1052,7 +1053,7 @@ communication with blocking operations and there is no way of
 obtaining a waitfree
 fragment of this library.
 
-Join patterns (first proposed as Join Calculus by \citet{join}) allow
+Join patterns (first proposed as the join calculus by \citet{join}) allow
 consuming messages from a group of
 channels simultaneously.  This involves waiting for a group of channels
 so that join patterns do not capture waitfreedom either.
@@ -1096,6 +1097,8 @@ One possible extension of our library is adding ``all-possible-results''
 mode.  When we execute a program under this mode, the library explores
 all possible executions and returns what can happen.
 
-Anyway, since we have shown that hypersequent based waitfree computation
+Notwithstanding, since we have shown that hypersequent based waitfree computation
 is implementable.  This at least supports the statement of
 \thref{th:soundness} in Chapter~\ref{ch:lambda}.
+Also as a side-effect, we obtained a type-checking implementation of a
+hyper-lambda calculus.
