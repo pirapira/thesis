@@ -26,7 +26,7 @@ DVIPDFMFLAGS = -p a4
 LaTeXDocument(hirai-thesis, hirai-thesis)
 
 .DEFAULT: hirai-thesis.pdf
-        cp ./hirai-thesis.pdf ~/Dropbox/hirai-thesis.pdf
+        # cp ./hirai-thesis.pdf ~/Dropbox/hirai-thesis.pdf
 	cp ./*.tex ~/Dropbox/
 
 clean:

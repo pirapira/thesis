@@ -1,4 +1,5 @@
  \section{Preliminaries}
+ \label{sec:prelim}
 
   We use ``iff\index{iff}'' as an abbreviation for ``if and only if.''
   We use set-theoretic concepts such as sets, relations and functions.
@@ -649,9 +650,9 @@ and the corresponding Postulate~(FC):
  y.\lambda z. xzy$, which is the combinator $C$, to the logical formula
  $(\beta\supset (\alpha\supset
  \gamma))\supset (\alpha\supset(\beta\supset\gamma))$.
- Throughout this thesis, we use $\colon$ to associate terms with types.
+ Throughout this thesis, we use colons~$\colon$ to associate terms with types.
 
- Henceforth, we do not give deduction system of a logic and
+ Henceforth, we do not give deduction systems of a logic and
  typing rules for a typed lambda calculi separately because
  the former can be obtained from the latter by this correspondence.
 The
@@ -665,11 +666,11 @@ introduction rule of implication is realized as the lambda abstraction
 and the elimination rule of implication is realized as the application
 of lambda terms.
 This encoding has a desirable property:
-the reductions in the lambda calculus corresponds to the reductions of
+the reductions in the lambda calculus correspond to the reductions of
 proofs that
-removes detours.
+remove detours.
 For example, suppose a natural deduction proof introduces an implication and then
-immediately eliminate the
+immediately eliminates the
 implication.  This proof can be encoded as a lambda term whose outermost
 structure is a $\beta$-redex: $(\lambda x. M)N$.
  The result of the $\beta$-reduction $M[N/x]$ encodes a proof tree using
@@ -682,7 +683,7 @@ called the Curry--Howard isomorphism.
 % The situation is similar to axiomatized geometry where lines and points
 % could be tables and chairs \fix{(cite)}.
 
-The material implications is justified in classical propositional logic.
+The material implications are justified in classical propositional logic.
 The latter view on implication, provided by BHK-interpretation, is most
 naturally embodied in the situation of
 intuitionistic propositional logic.  The last century saw their
@@ -691,7 +692,7 @@ logics\index{logic!superintuitionistic}), of which a typical example is
 called G\"odel--Dummett logic.
 In this thesis we investigate the Curry--Howard isomorphism for
 G\"odel--Dummett logic.  The G\"odel--Dummett
-logic\index{logic!G\"odel--Dummett} validates formulas
+logic\index{logic!G\"odel--Dummett} validates formulae
 of the form $(\phi\imp\psi)\lor(\psi\imp\phi)$, which is known as
 Dummett's axiom\index{axiom!Dummett's}\index{Dummett's
 axiom|see{axiom}}.  We add a construct to the simply typed lambda
@@ -704,7 +705,7 @@ well as the
 (intuitionistic) multiplicative
 additive fragment of linear logic.
 In the later chapter, we make a typing system that lacks contraction and
-weakening in Chapters~\ref{ch:exchange}, \ref{ch:pole}.
+weakening in Chapters~\ref{ch:exchange} and~\ref{ch:pole}.
 
 \subsubsection{Application to Programming Languages}
 
@@ -743,7 +744,7 @@ He axiomatized the logic by adding $(p\supset q)\lor(q\supset p)$ on top
 of the axioms for the intuitionistic propositional logic.
 Thomas~\citep{thomas1962} axiomatized
  the logic on $n$-element chains using Dummett's axiom and the
- formula~$F_{n+1}$,
+ formula~$F_{n+1}$ that appeared in \citet{godelprop},
  which is rewritten using only implications but no disjunction or conjunction.
 
 \subsubsection{Sonobe's Gentzen-Style Calculus}
@@ -783,7 +784,8 @@ Such a rule is called a \textit{structural
 rule}\index{rule!structural}\index{structural rule} as opposed to a
 logical rule\index{rule!logical}\index{logical rule}.
 
-For the hypersequent calculus with the communication rule,
+For the hypersequent calculus with the \textit{communication
+rule}\index{rule!communication}\index{communication rule},
 \citet{avron91} showed cut-elimination theorem.
 He asked what is the computational content of G\"odel--Dummett and other
 intermediate logics (see the beginning of Chapter~\ref{ch:lambda} for

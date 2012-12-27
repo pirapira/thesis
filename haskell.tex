@@ -77,13 +77,18 @@ slow: they can delay for unspecified amount of time and the threads
 have no control over the delay. Waitfreedom prohibits a thread from
 waiting for another; that is, a thread cannot choose to stay at the
 store until another thread comes to the store; nor can a thread
-keep visiting the store until another thread comes to the store.  The
+keep visiting the store until another thread comes to the
+store\footnote{Thus a thread cannot busy-wait for the shared memory to
+be filled.}.
+The
 latter restriction can be formalized as existence of a constant natural
 number~$k$ so
 that no thread visits the store more than
 $k$-times in any execution.  So, when a thread consumes all permitted
 visits to the store, the thread has to give up receiving anything yet to come
-from other threads.
+from other threads.  One way to enforce this restriction is prohibiting
+looping so that each thread can make steps at most the number of lines
+in its program.
 
 This notion of waitfreedom is originally imperative: involving reads from and writes to
 the memory and the ordering of events.  In other words, this description
@@ -129,7 +134,7 @@ type in Haskell.
 
 From this perspective, the merit of this chapter is showing the
 hyper-lambda calculi are implementable.
-Hypersequents are roughly a sequence of
+Hypersequents are roughly sequences of
 typed terms.  At first, they were introduced as an apparatus for obtaining
 cut-elimination theorems for more logics.
 However, as we have seen in Chapters~\ref{ch:exchange}, \ref{ch:lambda}
@@ -248,7 +253,8 @@ In any of these six cases, either thread 0 obtains thread 1's input or 1 obtains
 
 We look at the source code of this sample program in Figure~\ref{fig:example}.
 
-An obvious thing to do is to establish a TCP connection.  This is done
+For implementing the above described external behaviour,
+an obvious thing to do is to establish a TCP connection.  This is done
 by a function called \verb@handle@.   The input of \verb@handle@ is a
 \verb@PortID@, which is the port number.  The output of \verb@handle@ is
 a \verb@Handle@, which is a TCP connection.
@@ -311,7 +317,8 @@ thread \verb@t@
 computes \verb@(b,a)@ value and
 \verb@s@ computes \verb@(d,c)@ value successfully, the \verb@comm@ function guarantees either
 \verb@t@ obtains the \verb@c@ value or \verb@s@ obtains the \verb@a@ value.  The \verb@b@ value
-and the \verb@d@ value are only used locally.  Without this distinction of
+and the \verb@d@ value are only used locally.
+Without this distinction of
 local and remote usage, the TCP connections would be communicated
 together with the inputs so that the connections are not closed until all
 threads terminates.
@@ -909,7 +916,7 @@ three__ :: IO
 \end{spec}
 Finally, \verb@SecondT@ competes with \verb@FirstT@.  This makes a hypersequent with
 any component containing all thread's ids.  Since at least one component succeeds,
-at least one thread obtain all threads' ids.
+at least one thread obtains all threads' ids.
 
 However, the participating set problem requires more.  The following
 output does not conform to the problem although one thread has obtained
@@ -924,7 +931,7 @@ In this case threads 0 and 2 have to compete in order to decide which
 is slower.  In general, either \verb@ZeroT@--\verb@SecondT@ or
 \verb@FirstT@--\verb@SecondT@ competition is required so we do both and
 concatenate the three competitions as one derivation.
-Both of the two thread competition is similar to the simplest nontrivial
+Both of the two thread competition are similar to the simplest nontrivial
 waitfree protocol already explained so we omit the details.  The whole
 program is shown in Figure~\ref{fig:complete}.
 \begin{spec}
@@ -940,7 +947,7 @@ main = execute $three `follows` twoMid `follows` twoLast
 
 There are many functional programming languages (OCaml, Haskell, Clean
 etc.) that employ intuitionistic logic for their type systems.
-The hypersequent formulation that we employed is very similar to that of
+The hypersequent formulation that we employ is very similar to that of
 G\"odel--Dummett logic, which is among
 intermediate logics~\citep{umezawa} between intuitionistic and
 classical logics.
@@ -948,7 +955,7 @@ classical logics.
 G\"odel--Dummett logic~\citep{dummett59} was originally introduced as a logic
 obtained by adding axioms of the form
 $(\varphi\rightarrow\psi)\vee(\psi\rightarrow\varphi)$ to
-intuitionistic propositional logic.　　
+intuitionistic propositional logic.
 
 \citet{avron91} proposed an alternative formulation of the same logic.
  Instead of the axioms

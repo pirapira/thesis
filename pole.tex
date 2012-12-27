@@ -75,6 +75,7 @@ Danos and Krivine~\citep{danos-krivine}'s.
 We assume a set~$\pvar$ of propositional variables whose cardinality is
 countably infinite.
 We also assume countably infinitely many locations with involution
+$c\mapsto \co c$
 satisfying $\co c\neq c$ and $\co{\co c} = c$.
 Metavariable~$c$ runs over locations.
 An \textit{a-term}\index{term!a-term} (asynchronous term)~$t$ is defined
@@ -129,8 +130,6 @@ that satisfy:
 	    $[\lambda x.t,u\cdot\pi],S
 	     \ared'
 	     [t[u/x],      \pi],S$\enspace;
- \item[(load)]
-	    $[u,\pi],S\ared'[u,\pi],S$\enspace;
  \item[(ask)]
       $[\mat t x u y v,\pi], S\ared' [t,\mats x u \pi y v \pi], S$\enspace;
  \item[(ansL)]
@@ -803,8 +802,7 @@ same time.
 		t_1[{t_0}/\hat x][\vec{g}/\G],\pi\conc{e}\conc
 	       e_0\conc{e_1}\conc e_{\mathcal H'}\enspace.
 	       \]
-	       By (load),
-	       we have $({t_0}, e_0)\in\sem{\phi_0}$ so, by
+	       We have $({t_0}, e_0)\in\sem{\phi_0}$ so, by
 	       induction hypothesis~\ref{c:first},
 	       the reduct is in $\bbot$.
 	       Since $\bbot$ is closed for $\rev\sred$, the original

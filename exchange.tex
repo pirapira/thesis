@@ -157,6 +157,7 @@ with \textit{free variables}\index{free variable}\index{variable!free}~$S$.
 We assume countably infinitely many \textit{channels}\index{channel}
 with involution satisfying $\co c\neq c$ and $\co{\co c} = c$.
 \begin{itemize}
+ \item $\ast$ is a term with free variables~$\emptyset$,
  \item a variable $x$ is a term with free variables $\{x\}$,
  \item if $t$ is a term with free variables~$S$, $u$ is a term with
        free variables~$S'$, and moreover $S$ and $S'$ are disjoint, then $t\otimes
@@ -649,6 +650,11 @@ we add the semantics for channels.
   \ruleskip
   \AxiomC{}
   \UnaryInfC{$\lambda x.t\eval \lambda x.t$}
+  \DisplayProof
+  \hfill
+  \AxiomC{$\hypere\hmid t\eval\lambda x.t'\hmid u\eval v\hmid
+  t'[v/x]\eval w$}
+  \UnaryInfC{$\hypere \hmid tu \eval w$}
   \DisplayProof
   \ruleskip
   \AxiomC{$\hypere\hmid t\eval v\hmid u\eval w$}
@@ -1205,7 +1211,7 @@ x.t$ of type $\one\limp\phi$ so that $\lambda x.t\eval \lambda x.t$ is derivable
 	 \hypert\hmid \G,\tj{x}{\phi^\ell}\tr\tj{t}{\psi}\hmid
 	\D,\tj{y}{\overline{\phi^\ell}}\tr\tj{u}{\theta}
 	\]
-	are derivable,
+	is derivable,
 	\[
 	\hypert\hmid \G\tr\tj{t[\leftside{\phi^\ell}/ x]}{\psi}
 	\hmid \D\tr\tj{u[\rightside{\phi^\ell}/ y]}{\theta}
@@ -1785,7 +1791,7 @@ Abelian logics provides as some facts.
  in Amida calculus.
 \end{corollary}
 \begin{corollary}[Prelinearity in Amida calculus]
- Prelinearity is inhabited $(\phi\limp\psi)\oplus(\psi\limp\phi)$ is
+ Prelinearity $(\phi\limp\psi)\oplus(\psi\limp\phi)$ is
  inhabited in Amida calculus.
 \end{corollary}
 
@@ -1882,7 +1888,7 @@ formulae so that the essential net is uniquely determined.}.
 
  \begin{example}[An essential net of the Amida axiom] \label{essential-amida}
   Here is one of the essential nets of
-  the Amida axiom $(X^-\parr^+Y^+)\otimes^+(Y^-\parr^+ Y^+)$.
+  the Amida axiom $(X^-\parr^+Y^+)\otimes^+(Y^-\parr^+ X^+)$.
    \begin{center}
     \includegraphics[scale=0.4]{amida-essential.eps}
    \end{center}
@@ -2136,7 +2142,7 @@ the process~$P$ should be typable as
  \vdash P::x:(A\limp B)\otimes(B\limp A)\enspace.
 \]
 However, such typing is not possible because $(A\limp B)\otimes (B\limp
-A)$ is not a theorem of dual intuitionistic lienar logic (DILL),which
+A)$ is not a theorem of dual intuitionistic linear logic (DILL), which
 their type system
 is based on.
 In our type system, the following sequent is derivable
@@ -2340,7 +2346,7 @@ One of their typing rules
  is derivable.
  This suggests that the Amida axiom states that some
  computation is reversible in the context of proof searching.
- We are not sure whether this is very
+ We suspect that this can be
  useful within the realm of reversible computation~\citep{revcon}.
 
 \section{Discussion}
@@ -2455,7 +2461,8 @@ of an existing ML family programming language, we have to choose the
 existing language carefully.
 For example, OCaml and Haskell uses intuitionistic type system so if we
 use these languages naively, Amida axiom makes the type system
-inconsistent.
+inconsistent and some communication primitives can be thrown away,
+leaving the peer deadlocked.
 The uniqueness type of the programming language Clean~\citep{parle1991}
 does not allow contraction, but the uniqueness type is
 too strong because their type system allows weakening.
@@ -2497,37 +2504,13 @@ $X, Y\tr X\hmid \tr Y$ can be derived with a cut rule application:
 However, the conclusion is not derivable without the cut rule (as
 confirmed by a simple proof searching).
 
-On the other hand, if we translate the conclusion to a formula
-$\tr (X\limp (Y\limp X))\otimes Y$,
-then the formula is derivable without cut.
-\begin{center}
- \AxiomC{}
- \LL{Ax}
- \UnaryInfC{$X\tr X$}
- \AxiomC{}
- \LL{Ax}
- \UnaryInfC{$Y\tr Y$}
- \LL{Merge}
- \BinaryInfC{$X\tr X\hmid Y\tr Y$}
- \LL{Sync}
- \UnaryInfC{$X\tr Y\hmid Y\tr X$}
- \LL{$\limp$R}
- \UnaryInfC{$X\tr Y\hmid \tr Y\limp X$}
- \LL{Sync}
- \UnaryInfC{$X\tr Y\limp X\hmid \tr Y$}
- \LL{$\otimes$R}
- \UnaryInfC{$X\tr (Y\limp X)\otimes Y$}
- \DisplayProof
-\end{center}
-Since there is a cut-free deduction system for Abelian
+Worse, it is easy to see that the prelinearity
+$(\phi\limp\psi)\oplus(\psi\limp\phi)$ does not have a cut-free proof.
+However,
+since there is a cut-free deduction system for Abelian
 logic~\citep{metcalfe2006},
-we consider it natural to expect the same property for Amida calculus.
-One possible way of proving cut-elimination is translating a derivation
-of Amida calculus into \citet{metcalfe2006}'s system and applying
-\citet{metcalfe2006}'s cut-elimination and then translating the result
-back to Amida calculus.  Although in that case we have to translate a
-cut-free proof in \citet{metcalfe2006}'s system into a cut-free proof in
-our type system.
+we consider it natural to expect the same property for a suitable
+extension of Amida calculus.
 
 \subsection{The Problem with Excluded Middle}
 \label{computational-meaning}
@@ -2543,6 +2526,23 @@ middle.
 Since the closed term~$t$ uses additive constructs, we expect the
 multiplicative fragment to be much more explainable.
 
+\subsection{Non-Commutative Version of Amida Axiom}
+
+Including the
+the non-commutative version of Amida axiom $(\phi/\psi)\otimes(\psi/\phi)$
+to the full Lambek calculus turns out to be equivalent to
+adding $(\psi\setminus\phi)\otimes(\phi\setminus\psi)$.
+Algebraically speaking,
+the set of equations of the form $(x/y)\cdot(y/x) = 1$ forms an
+equational basis for $\mathsf{LG}$, the variety of lattice-ordered
+groups.
+In a lattice-ordered group,
+$(x/y)\cdot (y/x) = (x \cdot y^{-1}) \cdot (y \cdot x^{-1}) = 1$.
+On the other hand, assuming $(x/y)\cdot (y/x) = $, when we substitute 1
+for $x$, we obtain $(1/y)\cdot (y/1) = 1$.
+By the definition of residuation and the unit 1 of $\cdot$,
+we have $(1/y)\cdot y = 1$, which forms an equational basis for the
+variety of lattice-ordered groups \citep[Lemma~3.25]{residuated}.
 
 \section{Conclusion}
 
