@@ -720,7 +720,7 @@ Especially, this shows that whenever a communicating term is used
 the communicating term is used according to types
 shown in the Sync rule occurrence introducing the communicating term.
 
- \begin{theorem}[Safety of Amida calculus]
+ \begin{theorem}[Type Preservation of Amida calculus]
   \label{safety}
   If terms $t_0,\ldots,t_n$ have a hypersequent
    $\tr \tj{t_0}{\phi_0} \hmid \cdots \hmid \tr \tj{t_n}{\phi_n}$ and
@@ -894,7 +894,7 @@ x.t$ of type $\one\limp\phi$ so that $\lambda x.t\eval \lambda x.t$ is derivable
    condition is freshness of $c$ and $\co c$ in Figure~\ref{fig:eval}).
   \end{proof}
 
-  \section{Sessions and Processes as Abbreviations}
+  \section{Session Types and Processes as Abbreviations}
   \label{sec:session-process}
 
     In order to see the usefulness of the communication primitives,
@@ -2271,7 +2271,8 @@ our abbreviations are largely taken from Wadler's translations.
 
 \subsubsection{Giunti and Vasconcelos's Type System}
 
-\citet{giunti2010} gives a type system for the pi calculus, which is
+\citet{giunti2010} gives a type system for the pi calculus with the type
+preservation theorem. Their type system is
 extremely similar to our type system.
 They say ``the goal of this work is to equip types with a constructor
 able to denote the two ends of a same
