@@ -482,18 +482,16 @@ derivation whose endsequent is identical to the hypersequent.
    {com}
    {$\hypert_0\hmid\hypert_1\hmid\Gamma\tr\tj{\imapsto{(\comodL)M}}{[i]\psi}\hmid
    \Delta\tr\tj{\jmapsto{(\comodR)N}}{[j]\phi}$}
- \\ where locations $c$ and $d$ are fresh.
+ \\ where locations $c$ and $d$ are fresh and no location is contained
+ in both of the two branches.
 \ruleskip
 %% external structural
  \AxiomC{$\hypert\hmid \G\tr\tj{(M_i)_{i\in I}}{(\phi_i)_{i\in I}}\hmid
  \G\tr\tj{(N_i)_{i\in I}}{(\phi_i)_{i\in I}}$}
  \LL{EC}
  \UnaryInfC{$\hypert\hmid
- \G\tr\tj{(\cotuple{M_i',N_i'})_{i\in I}}{(\phi_i)_{i\in I}}$}
+ \G\tr\tj{(\cotuple{M_i,N_i})_{i\in I}}{(\phi_i)_{i\in I}}$}
  \DisplayProof
- \\where $I$ is a nonempty subset of $\processes$ and, for
- each $i\in\processes$, \\the pairs $\cotuple{M_i', N_i'}$
- is identical to either $\cotuple{M_i, N_i}$ or $\cotuple{N_i, M_i}$.
 \ruleskip
  \UnaryRule
  {$\hypert^+$}
@@ -901,7 +899,7 @@ The formal definition of the reductions follows.
 	\conf{[c\mapsto M]}{\imapsto{\reader d}}
 	$ where $M$ is a pure, closed term
   \item $\conf{[c\mapsto N]}{\imapsto{(\comodR) M}} \wreduce
-	\conf{[c\mapsto	N]}{\imapsto{\reader d}}$ where $M$ is a pure
+	\conf{[c\mapsto	N]}{\imapsto{\reader d}}$ where $M$ is a pure,
 	closed term.
  \end{itemize}
 \end{definition}
@@ -965,7 +963,7 @@ the left component.
  \conf{}{\imapsto{M}}$;
  \item
    $\conf{}{\imapsto{\cotuple{M,\abort}}}\areduce
- \conf{}{{M}}$;
+ \conf{}{\imapsto{M}}$;
  \item $\conf{}{\imapsto{\cotuple{M,N}}}\areduce \conf{}{\imapsto{M}}$ where
        $M$ and $N$ do not contain $\abort$, $\comodL$ or $\reader c$
        for any locations $c,d$;
@@ -1400,20 +1398,22 @@ strictly shortens the term under operation.
  Replacing all readers
  makes an infinite reduction sequence in the pure fragment.
  Moreover,
- the result of the translation is also well typed.
+ the result of the translation is also well typed\footnote{Because each
+ channel~$c$ is uniquely associated with a type~$\phi$ in the orignal
+ derivation and $\lstore_\infty(c)$ is a closed term of type~$\phi$.}.
  A typing derivation of the resulting hyperterm can be obtained by
  replacing com rules with EW rules and changing the process number in
  global types of some variables (c.f. the proof of \thref{nab}).
 
-We are aiming at reducing the problem to the strong normalization result
-by de Groote~\cite{Philippe2002js}.
-Since we have eliminated $(\comodL)M$ and $(\comodR)N$ occurrences,
-the remaining difference from \citet{Philippe2002js}'s lambda calculus
+ We are aiming at reducing the problem to the strong normalization result
+ by de Groote~\cite{Philippe2002js}.
+ Since we have eliminated $(\comodL)M$ and $(\comodR)N$ occurrences,
+ the remaining difference from \citet{Philippe2002js}'s lambda calculus
  is small: some abort propagation reductions
  and some permutative reductions involving $\cotuple{M,N}$.
-We just have to make sure that there are no infinite reduction sequences
-that consist of these two kinds of reductions only.
-We can deal with the permutative reductions following de
+ We just have to make sure that there are no infinite reduction sequences
+ that consist of these two kinds of reductions only.
+ We can deal with the permutative reductions following de
  Groote~\cite{Philippe2002js}'s strategy for introducing~$\bot$.
  There are no infinite sequence of abort propagation reductions keeping the
  number of $[M,N]$ constructions; and an abort propagation reduction cannot increase
@@ -1458,6 +1458,8 @@ waitfreedom,
 a single process waitfree protocol can solve any undecidable problem
 because a waitfree protocol can contain arbitrary functions.
 
+\newcommand{\true}{\texttt{t\kern -1.2pt t}}
+\newcommand{\false}{\texttt{f\kern -1.7pt f}}
 In order to define the set of inputs and outputs, we let
 $\lterm(\varphi)$ denote the set of closed, pure terms of
 type~$\varphi$,
@@ -1472,51 +1474,44 @@ task $R\subseteq \prod_{i\in \processes}\left(\lterm(\iota_i)\right)\times
  In words, a task~$R$ decides whether a pair of inputs and outputs is
  good or not.
 
-\newcommand{\true}{\texttt{t\kern -1.2pt t}}
-\newcommand{\false}{\texttt{f\kern -1.7pt f}}
-\newcommand{\xor}{\mathbin{\mathtt{xor}}}
- \begin{example}[The exclusive-or problem]
+ \begin{example}[The addition problem]
   \label{ex:xor}
   Let the set~$\processes$ be $\{0,1\}$,
   the types $\iota_0$, $\iota_1$, $o_0$ and $o_1$ be
-  $\bool = (\bot\imp\bot)\lor(\bot\imp\bot)$.
-  We define pure, closed terms
-  $\true$ to be $\inl{\lambda x.x}$ and
-  $\false$ to be $\inr{\lambda x.x}$.
-  Both $\true$ and $\false$ are of type $\bool$.
-  We define a binary operator exclusive-or ($\mathtt{xor}$) on
-  $\{\true,\false\}$:
-  $x \xor y$ is $\false$ when $x$ and $y$ are equal, $\true$ when $x$
-  and $y$ are different.
+  natural numbers\footnote{Actually, the type of natural numbers is not
+  definable in our language.
+  However, since we can define a three-valued type, we can make the same
+  argument below using $\mathbb{Z}/3$ instead of natural numbers.
+  }.
   Now we can define a task requiring at least one of the processes outputs
-  the exclusive-or of the inputs.  Specifically,
+  the addition of the inputs.  Specifically,
   \begin{align*}
-   R_{\mathtt{xor}} =&
-   \{\tuple{\{0\mapsto x, 1\mapsto y\},\{0\mapsto (x\xor y), 1\mapsto z\}}\mid
-   x,y,z\in\{\true,\false\}\}
+   R_{+} =&
+   \{\tuple{\{0\mapsto x, 1\mapsto y\},\{0\mapsto (x + y), 1\mapsto z\}}\mid
+   x,y,z\in\mathbb{N}\}
    \\ & \cup \{\tuple{\{0\mapsto x, 1\mapsto y\},\{0\mapsto z, 1\mapsto
-   (x \xor y)\}}\mid
-   x,y,z\in\{\true,\false\}\}\enspace.
+   (x + y)\}}\mid
+   x,y,z\in\mathbb{N}\}\enspace.
   \end{align*}
-  The equation above says the task~$R_{\mathtt{xor}}$ allows two different kinds of
+  The equation above says the task~$R_{+}$ allows two different kinds of
   behavior.  The first clause says if process~0 receives $x$ and
-  process~1 receives $y$ as their inputs, and process~0 outputs $x\xor
+  process~1 receives $y$ as their inputs, and process~0 outputs $x +
   y$; then whatever process~1 outputs, the two processes are considered
   to have solved the task.  The second clause poses a symmetric
   condition where the two processes are swapped.
-  In order to solve the task~$R_{\mathtt{xor}}$,
+  In order to solve the task~$R_{+}$,
   it is enough for one of the two processes to give the correct answer.
  \end{example}
-  \begin{example}[The exchange problem]
-   \label{ex:exchange}
-   There is another problem that requires
-   two processes to exchange their inputs.  Namely,
-  \begin{align*}
-   R_{\mathtt{exch}} =&
-   \{\tuple{\{0\mapsto x, 1\mapsto y\},\{0\mapsto y, 1\mapsto x\}}\mid
-   x,y\in\{\true,\false\}\}\enspace.
-  \end{align*}
-  \end{example}
+ \begin{example}[The exchange problem]
+  \label{ex:exchange}
+  There is another problem that requires
+  two processes to exchange their inputs.  Namely,
+ \begin{align*}
+  R_{\mathtt{exch}} =&
+  \{\tuple{\{0\mapsto x, 1\mapsto y\},\{0\mapsto y, 1\mapsto x\}}\mid
+  x,y\in\{\true,\false\}\}\enspace.
+ \end{align*}
+ \end{example}
 
 \subsection{Typed Protocols}
 
@@ -1593,34 +1588,30 @@ a \textit{typed protocol}\index{typed protocol}\footnote{We formulated this defi
        assumptions of the form $\tr\tj{\p y}{[i]t(\p y)}$ and
        $\tr\tj{c}{[i]W(c)}$.
 \end{itemize}
- \begin{example}[The exclusive-or protocol]
+ \begin{example}[The addition protocol]
   \label{ex:xor-protocol}
-  We give a concrete typed protocol that solves the exclusive-or task
+  We give a concrete typed protocol that solves the addition task
   (Example~\ref{ex:xor}).
   The set of locations~$C$ contains two elements $c$ and $d$.
   The locations $c$ and $d$ will be used as follows:
   process~0 writes to $d$ and reads from $c$, and process~1
   writes to $c$ and reads from $d$.
   Formally, $w(c) = 1$, $w(d) = 0$, $r(c) = 0$ and $r(d) = 1$.
-  Both locations will contain boolean values.
-  Formally, $W(c) = W(d) = (\bot\imp\bot)\lor(\bot\imp\bot)$.
+  Both locations will contain natural numbers.
+  Formally, $W(c) = W(d) = \mathbb{N}$.
   The set of program variables~$V$ is just $\{\p i_0, \p i_1, \p o_0, \p
   o_1\}$.
   The typed programs are
   \begin{align*}
-   p_0 &= d\leftarrow \p i_0; \p o_0\leftarrow xor(c, \p i_0); \p o_0
+   p_0 &= d\leftarrow \p i_0; \p o_0\leftarrow add(c, \p i_0); \p o_0
    \leftarrow \p i_0 \text{ and }\\
-   p_1 &= c\leftarrow \p i_1; \p o_1\leftarrow xor(c, \p i_1); \p o_1
+   p_1 &= c\leftarrow \p i_1; \p o_1\leftarrow add(c, \p i_1); \p o_1
    \leftarrow \p i_1
   \end{align*}
-  where $xor(M,N)$ is an abbreviation for
-  \begin{align*}
-  \mathsf{match\,}{M}\mathsf{of}\,&\inl{x}.{
-  (\mat{N}{z}{\false}{w}{\true})
-  }\,/\\ &\inr{y}.{
-  (\mat{N}{z}{\true}{w}{\false})
-  }\enspace.
-  \end{align*}
+  where $add(M,N)$ is a specially introduced\footnote{If we choose
+  $\mathbb{Z}/3$, we do not need to introduce a special term, but we can
+  define addition using nested \textsf{match} constructs.}
+  term that reduce to the sum.
   We omit the type assignments $t_0, t_1$ and typing derivations.
  \end{example}
 
@@ -1747,7 +1738,7 @@ snapshot!final}\index{snapshot!final system} of an execution.
  \begin{example}[An example of a run and an execution]
   Let $\processes$ be $\{0,1\}$ and $\Pi$ be the typed protocol given in
   Example~\ref{ex:xor-protocol}.
-  let us take $x_0 = \true$ and $x_1 = \false$.
+  let us take $x_0 = 3$ and $x_1 = 4$.
   Also we choose a schedule $\sigma$ as
   $\{0\}, \{0\}, \{0,1\}, \{1\}, \{1\}$, followed by an infinite
   sequence of $\{0,1\}$'s.
@@ -1757,8 +1748,8 @@ snapshot!final}\index{snapshot!final system} of an execution.
   The initial system snapshot $C_0=\tuple{\vec{s^0},\vec{v^0}}$ contains
   process snapshots
   \begin{align*}
-   s_0^0 = \tuple{p_0,\{\p i_0\mapsto \true\}}\text{ and }
-   s_1^0 = \tuple{p_1,\{\p i_1\mapsto \false\}}
+   s_0^0 = \tuple{p_0,\{\p i_0\mapsto 3\}}\text{ and }
+   s_1^0 = \tuple{p_1,\{\p i_1\mapsto 4\}}
   \end{align*}
   where $p_0$ and $p_1$ are defined in Example~\ref{ex:xor-protocol}.
   In the system snapshot, $\vec{v^0}$ maps both locations $c$ and $d$ to
@@ -1767,30 +1758,30 @@ snapshot!final}\index{snapshot!final system} of an execution.
   Since $\sigma_0 = \{0\}$, it does not contain 1.
   So, $s_1^1$ is the same as $s_1^0$.
   On the other hand, since $p_0$ is $d\leftarrow \p i_0; \p o_0\leftarrow
-  xor(c, \p i_0); \p o_0
+  add(c, \p i_0); \p o_0
    \leftarrow \p i_0$, $s_0^1$ is defined to be
   $\tuple{\p o_0\leftarrow
-  xor(c, \p i_0); \p o_0
-   \leftarrow \p i_0, \{\p i_0\mapsto \true\}}$ and
-  $v_d^1$ is defined to be $\true$.
+  add(c, \p i_0); \p o_0
+   \leftarrow \p i_0, \{\p i_0\mapsto 3\}}$ and
+  $v_d^1$ is defined to be $3$.
   However, $v_c^1$ is the same as $v_c^0$ and thus remains to be
   $\epsilon$.
   We conclude that $C_1=\tuple{\{0\mapsto s_0^1,1\mapsto s_1^1\},
-  \{c\mapsto \epsilon, d\mapsto \true\}}$.
+  \{c\mapsto \epsilon, d\mapsto 3\}}$.
   Again, the next snapshot $C_2$ is defined to be $C_1\update \sigma_1$.
   Since $\sigma_1 = \{0\}$, process~1's state is not changed so that
-  $s_0^2 = s_0^1 = \tuple{p_1,\{\p i_1\mapsto\false\}}$.
+  $s_0^2 = s_0^1 = \tuple{p_1,\{\p i_1\mapsto 4\}}$.
   On the other hand, since $s_0^1 = \tuple{\p o_0\leftarrow
-  xor(c, \p i_0); \p o_0
-   \leftarrow \p i_0, \{\p i_0\mapsto \true\}}$ and 0 is in $\sigma_1$,
+  add(c, \p i_0); \p o_0
+   \leftarrow \p i_0, \{\p i_0\mapsto 3\}}$ and 0 is in $\sigma_1$,
   process~0's state is updated to
   $s_0^2 = \tuple{\p o_0
-   \leftarrow \p i_0, \{\p i_0\mapsto \true\}}$
+   \leftarrow \p i_0, \{\p i_0\mapsto 3\}}$
   where the process failed to read from the location~$c$ because $v_c^1$
   is $\epsilon$.  As a result, the program variable~$\p o_i$ obtained
   no assignments.
   The store contents are not updated either so that $v_c^2 = v_c^1 =
-  \epsilon$ and $v_d^2 = v_d^1 = \true$.
+  \epsilon$ and $v_d^2 = v_d^1 = 3$.
   After four more rounds (including $i = 6$ to confirm $C_5 = C_6$), we
   obtain an execution shown in Table~\ref{table:exec}.
   Since $C_i = C_5$ for $i > 5$, the system snapshot~$C_5$ is the final
@@ -1800,55 +1791,48 @@ snapshot!final}\index{snapshot!final system} of an execution.
    \centering
    \caption{An example of execution of a typed protocol defined in
    Example~\ref{ex:xor-protocol}.
-   In the leftmost two columns,
-   $xor(M,N)$ is an abbreviation for
-   $\mathsf{match\,}{M}\mathsf{of}\,\inl{x}.{
-  (\mat{N}{z}{\false}{w}{\true})
-  }\,/ \inr{y}.{
-  (\mat{N}{z}{\true}{w}{\false})
-  }\enspace.$
    }
    \label{table:exec}
    \begin{tabular}{cllcc|l}
     $i$    & $s_0^i$&$s_1^i$ &$v_c^i$ &$v_d^i$ & $\sigma_i$ \\ \hline
-    0      & $\tuple{d\leftarrow \p i_0; \p o_0\leftarrow xor(c, \p i_0); \p o_0
-   \leftarrow \p i_0, \{\p i_0\mapsto \true\}}$
-	& $\tuple{c\leftarrow \p i_1; \p o_1\leftarrow xor(c, \p i_1); \p o_1
-   \leftarrow \p i_1, \{\p i_1\mapsto \false\}}$
+    0      & $\tuple{d\leftarrow \p i_0; \p o_0\leftarrow add(c, \p i_0); \p o_0
+   \leftarrow \p i_0, \{\p i_0\mapsto 3\}}$
+	& $\tuple{c\leftarrow \p i_1; \p o_1\leftarrow add(d, \p i_1); \p o_1
+   \leftarrow \p i_1, \{\p i_1\mapsto 4\}}$
 	    & $\epsilon$
 		& $\epsilon$
 		    & $\{0\}$ \\ \hline
     1      & $\tuple{\p o_0\leftarrow
-  xor(c, \p i_0); \p o_0
-   \leftarrow \p i_0, \{\p i_0\mapsto \true\}}$
-	& $\tuple{c\leftarrow \p i_1; \p o_1\leftarrow xor(c, \p i_1); \p o_1
-   \leftarrow \p i_1, \{\p i_1\mapsto \false\}}$
+        add(c, \p i_0); \p o_0
+        \leftarrow \p i_0, \{\p i_0\mapsto 3\}}$
+	& $\tuple{c\leftarrow \p i_1; \p o_1\leftarrow add(d, \p i_1); \p o_1
+   \leftarrow \p i_1, \{\p i_1\mapsto 4\}}$
 	    & $\epsilon$
-		& $\true$
+		& $3$
 		    & $\{0\}$ \\ \hline
     2      & $\tuple{\p o_0
-   \leftarrow \p i_0, \{\p i_0\mapsto \true\}}$
-	& $\tuple{c\leftarrow \p i_1; \p o_1\leftarrow xor(c, \p i_1); \p o_1
-   \leftarrow \p i_1, \{\p i_1\mapsto \false\}}$
+        \leftarrow \p i_0, \{\p i_0\mapsto 3\}}$
+        & $\tuple{c\leftarrow \p i_1; \p o_1\leftarrow add(d, \p i_1); \p o_1
+            \leftarrow \p i_1, \{\p i_1\mapsto 4\}}$
 	    & $\epsilon$
-		& $\true$
+		& $3$
 		    & \{0,1\} \\ \hline
-    3      & $\tuple{\epsilon, \{\p i_0\mapsto \true, \p o_0 \mapsto \true\}}$
-	& $\tuple{\p o_1\leftarrow xor(c, \p i_1); \p o_1
-   \leftarrow \p i_1, \{\p i_1\mapsto \false\}}$
-	    & $\false$
-		& $\true$
+    3      & $\tuple{\epsilon, \{\p i_0\mapsto 3, \p o_0 \mapsto 3\}}$
+        & $\tuple{\p o_1\leftarrow add(d, \p i_1); \p o_1
+   \leftarrow \p i_1, \{\p i_1\mapsto 4\}}$
+	    & $4$
+		& $3$
 		    & $\{1\}$ \\ \hline
-    4      & $\tuple{\epsilon, \{\p i_0\mapsto \true, \p o_0 \mapsto \true\}}$
+    4      & $\tuple{\epsilon, \{\p i_0\mapsto 3, \p o_0 \mapsto 3\}}$
 	& $\tuple{\p o_1
-   \leftarrow \p i_1, \{\p i_1\mapsto \false, \p o_1\mapsto \true\}}$
-	    & $\false$
-		& $\true$
+   \leftarrow \p i_1, \{\p i_1\mapsto 4, \p o_1\mapsto 7\}}$
+	    & $4$
+		& $3$
 		    & $\{1\}$\\ \hline
-    $\ge 5$& $\tuple{\epsilon, \{\p i_0\mapsto \true, \p o_0 \mapsto \true\}}$
-	& $\tuple{\epsilon, \{\p i_1\mapsto \false, \p o_1\mapsto \true\}}$
-	    & $\false$
-		& $\true$
+    $\ge 5$& $\tuple{\epsilon, \{\p i_0\mapsto 3, \p o_0 \mapsto 3\}}$
+	& $\tuple{\epsilon, \{\p i_1\mapsto 4, \p o_1\mapsto 7\}}$
+	    & $4$
+		& $3$
 		    & $\{0,1\}$ \\ \hline
    \end{tabular}
   \end{sidewaystable}
@@ -1891,32 +1875,28 @@ schedule~$\sigma$,
  \textit{waitfreely solvable}\index{waitfreely solvable}.
 
  \begin{example}[Permissible inputs and outputs]
-  The compatible inputs for the exclusive-or problem in
-  Example~\ref{ex:xor} are $(\true,\true)$, $(\true,\false)$,
-  $(\false,\true)$ and $(\false,\false)$.
-  For the input $(\true,\true)$, the exclusive-or of the inputs is
-  $\false$,
-  but the exclusive-or problem requires at least one process to output
-  the exclusive-or.
+  The compatible inputs for the addition problem in
+  Example~\ref{ex:xor} are pairs of natural numbers.
+  For the input $(3,4)$, the addition of the inputs is
+  $7$,
+  but the addition problem requires at least one process to output
+  the sum.
   Moreover, when process~0 is faulty, process~0 is allowed to output
   $\epsilon$.
-  In that case, whether process~1 outputs $\true$ or $\false$,
-  the exclusive-or problem is solved because both $(\epsilon,\true)$ and
-  $(\epsilon,\false)$ are compatible with some vector $\vec b$ such that
-  $\tuple{(\true,\true), \vec b} \in R_{\mathtt{xor}}$.
-  Indeed, $(\epsilon,\true)$ is compatible with $(\true,\true)$ and
-  $(\epsilon,\false)$ is compatible with $(\true,\false)$.
-  In short, in the exclusive-or problem, if one process outputs
-  $\epsilon$, the other process is allowed to output $\true$ and $\false$.
+  In that case, whatever natural number process~1 outputs,
+  the addition problem is solved because any $(\epsilon,n) (n\in
+  \mathbb{N})$ is
+  compatible with some vector $\vec b$ in $R_{+}$.
+  In short, in the addition problem, if one process outputs
+  $\epsilon$, the other process is allowed to output whatever.
  \end{example}
 
- \begin{example}[An example of a typed protocol solving the exclusive-or task]
+ \begin{example}[An example of a typed protocol solving the addition task]
   \label{ex:solv}
-  In the execution in Table~\ref{table:exec}, we can replace $\true$
-  with $\false$ altogether, $\false$ with $\true$ altogether, or perform
-  both replacements.
+  In the execution in Table~\ref{table:exec}, we can replace $3$ and $4$
+  with any natural numbers and $7$ with the sum.
   This shows that the typed protocol in Example~\ref{ex:xor-protocol}
-  solves the exclusive-or problem in Example~\ref{ex:xor} on the
+  solves the addition problem in Example~\ref{ex:xor} on the
   schedule
   \[
   \sigma = (\{0\}, \{0\}, \{0,1\}, \{1\}, \{1\}, \{0,1\}, \{0,1\},\ldots)
@@ -1925,10 +1905,10 @@ schedule~$\sigma$,
   $\{0,1\}$'s.
   On schedule~$\sigma$, both processes 0 and 1 are non-faulty.
   In Table~\ref{table:exec}, the decision value of process~0 is $d_0 =
-  \true$ and the decision value of process~1 is $d_1=\false$.
-  The tuple $\tuple{(x_0,x_1),(d_0,d_1)}$ is in $R_{\mathtt{xor}}$.
+  3$ and the decision value of process~1 is $d_1=7$.
+  The tuple $\tuple{(x_0,x_1),(d_0,d_1)}$ is in $R_{+}$.
   The same argument goes for different $(x_0,x_1)$'s.
-  Thus, the typed protocol solves the exclusive-or problem on schedule~$\sigma$.
+  Thus, the typed protocol solves the addition problem on schedule~$\sigma$.
   Actually, the typed protocol solves the problem for all schedules.
   To see why, we can do case analysis on an arbitrarily taken schedule:
   one case where all processes produce non-$\epsilon$ outputs and the other case where
@@ -1988,13 +1968,14 @@ we show that the ability of the waitfree protocols and \lgd\, are the same.
  % looks like we assume subformula property
 \end{definition}
 
- \begin{example}[A global term solving the exclusive-or problem]
+ \begin{example}[A global term solving the addition problem]
   For the exclusive-or problem (defined in Example~\ref{ex:xor}), there is
-  a global term $\{0\mapsto \cotuple{xor((\comodL)x_0,x_0),x_0},
-  1\mapsto\cotuple{xor((\comodR)x_1,x_1),x_1}\}$ that solves the
+  a global term $\{0\mapsto \cotuple{add((\comodL)x_0,x_0),x_0},
+  1\mapsto\cotuple{add((\comodR)x_1,x_1),x_1}\}$ that solves the
   problem.
   The global term can be typed as in Figure~\ref{fig:solving}.
  \end{example}
+
 
  \begin{sidewaysfigure}  %fig:solving
   \centering
@@ -2003,20 +1984,20 @@ we show that the ability of the waitfree protocols and \lgd\, are the same.
    \end{flushleft}
   \AxiomC{}
   \LL{Ax}
-  \UnaryInfC{$\tj{x}{[0]\bool}\tr\tj{x}{[0]\bool}$}
+  \UnaryInfC{$\tj{x}{[0]\mathbb{N}}\tr\tj{x}{[0]\nat}$}
   \AxiomC{$\vdots$}
-  \LL{$xor$}
+  \LL{$add$}
   \BinaryInfC{$
-  \tj{x}{[0]\bool}\tr\tj{\{0\mapsto xor((\comodL)x,x)\}}{[0]\bool}\hmid
-  \tj{y}{[1]\bool}\tr\tj{\{1\mapsto (\comodR)y\}}{[1]\bool}
+  \tj{x}{[0]\nat}\tr\tj{\{0\mapsto add((\comodL)x,x)\}}{[0]\nat}\hmid
+  \tj{y}{[1]\nat}\tr\tj{\{1\mapsto (\comodR)y\}}{[1]\nat}
   $}
   \AxiomC{}
   \LL{Ax}
-  \UnaryInfC{$\tj{y}{[1]\bool}\tr\tj{y}{[1]\bool}$}
-  \LL{$xor$}
+  \UnaryInfC{$\tj{y}{[1]\nat}\tr\tj{y}{[1]\nat}$}
+  \LL{$add$}
   \BinaryInfC{$
-  \tj{x}{[0]\bool}\tr\tj{\{0\mapsto xor((\comodL)x,x)\}}{[0]\bool}\hmid
-  \tj{y}{[1]\bool}\tr\tj{\{1\mapsto xor((\comodR)y,y)\}}{[1]\bool}
+  \tj{x}{[0]\nat}\tr\tj{\{0\mapsto add((\comodL)x,x)\}}{[0]\nat}\hmid
+  \tj{y}{[1]\nat}\tr\tj{\{1\mapsto add((\comodR)y,y)\}}{[1]\nat}
   $}
   \DisplayProof
   \begin{flushleft}
@@ -2024,43 +2005,43 @@ we show that the ability of the waitfree protocols and \lgd\, are the same.
   \end{flushleft}
   \AxiomC{}
   \LL{Ax}
-  \UnaryInfC{$\tj{y}{[1]\bool}\tr\tj{y}{[1]\bool}$}
+  \UnaryInfC{$\tj{y}{[1]\nat}\tr\tj{y}{[1]\nat}$}
   \AxiomC{$\vdots$}
   \LL{$\wedge\intro$}
   \BinaryInfC{$
-  \tj{x}{[0]\bool}\tr\tj{\{0\mapsto
-  {xor((\comodL)x,x)},
+  \tj{x}{[0]\nat}\tr\tj{\{0\mapsto
+  {add((\comodL)x,x)},
   1\mapsto{y}
-  \}}{\{0\mapsto \bool, 1\mapsto \bool\}}\hmid
+  \}}{\{0\mapsto \nat, 1\mapsto \nat\}}\hmid
   $}
   \noLine
   \UnaryInfC{$
-  \tj{y}{[1]\bool}\tr\tj{\{1\mapsto {xor((\comodR)y,y)}\}}
-  {[1]\bool}
+  \tj{y}{[1]\nat}\tr\tj{\{1\mapsto {add((\comodR)y,y)}\}}
+  {[1]\nat}
   $}
   \AxiomC{}
   \LL{Ax}
-  \UnaryInfC{$\tj{x}{[0]\bool}\tr\tj{x}{[0]\bool}$}
+  \UnaryInfC{$\tj{x}{[0]\nat}\tr\tj{x}{[0]\nat}$}
   \LL{$\wedge\intro$}
   \BinaryInfC{$
-  \tj{x}{[0]\bool}, \tj{y}{[1]\bool}\tr
+  \tj{x}{[0]\nat}, \tj{y}{[1]\nat}\tr
   \tj{\{
-  0\mapsto {xor((\comodL)x,x)}, 1\mapsto {y}
+  0\mapsto {add((\comodL)x,x)}, 1\mapsto {y}
   \}}
-  {\{0\mapsto \bool, 1\mapsto \bool\}}
+  {\{0\mapsto \nat, 1\mapsto \nat\}}
   \hmid
   $}
   \noLine
   \UnaryInfC{
   $
-  \tj{x}{[0]\bool}, \tj{y}{[1]\bool}\tr
+  \tj{x}{[0]\nat}, \tj{y}{[1]\nat}\tr
   \tj
   {\{
   0\mapsto {x},
-  1\mapsto {xor((\comodR)y, y)}
+  1\mapsto {add((\comodR)y, y)}
   \}}
-  {\{0\mapsto\bool
-  , 1\mapsto \bool
+  {\{0\mapsto\nat
+  , 1\mapsto \nat
   \}}
   \phantom{\hmid}$
   }
@@ -2070,62 +2051,62 @@ we show that the ability of the waitfree protocols and \lgd\, are the same.
   \end{flushleft}
   \AxiomC{}
   \LL{Ax}
- \UnaryInfC{$\tj{x}{[0]\bool}\tr\tj{\{0\mapsto x\}}{[0]\bool}$}
+ \UnaryInfC{$\tj{x}{[0]\nat}\tr\tj{\{0\mapsto x\}}{[0]\nat}$}
   \AxiomC{}
   \LL{Ax}
- \UnaryInfC{$\tj{y}{[1]\bool}\tr \tj{\{1\mapsto y\}}{[1]\bool}$}
+ \UnaryInfC{$\tj{y}{[1]\nat}\tr \tj{\{1\mapsto y\}}{[1]\nat}$}
  \LL{01-com}
  \BinaryInfC{
  $
-  \tj{x}{[0]\bool}\tr\tj{\{0\mapsto (\comodL)x\}}{[0]\bool} \hmid
-  \tj{y}{[1]\bool}\tr\tj{\{1\mapsto (\comodR)y\}}{[1]\bool}$
+  \tj{x}{[0]\nat}\tr\tj{\{0\mapsto (\comodL)x\}}{[0]\nat} \hmid
+  \tj{y}{[1]\nat}\tr\tj{\{1\mapsto (\comodR)y\}}{[1]\nat}$
  }
   \LL{\textsf{Part A}}
  \doubleLine
   \UnaryInfC{$
-  \tj{x}{[0]\bool}\tr\tj{\{0\mapsto{xor((\comodL)x,x)}\}}
-  {[0]\bool}
+  \tj{x}{[0]\nat}\tr\tj{\{0\mapsto{add((\comodL)x,x)}\}}
+  {[0]\nat}
   \hmid
-  \tj{y}{[1]\bool}\tr\tj{\{1\mapsto{xor((\comodR)y,y)}\}}{[1]\bool}
+  \tj{y}{[1]\nat}\tr\tj{\{1\mapsto{add((\comodR)y,y)}\}}{[1]\nat}
   $}
   \LL{\textsf{Part B}}
   \doubleLine
  \UnaryInfC{
  $
- \tj{x}{[0]\bool}, \tj{y}{[1]\bool}\tr
+ \tj{x}{[0]\nat}, \tj{y}{[1]\nat}\tr
  \tj{\{
-  0\mapsto {xor((\comodL)x,x)}, 1\mapsto {y}
+  0\mapsto {add((\comodL)x,x)}, 1\mapsto {y}
   \}}
-  {\{0\mapsto \bool, 1\mapsto \bool\}}
+  {\{0\mapsto \nat, 1\mapsto \nat\}}
   \hmid
  $
  }
   \noLine
   \UnaryInfC{
   $
-  \tj{x}{[0]\bool}, \tj{y}{[1]\bool}\tr
+  \tj{x}{[0]\nat}, \tj{y}{[1]\nat}\tr
   \tj
   {\{
   0\mapsto {x},
-  1\mapsto {xor((\comodR)y, y)}
+  1\mapsto {add((\comodR)y, y)}
   \}}
   {\{0\mapsto
-  \bool
+  \nat
   , 1\mapsto
-  \bool
+  \nat
   \}}
   \phantom{\hmid}$
   }
   \LL{EC}
   \UnaryInfC{$
-  \tj{x}{[0]\bool}, \tj{y}{[1]\bool}\tr\tj
+  \tj{x}{[0]\nat}, \tj{y}{[1]\nat}\tr\tj
   {\{
-  0\mapsto \cotuple{{xor((\comodL)x,x)},x},
-  1\mapsto \cotuple{{xor((\comodR)y,y)},y}
+  0\mapsto \cotuple{{add((\comodL)x,x)},x},
+  1\mapsto \cotuple{{add((\comodR)y,y)},y}
   \}}
   {\{
-  0\mapsto \bool,
-  1\mapsto \bool
+  0\mapsto \nat,
+  1\mapsto \nat
   \}
   }
   $
@@ -2225,11 +2206,9 @@ After three pages, there is an example showing compilation of a concrete
  \semo{\hypert\hmid \abort}=\semo{\hypert}\enspace,\quad
  \semoi{\hypert\hmid\abort}=&\semoi{\hypert}\hmid \emptyset\enspace,\quad
 	   \end{align*}
- \item[EC] (in this case, note that, in Figure~\ref{termassign},
-      $\cotuple{M_i',N_i'}$ is taken
-      to be either $\cotuple{M_i,N_i}$ or $\cotuple{N_i,M_i}$)
+ \item[EC] 
       \begin{align*}
-         &\semo{ \hypert \hmid \left(\cotuple{M'_i,N'_i}\right)_{i\in I}
+         &\semo{ \hypert \hmid \left(\cotuple{M_i,N_i}\right)_{i\in I}
        } \\
        =& \semo{\hypert\hmid \left(M_i\right) \hmid
        \left(N_i\right)}; \\
@@ -2237,21 +2216,11 @@ After three pages, there is an example showing compilation of a concrete
        \semoi{\hypert\hmid \overline{(M_i)}\hmid
        (N_i)}(i)
        ; \p k_i \leftarrow \semoi{\hypert\hmid {(M_i)}\hmid
-       \overline{(N_i)}}(i)\right)_{i\in I\mid M_i =
-       M'_i};
-       \\ &
-       \left(\p k_i\leftarrow
-       \semoi{\hypert\hmid {(M_i)}\hmid
-       \overline{(N_i)}}(i)
-       ; \p k_i \leftarrow
-       \semoi{\hypert\hmid \overline{(M_i)}\hmid
-       (N_i)}(i)
-       \right)_{i\in I\mid M_i \neq
-       M'_i}\enspace,\\ \\
-       &\semoi{ \hypert \hmid \left(\cotuple{M'_i,N'_i}\right)_{i\in I}
+       \overline{(N_i)}}(i)\right)_{i\in I},\\ \\
+       &\semoi{ \hypert \hmid \left(\cotuple{M_i,N_i}\right)_{i\in I}
        }
        =
-       \semoi{\overline{\hypert}\hmid \left(\cotuple{M'_i,N'_i}\right)_{i \in I}}
+       \semoi{\overline{\hypert}\hmid \left(\cotuple{M_i,N_i}\right)_{i \in I}}
        \hmid \{i\mapsto \p k_i\}_{i\in I}
       \end{align*}
  \item[EE]
@@ -2428,42 +2397,42 @@ This concludes the translation.
   \end{align*}
   And so on:
 \begin{align*}
- &\semo{{\{0\mapsto xor((\comodL)x,x)\}}\hmid
-  {\{1\mapsto xor((\comodR)y,y)\}}}\\
+ &\semo{{\{0\mapsto add((\comodL)x,x)\}}\hmid
+  {\{1\mapsto add((\comodR)y,y)\}}}\\
 &= \left(d\leftarrow \p i_x; \p y\leftarrow c\right)_0;
  \left(c\leftarrow \p i_y; \p x\leftarrow d\right)_1;
- \left(\p z\leftarrow xor(\p y,\p i_x)\right)_0;
- \left(\p w\leftarrow xor(\p x,\p i_y)\right)_1
+ \left(\p z\leftarrow add(\p y,\p i_x)\right)_0;
+ \left(\p w\leftarrow add(\p x,\p i_y)\right)_1
  \\
- &\semoi{{\{0\mapsto xor((\comodL)x,x)\}}\hmid
-  \{1\mapsto xor((\comodR)y,y)\}} \\
+ &\semoi{{\{0\mapsto add((\comodL)x,x)\}}\hmid
+  \{1\mapsto add((\comodR)y,y)\}} \\
  &= \{0\mapsto \p z\} \hmid \{1\mapsto \p x\}
 \end{align*}
   \begin{align*}
 &\llbracket
  {\{
-  0\mapsto {xor((\comodL)x,x)}, 1\mapsto {y}
+  0\mapsto {add((\comodL)x,x)}, 1\mapsto {y}
   \}}
   \hmid
   {\{
   0\mapsto {x},
-  1\mapsto {xor((\comodR)y, y)}
+  1\mapsto {add((\comodR)y, y)}
   \}}
    \rrbracket\phantom{\hmid}\\
    =& \left(d\leftarrow \p i_x; \p y\leftarrow c\right)_0;
  \left(c\leftarrow \p i_y; \p x\leftarrow d\right)_1;
- \left(\p z\leftarrow xor(\p y,\p i_x)\right)_0;
- \left(\p w\leftarrow xor(\p x,\p i_y)\right)_1; \\
+ \left(\p z\leftarrow add(\p y,\p i_x)\right)_0;
+ \left(\p w\leftarrow add(\p x,\p i_y)\right)_1; \\
    & \left(\p{x'}\leftarrow \p i_x\right)_0;
      \left(\p{y'}\leftarrow \p i_y\right)_1 \\
 &\llparenthesis
  {\{
-  0\mapsto {xor((\comodL)x,x)}, 1\mapsto {y}
+  0\mapsto {add((\comodL)x,x)}, 1\mapsto {y}
   \}}
   \hmid
   {\{
   0\mapsto {x},
-  1\mapsto {xor((\comodR)y, y)}
+  1\mapsto {add((\comodR)y, y)}
   \}}
   \rrparenthesis\phantom{\hmid}\\
    =&
@@ -2473,14 +2442,14 @@ This concludes the translation.
   \begin{align*}
    &\semo{
    \{
-   0\mapsto \cotuple{{xor((\comodL)x,x)},x},
-   1\mapsto \cotuple{{xor((\comodR)y,y)},y}
+   0\mapsto \cotuple{{add((\comodL)x,x)},x},
+   1\mapsto \cotuple{{add((\comodR)y,y)},y}
    \}}
    \\
    =&\left(d\leftarrow \p i_x; \p y\leftarrow c\right)_0;
    \left(c\leftarrow \p i_y; \p x\leftarrow d\right)_1;
-   \left(\p z\leftarrow xor(\p y,\p i_x)\right)_0;
-   \left(\p w\leftarrow xor(\p x,\p i_y)\right)_1; \\
+   \left(\p z\leftarrow add(\p y,\p i_x)\right)_0;
+   \left(\p w\leftarrow add(\p x,\p i_y)\right)_1; \\
    & \left(\p{x'}\leftarrow \p i_x\right)_0;
      \left(\p{y'}\leftarrow \p i_y\right)_1;
    \left(\p u \leftarrow \p z; \p u \leftarrow \p{x'}\right)_0 ;
@@ -2488,8 +2457,8 @@ This concludes the translation.
    \\
    &\semoi{
    \{
-   0\mapsto \cotuple{{xor((\comodL)x,x)},x},
-   1\mapsto \cotuple{{xor((\comodR)y,y)},y}
+   0\mapsto \cotuple{{add((\comodL)x,x)},x},
+   1\mapsto \cotuple{{add((\comodR)y,y)},y}
    \}}
    \\
    =&\{0\mapsto\p u,1\mapsto \p v\}\enspace.
@@ -2634,17 +2603,7 @@ This concludes the translation.
 	   \semoi{\hypert\hmid \overline{(M_i)}\hmid
 	   (N_i)}(i)
 	   ; \p k_i \leftarrow \semoi{\hypert\hmid {(M_i)}\hmid
-	   \overline{(N_i)}}(i)\right)_{i\in I\mid M_i =
-	   M'_i};
-	   \\ &
-	   \left(\p k_i\leftarrow
-	   \semoi{\hypert\hmid {(M_i)}\hmid
-	   \overline{(N_i)}}(i)
-	   ; \p k_i \leftarrow
-	   \semoi{\hypert\hmid \overline{(M_i)}\hmid
-	   (N_i)}(i)
-	   \right)_{i\in I\mid M_i \neq
-	   M'_i}
+	   \overline{(N_i)}}(i)\right)_{i\in I}
 	  \end{align*}
 	  whose final system snapshot is $\tuple{\vec s, \vec v}$
 	  where for each process $p\in \processes$, $s_p$ maps
@@ -2769,7 +2728,7 @@ We are going to encode the participating set problem in \lgd.
 For this, we introduce a base type called $\Id$ for process id's.
 Let there be an injection that maps a natural number~$i$ to a constant
 $c_i\colon\Id$.
-The additional typing rules involving $\Id$ are as follows, where $\bool = (\bot\supset\bot)\vee(\bot\supset\bot)$:
+The additional typing rules involving $\Id$ are as follows, where $\nat = (\bot\supset\bot)\vee(\bot\supset\bot)$:
 \begin{center}
  \UnaryRule{}{}
  {$\tr \tj{c_n}{[i]\Id}$}
@@ -2778,7 +2737,7 @@ The additional typing rules involving $\Id$ are as follows, where $\bool = (\bot
  {$\Gamma\tr \tj{M_0}[i]\Id$}
  {$\Gamma\tr \tj{M_1}[i]\Id$}
  {}
- {$\Gamma \tr \tj{\compare{M_0}{M_1}}{[i]\bool}$}\enspace.
+ {$\Gamma \tr \tj{\compare{M_0}{M_1}}{[i]\nat}$}\enspace.
 \end{center}
 The additional reduction is
 \[
