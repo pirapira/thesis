@@ -72,7 +72,7 @@ after the author talked about $(\phi\limp\psi)\oplus (\psi\limp\phi)$.}.
 From the viewpoint of typed lambda calculi, a natural way to add
 the axiom
 $(\phi\limp\psi)\otimes(\psi\limp\phi)$
-is adding a pair of primitives $c$ and $\co c$ so that
+is to add a pair of primitives $c$ and $\co c$ so that
 $\cdots ct \cdots \co c u \cdots$ reduces to
 $\cdots u  \cdots t \cdots$: in words,
 $c$ outputs $\co c$'s input and vice versa.
@@ -1804,7 +1804,7 @@ Abelian logics provides as some facts.
 Toward understanding Amida calculus, a technique called proof nets seems
 promising.
 Generally, proof nets are straightforward for the multiplicative
-fragments but complicated whenr additive and exponential connectives are
+fragments but complicated when additive and exponential connectives are
 involved.
 Since the Amida axiom $(\phi\limp\psi)\otimes(\psi\limp\phi)$
 does not contain additives ($\with,\oplus$) or exponential ($!,?$),
@@ -1899,7 +1899,7 @@ formulae so that the essential net is uniquely determined.}.
  However, the essential net in \thref{essential-amida} is rejected by
  the following correctness criterion.
   \begin{definition}[Correct essential nets]
-   A \textit{correct esential net}\index{correct essential
+   A \textit{correct essential net}\index{correct essential
    net}\index{essential net!correct} is an essential net satisfying all
    these conditions:
 \begin{enumerate}
@@ -1921,14 +1921,14 @@ condition~\ref{conditionL}.  Actually, Amida axiom does not have
 any correct essential net.  IMLL sequent calculus has the subformula
 property so that we can confirm that Amida axiom is not provable in IMLL.
 
- \begin{theorem}[Esseential nets for
+ \begin{theorem}[Essential nets for
   IMLL by~\citet{lamarche2008,murawski2003}]
   \label{essential-ok}
   An IMLL formula~$\phi$ is provable in IMLL iff there exists a correct essential net
   of $\phi$.
  \end{theorem}
  \begin{proof}
-  The left to right is relavitely easy.  For the other way around,
+  The left to right is relatively easy.  For the other way around,
   \citet{lamarche2008} uses a common technique of decomposing an
   essential net from the bottom.
   \citet{murawski2003} chose to reduce the problem to sequents of special forms
@@ -2317,10 +2317,10 @@ One of their typing rules
  evaluation $\co c[C[cv]]\eval v$, which
  reminds us of the call-with-current-continuation
  primitive~\citep{rees1986} and shift/reset primitives~\citep{danvy1990,asai2007}.
- The appearence of these classical type system primitives is not
+ The appearance of these classical type system primitives is not
  surprising because Abelian logic validates $((p\limp q)\limp q)\limp p$,
  which is a stronger form of the double negation elimination.
- Possibly we could use the technique of \citet{asai2007} to analyse
+ Possibly we could use the technique of \citet{asai2007} to analyze
  Amida calculus with eval-subst rule.
 
  \subsection{Logic Programming}
@@ -2563,7 +2563,7 @@ theoretically.
 If we need convergence, we need the eval-subst rule in the evaluation rule
 (Subsection~\ref{eval-subst}),
 which poses a threat to type safety.
-Moreover, there are some inhatited types like $\phi\oplus
+Moreover, there are some inhabited types like $\phi\oplus
 (\phi\limp\one)$ and $(\phi\limp\psi)\oplus(\psi\limp\phi)$,
 whose constructive justification is hard to see.
 Plausibly, the situation can be remedied by extending the Amida net

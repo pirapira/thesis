@@ -40,7 +40,7 @@ it seems to us extremely important to determine the exact
 Differently from intuitionistic logic, G\"odel--Dummett logic validates
 all formulae of the form
  $(\varphi\supset\psi)\vee(\psi\supset\varphi)$.
-Our aim is building a typed lambda calculus
+We aim at building a typed lambda calculus
 with some terms witnessing those formulae.
 Such a term
 $\tj{M}{(\varphi\supset\psi)\vee(\psi\supset\varphi)}$ must choose
@@ -60,7 +60,7 @@ start after the faster one finishes.
 So, the computation is nondeterministic.
 % see introduction for history of waitfreedom
 
-The contribution of this chapter is capturing
+The contribution of this chapter lies in capturing
 the nondeterminism of waitfreedom using the nondeterministic
 $\lambda$-calculus for G\"odel--Dummett logic.
 In Section~\ref{lgd},
@@ -81,7 +81,7 @@ This constitutes the second contribution of this thesis.
 Moreover, the lambda calculus is one side of the Curry--Howard
 isomorphism that will be matched against the waitfree computation.
 
-We first present a proof system for G\"odel--Dummet logic.
+We first present a proof system for G\"odel--Dummett logic.
 Then we turn the proof system into typing rules for $\lambda$-terms
 of~\lgd, give a set of reductions and prove strong-normalization and
 non-abortfullness.
@@ -128,7 +128,7 @@ $\bot$ although $\bot$ is not necessary to encode waitfree computation.}%
  (\varphi\vee\psi)\enspace.
 \]
 We omit parentheses when no ambiguity occurs.
-We assume countably inifinitely many \textit{processes}\index{process}.
+We assume countably infinitely many \textit{processes}\index{process}.
 A \textit{global formula}\index{formula!global}\index{global
 formula|see{formula}}
 (also called a \textit{global type}\index{type!global}\index{global type|see{type}})
@@ -2892,7 +2892,7 @@ his model theoretic comparison.
 
 As a programming language, \lgd\, allows efficient execution because it
 requires no synchronization among processes.
-A possible extension is adding synchronization primitives.
+Possibly, this calculus can be extended by synchronization primitives.
 It would be interesting to compare different synchronization primitives
 and different intermediate logics, generalizing waitfreedom and
 G\"odel--Dummett logic.

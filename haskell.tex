@@ -24,7 +24,7 @@
  Throughout this chapter, \texttt{Haskell} syntax is assumed%
  \footnote{Under Haskell platform,
  \texttt{cabal install waitfree} will install this library.}.
- Another purpose of this chapter is confirming the proof of
+ Another purpose of this chapter is confirmation of the proof of
  \thref{th:soundness} and \thref{th:completeness} by implementing it.
 
 \iffalse
@@ -86,7 +86,8 @@ number~$k$ so
 that no thread visits the store more than
 $k$-times in any execution.  So, when a thread consumes all permitted
 visits to the store, the thread has to give up receiving anything yet to come
-from other threads.  One way to enforce this restriction is prohibiting
+from other threads.  We can
+enforce this restriction by prohibiting
 looping so that each thread can make steps at most the number of lines
 in its program.
 
@@ -132,7 +133,7 @@ However, this derivation only contains types but not programs.  In this
 chapter, we are going to propose how to write a program belonging to this
 type in Haskell.
 
-From this perspective, the merit of this chapter is showing the
+From this perspective, the merit of this chapter exists in showing the
 hyper-lambda calculi are implementable.
 Hypersequents are roughly sequences of
 typed terms.  At first, they were introduced as an apparatus for obtaining
@@ -276,7 +277,7 @@ prepareHandle :: Thread t =>
 prepareHandle p = single $ handle p
 \end{spec}
 
-The next thing to do is asking the user to provide an input.
+Next the program asks the user to provide an input.
 In doing that, showing the name of the current thread is useful.
 When a type~\verb@t@ is of the type class~\verb@Thread@, we can obtain the
 thread's number via \verb@atid@ function (\verb@atid@ stands for Abstract Thread
@@ -1100,7 +1101,7 @@ computation can be implemented without locks.  In practice also, with
 sequential consistency, we can implement waitfree computation without
 locks.
 
-One possible extension of our library is adding ``all-possible-results''
+One possible extension of our library is addition of an ``all-possible-results''
 mode.  When we execute a program under this mode, the library explores
 all possible executions and returns what can happen.
 

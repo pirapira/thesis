@@ -23,7 +23,7 @@ sequent calculus rules and structural hypersequent calculus rules.
 According to their classification, the prelinearity axiom
 $(\phi\limp\psi)\oplus(\psi\limp\phi)$ and Amida axiom
 $(\phi\limp\psi)\otimes(\psi\limp\phi)$ belong to $\mathcal P_2$, a
-claess whose elements can be translated into a finite set of
+class whose elements can be translated into a finite set of
 hypersequent structural rules.
 Other classes $\mathcal N_2$ and $\mathcal P_3$ of axioms can also be
 translated into finite sets of hypersequent structural rules,
@@ -52,7 +52,7 @@ Moreover, since Amida calculus characterizes Abelian logic
 (\thref{complete-to-Abelian}),
 there are some inhabited types that are hard to justify constructively;
 for example $\phi\oplus(\phi\limp\one)$.
-The first step is going to be removing additives and studying the
+The first step would be removing additives and studying the
 multiplicative fragment of Amida calculus.
 
 \subsection{G\"odel--Dummett Logic}
@@ -89,8 +89,8 @@ coincides with \L{}ukasiewicz logic.
 \subsection{Implementation}
 
 In Chapter~\ref{ch:haskell}, we implemented a hyper-lambda calculus for
-waitfree computation using Haskell~\citep{marlow2010haskell}.
-The implementation is a prototype showing that the design of \lgd\,is
+waitfree computation on top of Haskell~\citep{marlow2010haskell}.
+The implementation is a prototype for showing that the design of \lgd\,is
 implementable.
 Internally, the implementation still uses locks but we should remove
 locks if we try to put the library to performance sensitive uses.
@@ -109,7 +109,7 @@ achievable.
 Since Abelian logic is incompatible with contraction or weakening,
 straightforward implementation Amida calculus on top of Haskell or OCaml
 would not be a
-good way to exploint the safety of Amida calculus.
+good way to exploit the safety of Amida calculus.
 Although Clean~\citep{parle1991} offers uniqueness types,
 uniqueness types only reject contraction but accept weakening, so Clean
 is not suitable either.
@@ -200,7 +200,7 @@ inquisitive logic~\citep{ciardelli2011},
 deontic logics~\citep{von1951deontic} and
 so on.  Among those investigations, in some cases, substructural logics
 play important roles.  For example, relevance logic is a famous
-substructural logic lacking weakening and inquisive logic is a weak
+substructural logic lacking weakening and inquisitive logic is a weak
 logic (a logic possibly without substitution-closedness) between
 intuitionistic and classical logics~\citep{ciardelli2011}.
 
@@ -238,5 +238,5 @@ Deontic logic~\citep{von1951deontic,sep-logic-deontic} tried to capture permissi
 obligation and so on.
 Using Abelian logic, we hope to address how much duty is imposed.
 Since Amida calculus can reduce some proofs in Abelian logic, it could
-provide a way to analyse a complicated situation where many kinds of
+provide a way to analyze a complicated situation where many kinds of
 obligations and permissions of different significance are interwound.
