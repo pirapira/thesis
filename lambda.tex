@@ -1399,7 +1399,7 @@ strictly shortens the term under operation.
  makes an infinite reduction sequence in the pure fragment.
  Moreover,
  the result of the translation is also well typed\footnote{Because each
- channel~$c$ is uniquely associated with a type~$\phi$ in the orignal
+ channel~$c$ is uniquely associated with a type~$\phi$ in the original
  derivation and $\lstore_\infty(c)$ is a closed term of type~$\phi$.}.
  A typing derivation of the resulting hyperterm can be obtained by
  replacing com rules with EW rules and changing the process number in
@@ -1425,8 +1425,8 @@ Strong normalization and non-abortfullness hold even for reductions
 where $\comodL$ operators are copied or discarded.  This is different
 from the situation in Chapter~\ref{ch:exchange} where
 discarding term~$c$ causes the peer $\co c$ to
-deadlock.  This is why the reason why we can use intuitionistic
-propositional logic in this chapter rather than linear (or affine) logics.
+deadlock.  This is the reason why we can use intuitionistic
+propositional logic rather than linear (or affine) logics in this chapter.
 
 % \fix{subformula property around here state in 6min}
 
@@ -1538,7 +1538,7 @@ where $c$ is a location and an \textit{expression}\index{expression}~$E$ is
  x.E\mid \tuple{E,E}\mid \linl{E}\mid \linr{E}\mid \\
  &\lpil{E}\mid\lpir{E}\mid  \mat E x {E} y {E}\mid \epsilon\enspace.
 \end{align*}
-Here, the expression~$\epsilon$ is used as the initial placsholder of the shared
+Here, the expression~$\epsilon$ is used as the initial placeholder of the shared
 memory.
 
 \newcommand{\Wg}{W_{\mathrm g}}
@@ -2622,7 +2622,7 @@ This concludes the translation.
 	  satisfies
 	  \begin{itemize}
 	   \item for any $i\in I$ with $\tuple{M_i,N_i} = \tuple{M'_i,
-		 N'_i}$, the proess snapshot
+		 N'_i}$, the process snapshot
 		 $s'_i$ maps
 		 $\semoi{\hypert\hmid \overline{(M_i)_{i\in I}}\hmid
 		 (N_i)_{i\in I}}$ to $V_i$ and
@@ -2694,7 +2694,7 @@ This concludes the translation.
 \begin{theorem}[Completeness of \lgd\, with regard to waitfreedom]
  \label{th:completeness}
 If there exists a typed protocol that solves a typed input-output
-problem, the problem is solvable by a typd global term of \lgd.
+problem, the problem is solvable by a typed global term of \lgd.
 \end{theorem}
 
 \begin{proof}
@@ -2936,7 +2936,7 @@ If that succeeds for classical logic, it will be interesting%
 \footnote{Kazushige Terui suggested the potential impact for classical logic.}%
 .
 
-Nontheless there are some more immediate future work.
+Nonetheless there are some more immediate future work.
 It would be better if we explicitly implement $n$-party participating
 set problem using \lgd.
 Another remaining task is to formalize the strong normalization theorem

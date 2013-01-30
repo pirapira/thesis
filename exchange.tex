@@ -810,7 +810,10 @@ Consider a typed term:
   \UnaryInfC{$\tr\tj{c(\co c(\inl \ast))}{\one\oplus\one}$}
   \DisplayProof
  \end{center}
- with no evaluation.  In order to evaluate this closed term,
+ with no evaluation.  When we think about why this
+ process does not have an evaluation,
+ one explanation is this process is deadlocked.
+ In order to evaluate this closed term,
  we can add the following eval-subst rule:
 \begin{center}
   \AxiomC{$\hypere\hmid t\eval v\hmid u[v/x]\eval w$}
@@ -832,9 +835,11 @@ so that the following evaluation is possible
    \DisplayProof\enspace.
 \end{center}
 
-  However, adding eval-subst rule breaks the proof of
-  \thref{safety} (safety), but there might be a remedy.
-  The real difficulty is revealed in the next counter example.
+  However, adding eval-subst rule breaks the current proof of
+  \thref{safety} (safety), but with some modifications,
+  the safety property can possibly be proved.  Even if we try that,
+  we must face the real difficulty for finding an operational semantics
+  with convergence.
 
 \subsubsection{Channels Sending Bound Variables}
 
@@ -862,7 +867,9 @@ If convergence holds, there must be an evaluation
 However, since the bound variable~$x$ is not yet replaced by a closed
 term, there is no closed canonical form $v$ satisfying the evaluation
 relation.
-Explicit substitutions~\citep{abadi1989} might be helpful.
+Explicit substitutions~\citep{abadi1989} might be helpful here.
+Note that, although the above example poses a difficulty for convergence,
+the above example does not witness a deadlock.
 
 \subsubsection{Regaining Convergence}
 
@@ -908,11 +915,12 @@ x.t$ of type $\one\limp\phi$ so that $\lambda x.t\eval \lambda x.t$ is derivable
 
     As an abbreviation, we introduce \textit{session
     types}\index{type!session}\index{session type|see{type}}.
-    Session types~\cite{honda-session} can specify a communication
+    Session types~\cite{interaction,honda-session} can specify a communication
     protocol over a channel.
-    The definitions and the descriptions are modification from
+    The following definitions and the descriptions are modification from
     \citet{wadler2012propositions}'s translations and descriptions of
-    session types.
+    session types.  The notation here is different from the
+    original notation by Takeuchi, Honda and Kubo~\citep{interaction}.
     \begin{align*}
      \sendtype\phi\psi&\equiv \phi\limp\psi &\text{
      output a value of $\phi$ then behave as $\psi$} \\
@@ -2116,14 +2124,61 @@ The paper \citep{metcalfe2006} is informative about some logics weaker
 than Abelian logic so that there might be a hint of getting a
 hyper-lambda calculi for these weaker logics.
 
+Before \citet{metcalfe2002},
+\citet{shirahata} studied the multiplicative fragment of Abelian logic,
+which he called CMLL (compact multiplicative linear logic).
+He gave a categorical semantics for the proofs of a sequent calculus
+presentation of CMLL and then proved
+that the cut-elimination procedure of
+the sequent calculus preserves the semantics.
+Since our Amida net presentation also gives a non-degenerate semantics
+for the same logic, we speculate that Amida nets provide a suitable
+presentation for morphisms of compact closed categories.
+Remarkably,
+\citet{shirahata} also noted that addition of infinite additives yields
+inconsistency
+although he did not notice his CMLL is identical to the multiplicative
+fragment of Abelian logic\footnote{
+\citet{expanding} already pointed out
+the fact that \citet{shirahata} and
+\citet{metcalfe2002} studied the same logic.}.
+He also noted that addition of finite additives yields a counter-example
+of cut-elimination, which we will note in Subsection~\ref{amida-cut}.
+
 \subsection{Linear Logic and Session Types}
 
-We treated session types~\citep{honda-session}.
+We treated session types~\citep{interaction,honda-session}.
 Session types aim at typing channels and processes in $\pi$-calculus so
 that the process execution is deterministic and not ending in deadlock.
-In general session type systems are not based on a well-known logic.
+In general, session type systems are not based on a well-known logic.
 However, there are recent developments on encoding session types into
 linear type systems.
+
+\subsubsection{Kobayashi--Pierce--Turner's Type System}
+
+\citet{kobayashi-pierce-turner} developed a type system for the
+$\pi$-calculus processes.
+Similarly to the type system presented here,
+their type system can specify
+types of communication contents through a name and
+how many times a name can be used.
+In some sense,
+that type system is more flexible than the one shown in this chapter.
+First, their type system allows a liberal typing on a channel so
+that the channel can be used for any number of times.
+Second, their type system can type replicated processes.
+Third, their type system allows
+weakening~\citep[Lemma~3.2]{kobayashi-pierce-turner}.
+In other respects,
+the type system in \citep{kobayashi-pierce-turner} is less expressible.
+That type system does not have lambda abstractions.
+Also, in contrast to our type system,
+it is impossible to substitute a free variable with a process in that
+type system.
+This is related to the fact that in their type system,
+a sequent contains types on the left side but not on the right side.
+Since there are no types on the right side, their sequent is hard to
+interpret logically.
 
 \subsubsection{Pfenning's Typing System}
 \label{pfenning}
@@ -2471,7 +2526,7 @@ The uniqueness type of the programming language Clean~\citep{parle1991}
 does not allow contraction, but the uniqueness type is
 too strong because their type system allows weakening.
 
-\subsection{Cut Elimination}
+\subsection{Cut-Elimination}
 \label{amida-cut}
 
 In Amida calculus, there is a hypersequent that
@@ -2514,7 +2569,8 @@ However,
 since there is a cut-free deduction system for Abelian
 logic~\citep{metcalfe2006},
 we consider it natural to expect the same property for a suitable
-extension of Amida calculus.
+extension of Amida calculus, which would contain terms and reductions
+corresponding to proof rules and proof reductions in the system of \citet{metcalfe2006}.
 
 \subsection{The Problem with Excluded Middle}
 \label{computational-meaning}
@@ -2548,6 +2604,20 @@ By the definition of residuation and the unit 1 of $\cdot$,
 we have $(1/y)\cdot y = 1$, which forms an equational basis for the
 variety of lattice-ordered groups \citep[Lemma~3.25]{residuated}.
 
+\subsection{Program Specification and Verification}
+
+Since the typing derivations of Amida calculus can be interpreted as
+proofs of Abelian logic, there is a possibility of specifying properties
+of processes using (first-order) Abelian logic formulae and then
+proving those properties using conjunctive hypersequents%
+\footnote{When the author applied for Grant-in-Aid for JSPS Fellows
+23-6978, the proposal included such a plan.  According to the proposal,
+this research would proceed from finding a typed lambda calculus then to
+developing a logic for proving properties of the obtained programming
+language.}.
+If that succeeds, the technique would be the first application of
+Abelian logic in program verification.
+
 \section{Conclusion}
 
 We found a new aximatization of Abelian logic, which can be
@@ -2560,7 +2630,7 @@ where components in a hypersequent are interpreted conjunctively rather
 than disjunctively.
 The resulting hyper-lambda calculus is somewhat hard to treat
 theoretically.
-If we need convergence, we need the eval-subst rule in the evaluation rule
+If we need convergence or deadlock-freedom, we need the eval-subst rule in the evaluation rule
 (Subsection~\ref{eval-subst}),
 which poses a threat to type safety.
 Moreover, there are some inhabited types like $\phi\oplus
