@@ -144,7 +144,7 @@ There are more formulae given by the following rules~\cite{heyting1930}:
  \item[1.2.] If $a$ and $b$ are correct formulas\footnote{In quotes, we do not adjust the plural
       ``formulas'' and ``formulae.'' }, then $a\land b$ is a correct
        formula.
- \item[1.3.] If $a$ and $b$ are correct formulas, then $b$ is a correct formula.
+ \item[1.3.] If $a$ and $a\supset b$ are correct formulas, then $b$ is a correct formula.
 \end{description}
 
 Following the intuitionists' belief
@@ -724,12 +724,10 @@ $(\phi\limp\psi)\otimes(\psi\limp\phi)$
 as a type for a language primitive.
 
 \subsection{G\"odel--Dummett Logic}
-\subsubsection{Dummett's axiomatization}
+\subsubsection{Dummett's Axiomatization}
 Dummett~\cite{dummett59} considers a semantics on $\{0,1,2,\ldots,\omega\}$ where
 $\wedge$ is interpreted as maximum, $\vee$ as minimum, $\bot$ as $\omega$
-and conjunction~$\wedge$
- and implication as a
-function~$\hat\supset$ where%
+ and implication as a function~$\hat\supset$ where%
 \footnote{To be precise, Dummett did not use absurdity~$\bot$ but negation~$\neg$
 although they are interdefinable in existence of implication~$\supset$
 and conjunction~$\wedge$.}
@@ -765,7 +763,7 @@ the computational interpretation of Sonobe's cut-elimination.
 \citet{avron91} invented the hypersequent calculus.
 A \textit{hypersequent}\index{hypersequent} is a finite sequence of sequents:
 \[
-\G_0\tr\phi_0\hmid \G_1\tr\phi_1\hmid \cdots \hmid \G_n\tr\phi_{n-1}
+\G_0\tr\phi_0\hmid \G_1\tr\phi_1\hmid \cdots \hmid \G_n\tr\phi_{n}
 \quad (n \ge 0)\enspace.
 \]
 We use metavariable $\hyper$ for a hypersequent.
@@ -797,7 +795,7 @@ A waitfree protocol over shared memory~\cite{herlihy1991wait}
  assigns a program to each process so that no process waits for another process.
 Some tasks can be solved by a~well-chosen waitfree protocol while the others cannot.
 For example,
- it is waitfreely impossible for both of two processes to attain the input value of the other
+ it is waitfreely impossible for each processes to attain the input value of the other
  process.
  On the other hand, it is waitfreely possible for
  either one of two processes to attain the input value of the other process.
@@ -821,7 +819,7 @@ dynamic epistemic logic~\citep{ditmarsch2007dynamic} and
 inquisitive logic~\citep{ciardelli2011}.  Thus
 in general it would be fair to say that a logic is a set of logical
 formulae.}.
-Elements of a logic is called \textit{theorems}\index{theorem}.
+Elements of a logic are called \textit{theorems}\index{theorem}.
 By \textit{substitution}\index{substitution}-closedness, if $\phi$ is a
 theorem, $\phi[\psi/X]$ (i.e. the
 logical formula obtained by replacing all occurrences of $X$ with
@@ -970,6 +968,14 @@ follow\footnote{Here, the capital alphabet W is a name of a combinator.
 Elsewhere, W stands for a structural rule weakening.}.
 Thus, the left hand side contraction is not admissible in the sequent
 calculus for the BCK logic.
+A rule
+       \begin{center}
+	\AxiomC{$\mathcal S$}
+	\UnaryInfC{$\mathcal S'$}
+	\DisplayProof
+       \end{center}
+is \textit{admissible}\index{admissible}
+iff $\hypere'$ is derivable whenever $\hypere$ is.
 
 \subsubsection{Linear and Affine Logics}
 \label{subsub:la-logics}

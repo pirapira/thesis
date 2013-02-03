@@ -118,10 +118,11 @@ and it is decided at execution time which one can send information to
 the other.  This phenomenon can be understood as a set of computations
 of which at least one is guaranteed to be successful.  Such a set of
 computations can be represented as a hypersequent.
-\verb@K s a@ as thread \verb@s@'s computation yielding a value of type \verb@a@ and
-\verb@K t b@ as thread \verb@t@'s computation yielding a value of type \verb@b@,
-the waitfree protocol described at the end of Subsection~\ref{subsect:wf}
-witnesses the following derivation because either \verb@t@ obtains \verb@b@ or \verb@s@
+\verb@K s a@ represents thread \verb@s@'s computation yielding a value of type \verb@a@ and
+\verb@K t b@ represents thread \verb@t@'s computation yielding a value of type \verb@b@.
+The waitfree protocol described at the end of Subsection~\ref{subsect:wf}
+witnesses the following derivation because either \verb@t@ obtains
+\verb@b@ or \verb@s@
 obtains \verb@a@ after executing the protocol.
 \begin{center}
  \AxiomC{\tt K t a}
@@ -241,10 +242,10 @@ operations in a totally ordered sequence.  In this case, there are
 six possible such ordered sequences.
 \begin{itemize}
  \item 0 writes, 0 reads, 1 writes and 1 reads.  Then, 1 reads 0's write.
- \item 0 writes, 1 writes, 0 reads and 1 reads.  Both reads the other's write.
- \item 0 writes, 1 writes, 1 reads and 0 reads.  Both reads the other's write.
- \item 1 writes, 0 writes, 0 reads and 1 reads.  Both reads the other's write.
- \item 1 writes, 0 writes, 1 reads and 0 reads.  Both reads the other's write.
+ \item 0 writes, 1 writes, 0 reads and 1 reads.  Both read each other's write.
+ \item 0 writes, 1 writes, 1 reads and 0 reads.  Both read each other's write.
+ \item 1 writes, 0 writes, 0 reads and 1 reads.  Both read each other's write.
+ \item 1 writes, 0 writes, 1 reads and 0 reads.  Both read each other's write.
  \item 1 writes, 1 reads, 0 writes and 0 reads.  Then, 0 reads 1's write.
 \end{itemize}
 In any of these six cases, either thread 0 obtains thread 1's input or 1 obtains
@@ -477,7 +478,7 @@ type L = (AbstractThreadId, IO ThreadStatus)
 
 Local computations are then transformed into a finite map from thread
 identifiers to channels containing computations. Each thread reads the list for
-its own identifier and execute the computations in the list one by one.
+its own identifier and executes the computations in the list one by one.
 A type \verb@l@ can be of type class \verb@Lconvertible@ only if
 a value of type \verb@l@ can be converted into a list of \verb@L@
 values.

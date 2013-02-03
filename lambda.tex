@@ -141,7 +141,7 @@ does not map any other processes to local formulae.
 % but that would make the contexts awkward, so
 % I chose not changing it for now.
 % \fix{this sentence is awkward}
-We name such global formulae that map only one process as a singleton
+We name such global formulae that map only one process as singleton
 global formulae.
 The unary operators $[0], [1],\ldots$ are called \textit{modalities}%
 \index{modality}.
@@ -358,7 +358,7 @@ Locations are denoted by~$c,d,\ldots$; process~$i,j, \ldots$ and variables~$x,
 y, \ldots$.
 Later, locations will be used to specify a location in a store.
 A location in a store can hold a term or be empty.
-Like in the $\lambda$-calculus, some terms reduces to other
+Like in the $\lambda$-calculus, some terms reduce to other
 terms, but in this calculus, terms may interact with stores (like
 a program written in Haskell or OCaml does with i-vars).
 This behavior will be shown later in the definition of reductions.
@@ -499,9 +499,9 @@ derivation whose endsequent is identical to the hypersequent.
  {$\hypert^+\hmid\Gamma\tr \tj {\{\}} {\m\phi}$}
 \hfill
  \UnaryRule
- {$\hypert\hmid\Gamma\tr M\colon\m\varphi\hmid\Delta\tr N\colon \m\psi\hmid \hypert'$}
+ {$\hypert\hmid\Gamma\tr \m M\colon\m\varphi\hmid\Delta\tr \m N\colon \m\psi\hmid \hypert'$}
  {EE}
- {$\hypert\hmid\Delta\tr N\colon\m\psi   \hmid\Gamma\tr M\colon \m\varphi\hmid \hypert'$}
+ {$\hypert\hmid\Delta\tr \m N\colon\m\psi   \hmid\Gamma\tr \m M\colon \m\varphi\hmid \hypert'$}
  \ruleskip
 % \textbf{Inner Global Rules}
 %    \ruleskip
@@ -513,7 +513,7 @@ derivation whose endsequent is identical to the hypersequent.
    \hfill
    \UnaryRule
    {$\hypert\hmid \tj{x}{[i]\phi}, \tj{y}{[i]\phi}, \Gamma\tr \tj
-   M{\m\psi}$}
+ {\m M}{\m\psi}$}
    {IC}
    {$\hypert \hmid \tj{x}{[i]\phi}, \Gamma\tr \tj{\m{M}[x/y]}{\m\psi}$}
 \ruleskip
@@ -868,8 +868,8 @@ logic with implication, conjunction and disjunction.
  The basic reduction $\breduce$ is the smallest congruence containing
  the followings:
  \begin{itemize}
-  \item  $\conf{}{\imapsto{(\lambda x.M)O}}\breduce
-	 \conf{}{\imapsto{M[O/x]}}$
+  \item  $\conf{}{\imapsto{(\lambda x.M)N}}\breduce
+	 \conf{}{\imapsto{M[N/x]}}$
   \item $\conf{}{\imapsto{\lpil{\lpair{M,N}}}} \breduce
 	 \conf{}{           \imapsto{M}   }$
   \item $\conf{}{\imapsto{\lpir{\lpair{M,N}}}} \breduce
@@ -947,7 +947,7 @@ except $\cotuple{M,N}$, also reduces to $\abort$.  The \textit{concurrent
 construction}\index{concurrent
 construction}\index{construction!concurrent} $\cotuple{M,N}$ runs $M$
 and $N$ concurrently and throws
-away those subterms that reduces to $\abort$.
+away those subterms that reduce to $\abort$.
 To be specific, the term $\cotuple{M,N}$ reduces to ${M}$
 or ${N}$.
 The reduction rules are not symmetric with regard to the left component
@@ -1076,7 +1076,7 @@ a normal configuration (the choice of $\lstore$ is irrelevant).
   \areduce &
   \left(\{d\mapsto v\},
   \{
-  0\mapsto\linr{v},
+  0\mapsto{v},
   1\mapsto\cotuple{\lpair{\underline{(\comodR)w},w},w}
   \}
   \right)
@@ -1086,7 +1086,7 @@ a normal configuration (the choice of $\lstore$ is irrelevant).
   \{c\mapsto w, d\mapsto v\}
   ,
   \{
-  0\mapsto \linr{v},
+  0\mapsto {v},
   1\mapsto \cotuple{\lpair{\underline{\reader d}, w}, w}
   \}
   \right)
@@ -1096,7 +1096,7 @@ a normal configuration (the choice of $\lstore$ is irrelevant).
   \{c\mapsto w, d\mapsto v\}
   ,
   \{
-  0\mapsto \linr{v},
+  0\mapsto {v},
   1\mapsto \underline{\cotuple{\lpair{v,w},w}}
   \}
   \right)
@@ -1106,8 +1106,8 @@ a normal configuration (the choice of $\lstore$ is irrelevant).
   \{c\mapsto w, d\mapsto v\}
   ,
   \{
-  0\mapsto \linr{v},
-  1\mapsto \linr{\lpair{v,w}}
+  0\mapsto {v},
+  1\mapsto {\lpair{v,w}}
   \}
   \right)\quad.
  \end{align*}
@@ -1165,8 +1165,8 @@ proof is simpler.
  When a reduction sequence is fixed, for any locations~$c$ and $d$, depending on
  whether $c$ or $d$ is filled first,
  either:
- (i)  no ${\reader c} \reduce {\abort}$ occurs, or
- (ii) no ${\reader d} \reduce {\abort}$ occurs.
+ (i)  no ${\reader d} \reduce {\abort}$ occurs, or
+ (ii) no ${\reader c} \reduce {\abort}$ occurs.
 
 In case~(i), we can rewrite
 a communication rule occurrence
@@ -1605,7 +1605,7 @@ a \textit{typed protocol}\index{typed protocol}\footnote{We formulated this defi
   \begin{align*}
    p_0 &= d\leftarrow \p i_0; \p o_0\leftarrow add(c, \p i_0); \p o_0
    \leftarrow \p i_0 \text{ and }\\
-   p_1 &= c\leftarrow \p i_1; \p o_1\leftarrow add(c, \p i_1); \p o_1
+   p_1 &= c\leftarrow \p i_1; \p o_1\leftarrow add(d, \p i_1); \p o_1
    \leftarrow \p i_1
   \end{align*}
   where $add(M,N)$ is a specially introduced\footnote{If we choose
@@ -1629,6 +1629,7 @@ We are going to define a virtual machine for executing the typed
 protocol.
 In order to do that, we first define snapshots of the virtual machine.
 After this, we will define the transition from snapshots to snapshots.
+ \begin{definition}
 A \textit{program variable content}\index{program variable content} for
 $i\in\processes$ is a
 partial function that maps a program variable to a closed local term of
@@ -1649,7 +1650,9 @@ and
 $\vec v =
 \left(v_c\right)_{c\in C} \in \prod_{c\in C}(\val(W(c))\cup\{\epsilon\})
 $.
+ \end{definition}
 
+  \begin{definition}
 For a nonempty subset~$J$ of $\processes$, we define an operator $\update J$ that
 takes a system snapshot and produces a system snapshot.
 This operator depicts a computational step where the processes in~$J$
@@ -1693,7 +1696,9 @@ every program variable~$\p y$ is replaced by $x(\p y)$
 and every location~$c$ is replaced by $v_c$.
 If any of the substitutes is $\epsilon$,
 $\semo{E}_{x, \vec v}$ is defined to be $\epsilon$.
+  \end{definition}
 
+   \begin{definition}
 A \textit{schedule}\index{schedule} is an infinite sequence of nonempty subsets
 of~$\processes$,
 which looks like $\sigma = \sigma_0\sigma_1\sigma_2\cdots$.
@@ -1701,6 +1706,7 @@ Each $\sigma_k$ is called a \textit{block}\index{block}.
 We say $i$ is \textit{non-faulty}\index{non-faulty} (resp.~faulty\index{faulty}) in
 $\sigma$ if it appears infinitely (resp. only finitely many) often.
 When every process is non-faulty, the schedule is \textit{fair}\index{fair}.
+   \end{definition}
  \begin{example}[An example of schedules]
   \label{ex:schedules}
   When $\processes$ is a singleton $\{0\}$, there is only one schedule
@@ -1721,6 +1727,7 @@ When every process is non-faulty, the schedule is \textit{fair}\index{fair}.
   must satisfy one of these conditions.
  \end{example}
 
+  \begin{definition}
 A \textit{run}\index{run} is a triple $\tuple{\Pi, \vec x, \sigma}$,
 where $\Pi$ is a typed protocol,
 $\vec x \in \prod_{i\in \processes} \lterm(\iota_i)$ is the input,
@@ -1734,6 +1741,7 @@ Since all programs are finite, the system snapshot will stay constant
 after initial finite steps.  We call that constant system snapshot the
 \textit{final system snapshot}\index{final system snapshot}\index{system
 snapshot!final}\index{snapshot!final system} of an execution.
+  \end{definition}
 
  \begin{example}[An example of a run and an execution]
   Let $\processes$ be $\{0,1\}$ and $\Pi$ be the typed protocol given in
@@ -1837,6 +1845,7 @@ snapshot!final}\index{snapshot!final system} of an execution.
    \end{tabular}
   \end{sidewaystable}
 
+   \begin{definition}
 Process~$i$'s \textit{output}\index{output}~$\hat{o_k}$ at step~$k$ is
 $M$ if the $i$-th process snapshot of $C_k$ is
 $(p, x)$ and the $x[\p{o}_i] = M$, which might be $\epsilon$.
@@ -1849,6 +1858,7 @@ denoted~$d_i \in \lval(o_i)\cup\{\epsilon\}$
 $\epsilon$ if such an output does not exist.
 The \textit{decision vector}\index{vector!decision} of the run is
 the $n$-tuple~$\vec d$ consists of decision value $d_i$'s.
+   \end{definition}
 
 A vector $\vec b\in \prod_{i\in \processes}(\lval(o_i))$
 is \textit{compatible with}\index{compatible with} $\vec d \in \prod_{i\in
@@ -1858,7 +1868,9 @@ For a task~$R$,
 an input~$\vec x\in \prod_{i\in \processes}\lterm(\iota_i)$
 is \linebreak[2] $R$-\textit{permissible}\index{permissible} iff there
 is at least one
-vector $\vec b\in \prod_{i\in \processes}(\lval(o_i))$ with $(\vec x, \vec b)\in R$.
+vector $\vec b\in \prod_{i\in \processes}(\lval(o_i))$ with $(\vec x,
+\vec b)\in R$.
+ \begin{definition}
 A typed protocol~$\Pi$ \textit{solves}\index{solve!typed protocol --- typed
 input-output problem} the typed input-output problem
   $\tuple{(\iota_i)_{i\in \processes}, (o_i)_{i\in \processes}, R}$ on
@@ -1873,6 +1885,7 @@ schedule~$\sigma$,
  the problem on every schedule~$\sigma$.
  In that case, the typed input-output problem is
  \textit{waitfreely solvable}\index{waitfreely solvable}.
+ \end{definition}
 
  \begin{example}[Permissible inputs and outputs]
   The compatible inputs for the addition problem in

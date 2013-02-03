@@ -220,7 +220,7 @@ and to $[u,\pi], S_\epsilon$ (Figure~\ref{fig:lafont}).
 		    {\forall X\forall
  Y((X\limp Y)\oplus (Y\limp X))}\enspace.
 		   \]
- Then, the s-executable
+ Then, the a-executable
  \[
  [g, \mats{z}{z}{x\cdot\pi_Y}{w}{w}{y\cdot\pi_X}]
  \]
@@ -290,7 +290,7 @@ s-executable and for addition of multisets.
 We denote the empty multiset by~$\emptyset$.
 
 % 2a' reduction
-A \textit{schedule}\index{schedule} is a total order on locations.
+A \textit{schedule}\index{schedule} is a total preorder on locations.
 Given a fixed schedule~$\sche$,
 we define binary relations $\sred'$ and $\sred$
 on s-executables
@@ -650,7 +650,7 @@ However, when we try to prove \ref{c:first} by induction on derivations,
 the case for Com rule fails.  Thus we deal with two derivations at the
 same time.
 
-\begin{theorem}[Adequacy of NMTL2]
+\begin{theorem}[Adequacy of \NMTL2]
  \label{c:adequacy}
  Let hypersequents $\mathcal H$ and $\mathcal I$ be derivable.
  We state:
