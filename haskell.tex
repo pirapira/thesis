@@ -1,7 +1,7 @@
 \chapter{Hypersequents in the Programming Language Haskell}
 \label{ch:haskell}
 
-\subsection{Summary}
+\section{Summary}
 
  We investigate the computational meaning of hypersequents and realize
  it as a Haskell library.
@@ -942,7 +942,7 @@ main = execute $three `follows` twoMid `follows` twoLast
 \end{spec}
 
 
-\section{Comparison with G\"odel--Dummett Logic}
+\section{Comparison with G\"odel-Dummett Logic}
 
 
 \subsection{Similarity}
@@ -950,11 +950,11 @@ main = execute $three `follows` twoMid `follows` twoLast
 There are many functional programming languages (OCaml, Haskell, Clean
 etc.) that employ intuitionistic logic for their type systems.
 The hypersequent formulation that we employ is very similar to that of
-G\"odel--Dummett logic, which is among
+G\"odel-Dummett logic, which is among
 intermediate logics~\citep{umezawa} between intuitionistic and
 classical logics.
 
-G\"odel--Dummett logic~\citep{dummett59} was originally introduced as a logic
+G\"odel-Dummett logic~\citep{dummett59} was originally introduced as a logic
 obtained by adding axioms of the form
 $(\varphi\rightarrow\psi)\vee(\psi\rightarrow\varphi)$ to
 intuitionistic propositional logic.
@@ -997,11 +997,11 @@ The answer is actually the execution time scheduling among threads.
 
 \subsection{Difference}
 
-G\"odel--Dummett logic does not have modalities.  Its formulae are the
+G\"odel-Dummett logic does not have modalities.  Its formulae are the
 same as intuitionistic or classical logic.  The only difference of
-G\"odel--Dummett logic from intuitionistic logic is that more formulae
-are provable in G\"odel--Dummett
-logic than in intuitionistic logic.  So, if we want to encode G\"odel--Dummett
+G\"odel-Dummett logic from intuitionistic logic is that more formulae
+are provable in G\"odel-Dummett
+logic than in intuitionistic logic.  So, if we want to encode G\"odel-Dummett
 logic faithfully, we do not have to introduce modalities such as \verb@K t@.
 Even without such modalities, we can regard each component of a
 hypersequent as a thread. However,
@@ -1075,7 +1075,7 @@ interface captures waitfreedom, it is possible to build a less
 time-consuming implementation for this interface although the current
 implementation relies on MVar cells, which internally use spin locks.
 
-\section{Future Work and Conclusion}
+\section{Future Work and Conclusions}
 
 \citet*{alg} showed a class of logics can be defined using
 hypersequent derivation rules.  It will be interesting to see what kind

@@ -1,6 +1,6 @@
-\chapter{Conclusion}
+\chapter{Conclusions}
 
-\subsection{Overview}
+\section{Overview}
 
 We gave mainly two inventions: hyper-lambda calculi and a new
 axiomatization of Abelian logic.
@@ -21,7 +21,7 @@ We have seen two particular hyper-lambda calculi for two logics.
 and identified classes of axioms that can be translated into structural
 sequent calculus rules and structural hypersequent calculus rules.
 According to their classification, the prelinearity axiom
-$(\phi\limp\psi)\oplus(\psi\limp\phi)$ and Amida axiom
+$(\phi\limp\psi)\oplus(\psi\limp\phi)$ and the Amida axiom
 $(\phi\limp\psi)\otimes(\psi\limp\phi)$ belong to $\mathcal P_2$, a
 class whose elements can be translated into a finite set of
 hypersequent structural rules.
@@ -32,7 +32,7 @@ logics with these axioms on top of $\mathbf{FLe}$.
 
 One particular logic worth trying is
 the logic characterized by Kripke models with bounded width~\citep{Ciabattoni01042001}.
-Since G\"odel--Dummett logic is a special case of the bounding width~1,
+Since G\"odel-Dummett logic is a special case of the bounding width~1,
 the generalization of width $k$ will provide waitfree computation on
 weaker shared memory consistency.  Further,
 an ambitious goal is to develop a general framework with which we can
@@ -43,26 +43,26 @@ we are yet to know the computational meaning of the cut-elimination.
 Aforementioned framework would clarify the computational meaning of the
 cut-elimination of hypersequent calculi.
 
-\subsection{Amida Calculus}
+\subsection{The Amida Calculus}
 
 As we saw in Subsection~\ref{amida-cut},
-the deduction system underlying Amida calculus does not enjoy
+the deduction system underlying the Amida calculus does not enjoy
 cut-elimination in the strict sense.
-Moreover, since Amida calculus characterizes Abelian logic
+Moreover, since the Amida calculus characterizes Abelian logic
 (\thref{complete-to-Abelian}),
 there are some inhabited types that are hard to justify constructively;
 for example $\phi\oplus(\phi\limp\one)$.
 The first step would be removing additives and studying the
-multiplicative fragment of Amida calculus.
+multiplicative fragment of the Amida calculus.
 
-\subsection{G\"odel--Dummett Logic}
+\subsection{G\"odel-Dummett Logic}
 
 In logical point of view, the lambda calculus in Chapter~\ref{ch:lambda}
-is too complicated for G\"odel--Dummett logic.
+is too complicated for G\"odel-Dummett logic.
 For example, the notion of processes are actually not needed to study
-G\"odel--Dummett logic.  However, with the help of these additional
+G\"odel-Dummett logic.  However, with the help of these additional
 constructions,
-we were able to identify the computational nature of G\"odel--Dummett
+we were able to identify the computational nature of G\"odel-Dummett
 logic as that of waitfree computation.
 In order to exploit our discovery, we have to extend the
 characterization to the realm of proof searching.  That is, designing a
@@ -74,7 +74,7 @@ proof searching.
 Since we have identified the computational content of the prelinearity
 axiom and obtained a lambda calculus for monoidal t-norm logic, we are
 in a good situation to study fuzzy logics in general.
-After all, the monoidal t-norm logic is the weakest fuzzy logic.
+After all, monoidal t-norm logic is the weakest fuzzy logic.
 Thus, there is a possibility to obtain a lambda calculus for any fuzzy
 logic by extending the lambda calculus in Chapter~\ref{ch:pole}.
 The next target is \L{}ukasiewicz logic.  \L{}ukasiewicz logic is so
@@ -107,14 +107,14 @@ achievable.
 \subsection{Further Implementation}
 
 Since Abelian logic is incompatible with contraction or weakening,
-straightforward implementation Amida calculus on top of Haskell or OCaml
+straightforward implementation the Amida calculus on top of Haskell or OCaml
 would not be a
-good way to exploit the safety of Amida calculus.
+good way to exploit the safety of the Amida calculus.
 Although Clean~\citep{parle1991} offers uniqueness types,
 uniqueness types only reject contraction but accept weakening, so Clean
 is not suitable either.
 
-One promising framework on which to implement Amida calculus is linear ML%
+One promising framework on which to implement the Amida calculus is linear ML%
 \footnote{Although there are no
 publications available, there is an implementation at
 \texttt{https://github.com/pikatchu/LinearML}\enspace.},
@@ -146,15 +146,15 @@ session types.
 
 \subsection{Reasoning about Hyper-Lambda Terms}
 
-The Amida edges introduced in Section~\ref{sec:proofnets} can be applied
+The the Amida edges introduced in Section~\ref{sec:proofnets} can be applied
 to other methods than proof nets.
 For example, in the game semantics of lambda calculi~\citep{untyped},
 strategies are represented by Nakajima trees~\citep{nakajima1975}.
-Then we can expect  Amida edges on Nakajima trees to represent a
+Then we can expect the Amida edges on Nakajima trees to represent a
 strategy of the game semantics for Abelian logic.
-Also, Amida edges works on paths, it should be compatible to the path
+Also, the Amida edges works on paths, it should be compatible to the path
 based semantics by \citet{danos-regnier}.
-Since Amida edges define permutation on the ends of edges in a proof
+Since the Amida edges define permutation on the ends of edges in a proof
 net, and hence can be represented as a matrix, it should be compatible
 to Geometry of Interaction~\citep{girard1989}.
 
@@ -204,17 +204,17 @@ substructural logic lacking weakening and inquisitive logic is a weak
 logic (a logic possibly without substitution-closedness) between
 intuitionistic and classical logics~\citep{ciardelli2011}.
 
-G\"odel--Dummett logic~\citep{dummett59} was invented for algebraic
+G\"odel-Dummett logic~\citep{dummett59} was invented for algebraic
 reason, but now we found a constructive justification of Dummett's axiom
 $(\phi\imp\psi)\lor(\psi\imp\phi)$ as the result of speed-racing during
 proof reduction.  Since the semantics presented in
 Chapter~\ref{ch:lambda} seems somewhat too rigorous,
 there is room for simplification and better understanding of
-G\"odel--Dummett logic.
+G\"odel-Dummett logic.
 
 Abelian logic can provide a way to express
 exchanges and indebtedness.
-Amida axiom $(\phi\limp
+The Amida axiom $(\phi\limp
 \psi)\otimes(\psi\limp\phi)$
 can describe two agents' exchange of $\phi$ and $\psi$ between two agents
 or one agent's borrowing of $\phi$ for $\psi$ and returning $\phi$ for
@@ -237,6 +237,6 @@ sense of indebtedness or obligation in a quantitative way.
 Deontic logic~\citep{von1951deontic,sep-logic-deontic} tried to capture permission,
 obligation and so on.
 Using Abelian logic, we hope to address how much duty is imposed.
-Since Amida calculus can reduce some proofs in Abelian logic, it could
+Since the Amida calculus can reduce some proofs in Abelian logic, it could
 provide a way to analyze a complicated situation where many kinds of
 obligations and permissions of different significance are interwound.

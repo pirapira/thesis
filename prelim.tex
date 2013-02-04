@@ -4,9 +4,9 @@
   We use ``iff\index{iff}'' as an abbreviation for ``if and only if.''
   We use set-theoretic concepts such as sets, relations and functions.
   For a set~$X$, $2^X$ denotes the powerset of $X$.
-   $X\setminus Y$ denotes the subset of $X$ that consists of those
+   $X\setminus Y$ denotes the subset of $X$ that consists of the
    elements of $X$ that are not elements of $Y$.
-   Everywhere, we consider countably infinite set of logical formulae.
+   Everywhere, we consider a countably infinite set of logical formulae.
    A logic\index{logic} is a set of logical formulae, thus, there are at most
    $\powerset{\mathbb N}$ different logics once the set of logical
    formulae is fixed.
@@ -17,7 +17,7 @@
    maps 0 to $M$ and 1 to $N$.
    We denote by $\dom(f)$ the domain of $f$, that is,
    the set of elements that are mapped to something.
-   We also denote a partial map as a sequence whose index is the domain.
+   We also denote a partial map as a sequence whose index set is the domain.
    For example, $(y_i)_{i\in I}$ denotes the partial map that maps
    $i\in I$ to $y_i$.
    For partial maps whose domains are disjoint, we use $\sqcup$ to
@@ -28,7 +28,7 @@
    defined, or otherwise to nothing.
 
   We use BNF (Backus Naur Form) for giving inductive definitions for sets
-  of sequents of symbols.
+  of finite sequences of symbols.
  \begin{example}[An example of BNF]
   When we say we define formulae~$\phi$ by BNF:
   \[
@@ -39,7 +39,7 @@
   \begin{itemize}
    \item $\bot$ is in $\Phi$
    \item each propositional variable is in $\Phi$ and
-   \item if $\phi$ and $\psi$ are in $\Phi$, then $(\phi\imp\psi)$ is in $\Phi$.
+   \item if $\phi$ and $\psi$ are in $\Phi$, then $(\phi\imp\psi)$ is in $\Phi$;
   \end{itemize}
   and then we declare that we call elements of $\Phi$ formulae.
  \end{example}
@@ -53,7 +53,7 @@
 We briefly review the history of mathematical logic and computer science
 to the extent relevant to this thesis.
 Especially, we focus on the treatments of Dummett's axiom $(a\imp
-b)\lor(b\imp a)$ using the techniques in the history.
+b)\lor(b\imp a)$ using the historical techniques.
 We confine ourselves to the developments of propositional logic and
 ignore anything related to predicate logic or formalization of
 mathematics.
@@ -112,7 +112,8 @@ In 1930, Heyting~\cite{heyting1930}\index{Heyting} developed a deduction
 system for the
 intuitionistic propositional logic.  The presentation is similar to
 the contemporary one except some notational differences.  The
-logical connectives are the same $\{\wedge,\vee,\supset,\neg\}$ as today, the
+logical connectives  $\{\wedge,\vee,\supset,\neg\}$
+are the same as today, the
 first three binary and the last unary%
 \footnote{Though, in this thesis, we prefer having nullary $\bot$ as a
 primitive and define $\neg a$ as an abbreviation for $a\supset\bot$.}%
@@ -121,7 +122,7 @@ using these connectives and the propositional variables.
 Although he sometimes used parentheses, he still used more points
 around outer connectives (e.g. $b\supset \kern -3pt\cdot \kern 2pt  a
 \supset b$ indicates the left $\supset$ is outer and the right one is
-inner), but we use parentheses here.
+inner).  Instead we use parentheses.
 These formulae are axioms\footnote{The axioms with numberings are taken
 from \citet{heyting1930}.}, i.e. assumed to be
 ``correct formulae''~\cite{heyting1930}\index{formula!correct}:
@@ -196,8 +197,8 @@ following tables~\citep{heyting1930}:\\
 When we assign one of $\{0,1,2\}$ to each propositional variable, we
 can extend the assignment to all formulae using these tables.
 For binary operators, the columns stand for the prearguments (the
-arguments left of the operator) and the
-rows stand for the postarguments (the arguments right of the operator).
+arguments on the left of the operator) and the
+rows stand for the postarguments (the arguments on the right of the operator).
 For example, if we assign 1 to $a$ and 2 to $b$,
 $a\supset b$ obtains value~0.
 Under any assignment to propositional variables, all of Heyting's axioms
@@ -212,7 +213,7 @@ However, if we assign 2 to $a$, $(\neg \neg a)\supset a$
 is assigned 2.  Thus, we can conclude that $\neg \neg a \supset a$ is
 not a correct formula in Heyting's deduction system.
 Note that the natural order between natural numbers
-plays no rule here: it is not relevant that 2 is larger than 1 or 0 is
+plays no role here: it is not relevant that 2 is larger than 1 or 0 is
 less than 1 (in other places he uses ``all positive and negative
 whole numbers and 0'').  Although Heyting used natural numbers here, he
 already obtained an equivalent notion of what is called Heyting algebra
@@ -281,18 +282,16 @@ propositional logic.
 
 Among the formulae~$F_n$,
 especially, the formula~$F_2$, which is $(a_1\supset a_2)\land (a_2\supset
-a_1)$, brings contradiction into classical or intuitionistic logic.  If we
-had $(p\land q)\supset p$ and $F_2$ as theorems in a logic closed under
-substitution and modus ponens,
-$a_1\supset a_2$ is also a theorem and all formulae would be theorems or
-there would be no theorems.
-% In Chapter~\ref{ch:exchange} we investigate a logic with an axiom similar to $F_2$:
-% $(\phi\limp\psi)\otimes(\psi\limp\phi)$, where $\otimes$ is the
-% multiplicative conjunction and $\limp$ is the linear implication.  Such
-% attempt has been made possible by the development of linear and
-% substructural logics explained below in \ref{linear}.
-In short, in some of those settings, $(p\otimes q)\limp p$ is
-not a theorem because we are not allowed to throw away $q$.
+a_1)$, brings contradiction into classical or intuitionistic logic.
+Moreover, any logic (closed under modus ponens and substitution) having
+$F_2$ as a theorem is inconsistent.
+In Chapter~\ref{ch:exchange} we investigate a logic with an axiom similar to $F_2$:
+$(\phi\limp\psi)\otimes(\psi\limp\phi)$, where $\otimes$ is the
+multiplicative conjunction and $\limp$ is the linear implication.
+That logic is consistent because it lacks weakening and contraction rules.
+Such
+attempt has been made possible by the development of linear and
+substructural logics explained below in \ref{linear}.
 
 In the final sentence, \citet{godelprop} states what is known as
 disjunction property\index{disjunction property} today%
@@ -307,12 +306,12 @@ $(p\supset q) \lor (q\supset p)$ is not provable.
 
 Although Troelstra~\cite[p.~223]{goedelcollected} writes ``the reasons
 for studying intermediate logics are mainly technical,'' we find that
-one typical intermediate logic, G\"odel--Dummett logic, has a
+one typical intermediate logic, G\"odel-Dummett logic, has a
 computational interpretation that has already been known: waitfreedom.
-The connection between G\"odel--Dummett logic and waitfreedom will be
+The connection between G\"odel-Dummett logic and waitfreedom will be
 treated in Chapter~\ref{ch:lambda}.
 
-\subsection{The Brouwer--Heyting--Kolmogorov Interpretation of Logical Connectives}
+\subsection{The Brouwer-Heyting-Kolmogorov Interpretation of Logical Connectives}
 
 \subsubsection{Kolmogorov's view of implication as problem reduction}
 
@@ -357,9 +356,9 @@ In the calculus of problems, the logical connectives $\vee, \wedge,
 \subsubsection{Realization as Typed Lambda Terms}
 
 One formulation of the
-Brouwer--Heyting--Kolmogorov\index{Brouwer--Heyting--Kolmogorov
+Brouwer-Heyting-Kolmogorov\index{Brouwer-Heyting-Kolmogorov
 interpretation}
-(BHK\index{BHK|see{Brouwer--Heyting--Kolmogorov interpretation}})
+(BHK\index{BHK|see{Brouwer-Heyting-Kolmogorov interpretation}})
 interpretation reads: ``a proof of the
 implication $\varphi\supset\psi$ is a construction which permits us to
  transform any proof of $\varphi$ into a proof of $\psi$''~\cite[Ch.~1, 3.1.]{troelstra1988constructivism}.
@@ -383,7 +382,8 @@ mention a larger, more complicated formula.  Actually, there
 are alternative formulations of intuitionistic (and classical)
 propositional logic by \citet{gentzen} where we only have to
 mention subformulae of the formula being proven.
-The desirable property is called subformula property\index{subformula property}.
+The desirable property is called the subformula
+property\index{subformula property}.
 The two proof systems are called natural deduction\index{natural
 deduction} and sequent calculus\index{sequent calculus}.
 
@@ -453,10 +453,10 @@ rules for $\wedge$
   The elimination rules are rewritten so that they operate on the left
   side of sequents and they are called the left rules.
 
-  In Chapter~\ref{ch:exchange}, we will use hypersequent calculus for
+  In Chapter~\ref{ch:exchange}, we will use a hypersequent calculus for
   presenting Abelian logic.
   In Chapter~\ref{ch:lambda}, we will use hypersequent-style natural deduction
-  for presenting G\"odel--Dummett logic.
+  for presenting G\"odel-Dummett logic.
 
 \subsubsection{Prawitz's Analysis of Natural Deduction}
 
@@ -493,7 +493,7 @@ derivation~\citep[p.~36]{prawitz1965} can be reduced
  where $\Sigma_0$ and $\Sigma_1$ stand for derivations with conclusions
  $A$ and $B$ respectively.
  In the reduction, the occurrence of $\wedge$ is removed.
- The same holds for other logical connectives: thus we can remove
+ The same holds for other logical connectives; thus we can remove
  maximal formulae.
 
  Further, \citet[Chapter~IV]{prawitz1965} formulated a weaker notion
@@ -507,14 +507,14 @@ derivation~\citep[p.~36]{prawitz1965} can be reduced
  Such ``syntactic bureaucracy'' can be removed by proof nets.
  See Section~\ref{sec:proofnets} for an example.}.
  A derivation without maximal segments is called normal.
- And Prawitz proved the existence of a normal derivation of $\G\vdash A$
+ Prawitz proved the existence of a normal derivation of $\G\vdash A$
  given any derivation of $\G\vdash A$.
  \citet{prawitz1965} treated first-order, second-order and modal logics but
  we do not elaborate.
 
  The reductions and the normal form coincide with the $\beta$-reduction
  and the normal form in the typed lambda
- calculi under Curry--Howard isomorphism.
+ calculi under Curry-Howard isomorphism.
 
 \subsubsection{Prior's Tonk}
 
@@ -564,32 +564,32 @@ nonsense by the dual nonsense, namely:
  inference-ticket.
 
 
-\subsection{Curry--Howard Isomorphism}
+\subsection{Curry-Howard Isomorphism}
 
 At the core of computer science lies the interplay of static formalism
 and dynamic behaviour.  We can find examples in typed lambda calculi,
 where static formalism of type derivations interacts with dynamic
 behaviour of lambda terms.
-Type derivations of static objects associating lambda terms to types.
-The reduction on terms gives dynamics, defining which term reduces
+Type derivations are static objects associating lambda terms to types.
+The reduction relation on terms gives dynamics, defining which term reduces
 to which.  Static type derivations can guarantee dynamic properties of
 programs such as strong normalization~\citep{girard1989proofs} and more
 specific properties using parametricity arguments~\citep{reynolds1983types}.
 
-The Curry--Howard isomorphism~\index{Curry--Howard isomorphism}
+The Curry-Howard isomorphism~\index{Curry-Howard isomorphism}
 is originally a correspondence between
 intuitionistic propositional logic proofs and typed lambda terms, but
-the name combination Curry--Howard has obtained a more general meaning
+the name combination Curry-Howard has obtained a more general meaning
 spanning over the
 correspondence between proofs and programs in general.
 The phrase ``computational interpretation'' is most often used for
-the Curry--Howard
+the Curry-Howard
 isomorphism~\citep{abramsky1993computational,parigot2000,bierman1998,martini1996}.
 \citet{curryhoward} recently presented a comprehensive reference book on the
 topic, containing lots of historical and bibliographical remarks.
 
 \subsubsection{Curry's Discovery}
-The Curry--Howard isomorphism is originally the correspondence of
+The Curry-Howard isomorphism is originally the correspondence of
 the typed lambda terms and the proofs of the implicational fragment%
  \footnote{The implicational fragment\index{fragment!implicational} of a
  logic can be defined by taking formulae only containing implications
@@ -650,7 +650,7 @@ and the corresponding Postulate~(FC):
  y.\lambda z. xzy$, which is the combinator $C$, to the logical formula
  $(\beta\supset (\alpha\supset
  \gamma))\supset (\alpha\supset(\beta\supset\gamma))$.
- Throughout this thesis, we use colons~$\colon$ to associate terms with types.
+ Throughout this thesis, we use colons~$\colon$ to combine terms with types.
 
  Henceforth, we do not give deduction systems of a logic and
  typing rules for a typed lambda calculi separately because
@@ -660,7 +660,7 @@ precise statements for the correspondence appear in
 \citet[9E]{curry1974combinatory}, a section titled ``analogies with
 propositional algebra.''
 
-Curry--Howard isomorphism provides
+Curry-Howard isomorphism provides
 one realization of BHK interpretation: proofs as lambda terms where the
 introduction rule of implication is realized as the lambda abstraction
 and the elimination rule of implication is realized as the application
@@ -679,7 +679,7 @@ structure is a $\beta$-redex: $(\lambda x. M)N$.
  A proof of implication allows transformation of proofs
 by means of
 substitution.  The encoding of proofs as lambda terms is traditionally
-called the Curry--Howard isomorphism.
+called the Curry-Howard isomorphism.
 % The situation is similar to axiomatized geometry where lines and points
 % could be tables and chairs \fix{(cite)}.
 
@@ -689,10 +689,10 @@ naturally embodied in the situation of
 intuitionistic propositional logic.  The last century saw their
 generalization called intermediate logics~\citep{umezawa} (or superintuitionistic
 logics\index{logic!superintuitionistic}), of which a typical example is
-called G\"odel--Dummett logic.
-In this thesis we investigate the Curry--Howard isomorphism for
-G\"odel--Dummett logic.  The G\"odel--Dummett
-logic\index{logic!G\"odel--Dummett} validates formulae
+G\"odel-Dummett logic.
+In this thesis we investigate the Curry-Howard isomorphism for
+G\"odel-Dummett logic.  The G\"odel-Dummett
+logic\index{logic!G\"odel-Dummett} validates formulae
 of the form $(\phi\imp\psi)\lor(\psi\imp\phi)$, which is known as
 Dummett's axiom\index{axiom!Dummett's}\index{Dummett's
 axiom|see{axiom}}.  We add a construct to the simply typed lambda
@@ -704,26 +704,26 @@ logics~\citep{residuated}, which contains all the intermediate logics as
 well as the
 (intuitionistic) multiplicative
 additive fragment of linear logic.
-In the later chapter, we make a typing system that lacks contraction and
+In the later chapters, we make a typing system that lacks contraction and
 weakening in Chapters~\ref{ch:exchange} and~\ref{ch:pole}.
 
 \subsubsection{Application to Programming Languages}
 
 \citet{landin1965} noticed some similarities between ALGOL~60 syntax and
 the untyped lambda calculus.
-Since then, many programming languages came out of the Curry--Howard
-isomorphism.  Most notably the so-called ML family languages like
+Since then, many programming languages came out of the Curry-Howard
+isomorphism:  most notably so-called the ML family languages like
 Standard ML~\citep{milner1997definition},
 OCaml~\citep{minsky2011}, SML\#~\citep{ohori2011},
 Haskell~\citep{marlow2010haskell}, F\#~\citep{fsharp} and so on.
 
-However, none has employed Dummett's axiom
+However, none has employed Dummett axiom
 $(\phi\imp\psi)\lor(\psi\imp\phi)$
-or Amida axiom\footnote{For explanation of $\otimes$ and $\limp$, see \ref{subsub:la-logics}.}
+or the Amida axiom\footnote{For explanation of $\otimes$ and $\limp$, see \ref{subsub:la-logics}.}
 $(\phi\limp\psi)\otimes(\psi\limp\phi)$
 as a type for a language primitive.
 
-\subsection{G\"odel--Dummett Logic}
+\subsection{G\"odel-Dummett Logic}
 \subsubsection{Dummett's Axiomatization}
 Dummett~\cite{dummett59} considers a semantics on $\{0,1,2,\ldots,\omega\}$ where
 $\wedge$ is interpreted as maximum, $\vee$ as minimum, $\bot$ as $\omega$
@@ -747,12 +747,12 @@ Thomas~\citep{thomas1962} axiomatized
 
 \subsubsection{Sonobe's Gentzen-Style Calculus}
 
-\citet{sonobe} presented a sequent calculus for G\"odel--Dummett logic
+\citet{sonobe} presented a sequent calculus for G\"odel-Dummett logic
 and proved cut-elimination theorem for it.
 On top of intuitionistic propositional logic, there is only one rule.
 However, the number of assumptions of the rule is not constantly
 bounded.  The rule can have assumptions as many as any natural number.
-After looking at \lgd\,in Chapter~\ref{ch:lambda},
+After looking at a hyper-lambda calculus \lgd\,in Chapter~\ref{ch:lambda},
 we can translate a proof in Sonobe's system into a \lgd\,typing
 derivation and then find the computational content of the original
 proof.  However, the author has never seen an attempt of determining
@@ -767,7 +767,7 @@ A \textit{hypersequent}\index{hypersequent} is a finite sequence of sequents:
 \quad (n \ge 0)\enspace.
 \]
 We use metavariable $\hyper$ for a hypersequent.
-For G\"odel--Dummett logic, \citet{avron91} formulated the communication
+For G\"odel-Dummett logic, \citet{avron91} formulated the communication
 rule\index{rule!communication}\index{communciation rule}
 \begin{center}
  \AxiomC{$\hyper_0\hmid \G'_0, \G_0\tr \phi_0 $}
@@ -785,20 +785,23 @@ logical rule\index{rule!logical}\index{logical rule}.
 For the hypersequent calculus with the \textit{communication
 rule}\index{rule!communication}\index{communication rule},
 \citet{avron91} showed cut-elimination theorem.
-He asked what is the computational content of G\"odel--Dummett and other
+He asked what is the computational content of G\"odel-Dummett and other
 intermediate logics (see the beginning of Chapter~\ref{ch:lambda} for
 quotation).
 
 \subsection{Waitfreedom}
 
 A waitfree protocol over shared memory~\cite{herlihy1991wait}
- assigns a program to each process so that no process waits for another process.
-Some tasks can be solved by a~well-chosen waitfree protocol while the others cannot.
-For example,
- it is waitfreely impossible for each processes to attain the input value of the other
- process.
+ assigns a program to each process within the restriction that
+ no process waits for another process.
+Some tasks can be solved by a~well-chosen waitfree protocol while the
+ others cannot.
+ For example,
+ it is waitfreely impossible for each processes to attain the input
+ values of the other processes.
  On the other hand, it is waitfreely possible for
- either one of two processes to attain the input value of the other process.
+ at least one of the processes to attain the input values of the other
+ processes.
 
 Herlihy and Shavit~\cite{Herlihy99} characterized waitfree
 computation using
@@ -812,15 +815,15 @@ Gafni and Koutsoupias~\cite{gafni1999three}
 
 In this thesis,
 a \textit{logic}\index{logic} is a set of logical formulae which is
-closed by
-substitution and modus ponens%
+closed under substitution and modus ponens%
 \footnote{There are, however, logics not closed for substitution such as
 dynamic epistemic logic~\citep{ditmarsch2007dynamic} and
 inquisitive logic~\citep{ciardelli2011}.  Thus
 in general it would be fair to say that a logic is a set of logical
 formulae.}.
 Elements of a logic are called \textit{theorems}\index{theorem}.
-By \textit{substitution}\index{substitution}-closedness, if $\phi$ is a
+The \textit{substitution}\index{substitution}-closedness means
+ that if $\phi$ is a
 theorem, $\phi[\psi/X]$ (i.e. the
 logical formula obtained by replacing all occurrences of $X$ with
 $\psi$) is also a theorem.
@@ -862,7 +865,7 @@ $\alpha\imp\chi, \chi\imp\beta\in L$ and $\chi$ only contains propositional
 variables that appear in both $\alpha$ and $\beta$.
 The seven logics include the intuitionistic propositional logic, the logic of
 the weak excluded middle,
-G\"odel--Dummett logic
+G\"odel-Dummett logic
 and classical logic.
 Although the Craig interpolation property is useful for program
 verification~\citep{mcmillan2003,esparza,unno2009},
@@ -871,11 +874,11 @@ theoretical interest.
 
 We take the first approach described by Hosoi and Ono: namely,
 studying particular logics instead of intermediate logics in general.
-This thesis is about particular logics: G\"odel--Dummett logic and
+This thesis is about particular logics: G\"odel-Dummett logic and
 Abelian logic.  We claim that these logics can be used for developing
- programming languages.  The Curry--Howard
-isomorphism is our justification of studying these particular logics.
-G\"odel--Dummett logic is one typical intermediate logic.
+ programming languages.  The Curry-Howard
+isomorphism justifies our investigation of these particular logics.
+G\"odel-Dummett logic is one typical intermediate logic.
 Abelian logic, on the other hand, is not an intermediate logic
 because it lacks structural rules called weakening and contraction.  Such logics are
 called substructural logics, whose history will be followed in \ref{linear}.
@@ -899,15 +902,16 @@ However, in the case of axiomatic set theory with comprehension,
 contradictory\footnote{\citet{yatabe2009} found an easier proof of this.}.
 
 Computationally inclined research on intermediate logics can be found
-in proof searching.  For the typical intermediate logic G\"odel--Dummett
-logic, there have been many proof searching implementations.
+in proof searching.  The most typical intermediate logic,
+G\"odel-Dummett
+logic have many proof searching implementations.
 Currently, the fastest solver the author is aware of
 is Fiorino's EPDL~\citep{Fiorino20103633}.
 Fiorino benchmarked his and other implementations
  on a problem set for intuitionistic logic
 called ILTP library~\citep{iltp}.
 Related to proof searching,
-Ferm\"uller~\cite{parallel} gave a game semantics for G\"odel--Dummett
+Ferm\"uller~\cite{parallel} gave a game semantics for G\"odel-Dummett
 logic, which is based on Lorenzen game~\cite{curryhoward} and essentially
 proof searching bottom-to-up.  The game contains concurrent subgames but
 he gave no explicit mentions on waitfree computation.
@@ -955,7 +959,7 @@ Further, when we add weakening to BCI logic, we obtain BCK
 logic~\citep{ono-komori-1985}.
 \textit{BCK logic}\index{logic!BCK} has three axioms named after well-known
 combinators.  Indeed, the logic can be characterized as the smallest set
-closed by modus ponens and substitution that contains
+closed under modus ponens and substitution that contains
 \begin{description}
  \item[(B)] $(\phi\imp\psi)\imp((\chi\imp\phi)\imp(\chi\imp\psi))$
  \item[(C)] $(\phi\imp(\psi\imp\chi))\imp(\psi\imp(\phi\imp\chi))$ and
@@ -980,7 +984,7 @@ iff $\hypere'$ is derivable whenever $\hypere$ is.
 \subsubsection{Linear and Affine Logics}
 \label{subsub:la-logics}
 
-Girard invented the linear
+Girard found the linear
 logic~\citep{girard1987}\index{logic!linear}\index{linear
 logic|see{logic}}.
 To explain this logic, let us present two formulations of
@@ -1030,10 +1034,11 @@ propositional logic:
  we sometimes use them as nouns: ``multiplicatives'' for the
  multiplicative operators and ``additives'' for the additive operators.
 
- Although additive implication can be defined~\citep[Ch.~4]{troelstra1992},
+ Additive implication can be
+ defined~\citep[Ch.~4]{troelstra1992} using additive disjunction, but
  the multiplicative implication~$\limp$ has a more important role
  because our interpretation of $\tr$ symbol in a sequent is the
- multiplicative implication as the following invertible rule shows:
+ multiplicative implication.  This is shown by the following invertible rule:
   \begin{center}
    \AxiomC{$\G,\phi\tr\psi$}
    \UnaryInfC{$\G\tr\phi\limp\psi$}
@@ -1054,7 +1059,7 @@ propositional logic:
  \subsubsection{Abelian Logic}
 
  \citet{meyer-slaney-1989} and \citet{casari1989} found Abelian logic
- independently.  \citet{meyer-slaney-1989}'s motivation was bringing the
+ independently.  Meyer and Slaney's motivation was bringing the
  theory of relevant logics closer to group theory.
  \citet{casari1989} mentions arguments about comparative propositions in
  treated in Aristotle's \textit{Topics}:
@@ -1069,7 +1074,7 @@ propositional logic:
  the interpretation of $\cdot\limp\one$ is the inverse element.
  Abelian logic is an important example in algebraic semantics of logics
  because Abelian logic is complete with respect to the lattice-ordered
- group $\mathbb Z$ of integers~\citep[pp.~107--108]{residuated}.
+ group $\mathbb Z$ of integers~\citep[pp.~107-108]{residuated}.
  \citet{metcalfe2002} gave a deduction system for Abelian logic,
  which ``almost''~\citep[after Definition~8]{metcalfe2002} has the subformula property.
  \citet{metcalfe2006} gave a hypersequent calculus for Abelian logic and
@@ -1081,7 +1086,7 @@ propositional logic:
  hyper-lambda calculus in a straightforward way
  (Section~\ref{sec:session-process}).
 
- \subsubsection{Proof Nets and Amida Lotteries}
+ \subsubsection{Proof Nets and the Amida Lotteries}
  \label{amidalot}
 
 Proof nets are graphical representation of proofs.
@@ -1095,11 +1100,11 @@ There have been intensive studies on proof nets,
 which started with~\citet{girard1987} and \citet{danos-regnier}.
 
  We are going to treat the intuitionistic version of
- multiplicative linear logic, and its proof nets are based on Amida
+ multiplicative linear logic, and its proof nets are based on the Amida
  lotteries.
  The Amida lottery is a traditional way to generate permutations on a set
  in an obfuscated way.
- Japanese schoolchildren use \textit{Amida lotteries}\index{Amida lotteries}
+ Japanese schoolchildren use the \textit{Amida lotteries}\index{Amida lotteries}
  for assigning seats, jobs, teams and so on to classmates.
  The diagram defines a permutation.
  From a top end, one can find the counterpart by following the vertical
@@ -1110,7 +1115,7 @@ which started with~\citet{girard1987} and \citet{danos-regnier}.
  \begin{figure}[h]
   \centering
   \includegraphics[scale=0.6]{amida.eps}
-  \caption[An example of Amida lotteries.]{An example of Amida
+  \caption[An example of the Amida lotteries.]{An example of Amida
   lotteries.  Nozomi clears blackboards; Ken waters flowers; Yuko chairs
   meetings; and Taro feeds Hamsters.}
   \label{amida-lottery}
@@ -1124,7 +1129,7 @@ Chapter~\ref{ch:exchange} treats a synchronous hyper-lambda calculus and
 Chapter~\ref{ch:lambda} deals with an asynchronous one.
 The operational semantics is simpler in the synchronous case while
 the type system is more exotic in the synchronous case.
-The asynchronous one is apt for shared--memory implementation.
+The asynchronous one is apt for shared-memory implementation.
 Chapter~\ref{ch:pole} treats another asynchronous hyper-lambda calculus
 based on monoidal t-norm logic.  In this chapter, we analyse the
 \textit{prelinearity

@@ -1,18 +1,18 @@
 \chapter{Introduction}
 
-\subsection{Our Contributions}
+\section{Our Contributions}
 
 We propose hyper-lambda calculi.
 Instead of lambda terms in ordinary lambda calculi,
 we use a finite sequence of lambda terms called hyper-lambda terms.
 We give two such examples:
-one models synchronous send--receive communication (Chapter~\ref{ch:exchange}) and
+one models synchronous send-receive communication (Chapter~\ref{ch:exchange}) and
 the other models asynchronous waitfree
-read--write communication (Chapter~\ref{ch:lambda}).
-The two hyper-lambda calculi are in Curry--Howard correspondence with
-hypersequent formulation of logics: Abelian logic and G\"odel--Dummett
+read-write communication (Chapter~\ref{ch:lambda}).
+The two hyper-lambda calculi are in Curry-Howard correspondence with
+hypersequent formulation of logics: Abelian logic and G\"odel-Dummett
 logic.
-G\"odel--Dummett logic is an intermediate logic.
+G\"odel-Dummett logic is an intermediate logic.
 An intermediate logic is a logic \textit{between} classical and
 intuitionistic logics, where `between' is defined using the
 set-theoretic inclusion of valid logical formulae of each logic.
@@ -26,33 +26,31 @@ results contain new phenomena.
 This thesis is intended to contain such concrete discoveries
 about specific intermediate and substructural logics.
 
-The more famous logic among the two, G\"odel--Dummett logic, is
+The more famous logic among the two, G\"odel-Dummett logic, is
 a typical intermediate logic known from 1950's.
-Our method is the Curry--Howard correspondence, also known from 1940's.
+Our method is the Curry-Howard correspondence, also known from 1940's.
 Our result is characterization of waitfreedom, a concept in the theory
 of distributed computation extensively studied in 1990's.
 Since both sides of the correspondence are already known,
 the discovery is a replay of Curry's surprise.
 
-After developing the hyper-lambda calculus for Abelian logic,
-we found that the resulting programming language is similar to one of
+After developing a hyper-lambda calculus for Abelian logic,
+we found that the resulting programming language is similar to a
 session type systems by \citet{giunti2010} although they were not aware
-of the underlying logic.  The temporal order of discoveries is unusual
-because usually logic is found first and then programming languages are
-developed using Curry--Howard correspondence.  Abelian logic is found
-after the programming language.
+of the underlying logic.  The independent discoveries constitute
+another instance of Curry--Howard correspondence ``not by design''.
 
 We list our contributions from the most important:
 \begin{enumerate}
  \item developing a lambda calculus using
        a hypersequent calculus (Chapters~\ref{ch:exchange}, \ref{ch:lambda});
- \item identifying the computational ability of the
-       G\"odel--Dummett logic with waitfreedom (Chapter~\ref{ch:lambda});
+ \item identifying the computational ability of
+       G\"odel-Dummett logic with waitfreedom (Chapter~\ref{ch:lambda});
  \item encoding session types using a seemingly unknown axiom
-       $(\phi\limp \psi)\otimes(\psi\limp \phi)$ (which we call Amida axiom) on top
+       $(\phi\limp \psi)\otimes(\psi\limp \phi)$ (which we call the Amida axiom) on top
        of the multiplicative additive fragment of intuitionistic linear
        logic (Chapter~\ref{ch:exchange}),
- \item discovery of a new axiomatization of Abelian logic (Chapter~\ref{ch:exchange});
+ \item discovery of a new proof system for Abelian logic (Chapter~\ref{ch:exchange});
  \item using conjunctive hypersequents for the first time
        (Chapter~\ref{ch:exchange});
  \item giving a typed lambda calculus for monoidal t-norm logic
@@ -61,18 +59,20 @@ We list our contributions from the most important:
 \end{enumerate}
 
 Our first contribution is the technique for our second contribution.
-We developed a lambda calculus based on \citet{avron91}'s hypersequents.
+We developed a lambda calculus based on Avron's
+hypersequents~\citep{avron91}.
 \citet{avron91} himself noted that it would be important to develop a
 lambda calculus for hypersequents.
-The lambda calculus relies on \citet{avron91}'s hypersequents.
-The hypersequent calculus is a
+The lambda calculus relies on Avron's hypersequents~\citep{avron91}.
+A hypersequent calculus is a
 variant of the deduction system called sequent calculus.  In sequent
 calculus, each step of a proof tree concludes a sequent $\G\vdash\phi$ that
 consists of a finite sequence of logical formulae~$\G$ and a logical
 formula~$\phi$.  The sequent $\G\vdash\phi$ is
 interpreted as an implication.  In hypersequent calculus, each step of a
 proof tree concludes a hypersequent instead of a sequent.  A
-hypersequent is a sequence of sequents delimited by $\hmid$:
+\textit{hypersequent}\index{hypersequent}
+is a sequence of sequents delimited by $\hmid$, e.g.,
 $\G\vdash\phi\hmid \D\vdash\psi
 \hmid \cdots$.  Also here, each component is interpreted as an
 implication, and then the whole hypersequent is interpreted as the
@@ -83,17 +83,17 @@ interpretation of components, we regard the proof tree as the guarantee of
 success of at least one process.
 
 Our second contribution is the new approach of interpreting proofs in
-G\"odel--Dummett logic as
+G\"odel-Dummett logic as
 concurrently executable programs for waitfree computation.
 Although \citet{avron91} noticed his hypersequent calculus has something
 to do with concurrency (as the title of~\citep{avron91} contains the phrase
 ``intermediate logics for concurrency''), it was unknown that
-the computational interpretation of G\"odel--Dummett logic has
+the computational interpretation of G\"odel-Dummett logic coincides with
 the degree of synchronization called waitfreedom.  This discovery
 constitutes our second contribution.
 
 According to \citet[p.97]{curryhoward},
-the Curry--Howard isomorphism~\citep{curryhoward} was first made
+the Curry-Howard isomorphism~\citep{curryhoward} was first made
 precise by \citet[\textbf{9}E and
 \textbf{9}F]{curry1974combinatory}.
 The intuitionistic propositional logic and the typed lambda calculus
@@ -101,14 +101,15 @@ had been independently invented but Curry discovered them to be the same thing.
 The ``double discovery'' (\citet{wadler2012propositions}) is considered
 to affirm the importance of the typed lambda calculi.
 In this thesis we witness a replay of the ``double discovery'' with
-different casts: G\"odel--Dummett logic and the waitfreedom.
+different casts: G\"odel-Dummett logic and the waitfreedom.
 Both of these were born in the early eras of their respective academic
 disciplines:
 mathematical logic bore G\"odel Dummett logic in
 1950's~\citep{dummett59}
 and the computer science bore waitfree computation in
 1970's~\citep{lamport1979make}.
-Chapter~\ref{ch:lambda} is about the unknown connection between these two.
+Chapter~\ref{ch:lambda} is about the previously unknown connection
+between these two.
 
 This is the first such computational
 interpretation for intermediate logics (Figure~\ref{fig:lattice}).
@@ -130,20 +131,21 @@ In computer science, such a phenomenon is called nondeterminism caused by schedu
  \begin{figure}
   \centering
   \includegraphics[scale=0.8]{lattice.eps}
-  \caption[The lattice of substructural logics, some of which with known lambda calculi.]
+  \caption[The lattice of substructural and intermediate logics, some of
+  which with known lambda calculi.]
   {\small
-  The substructural logics for which lambda calculi are found.
+  The substructural and intermediate logics for which lambda calculi are found.
   The underlying Hasse diagram of well-known substructural logics is
   taken from
   \cite[p.~120]{residuated} with slight modifications.
   The names in boxes refer to people who developed lambda calculi for
   these logics.{
-  \textsf{GD} stands for G\"odel--Dummett logic, for which
+  \textsf{GD} stands for G\"odel-Dummett logic, for which
   a lambda calculus will be given in
   Chapter~\ref{ch:lambda}.
   \textsf{Abelian} stands for Abelian
   logic~\citep{meyer-slaney-1989,casari1989,metcalfe2002}
-  treated in Chapter~\ref{ch:exchange}.
+  discussed in Chapter~\ref{ch:exchange}.
   \textsf{MTL} is monoidal t-norma logic~\cite{Esteva2001271}, for which
   we give a hyper-lambda calculus in Chapter~\ref{ch:pole}.
   \textsf{FLe} is for the full Lambek calculus with exchange
@@ -166,7 +168,7 @@ In computer science, such a phenomenon is called nondeterminism caused by schedu
   \textsf{R} stands for relevance logic~\citep{urquhart1972},
   for which \citet{gabbay1992} gave a lambda calculus.
   \textsf{Int} stands for the intuitionistic propositional logic.
-  The original Curry--Howard isomorphism was found for this logic by
+  The original Curry-Howard isomorphism was found for this logic by
   Curry~\citep{curry1942}.
   \textsf{Cl} stands for the classical propositional logic.
   There is intensive research going on for the computational
@@ -180,33 +182,35 @@ In computer science, such a phenomenon is called nondeterminism caused by schedu
  \end{figure}
 Dynamic behaviour involves time.
 One simple notion of time is that of totally ordered events where
-one event happens before the other or the other before one.
+one event happens before the other or the other before the one.
 This sentence is syntactically similar to Dummett's axiom that states
-one proposition implies the other or the other implies one.
+one proposition implies the other or the other implies the one.
 We investigate whether this syntactic similarity is reflected
 in the dynamic semantics of logics: namely, the lambda calculi.
 
 Our third contribution is about encoding of session types into a linear
-type system.  Although the approach is similar to \citet{pfenning2010} and
-\citet{wadler2012propositions}'s work, our Amida calculus has an
+type system.  Although the approach is similar to that of \citet{pfenning2010} and
+\citet{wadler2012propositions}, the Amida calculus has an
 additional axiom so that it can type some processes that Pfenning or
 Wadler's type systems cannot.
 
 Our fourth contribution is a side effect of the third contribution.
-The type system we developed for our third contribution is seemingly
-unknown axiomatization of Abelian logic~\citep{casari1989}.
+The type system we developed for our third contribution is an
+unknown proof system for Abelian logic~\citep{casari1989}.
+We moreover take the essence of the new proof system and obtain a kind
+of proof nets called the Amida nets.
 Syntactically, the correct proof structure can be characterized with
-Amida edges, which is similar to the structure of Amida lottery.
-The previous works treated the computational interpretations of
+the Amida edges, which is similar to the structure of Amida lottery.
+The previous chapters gave the computational interpretations of
 disjunctive formulae like $(\phi\imp\psi)\lor(\psi\imp\phi)$ or
 $(\phi\limp\psi)\oplus(\psi\limp\phi)$.  In this chapter, we try
 replacing these disjunctions with conjunctions.
-In the former case, the change renders the logic inconsistent.
-If we add the axiom $(\phi\imp\psi)\land(\psi\imp\phi)$ to the
+In the former case, the change renders the logic inconsistent;
+if we add the axiom $(\phi\imp\psi)\land(\psi\imp\phi)$ to the
 intuitionistic propositional logic,
 we can prove any formula.  However in the latter case, the change does
 not make the system meaningless.
-In Chapter~\ref{ch:exchange}, we treat
+In Chapter~\ref{ch:exchange}, we introduce
 the axioms of the form $(\phi\limp\psi)\otimes(\psi\limp\phi)$
 on top of IMALL, intuitionistic
 multiplicative additive linear
@@ -224,9 +228,9 @@ This is the first application of such conjunctive hypersequents.
 
 Our sixth contribution is a typed lambda calculus for monoidal
 t-norm logic.  Monoidal t-norm logic (MTL) is the affine version of
-G\"odel--Dummett logic.
+G\"odel-Dummett logic.
 MTL is considered by some to be the weakest fuzzy logic.
-Following our method of interpreting G\"odel--Dummett logic proofs as
+Following our method of interpreting G\"odel-Dummett logic proofs as
 waitfree protocols, we interpret the MTL proofs in our deduction system
 as asynchronously communicating processes.
 There we employ the second-order formulation and perform parametricity

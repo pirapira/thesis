@@ -4,40 +4,40 @@
 \chapter{An Asynchronous Hyper-Lambda Calculus}
 \label{ch:lambda}
 
-\subsection{Summary}
+\section{Summary}
 
 We define a typed lambda calculus based on Avron's hypersequent
-calculus~\citep{avron91} for G\"odel--Dummett logic.
+calculus~\citep{avron91} for G\"odel-Dummett logic.
 We show that this calculus models
 waitfree computation~\citep{Herlihy88,Saks:1993vq}.
 Besides strong normalization and non-abortfullness,
 we give soundness and completeness of
 the calculus against the typed version of waitfree protocols.
-The calculus is not only proof theoretically interesting,
+The calculus is not only proof-theoretically interesting,
 but also valuable as a basis for distributed programming languages.
 In other words, we extend
-Curry--Howard isomorphism~\cite{curryhoward} to G\"odel--Dummett logic and
+Curry-Howard isomorphism~\cite{curryhoward} to G\"odel-Dummett logic and
 waitfreedom.
 The content of this chapter appeared in a conference paper by
 \citet{hiraiflops2012} although substantial modification has been
 applied since.
 
-On one hand, G\"odel--Dummett logic~\cite{dummett59}
+On one hand, G\"odel-Dummett logic~\cite{dummett59}
 is one of the intermediate logics
 between classical and intuitionistic logics.
-Waitfreedom~\cite{Herlihy88,Saks:1993vq} is a class of distributed
+On the other hand, waitfreedom~\cite{Herlihy88,Saks:1993vq} is a class of distributed
 computation without synchronization among processes.
 
-We connect G\"odel--Dummett logic and waitfreedom using
+We connect G\"odel-Dummett logic and waitfreedom using
 Avron's hypersequent calculus~\cite{avron91}.
 In doing that, we respond to his suggestion:
 \begin{quote}
 it seems to us extremely important to determine the exact
-       computational content of them~[intermediate logics] ---
+       computational content of them~[intermediate logics]---%
        and {to develop corresponding `$\lambda$-calculi'}
        ---Avron~\cite{avron91}.
 \end{quote}
-Differently from intuitionistic logic, G\"odel--Dummett logic validates
+Differently from intuitionistic logic, G\"odel-Dummett logic validates
 all formulae of the form
  $(\varphi\supset\psi)\vee(\psi\supset\varphi)$.
 We aim at building a typed lambda calculus
@@ -52,17 +52,17 @@ In essence, the nondeterminism arises from the scheduling of concurrent
 processes: which process writes to the store before which process
 reads from the store.
 
-On the other hand, waitfreedom is a class of distributed computation
+Waitfreedom is a class of distributed computation
 where processes cannot wait for other processes.  When two processes try
 to exchange information, the faster process can pass information to the
 slower one, but not always vice versa because the slower process might
 start after the faster one finishes.
-So, the computation is nondeterministic.
+In this situation, computation is nondeterministic in general.
 % see introduction for history of waitfreedom
 
 The contribution of this chapter lies in capturing
 the nondeterminism of waitfreedom using the nondeterministic
-$\lambda$-calculus for G\"odel--Dummett logic.
+$\lambda$-calculus for G\"odel-Dummett logic.
 In Section~\ref{lgd},
 we define a lambda calculus and prove some of its properties.
 In Section~\ref{waitfreedom}, we define typed waitfreedom.
@@ -78,10 +78,10 @@ problem if and only if it is waitfreely solvable.
 In this section, we define a typed lambda calculus \lgd\, based on
 hypersequents.
 This constitutes the second contribution of this thesis.
-Moreover, the lambda calculus is one side of the Curry--Howard
+Moreover, the lambda calculus is one side of the Curry-Howard
 isomorphism that will be matched against the waitfree computation.
 
-We first present a proof system for G\"odel--Dummett logic.
+We first present a proof system for G\"odel-Dummett logic.
 Then we turn the proof system into typing rules for $\lambda$-terms
 of~\lgd, give a set of reductions and prove strong-normalization and
 non-abortfullness.
@@ -120,7 +120,7 @@ formulae}\index{formula!local}\index{local formula|see{formula}}
 $\varphi, \psi$ (also called \textit{local types}\index{type!local}\index{local
 type|see{type}}) by the following BNF, where $I$ is a propositional
 variable\footnote{We include $\bot$ in the definition of local formulae
-because G\"odel--Dummett logic has
+because G\"odel-Dummett logic has
 $\bot$ although $\bot$ is not necessary to encode waitfree computation.}%
 :
 \[
@@ -128,7 +128,7 @@ $\bot$ although $\bot$ is not necessary to encode waitfree computation.}%
  (\varphi\vee\psi)\enspace.
 \]
 We omit parentheses when no ambiguity occurs.
-We assume countably infinitely many \textit{processes}\index{process}.
+We assume a countably infinite number of \textit{processes}\index{process}.
 A \textit{global formula}\index{formula!global}\index{global
 formula|see{formula}}
 (also called a \textit{global type}\index{type!global}\index{global type|see{type}})
@@ -141,8 +141,9 @@ does not map any other processes to local formulae.
 % but that would make the contexts awkward, so
 % I chose not changing it for now.
 % \fix{this sentence is awkward}
-We name such global formulae that map only one process as singleton
-global formulae.
+We name such global formulae that map only one process as \textit{singleton
+global formulae}\index{formula!singleton global}\index{global
+formula!singleton}\index{singleton global formula}.
 The unary operators $[0], [1],\ldots$ are called \textit{modalities}%
 \index{modality}.
 %\fix{example, with $\sqcup$}
@@ -160,9 +161,9 @@ A \textit{hypersequent}\index{hypersequent} is a finite sequence of sequents.
 
 The underlying logic has the derivation rules in Figure~\ref{fig:logic}.
 If we omit all the modalities, these rules characterize
-G\"odel--Dummett logic.
- \begin{theorem}[Characterization of G\"odel--Dummett logic]
-For any local formula~$\phi$, $\phi$ is a theorem in G\"odel--Dummett
+G\"odel-Dummett logic.
+ \begin{theorem}[Characterization of G\"odel-Dummett logic]
+For any local formula~$\phi$, $\phi$ is a theorem in G\"odel-Dummett
 logic iff $[0]\phi$ is provable.
  \end{theorem}
  \begin{proof}
@@ -335,8 +336,8 @@ $[0]((\varphi\supset\psi)\vee(\psi\supset\varphi))$ is provable (Figure~\ref{fig
  $\hyper$ stands for a possibly empty hypersequent.
  $\hyper^+$ stands for a nonempty hypersequent.
  $\Gamma$ and $\Delta$ stand for possibly empty contexts.
- In the names of rules, $\intro$ at the end stands for introduction and $\elim$ for
- elimination.  For structural rules, E stands for exchange, W for
+ In the names of the rules, $\intro$ at the end stands for introduction and $\elim$ for
+ elimination.  For the structural rules, E stands for exchange, W for
  weakening and C for contraction.  The I's in front stand for internal and E
  for external.
  A rule $[i]\wedge\intro$ is omitted because the inner global rule
@@ -372,8 +373,8 @@ We define \textit{local terms}\index{term!local}~$\term$ by BNF:
   \lpil \term \mid \lpir \term \mid
  \lpair {\term,\term}\mid \\&
   \linl \term \mid  \linr \term \mid
+ \mid \mat \term x\term y \term
  \lambda x.\term\mid (\term \term)
-\mid \mat \term x\term y \term
 \end{align*}
 where $x$ is a variable and $c$ is a location.
 All variable occurrences except the first clause are binding.
@@ -1408,7 +1409,7 @@ strictly shortens the term under operation.
  We are aiming at reducing the problem to the strong normalization result
  by de Groote~\cite{Philippe2002js}.
  Since we have eliminated $(\comodL)M$ and $(\comodR)N$ occurrences,
- the remaining difference from \citet{Philippe2002js}'s lambda calculus
+ the remaining difference from de Groote's lambda calculus~\citep{Philippe2002js}
  is small: some abort propagation reductions
  and some permutative reductions involving $\cotuple{M,N}$.
  We just have to make sure that there are no infinite reduction sequences
@@ -1619,8 +1620,8 @@ a \textit{typed protocol}\index{typed protocol}\footnote{We formulated this defi
 
 We define when a typed protocol solves a typed
 input-output problem.
-This definition is obtained by modifying \citet{Saks:1993vq}'s
-definition of input-output problems.
+This definition is obtained by modifying Saks and Zaharoglou's
+definition of input-output problems~\citep{Saks:1993vq}.
 
 A closed local term~$M$ is \textit{of} type~$\varphi$ iff there is
 a derivation of $\tr \tj{\{0\mapsto M\}}{[0]\varphi}$.
@@ -2564,7 +2565,7 @@ This concludes the translation.
 	  equal to $V_{|\hypert_0|+|\hypert_1|,j}$ unless
 	  $V_{|\hypert_0|+|\hypert_1|,j}$ is $\epsilon$.
 
-	  By induction hypothesis on $\hypert_0\hmid \imapsto{M}$,
+	  By the induction hypothesis on $\hypert_0\hmid \imapsto{M}$,
 	  there exists a reduction relation
 	  \begin{align*}
 	   &\concreteconf{\{\}}{ \hypert_0\hmid \imapsto{M} } \\
@@ -2576,7 +2577,7 @@ This concludes the translation.
 	  for some store~$S'$ and $\m{M}_k(p) = V_{kp}$ for each $p\in
 	  \processes$.
 	  Also,
-	  by induction hypothesis on $\hypert_1\hmid \jmapsto{N}$,
+	  by the induction hypothesis on $\hypert_1\hmid \jmapsto{N}$,
 	  there exists a reduction relation
 	  \begin{align*}
 	   &\concreteconf{\{\}}{ \hypert_1\hmid \jmapsto{N} } \\
@@ -2660,7 +2661,7 @@ This concludes the translation.
 		 I}\hmid (N_i)_{i\in I}}$ to
 		 $(V_{kp})_{0\le p < |\hypert|}$.
 	  \end{itemize}
-	  By induction hypothesis, there exists a reduction relation
+	  By the induction hypothesis, there exists a reduction relation
 	  \begin{align*}
 	   &\concreteconf{\{\}}{\hypert\hmid (M_i)_{i\in I}\hmid
 	   (N_i)_{i\in I}}
@@ -2846,7 +2847,7 @@ two-party participating set problem.
 
 Sonobe~\cite{sonobe} gives sequent calculi for intermediate logics $S_i$
 and proved cut-elimination theorem for them.  As a special case he gives
-$S_\omega$, which coincides with G\"odel--Dummett logic.
+$S_\omega$, which coincides with G\"odel-Dummett logic.
 The proof of cut-elimination is similar to that of
 Gentzen~\cite{gentzen}, involving the mix rule.
 No lambda calculi has been developed based on Sonobe's deduction system,
@@ -2854,7 +2855,7 @@ probably because the deduction system involves a rule having unlimited
 number of assumptions.
 
 Avron~\cite{avron91} formulates a
-hypersequent calculus for G\"odel--Dummett logic and proves
+hypersequent calculus for G\"odel-Dummett logic and proves
 cut-elimination theorem using a method
 similar to Gentzen~\cite{gentzen}.
 Also, he explains the intuition behind the communication rule as
@@ -2869,9 +2870,9 @@ Their cut-elimination proof is general but it does not
 obviously reveal the computational content.
 
 Baaz, Ciabattoni and Ferm\"uller~\cite{natural} propose a
-hypersequent-style natural deduction for G\"odel--Dummett logic, but
+hypersequent-style natural deduction for G\"odel-Dummett logic, but
 did not define reductions.
-Ferm\"uller~\cite{parallel} gives a game semantics for G\"odel--Dummett
+Ferm\"uller~\cite{parallel} gives a game semantics for G\"odel-Dummett
 logic, which is based on Lorenzen game~\cite{curryhoward} and essentially
 proof searching bottom-to-up.
 Of course, there is a possibility of employing waitfree communication
@@ -2896,7 +2897,7 @@ a process can wait for an input.
 
 Hirai~\cite{hirailpar,hiraimaster} compares the temporal order of waitfree
 computation and the Kripke models of a modal logic similar to
-G\"odel--Dummett logic.  The current
+G\"odel-Dummett logic.  The current
 work witnesses the constructive content of
 his model theoretic comparison.
 
@@ -2908,7 +2909,7 @@ requires no synchronization among processes.
 Possibly, this calculus can be extended by synchronization primitives.
 It would be interesting to compare different synchronization primitives
 and different intermediate logics, generalizing waitfreedom and
-G\"odel--Dummett logic.
+G\"odel-Dummett logic.
 For example, it would be tedious but straightforward to adapt the
 hyper-lambda calculi here to
 the logics characterized by the Kripke frames of bounded
@@ -2970,11 +2971,11 @@ can be carried out using induction on just two type derivations;
 if we did the same for the second-order variant of \lgd,\,it would take
 induction over arbitrary number of derivations, using their heights.
 
-\section{Conclusion}
+\section{Conclusions}
 \label{conc}
 We proposed \lgd, a lambda calculus
-based on \citet{avron91}'s hypersequent calculus for
-G\"odel--Dummett logic.
+based on Avron's hypersequent calculus for
+G\"odel-Dummett logic~\citep{avron91}.
 We proved normalization and non-abortfullness.
 The calculus characterizes
 the typed version of waitfree computation.

@@ -2,10 +2,11 @@
  We propose hyper-lambda calculi, the typed lambda calculi based on
  hypersequent calculi.  A hyper-lambda term is a finite
  sequence of lambda terms, which represent concurrent processes.  We give
- two concrete hyper-lambda calculi: synchronous and asynchronous.  Both
+ three concrete hyper-lambda calculi: one synchronous and the other two
+ asynchronous.  All
  employ a
  pair of communication primitives exchanging their inputs.
- In the synchronous case, both sides succeed.  In the asynchronous case,
+ In the synchronous case, both sides succeed.  In the asynchronous cases,
  at least one side obtains the other side's input.
  The synchronous calculus implements message-passing communication
  and session types;
@@ -20,12 +21,12 @@
  $(\phi\limp\psi)\otimes(\psi\limp\phi)$ on top of multiplicative
  additive fragment of intuitionistic linear
  logic (without some units);
- the asynchronous calculus is based on G\"odel--Dummett logic:
+ one of the asynchronous calculi is based on G\"odel-Dummett logic:
  $(\phi\imp\psi)\lor(\psi\imp\phi)$ on top of intuitionistic logic.
- The hyper-lambda calculi are in Curry--Howard correspondence with the
+ The hyper-lambda calculi are in Curry-Howard correspondence with the
  deduction systems for these logics.
- We also treat another variant based on monoidal t-norm logic and
- an implementation using Haskell.
+ We also give a similar development monoidal t-norm logic and
+ implement the G\"odel-Dummett case using Haskell.
 \end{eabstract}
 
 \begin{jabstract}

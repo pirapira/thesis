@@ -1,7 +1,7 @@
 \chapter{Prelinearity Axiom as an Asynchronous Communication Scheme}
 \label{ch:pole}
 
-\subsection{Summary}
+\section{Summary}
 %%% abstract
 \citet{danos-krivine} state that
 disjunctive tautologies\footnote{A \textit{tautology}\index{tautology}
@@ -33,15 +33,15 @@ we externally specify such nondeterministic choice.
 In Section~\ref{sec:async}, where processes do not make synchronization,
 the nondeterminism appears automatically as a slower process cannot pass
 information to a faster one.
-We adapt \citet{danos-krivine}'s realizability argument to our
+We adapt Danos and Krivine's realizability argument~\citep{danos-krivine} to our
 synchronous case and give simulation from the
 synchronous case to the asynchronous case.
 
 The asynchronous semantics here is closely related to
-the hyper-lambda calculus for G\"odel--Dummett logic presented in
+the hyper-lambda calculus for G\"odel-Dummett logic presented in
 Chapter~\ref{ch:lambda}.
 On top of intuitionistic logic,
-G\"odel--Dummett logic is axiomatized by Dummett axiom
+G\"odel-Dummett logic is axiomatized by Dummett axiom
 $(\phi\imp\psi)\lor(\psi\imp\phi)$, which is similar to the prelinearity axiom.
 
 Our aim in this chapter is to reason about asynchronous communication on
@@ -69,7 +69,7 @@ and our conclusion.
 
 In this section, we give another operational semantics involving
 asynchronous shared memory communication, which is similar to the
-hyper-lambda calculus for G\"odel--Dummett logic (Chapter~\ref{ch:lambda}).
+hyper-lambda calculus for G\"odel-Dummett logic (Chapter~\ref{ch:lambda}).
 We consider a programming language, which is a modification of
 Danos and Krivine~\citep{danos-krivine}'s.
 We assume a set~$\pvar$ of propositional variables whose cardinality is
@@ -650,7 +650,7 @@ However, when we try to prove \ref{c:first} by induction on derivations,
 the case for Com rule fails.  Thus we deal with two derivations at the
 same time.
 
-\begin{theorem}[Adequacy of \NMTL2]
+\begin{theorem}[Adequacy of $\NMTL2$]
  \label{c:adequacy}
  Let hypersequents $\mathcal H$ and $\mathcal I$ be derivable.
  We state:
@@ -705,7 +705,7 @@ same time.
 	       Since $\hat x$ does not appear freely in $t$,
 	       the term in question $t[\hat t/\hat x][\vec{g'}/\G']$ is
 	       equal to $t[\vec{g'}/\G']$.
-	       By induction hypothesis~\ref{c:first},
+	       By the induction hypothesis~\ref{c:first},
 	       $(t[\vec{g'}/\G'],e\conc e_{\mathcal H'})$ is in $\sem{\phi}$.
 	       By condition~\ref{conc-closed}.~of Definition~\ref{def:pole},
 	       the program in question $(t[\hat t/\hat x][\vec{g'}/\G'],
@@ -730,7 +730,7 @@ same time.
 	      u[w/y][\vec d/\hat \D], \sigma\conc e\conc f\conc e'\conc
 	      e''\conc f''\conc e_{\hatma H}\conc e_{\hatma I}\enspace.
 	      \]
-	      By induction hypothesis~\ref{c:first},
+	      By the induction hypothesis~\ref{c:first},
 	      $
 	       [t[\vec g/\hat \G],\pi\conc e\conc e''\conc e_{\hatma H}]
 	      $
@@ -767,7 +767,7 @@ same time.
 	       [e_{\mathcal H'}\conc e_{\mathcal H'}\conc
 	       t_0,\pi \conc t_1, \pi\conc f\conc f]\enspace,
 	       \]
-	       which is in $\bbot$ because, by induction hypothesis, the
+	       which is in $\bbot$ because, by the induction hypothesis, the
 	       following executable is in $\bbot$:
 	       \[
 	       [e_{\mathcal H'}\conc
@@ -803,7 +803,7 @@ same time.
 	       e_0\conc{e_1}\conc e_{\mathcal H'}\enspace.
 	       \]
 	       We have $({t_0}, e_0)\in\sem{\phi_0}$ so, by
-	       induction hypothesis~\ref{c:first},
+	       the induction hypothesis~\ref{c:first},
 	       the reduct is in $\bbot$.
 	       Since $\bbot$ is closed for $\rev\sred$, the original
 	       s-executable is in $\bbot$, too.
@@ -832,7 +832,7 @@ same time.
 	       e_{\hatma H}\conc e_{\hatma I}\enspace.
 	       \]
 	       Since $({t_0},e_0')$ is in $\sem{\phi_0}$,
-	       by induction hypothesis~\ref{c:second}, the reduct is in
+	       by the induction hypothesis~\ref{c:second}, the reduct is in
 	       $\bbot$.  Since $\bbot$ is closed for $\rev\sred$,
 	       the original s-executable is also in $\bbot$.
 	\end{enumerate}
@@ -861,7 +861,7 @@ same time.
 		t_0[\vec{g_0}/\G_0], t_1[\vec{g_1}/\G_1]\cdot \pi
 	       \conc {e_0}\conc {e_1}\conc e''\conc \eHz\conc \eHo.
 	       \]
-	       By induction hypothesis~\ref{c:first} on both branches,
+	       By the induction hypothesis~\ref{c:first} on both branches,
 	       we have $(t_0[\vec{g_0}/\G_0],
 	       {e_0\conc \eHz})\in\sem{\phi'\limp\phi}$
 	       and
@@ -905,12 +905,12 @@ same time.
 		     u' ,\sigma\conc \hat e\conc {{e_1}}\conc
 		     {e''}\conc{f''}\conc \eHo\enspace.
 		     \]
-		     By induction hypothesis~\ref{c:first},
+		     By the induction hypothesis~\ref{c:first},
 		     $(t_1[\vec{g_1}/\G_1],{e_1\conc \eHo})$ is in $\sem{\phi'}$.
 		     In addition to this, $(\pi,e'')$ is in $\nsem{\phi}$,
 		     making $(t_1[\vec{g_1}/\G_1]\cdot\pi, {e_1\conc \eHo}\conc e'')$ in
 		     $\nsem{\phi'\limp\phi}$.
-		     By induction hypothesis~\ref{c:second},
+		     By the induction hypothesis~\ref{c:second},
 		     $(t_0[v/x][\vec{g_0}/\hat\G_0], u', \hat e)$ is in
 		     $\sempair{\phi'\limp\phi,\psi}$.
 		     These make the reduct a member of $\bbot$.
@@ -944,7 +944,7 @@ same time.
 		     \conc\hat{f}\conc
 		     e''\enspace.
 		     \]
-		     By induction hypothesis~\ref{c:second},
+		     By the induction hypothesis~\ref{c:second},
 		     $(t_1[v/x][\vec{g_1}/\hat\G_1],
 		     u[w/y][\vec{d}/\hat\D], {e_1\conc \eHo}\conc {f}\conc
 		     e')$ is in $\sempair{\phi',\psi}$.
@@ -955,7 +955,7 @@ same time.
 		     Combined,
 		     $(t_1[v/x][\vec{g_1}/\hat\G_1]\cdot\pi,\hat f\conc e'')$
 		     is in $\nsem{\phi'\limp\phi}$\kern -1pt.
-		     By induction hypothesis~\ref{c:first},
+		     By the induction hypothesis~\ref{c:first},
 		     $(t_0[\vec{g_0}/\G_0],\hat e)$ is in
 		     $\sem{\phi'\limp\phi}$.
 		     So, the reduct is in $\bbot$, making the original
@@ -976,7 +976,7 @@ same time.
 	      $(\vec g, e)\in\sem{\G}$ and
               $(\mats {\hat x}v{\pi_0}{\hat y}w{\pi_1}, e'')$
               in $\nsem{\phi_0\oplus\phi_1}$.
-              By induction hypothesis~\ref{c:first},
+              By the induction hypothesis~\ref{c:first},
               $(t'[\vec g/\G], e\conc e_{\mathcal H'})$ is in
 	      $\sem{\phi_0}$.
               By definition of $\nsem{\phi_0\oplus\phi_1}$,
@@ -1025,7 +1025,7 @@ same time.
               u',\sigma\conc
               \hat e\conc e''\conc f''
               $.
-              By induction hypothesis~\ref{c:second},
+              By the induction hypothesis~\ref{c:second},
               $(t'[v/x][\vec g/\hat \G], u', \hat e)$ is in
               $\sempair{\phi_0,\psi}$.
               So, $(t'[v/x][\vec g/\hat\G], [u',\sigma\conc \hat e\conc
@@ -1073,7 +1073,7 @@ same time.
               \eHo}\conc
               e')$ is in $\nsem{\phi\oplus\psi}$ and that
               $(t'[\vec{g_0}/\G_0],{e_0\conc \eHz})$ is in $\sem{\phi\oplus\psi}$.  The first
-              claim is shown by induction hypothesis~\ref{c:first}
+              claim is shown by the induction hypothesis~\ref{c:first}
               stating that $(t_0[v/\hat{x}][\vec{g_1}/\G_1], {e_1\conc \eHo}\conc
               e'')$ is in $\sem{\phi}$ for any $(v,e'')\in\sem{\phi_0}$
               and similarly to~$t_1$.
@@ -1116,7 +1116,7 @@ same time.
                     {e_0\conc \eHz}\conc {e_1\conc \eHo}\conc  f\conc e''\conc
                     f''\enspace.
                     \end{eqnarray*}
-                    By induction hypothesis~\ref{c:second},
+                    By the induction hypothesis~\ref{c:second},
                     we have
                     \[
                     (t'[v/x][\vec{g_0}/\hat\G_0], u[w/y][\vec d/\hat\D],
@@ -1158,7 +1158,7 @@ same time.
                     \end{align*}
 		    where $t_0' = t_0[v/x][\vec{g_1}/\G_1]$ and $t_1' =
 		    t_1'[v/x][\vec{g_1}/\G_1]$.
-                    By induction hypothesis~\ref{c:second},
+                    By the induction hypothesis~\ref{c:second},
                     the triple
                     $(t_0'[v_0'/\hat x],
                     u[w/y][\vec d/\hat \D], e'\conc {e_1\conc \eHo}\conc
@@ -1181,7 +1181,7 @@ same time.
                     )
                     \end{align*}
                     is in $\nsem{\phi_0\oplus\phi_1}$\kern -2pt.
-                    By induction hypothesis~\ref{c:first},
+                    By the induction hypothesis~\ref{c:first},
                     $(t'[\vec{g_0}/\G_0],{e_0\conc \eHz})$ is in
                     $\sem{\phi_0\oplus\phi_1}$.
                     By definition of $\sem{\phi_0\oplus\phi_1}$,
@@ -1208,7 +1208,7 @@ same time.
 	      $(\vec{g_1},{e_1})\in\sem{\G_1}$.
 	      By Proposition~\ref{comod-type}, we have
 	      $(\comodL,\comodR,\emptyset)\in\sempair{\phi_0\limp\phi_1,\phi_1\limp\phi_0}$.
-	      By induction hypothesis~\ref{c:second}, the s-terms
+	      By the induction hypothesis~\ref{c:second}, the s-terms
 	      $t'_0=t_0[\comodL/\hat{x}][\vec{g_0}/\G_0]$ and
 	      $t'_1=t_1[\comodR/\hat{y}][\vec{g_1}/\G_1]$
 	      satisfy
@@ -1252,7 +1252,7 @@ same time.
 	     So, program $p =(\comodL,[t_1',\pi'\conc{e_1\conc \eHo\conc
 	     e'''}])$ is in
 	     $\sem{\phi_0\limp\phi_1}$.
-	     By induction hypothesis~\ref{c:second} for the derivations
+	     By the induction hypothesis~\ref{c:second} for the derivations
 	     for $t_0$ and $u$, especially using the program~$p$ for
 	     substituting~$\hat x$, we can show that
 	     $(t_0',u',(t_1',\pi'\conc {e_1\conc \eHo\conc e'''}\conc {e_0\conc
@@ -1293,7 +1293,7 @@ same time.
 	      $(v,w,e')\in\sem{\theta[X'/X],\tau}$,
 	      $(\vec{g},{e\conc e_{\mathcal H}})\in\sem{\hat\G[X'/X]}$ and $(\pi,e'')\in
 	      \nsem{\forall X'\phi[X'/X]}$.
-	      By induction hypothesis~\ref{c:second}
+	      By the induction hypothesis~\ref{c:second}
 	      on the renamed derivation,
 	      the s-terms
 	      $t' = t[v/x][\vec g/\G]$ and
@@ -1592,7 +1592,7 @@ substituting an MTL formula for each bound propositional variable in $\phi$.
 
 \section{Discussion and Future Work}
 \label{sec:discuss}
-This work is technically similar to \citet{danos-krivine}'s.
+This work is technically similar to Danos and Krivine's~\citep{danos-krivine}.
 One large difference is the existence of (com$i$), (read) and (write)
 reductions, where terms are passed from processes to other
 processes.
@@ -1614,7 +1614,7 @@ many derivations.
 
 There are recent
 developments~\citep{pfenning2010,wadler2012propositions} over
-Curry--Howard correspondence between
+Curry-Howard correspondence between
 the linear logic and process
 calculi.
 Since their type systems do not incorporate the prelinearity axiom
@@ -1660,7 +1660,7 @@ the additional axiom in order to find a lambda calculus for BL.
 % we need stronger induction hypothesis.
 
 
-\section{Conclusion}
+\section{Conclusions}
 \label{sec:conclude}
 We developed a lambda calculus for MTL2 and
 analyzed the prelinearity axiom using

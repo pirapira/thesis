@@ -569,7 +569,8 @@
     the Degree of \thesisgrade \ of Science}
 \else
   \newcommand\@submittedto{%
-    the Graduate School of the University of Tokyo}
+    the Graduate School of Infomation Science and Technology,
+    the University of Tokyo}
   \ifist@gradiss
     \newcommand\@degreename{%
       the Degree of \thesisgrade \ of Science\\
