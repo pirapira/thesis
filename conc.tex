@@ -9,7 +9,7 @@ some concrete examples of substructural logics, the remaining space is
 vast.
 Reflecting the wide applications of substructural and especially
 intermediate logics,
-our conclusions and future work span from mathematical logic, computer
+our conclusions and variety of future work span from mathematical logic, computer
 science and philosophy.
 
 \section{From Logical Perspectives}
@@ -51,7 +51,7 @@ cut-elimination in the strict sense.
 Moreover, since the Amida calculus characterizes Abelian logic
 (\thref{complete-to-Abelian}),
 there are some inhabited types that are hard to justify constructively;
-for example $\phi\oplus(\phi\limp\one)$.
+for example a linear version of the excluded middle $\phi\oplus(\phi\limp\one)$.
 The first step would be removing additives and studying the
 multiplicative fragment of the Amida calculus.
 
@@ -73,7 +73,7 @@ proof searching.
 
 Since we have identified the computational content of the prelinearity
 axiom and obtained a lambda calculus for monoidal t-norm logic, we are
-in a good situation to study fuzzy logics in general.
+in a good position to study fuzzy logics in general.
 After all, monoidal t-norm logic is the weakest fuzzy logic.
 Thus, there is a possibility to obtain a lambda calculus for any fuzzy
 logic by extending the lambda calculus in Chapter~\ref{ch:pole}.
@@ -135,7 +135,7 @@ The disadvantage, which the first author of
 is the compiler's cryptic error messages.
 Since the used Haskell compiler is not aware of session types and just reports
 pattern-matching errors in the encoding of session types, the error
-messages are about the encoding not about the originally intended
+messages are about the encoding but not about the originally intended
 session types.
 
 % move to related work part
@@ -205,10 +205,10 @@ logic (a logic possibly without substitution-closedness) between
 intuitionistic and classical logics~\citep{ciardelli2011}.
 
 G\"odel-Dummett logic~\citep{dummett59} was invented for algebraic
-reason, but now we found a constructive justification of Dummett's axiom
+reasons, but now we found a constructive justification of Dummett's axiom
 $(\phi\imp\psi)\lor(\psi\imp\phi)$ as the result of speed-racing during
 proof reduction.  Since the semantics presented in
-Chapter~\ref{ch:lambda} seems somewhat too rigorous,
+Chapter~\ref{ch:lambda} seems somewhat too complicated,
 there is room for simplification and better understanding of
 G\"odel-Dummett logic.
 
@@ -227,7 +227,9 @@ Dynamic epistemic logic~\citep{ditmarsch2007dynamic}, or its fragment
 called public announcement
 logic, is a modal logic that has a modality for agents' knowledge and
 announcements.  However, in the current formulation of dynamic epistemic
-logic, we cannot formalize the effect of repetitions of announcements or
+logic, we cannot formalize the effect of repetitions\footnote{The point
+is distinguishing a single announcement from repeated announcements of
+the same content.  For that, we do not want contraction.} of announcements or
 cancels of announcements.  In Abelian logic, we can multiply any formula
 with any integer, thus there is a possibility of representing repetition
 or cancels of announcements using a modal logic based on Abelian logic.
