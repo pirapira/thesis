@@ -227,7 +227,11 @@ conjunction of components:
 $(\bigotimes\G\limp\phi)\otimes (\bigotimes\D\limp\psi)$ where
 $\bigotimes\G$ stands for the $\otimes$-conjunction of elements of $\G$.
 The conjunctive treatment is our original invention, and finding an application
-of such a treatment is one of our contributions.
+of such a treatment is one of our contributions\footnote{We have to note
+however, for Abelian logic, there is an ordinary disjunctive
+hypersequent system that enjoys cut-elimination.  The conjunctive
+hypersequents reflect xsome computational intuition.
+}.
 We name this technique the \textit{conjunctive
 hypersequent}\index{hypersequent!conjunctive}.
 
@@ -1143,7 +1147,7 @@ x.t$ of type $\one\limp\phi$ so that $\lambda x.t\eval \lambda x.t$ is derivable
     inter-derivable with $\one\limp\phi$) and $\sendtype\phi\terminate$ is
     $\phi\limp \one$.
     We can generalize this phenomenon to the more complicated session
-    types.
+    types\footnote{This is impossible using the oridinary linear types.}.
      \begin{proposition}[Session realizers]
       For any linear type~$\phi^\sim$\kern -2pt, the hypersequent
       \[
@@ -1937,8 +1941,7 @@ condition~\ref{conditionL}.  Actually, the Amida axiom does not have
 any correct essential net.  IMLL sequent calculus has the subformula
 property so that we can confirm that the Amida axiom is not provable in IMLL.
 
- \begin{theorem}[Essential nets for
-  IMLL by~\citet{lamarche2008,murawski2003}]
+ \begin{theorem}[Essential nets by~\citet{lamarche2008,murawski2003}]
   \label{essential-ok}
   An IMLL formula~$\phi$ is provable in IMLL iff there exists a correct essential net
   of $\phi$.
@@ -2059,7 +2062,9 @@ This difference of labels makes Amida nets validate the Amida axiom.
  \end{theorem}
  \begin{proof}
   From a correct Amida net, first we move the Amida edges upwards
-  until they are just below axiom edges.
+  until they are just below axiom edges\footnote{The idea is similar to
+  the most popular syntactic
+  cut-elimination proofs.}.
 The moves are as follows.
  \begin{center}
 \includegraphics[scale=0.4]{tensor-move.eps}
@@ -2236,8 +2241,8 @@ This example shows that our type system can type some terms that
 the type system in \citet{pfenning2010} cannot.
 
 The most complicated example in \citet{pfenning2010} involves a drink server.
- \begin{example}[Drink server from \citet{pfenning2010} in Amida
-  calculus]
+ \begin{example}[Drink server from \citet{pfenning2010} in the Amida
+  cal.]
   \begin{align*}
    ServerProto &= (N\limp I \limp (N\otimes \one))\with (N\limp( I
   \otimes \one)) \\
@@ -2635,8 +2640,7 @@ Abelian logic in program verification.
 
 \section{Conclusions}
 
-We found a new axiomatization of Abelian logic, which can be
-characterized by the Amida axiom
+We found a new axiomatization of Abelian logic: the Amida axiom
 $(\phi\limp\psi)\otimes(\psi\limp\phi)$ on top of IMALL$^-$.
 The axiomatization has an application for encoding process calculi and
 session type systems.

@@ -1315,7 +1315,7 @@
  \newcommand\thesisgrade{Master}
  \newcommand\ist@whatscience{Computer Science}
 \else \if@doctorthesis
- \newcommand\ethesisname{A Doctor Thesis}
+ \newcommand\ethesisname{A Doctoral Thesis}
  \newcommand\einterimname{An Interim Report (Abstract)}
  \newcommand\jthesisname{\ist@j@doctor}
  \newcommand\jinterimname{\ist@j@interim}

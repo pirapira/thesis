@@ -953,8 +953,7 @@ Figure~\ref{fig:lattice}.
 
 \subsubsection{BCI and BCK Logics}
 
-When we add exchange rule to FL, we obtain BCI logic (originally called
-BCC logic in \citep{ono-komori-1985}).
+When we add exchange rule to FL, we obtain BCI logic.
 Further, when we add weakening to BCI logic, we obtain BCK
 logic~\citep{ono-komori-1985}.
 \textit{BCK logic}\index{logic!BCK} has three axioms named after well-known
@@ -981,7 +980,7 @@ A rule
 is \textit{admissible}\index{admissible}
 iff $\hypere'$ is derivable whenever $\hypere$ is.
 
-\subsubsection{Linear and Affine Logics}
+\subsubsection{Linear Logics}
 \label{subsub:la-logics}
 
 Girard found the linear
@@ -1038,7 +1037,9 @@ propositional logic:
  defined~\citep[Ch.~4]{troelstra1992} using additive disjunction, but
  the multiplicative implication~$\limp$ has a more important role
  because our interpretation of $\tr$ symbol in a sequent is the
- multiplicative implication.  This is shown by the following invertible rule:
+ multiplicative implication.  This is shown by the following
+ invertible\footnote{When a rule is changed upside-down and stay admissible,
+ the rule is called \textit{invertible}\index{invertible}.} rule:
   \begin{center}
    \AxiomC{$\G,\phi\tr\psi$}
    \UnaryInfC{$\G\tr\phi\limp\psi$}

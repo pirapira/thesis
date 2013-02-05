@@ -1093,7 +1093,9 @@ the implementation is not short nor symmetric.
 There seems to be room for more elegant abstraction for symmetric
 protocols such as
 a rule containing more than two threads and a more direct embedding of the
-participating set problem.
+participating set problem.  The main challenge is encoding the
+$n$-party participating set problem in the Haskell type system uniformly
+with respect to $n$.
 
 Moreover, in order to obtain performance, we have to change the runtime
 system of Haskell.  Since the current implementation uses MVar mechanism

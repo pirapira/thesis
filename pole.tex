@@ -253,7 +253,7 @@ A hypersequent is \textit{derivable}\index{derivable} in $\NMTL$ when there is a
 derivation ending at the hypersequent.
 An s-term~$t$ has type~$\phi$ when $\tr\tj{t}{\phi}$ is derivable.
 A type~$\phi$ is provable when there is an s-term~$t$ with type~$\phi$.
-There is a well-known substructural logic called monoidal t-norm logic
+There is a well-known substructural logic called the monoidal t-norm logic
 (MTL), which validates the prelinearity axiom
 $(\phi\limp\psi)\oplus(\psi\limp\phi)$.  Actually, $\NMTL$ characterizes
 MTL.
@@ -407,16 +407,16 @@ For example, there is an s-term typed with the prelinearity axiom (Figure~\ref{f
 %   \label{fig:weakening}
 %  \end{figure}
 
-\begin{corollary}[Prelinearity as a Communication Scheme]
+\begin{corollary}[Prelinearity as a communication scheme]
  \label{spec:prelin-cor}
  Assume that an a-term~$g$ have type $
 		    {\forall X\forall
  Y((X\limp Y)\oplus (Y\limp X))}.
 		   $
  Then, the s-executable
- $
+\[
  [g, \mats{z}{z}{x\cdot\pi_Y}{w}{w}{y\cdot\pi_X}]
- $
+\]
  reduces to a multiset containing an element of
  $\{(x,\pi_X), (y,\pi_Y)\}$.
 \end{corollary}
@@ -1324,7 +1324,7 @@ and \ref{c:second} uses \ref{c:first} in ($\limp$E,~\textminus) and
  an s-executable containing an element of $P$.
 \end{proposition}
 
-\begin{proposition}[Prelinearity as a Communication Scheme]
+\begin{proposition}[Prelinearity as a communication scheme]
  \label{spec:prelin}
  Assume that an s-term $g$ have type $
 {\forall X\forall
@@ -1622,7 +1622,8 @@ we conjecture that we can extend their type systems and their process
 calculi
 with the prelinearity
 axiom representing the same kind of communication schemes as we have
-shown.
+shown\footnote{Although it is not clear how to implement shared memory
+in the target process calculi.}.
 
 H\'{a}jek's basic fuzzy logic (BL) is very similar to
 MTL~\citep{chvalovsky2012}.

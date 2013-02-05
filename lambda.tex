@@ -418,7 +418,7 @@ We extend a sequent
 to $\G\tr \tj {\m M}{\m \varphi}$\kern -3pt, where $\G$ is
 a sequence like $\tj{x}{[i]\psi}\kern -1pt, \tj{y}{[j]\theta}$ and $\m M$
 is a global term.
-In a sequent $\Gamma\tr\tj{M}{\m\varphi}$\kern -3pt, we require the
+In a sequent $\Gamma\tr\tj{\m M}{\m\varphi}$\kern -3pt, we require the
 variables in $\G$ to be distinct from each other.
 We do not allow a context to contain both $\tj{x}{[0]I}$ and
 $\tj{x}{[1]I}$, or even $\tj{x}{[0]I}$ twice.
@@ -434,42 +434,6 @@ Each derivation has a unique hypersequent at the bottom, which is called the
 \textit{endhypersequent}\index{endhypersequent} of the derivation.
 A hypersequent is \textit{derivable}\index{derivable} when there is a
 derivation whose endsequent is identical to the hypersequent.
-\begin{sidewaysfigure}
- \centering
-\AxiomC{}
-\LL{[0]Ax}
-\UnaryInfC{$\tj{x}{[0]P}\tr \tj{x}{[0]P}$}
-
-\AxiomC{}
-\LL{[0]Ax}
-\UnaryInfC{$\tj{y}{[0]Q}\tr\tj{y}{[0]Q}$}
-\LL{$00$-com}
-\BinaryInfC{$\tj{x}{[0]P}\tr\tj{(\comodL)x}{[0]Q}\hmid
- \tj{y}{[0]Q}\tr\tj{(\comodR)y}{[0]P}$}
-\LL{$[0]\supset\intro$}
-\UnaryInfC{$\tr\tj{\lambda x. (\comodL)x}{[0](P\supset Q)}
- \hmid \tj{y}{[0]Q}\tr\tj{(\comodR)y}{[0]P}$}
-\LL{$[0]\supset\intro$}
-\UnaryInfC{$\tr\tj{\lambda x. (\comodL)x}{[0](P\supset Q)}\hmid \tr
- \tj{\lambda y.(\comodR)y}{[0](Q\supset P)}$}
-\LL{$[0]\vee\intro$}
-\UnaryInfC{$\tr\tj{\inl{\lambda x. (\comodL)x}}{[0]((P\supset Q)\lor
- (Q\supset P))}\hmid \tr
- \tj{\lambda y.(\comodR)y}{[0](Q\supset P)}$}
-\LL{$[0]\vee\intro$}
-\UnaryInfC{$\tr\tj{\inl{\lambda x. (\comodL)x}}{[0]((P\supset Q)\lor
- (Q\supset P))}\hmid \tr
- \tj{\inr{\lambda y.(\comodR)y}}{[0]((P\supset Q)\lor(Q\supset P))}$}
-\LL{EC}
-\UnaryInfC{$
-\tr \tj{\left[{\inl{\lambda x. (\comodL)x}} ,\quad {\inr{\lambda
- y.(\comodR)y}} \right]}
- {[0]((P\supset Q)\lor (Q\supset P))} $}
-\DisplayProof
- \caption{An example of a typed term in \lgd\, that corresponds the
- derivation in Figure~\ref{fig:dummett-modal}.}
- \label{fig:typed}
-\end{sidewaysfigure}
 
 \begin{figure}[p]
  \small
@@ -623,14 +587,49 @@ derivation whose endsequent is identical to the hypersequent.
  \caption[The typing rules of \lgd.]
  {Term assignment on the \lgd\,type system.
  Metavariable $\m M$ stands for global terms.
- When we remove variables and terms, we obtain the derivation rules for
- the underlying logic (Figure~\ref{fig:logic}).
  $\hypert$ stands for
  a possibly empty hypersequent (with possible subscripts).
  $\hypert^+$ stands for a non-empty hypersequent.
  }
  \label{termassign}
 \end{figure}
+
+\begin{sidewaysfigure}
+ \centering
+\AxiomC{}
+\LL{[0]Ax}
+\UnaryInfC{$\tj{x}{[0]P}\tr \tj{x}{[0]P}$}
+
+\AxiomC{}
+\LL{[0]Ax}
+\UnaryInfC{$\tj{y}{[0]Q}\tr\tj{y}{[0]Q}$}
+\LL{$00$-com}
+\BinaryInfC{$\tj{x}{[0]P}\tr\tj{(\comodL)x}{[0]Q}\hmid
+ \tj{y}{[0]Q}\tr\tj{(\comodR)y}{[0]P}$}
+\LL{$[0]\supset\intro$}
+\UnaryInfC{$\tr\tj{\lambda x. (\comodL)x}{[0](P\supset Q)}
+ \hmid \tj{y}{[0]Q}\tr\tj{(\comodR)y}{[0]P}$}
+\LL{$[0]\supset\intro$}
+\UnaryInfC{$\tr\tj{\lambda x. (\comodL)x}{[0](P\supset Q)}\hmid \tr
+ \tj{\lambda y.(\comodR)y}{[0](Q\supset P)}$}
+\LL{$[0]\vee\intro$}
+\UnaryInfC{$\tr\tj{\inl{\lambda x. (\comodL)x}}{[0]((P\supset Q)\lor
+ (Q\supset P))}\hmid \tr
+ \tj{\lambda y.(\comodR)y}{[0](Q\supset P)}$}
+\LL{$[0]\vee\intro$}
+\UnaryInfC{$\tr\tj{\inl{\lambda x. (\comodL)x}}{[0]((P\supset Q)\lor
+ (Q\supset P))}\hmid \tr
+ \tj{\inr{\lambda y.(\comodR)y}}{[0]((P\supset Q)\lor(Q\supset P))}$}
+\LL{EC}
+\UnaryInfC{$
+\tr \tj{\left[{\inl{\lambda x. (\comodL)x}} ,\quad {\inr{\lambda
+ y.(\comodR)y}} \right]}
+ {[0]((P\supset Q)\lor (Q\supset P))} $}
+\DisplayProof
+ \caption{An example of a typed term in \lgd\, that corresponds the
+ derivation in Figure~\ref{fig:dummett-modal}.}
+ \label{fig:typed}
+\end{sidewaysfigure}
 
  \begin{example}[A typing of a global term.]
 The global term
@@ -861,6 +860,8 @@ when
        $\concreteconf{S}{\hypert} R \concreteconf{S'}{\hypert_0\hmid
        \m{N}\hmid \m{M}\hmid \hypert_1}$.
 \end{itemize}
+Although only singleton terms appear in these clauses, by congruence,
+these rules are applicable to more complicated global terms.
 
 The first kind of reductions, basic reductions, are what one would
 expect from typed lambda calculi based on intuitionistic propositional
@@ -992,7 +993,7 @@ For example, the configuration $(S, \cotuple{\abort,\abort})$ reduces to $(S,
 In order to avoid the situation where computation is blocked by
 a syntactic barricade,
 we add yet another kind of reduction rules called permutative
- reductions.
+ reductions\footnote{The ``permutative'' conversions can be found in \citet{prawitz1965}.}.
 \begin{definition}[Permutative reduction]
  The permutative reduction~$\preduce$ is the smallest congruence
  containing the followings:
@@ -1206,7 +1207,8 @@ hyperterm has a component not containing $\abort$.
 
 In order to justify the renaming operation appearing in the proof of
 \thref{nab}, we first define the renaming operation on global types.
-Of a global type $\m\phi = (\phi_i)_{i \in I}$,
+Of a global type $\m\phi = (\phi_i)_{i \in I}$ (the global type that maps
+$i$ to $\phi_i$),
 the $j$-replacement~$\phi^{+j}$ is
 $\{j \mapsto \bigwedge_{i\in I} (\phi_i)\}$.  For example, the
 1-replacement of $[0]\bot$ is $[0]\bot^1 = [1]\bot$.
@@ -1217,7 +1219,7 @@ the $j$-replacement $\G^j$ is
 $\tj{x_0}{[j]\phi_0}, \tj{x_1}{[j]\phi_1},
 \tj{x_2}{[j]\phi_2}, \ldots,\tj{x_n}{[j]\phi_n}$.
 
-  \begin{proposition}
+  \begin{proposition}[Process renaming]
    \label{process-change}
   When $\mathcal O \hmid \G_0,\D_0\tr\tj{\m{M}}{\m\phi}$ is derivable,
   \[
@@ -1413,7 +1415,7 @@ strictly shortens the term under operation.
  is small: some abort propagation reductions
  and some permutative reductions involving $\cotuple{M,N}$.
  We just have to make sure that there are no infinite reduction sequences
- that consist of these two kinds of reductions only.
+ that consist of only these two kinds of reductions.
  We can deal with the permutative reductions following de
  Groote~\cite{Philippe2002js}'s strategy for introducing~$\bot$.
  There are no infinite sequence of abort propagation reductions keeping the
@@ -1703,10 +1705,9 @@ $\semo{E}_{x, \vec v}$ is defined to be $\epsilon$.
   \end{definition}
 
    \begin{definition}
-A \textit{schedule}\index{schedule} is an infinite sequence of nonempty subsets
-of~$\processes$,
+    A \textit{block}\index{block} is a nonempty subset of $\processes$.
+A \textit{schedule}\index{schedule} is an infinite sequence of blocks,
 which looks like $\sigma = \sigma_0\sigma_1\sigma_2\cdots$.
-Each $\sigma_k$ is called a \textit{block}\index{block}.
 We say $i$ is \textit{non-faulty}\index{non-faulty} (resp.~faulty\index{faulty}) in
 $\sigma$ if it appears infinitely (resp. only finitely many) often.
 When every process is non-faulty, the schedule is \textit{fair}\index{fair}.
@@ -1942,7 +1943,7 @@ schedule~$\sigma$,
   produce whatever output to meet the task because the other process
   produces~$\epsilon$.
  \end{example}
-  \begin{example}[An example of waitfreely unsolvable typed input-output
+  \begin{example}[A waitfreely unsolvable typed input-output
    problem]
    On the other hand, there is no typed protocol that solves
    the exchange problem (Example~\ref{ex:exchange}).
@@ -2194,7 +2195,9 @@ $(p_i; q_i)_{i\in\processes}$.
 And $(p)_j$ denotes $(q_i)_{i\in\processes}$ where $q_j = p$ and $q_i =
 \epsilon$ for all $i\neq j$.
 The definition is inductive over the type derivations. What we do below is
-essentially compilation from lambda terms to imperative programs.
+essentially compilation from lambda terms to imperative
+programs\footnote{That is one reason to try implementing it using
+Haskell in Chapter~\ref{ch:haskell} because the Haskell compiler takes care of lambda-to-imperative translation.}.
 After three pages, there is an example showing compilation of a concrete
 \lgd\,global term.
 \begin{description}
@@ -2398,7 +2401,8 @@ This concludes the translation.
    \semoi{{\{1\mapsto y\}}} &=
    \{1\mapsto \p i_y\}\enspace.
   \end{align*}
-  Next we look one step below:
+  Next we look one step\footnote{A step in the type derivation is
+  translated into a pair of equalities with different kinds of parentheses.} below:
   \begin{align*}
    \semo{{\{0\mapsto (\comodL)x\}} \hmid
    {\{1\mapsto (\comodR)y\}}}
@@ -2961,6 +2965,8 @@ intuitionistic propositional logic, containing disjunction.
 Lindley's proof was formalized in Nominal Isabelle by
 \citet{Doczkal2009}.
 
+Developing a second order formulation and performing the parametricity
+argument is another piece of future work.
 In Chapter~\ref{ch:exchange}, we studied an axiom
 $(\phi\limp\psi)\otimes(\psi\limp\phi)$.
 Apart from this, we also tried developing a lambda calculus for
@@ -2970,6 +2976,22 @@ While doing that, we noticed that adequacy of parametricity argument
 can be carried out using induction on just two type derivations;
 if we did the same for the second-order variant of \lgd,\,it would require
 induction over many derivations.
+
+Another immediate task is to verify cut-elimination theorem for the new
+communication rule presented here.
+Our com rule does not duplicate any contexts
+while the com' rule by Avron~\cite{avron91} duplicates
+   the contexts $\G$ and $\D$ as
+   \[
+   \BinaryRule
+   {$\hypert_0\hmid\G,\D\tr\tj{M}{[i]\varphi}$}
+   {$\hypert_1\hmid\G,\D\tr\tj{N}{[j]\psi}$}
+   {}
+   {$\hypert_0\hmid\hypert_1\hmid\G\tr\tj{(\comodL)M}{[i]\psi}\hmid
+   \D\tr\tj{(\comodR)N}{[j]\varphi}$}\enspace.
+   \]
+Although \citet{avron91} showed cut-elimination theorem for com' rule,
+it is not clear whether the same theorem holds in our case.
 
 \section{Conclusions}
 \label{conc}
