@@ -843,12 +843,12 @@ when
  \item $\concreteconf{S_0}{\hypert_0\hmid \m{M_0}} R
        \concreteconf{S_1}{\hypert_1 \hmid \m{M_1}}$ implies\\
        $\concreteconf{S_0}{\hypert_0\hmid \m{M_0}\sqcup \m{N}} R
-       \concreteconf{S_1}{\hypert_1\hmid \m{M_1}}$
+        \concreteconf{S_1}{\hypert_1\hmid \m{M_1}\sqcup \m{N}}$
  \item $\concreteconf{S_0}{\hypert_0\hmid \{i\mapsto M_0\}\sqcup
        \m{M_0}} R \concreteconf{S_1}{\hypert_1\hmid \imapsto{M_1}\sqcup
        \m{M_1}}$ implies\\
-       $\concreteconf{S_0}{\imapsto{C[M_0]}\sqcup \m{M_0}} R
-       \concreteconf{S_1}{\imapsto{C[M_1]}\sqcup \m{M_1}}$ for any
+       $\concreteconf{S_0}{\hypert_0\hmid\imapsto{C[M_0]}\sqcup \m{M_0}} R
+        \concreteconf{S_1}{\hypert_1\hmid\imapsto{C[M_1]}\sqcup \m{M_1}}$ for any
        context~$C$
  \item $\concreteconf{S}{\hypert_0\hmid \m{M}\hmid \m{N} \hmid \hypert_1}
        R \concreteconf{S'}{\hypert'}$
@@ -914,12 +914,12 @@ the term $(\lambda x. (\comodL x)) M$ can store $x$ in the store and
 another process can read $x$ from the store.
 After that, if $(\lambda x.\cdots)M$ reduces,
 then, $x$ becomes $M$ suddenly in the other process.
-We want to avoid this phenomenon because it is synchronous communication.
+We want to avoid such synchronous communication.
 
 We require the same condition in the second clause as well although
 the store contents are not changed in the second clause.
-Otherwise, whether a configuration admits a write reduction or not
-would depend on the contents of the store, which would make the
+Otherwise, in order to judge whether a configuration admits a write reduction or not,
+we have to inspect the contents of the store.  This would make the
 implementation more complicated.  More technically, the definition of
 normal forms would depend on the store contents, which we avoided.
 
@@ -1229,15 +1229,15 @@ $\tj{x_0}{[j]\phi_0}, \tj{x_1}{[j]\phi_1},
    By induction on the height of derivation.
    All rules except com and EC are trivial because
    they do not interact
-   with the modalities.  For EC rule, we have to apply the induction
+   with the modalities.  For the EC rule, we have to apply the induction
    hypothesis twice to change modalities in two components.
-   For com rule, let us assume the derivation ends in com rule as:
+   For the com rule, let us assume the derivation ends in the com rule as:
    \[
    \BinaryRule
    {$\hypert_0\hmid\G\tr\tj{M}{[i]\varphi}$}
    {$\hypert_1\hmid\D\tr\tj{N}{[j]\psi}$}
    {}
-   {$\cotuple{\hypert_0,\hypert_1}\hmid\Gamma\tr\tj{(\comodL)M}{[i]\psi}\hmid
+   {$\hypert_0 \hmid \hypert_1 \hmid\Gamma\tr\tj{(\comodL)M}{[i]\psi}\hmid
    \Delta\tr\tj{(\comodR)N}{[j]\varphi}$}\enspace.
    \]
    We have to consider three cases:  first, when
@@ -1325,7 +1325,7 @@ symmetric reductions in the pure fragment.
 
 For that, we first
 build an infinite reduction sequence with constant stores.
-Using the original infinite sequence, we define a pair of stores called the
+Using the original infinite sequence, we define a store called the
 \textit{store prophecy}\index{store!--- prophecy} $\lstore_\infty$ where
 $ \lstore_\infty(c)$ is defined to be $\epsilon$ if
  $\lstore_k(c)=\epsilon$ holds for all
@@ -1357,7 +1357,7 @@ invariant inductively on the number of steps
        \rreduce
        \conf{_{k+1}}{\hypc{}{O}}$ is translated into
        $\conf{_\infty}{\hypc'{\reader c}} \rreduce
-       \conf{_{k+1}}{\hypc'{O'}}$.
+       \conf{_{k+1}}{\hypc'{O'}}$ for a context $\mathcal{C}'$.
        If $\lstore_i(c)$ is a term,
        $\lstore_\infty(c)$ and $O'$ are also identical to the term.
        Otherwise, $O'$ must be $\abort$.
@@ -1439,10 +1439,10 @@ propositional logic rather than linear (or affine) logics in this chapter.
 Waitfree protocols~\cite{Herlihy88,Saks:1993vq} are a class of protocols
 that can solve
 some of the input-output problems~\cite{Moran:1987ep,Biran:1988hh}.
-If a waitfree protocol solves an input-output problem, then the protocol
-belongs to the waitfreedom.
+If a waitfree protocol solves an input-output problem, then we call the protocol
+to be in the \textit{waitfreedom}\index{waitfreedom}.
 We define the typed version of waitfreedom.
-Since these definitions are involved, we supplied many examples.
+Since these definitions are involved, we supply many examples.
 
 \subsection{Typed Input-Output Problem}
 
@@ -1521,7 +1521,7 @@ of processes and a countably infinite
 set of \textit{program variables}\index{program
 variable}\index{variable!program}
 $\ProV =\{\p x, \p y, \p z, \ldots\}$.
-Program variables are typed in the typewriter font.
+Program variables are typeset in the typewriter font.
 We assume an injection from variables to program variables $x\mapsto
 \p{x}_x$, whose image leaves infinitely many unused program variables.
 
@@ -1546,13 +1546,13 @@ memory.
 \newcommand{\Wd}{W_{\mathrm d}}
 A program is \textit{well formed}\index{well formed
 program}\index{program!well formed} when
-any program variable~$\p x$ (resp. location~$c$) first appears in a $\p x\leftarrow E$
-(resp. $c\leftarrow E$)
-sentence where $E$ does not contain $\p x$ (resp. $c$), and
+any program variable~$\p x$ (resp.\ location~$c$) first appears in a $\p x\leftarrow E$
+(resp.\ $c\leftarrow E$)
+sentence where $E$ does not contain $\p x$ (resp.\ $c$), and
 after that, only appears in expressions.
 In other words, a well-formed program is in the single assignment form.
 
-A \textit{contexed type}\index{contexted type}
+A \textit{contexted type}\index{contexted type}
  $\Gamma\tr\m\varphi$ is a sequent without a term but with variables in
  $\Gamma$.
 For a contexted type $(\Gamma\tr\m\varphi)$,
@@ -1573,7 +1573,7 @@ a \textit{typed protocol}\index{typed protocol}\footnote{We formulated this defi
  \item $W$: maps a location in $C$ to a contexted type;
  \item $V$: a finite set of program variables that contains $\p i_i$'s
        and $\p o_i$'s;
- \item a function~$t_i$ for each $i\in \processes$;
+ \item a function~$t_i$ for each $i\in \processes$
        that maps a program variable in $V$ to a contexted type
        $(\tj{x_k}{[i]\phi_k})_k \tr[i]\varphi$ with a special condition
        $t_i(\p i_i)= \iota_i$;
@@ -1593,7 +1593,7 @@ a \textit{typed protocol}\index{typed protocol}\footnote{We formulated this defi
   \label{ex:xor-protocol}
   We give a concrete typed protocol that solves the addition task
   (Example~\ref{ex:xor}).
-  The set of locations~$C$ contains two elements $c$ and $d$.
+  The set~$C$ of locations contains two elements $c$ and $d$.
   The locations $c$ and $d$ will be used as follows:
   process~0 writes to $d$ and reads from $c$, and process~1
   writes to $c$ and reads from $d$.
@@ -1613,6 +1613,9 @@ a \textit{typed protocol}\index{typed protocol}\footnote{We formulated this defi
   $\mathbb{Z}/3$, we do not need to introduce a special term, but we can
   define addition using nested \textsf{match} constructs.}
   term that reduce to the sum.
+  The last two sentences of each program writes to the same variable.
+  Although a variable is never updated after being filled, the second
+  write is still meaningful because the first write may fail.
   We omit the type assignments $t_0, t_1$ and typing derivations.
  \end{example}
 
@@ -1724,7 +1727,7 @@ When every process is non-faulty, the schedule is \textit{fair}\index{fair}.
   Obviously, when a schedule contains infinitely many
   $\{0,1\}$'s, then the schedule is fair.  Not only that, but when a
   schedule contains infinitely many $\{0\}$'s and infinitely many $\{1\}$'s,
-  then the schedule is fair.  On the other direction, a fair schedule
+  then the schedule is fair.  In the other direction, a fair schedule
   must satisfy one of these conditions.
  \end{example}
 
@@ -1917,7 +1920,7 @@ schedule~$\sigma$,
   \] where
   the last ``$\ldots$'' represents an infinite sequence consisting of
   $\{0,1\}$'s.
-  On schedule~$\sigma$, both processes 0 and 1 are non-faulty.
+  On the schedule~$\sigma$, both processes 0 and 1 are non-faulty.
   In Table~\ref{table:exec}, the decision value of process~0 is $d_0 =
   3$ and the decision value of process~1 is $d_1=7$.
   The tuple $\tuple{(x_0,x_1),(d_0,d_1)}$ is in $R_{+}$.
@@ -1971,7 +1974,7 @@ we show that the ability of the waitfree protocols and \lgd\, are the same.
  \label{def:solvable}
  A typed input-output problem
  $\tuple{(\iota_i)_{i\in \processes}, (o_i)_{i\in \processes}, R}$ is
- solvable by a global term
+ \textit{solvable}\index{solvable!--- by a global term} by a global term
  $\m M$ of contexted type
  $\left(\tj{x_i}{[i]\iota_i}\right)_{i\in\processes}
  \tr\left(o_i\right)_{i\in \processes}$ iff
@@ -2187,10 +2190,7 @@ Suppose $\semoi{\m{M}\hmid \m{N}} = \{0\mapsto \p x, 1\mapsto \p
 
 We let $\epsilon$ denote $(p_i = \epsilon)_{i\in\processes}$.
 Also, $(p_i)_{i\in\processes}; (q_i)_{i\in\processes}$ denotes
-$(p_i; q_i)_{i\in\processes}$ where the
-same program variable does not have multiple substitutions
-(we can rename variables in the original typing derivation to satisfy
-this).
+$(p_i; q_i)_{i\in\processes}$.
 And $(p)_j$ denotes $(q_i)_{i\in\processes}$ where $q_j = p$ and $q_i =
 \epsilon$ for all $i\neq j$.
 The definition is inductive over the type derivations. What we do below is
@@ -2407,7 +2407,7 @@ This concludes the translation.
    \left(c\leftarrow\p i_y; \p x \leftarrow d\right)_1\\
    \semoi{{\{0\mapsto (\comodL)x\}} \hmid
    {\{1\mapsto (\comodR)y\}}}
-   =& \{0\mapsto \p y\}\hmid \{1\mapsto \p x\}\enspace
+   =& \{0\mapsto \p y\}\hmid \{1\mapsto \p x\}\enspace.
   \end{align*}
   And so on:
 \begin{align*}
@@ -2420,7 +2420,7 @@ This concludes the translation.
  \\
  &\semoi{{\{0\mapsto add((\comodL)x,x)\}}\hmid
   \{1\mapsto add((\comodR)y,y)\}} \\
- &= \{0\mapsto \p z\} \hmid \{1\mapsto \p x\}
+ &= \{0\mapsto \p z\} \hmid \{1\mapsto \p x\}\enspace.
 \end{align*}
   \begin{align*}
 &\llbracket
@@ -2451,7 +2451,7 @@ This concludes the translation.
   \rrparenthesis\phantom{\hmid}\\
    =&
    \{0\mapsto \p z, 1\mapsto \p{y'}\} \hmid \{0\mapsto\p{x'}, 1\mapsto
-   \p w\}
+   \p w\}\enspace.
   \end{align*}
   \begin{align*}
    &\semo{
@@ -2477,12 +2477,12 @@ This concludes the translation.
    \\
    =&\{0\mapsto\p u,1\mapsto \p v\}\enspace.
   \end{align*}
-  The last two equations result in a typed protocol that solves the
+  The last two clauses result in a typed protocol that solves the
   exclusive-or problem (Example~\ref{ex:xor}) for the same reason as the
   typed protocol in Example~\ref{ex:solv}.
  \end{example}
 
- Given the translation solves a typed input-output problem, we have to
+ Given that the translation solves a typed input-output problem, we have to
  make sure that the original global term solves the same problem.
  Otherwise, the translation incorrectly produced a working typed protocol from
  not-working a global term.
@@ -2510,7 +2510,7 @@ This concludes the translation.
    \begin{proof}
     By induction on the typing derivation for $\hypert$.
     All cases are more or less straightforward, of which the most
-    complicated cases are $ij$-com rule and EC rule.
+    complicated cases are $ij$-com rule and the EC rule.
     \begin{description}
      \item[$ij$-com]
 	  Assume that there is an execution of
@@ -2712,7 +2712,7 @@ problem, the problem is solvable by a typed global term of \lgd.
 \end{theorem}
 
 \begin{proof}
-\citet{Herlihy99} showed that a finite repetition
+\citet{Herlihy99} showed that a solution to a finite repetition
  of the participating set
  problem solves any waitfreely solvable problem.
  Also, $n$-party participating problem can be solved by a tournament of
@@ -2720,8 +2720,8 @@ problem, the problem is solvable by a typed global term of \lgd.
  \footnote{To be exact, the construction for solving the $n$-party
  participating set problem using 2-party participating set problem
  is the same as a sorting network~\citep{batcher1968} for sorting $n$
- elements.}.
- It suffices to show a \lgd\, term solving the two-party participating
+ elements.}.  Since \lgd\, can express problem composition,
+ it suffices to show a \lgd\, term solving the two-party participating
  set problem.
 
 In the \textit{participating set problem}\index{participating set
@@ -2966,10 +2966,10 @@ $(\phi\limp\psi)\otimes(\psi\limp\phi)$.
 Apart from this, we also tried developing a lambda calculus for
 $(\phi\limp\psi)\oplus(\psi\limp\phi)$ on top of a second-order
 formulation of intuitionistic linear logic in Chapter~\ref{ch:pole}.
-After doing that, we noticed that adequacy of parametricity argument
+While doing that, we noticed that adequacy of parametricity argument
 can be carried out using induction on just two type derivations;
-if we did the same for the second-order variant of \lgd,\,it would take
-induction over arbitrary number of derivations, using their heights.
+if we did the same for the second-order variant of \lgd,\,it would require
+induction over many derivations.
 
 \section{Conclusions}
 \label{conc}
