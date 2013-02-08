@@ -409,7 +409,7 @@ For example, there is an s-term typed with the prelinearity axiom (Figure~\ref{f
 
 \begin{corollary}[Prelinearity as a communication scheme]
  \label{spec:prelin-cor}
- Assume that an a-term~$g$ have type $
+ Assume that an a-term~$g$ has type $
 		    {\forall X\forall
  Y((X\limp Y)\oplus (Y\limp X))}.
 		   $
@@ -1326,7 +1326,7 @@ and \ref{c:second} uses \ref{c:first} in ($\limp$E,~\textminus) and
 
 \begin{proposition}[Prelinearity as a communication scheme]
  \label{spec:prelin}
- Assume that an s-term $g$ have type $
+ Assume that an s-term $g$ has type $
 {\forall X\forall
  Y((X\limp Y)\oplus (Y\limp X))}.
 $
@@ -1523,7 +1523,7 @@ induction on $\phi$:
  X^\bullet &= X \nonumber\\
  (\phi\limp\psi)^\bullet &= \phi^\bullet \limp \psi^\bullet\nonumber\\
  (\phi\otimes\psi)^\bullet & = \forall
- X((\phi^\bullet\limp\psi^\bullet\limp X)\limp X) \text{ where }X\text{ do
+ X((\phi^\bullet\limp\psi^\bullet\limp X)\limp X) \text{ where }X\text{ does
  not appear in }\phi\otimes\psi\nonumber\\
  (\phi\oplus\psi)^\bullet &= \phi^\bullet \oplus \psi^\bullet\quad.
 \end{align*}
@@ -1583,7 +1583,7 @@ substituting an MTL formula for each bound propositional variable in $\phi$.
 \begin{proof}
  By induction on derivations of the cut-free fragment of $\HLBCK$.
  All cases are straightforward.  For branching rules, we have to apply
- (EC) because in $\HLBCK$, the components in a hypersequent is distributed
+ (EC) because in $\HLBCK$, the components in a hypersequent are distributed
  additively while in $\NMTL$ multiplicatively.  And above and below
  (EC), we have to use ($\limp$I) and ($\limp$E) so that the
  restricted form of (EC) rule in $\NMTL$ is applicable.

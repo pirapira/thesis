@@ -230,7 +230,7 @@ The conjunctive treatment is our original invention, and finding an application
 of such a treatment is one of our contributions\footnote{We have to note
 however, for Abelian logic, there is an ordinary disjunctive
 hypersequent system that enjoys cut-elimination.  The conjunctive
-hypersequents reflect xsome computational intuition.
+hypersequents reflect some computational intuition.
 }.
 We name this technique the \textit{conjunctive
 hypersequent}\index{hypersequent!conjunctive}.
@@ -1147,7 +1147,7 @@ x.t$ of type $\one\limp\phi$ so that $\lambda x.t\eval \lambda x.t$ is derivable
     inter-derivable with $\one\limp\phi$) and $\sendtype\phi\terminate$ is
     $\phi\limp \one$.
     We can generalize this phenomenon to the more complicated session
-    types\footnote{This is impossible using the oridinary linear types.}.
+    types\footnote{This is impossible using the ordinary linear types.}.
      \begin{proposition}[Session realizers]
       For any linear type~$\phi^\sim$\kern -2pt, the hypersequent
       \[
@@ -1894,7 +1894,7 @@ We call arrows with upward (resp. downward) signs
 The \textit{dashed child}\index{dashed child}
 of a $\parr^+$ node~$p$ is the node which the dashed
 line from $p$ reaches.
-The branching nodes labelled by $\parr^+, \parr^-, \otimes^+$ and
+The branching nodes labeled by $\parr^+, \parr^-, \otimes^+$ and
 $\otimes^-$ are called \textit{operator nodes}.
 
 When we add axiom edges and $\bot$-branches (shown below)
@@ -1922,9 +1922,9 @@ formulae so that the essential net is uniquely determined.}.
    net}\index{essential net!correct} is an essential net satisfying all
    these conditions:
 \begin{enumerate}
- \item Any node labelled with $X^+$ (resp. $Y^-$) is connected to a
-       unique node labelled with $X^-$ (resp. $Y^+$).
-       Any leaf labelled with $\bot^-$ is connected to a $\bot$-branch.
+ \item Any node labeled with $X^+$ (resp. $Y^-$) is connected to a
+       unique node labeled with $X^-$ (resp. $Y^+$).
+       Any leaf labeled with $\bot^-$ is connected to a $\bot$-branch.
        $\one^+$ is not connected to anything above itself;
  \item the directed graph formed by up-edge, down-edge, axiom edges and
        $\bot$-branches is acyclic;
@@ -1999,7 +1999,7 @@ For a hypersequent~$\hyper$,
        and one infinite path $\cdots e_m e_a e_m e_a \cdots$.
 \end{itemize}
  \end{definition}
- In these clauses, we call the edges labelled~$e_a$ the \textit{Amida
+ In these clauses, we call the edges labeled~$e_a$ the \textit{Amida
  edges}\index{edge!Amida}\index{Amida edge}.
 
  \begin{definition}[Correct Amida nets]
@@ -2076,7 +2076,7 @@ These translations have two properties.
  \item When the original (contained in a larger picture)
        is a correct Amida net, the translation (contained in the same
        larger picture) is also a correct Amida net.
- \item The end nodes of the translation corresponds to the end nodes of
+ \item The end nodes of the translation correspond to the end nodes of
        the original, and the corresponding end nodes have the same label
        (up to logical equivalence in IMLL).  In case of $\otimes$
        translation, $\phi$ and
@@ -2095,7 +2095,7 @@ Although the $\parr$ move introduces an Amida edge below a
 branching rule, that branching rule is of $\otimes$ nature.
 Also, the $\parr$ move introduces an Amida edge below $\psi$-axiom link,
 which is actually a macro.  So we have to continue applying the
-translation moves in the macro.  However, Since $\psi$ is a strictly
+translation moves in the macro.  However, since $\psi$ is a strictly
 smaller subformula of $\psi\parr\chi$, this does not cause infinite
 recursion.
 
@@ -2104,7 +2104,7 @@ the whole Amida net is decomposed vertically into three layers.
 At the top, there is a layer with only axiom edges.
 In the middle, there is a layer with only vertical edges and Amida
 edges.
-At the bottom, there is a layer which contains only ordinary
+At the bottom, there is a layer that contains only ordinary
 essential net nodes.
 
 Since the middle layer is an Amida lottery, it defines a permutation.
@@ -2130,9 +2130,9 @@ treated in a straightforward way.
 
 \subsection{Analytic Calculus for Abelian Logic}
 
-\citet{metcalfe2002} gave a labelled sequent calculus for Abelian logic.
+\citet{metcalfe2002} gave a labeled sequent calculus for Abelian logic.
 Some years later,
-\citet{metcalfe2006} gave a hypersequent caluclus for Abelian logic and
+\citet{metcalfe2006} gave a hypersequent calculus for Abelian logic and
 proved cut-elimination theorem for the hypersequent calculus.
 His formulation is different from ours because Metcalfe's system does
 not use conjunctive hypersequents.  He sticks to the traditional
@@ -2164,7 +2164,7 @@ of cut-elimination, which we will note in Subsection~\ref{amida-cut}.
 
 \subsection{Linear Logic and Session Types}
 
-Session types~\citep{interaction,honda-session} apperaed in this chapter.
+Session types~\citep{interaction,honda-session} appeared in this chapter.
 Session types aim at typing channels and processes in $\pi$-calculus so
 that the process execution is deterministic and not ending in deadlock.
 In general, session type systems are not based on a well-known logic.
@@ -2252,7 +2252,7 @@ The most complicated example in \citet{pfenning2010} involves a drink server.
   $N$ stands for the type of strings and $I$ stands for the type of
   integers, but following \citet{pfenning2010}, we identify both $N$ and
   $I$ with $\one$.  Below, $SP$ abbreviates $ServerProto$.
-  Here is the process of the server, that serves one client and
+  Here is the process of the server, which serves one client and
   terminates.\\
   \[
    Serv = \lpair{\recvterm s {pn} {\recvterm s {cn} {\sendterm s {rc}
@@ -2339,9 +2339,9 @@ one difficulty looms.  In classical multiplicative linear logic,
 adding the Amida edges to proof nets seems harder than the intuitionistic case
 because classical MLL proof nets have no direction on edges.
 After a path crosses an Amida edge, the author has no idea which
-direction the path should continue; one plausible solution is doing
-path-tracking in parallel and make these path-tracking processes synchronize
-on Amida edges.
+direction the path should continue; one plausible solution is allowing
+multiple processes to track the paths in parallel and making these
+processes synchronize on Amida edges.
 
 That said,
 Wadler's type system is similar to ours;

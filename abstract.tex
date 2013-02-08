@@ -25,7 +25,7 @@
  $(\phi\imp\psi)\lor(\psi\imp\phi)$ on top of intuitionistic logic.
  The hyper-lambda calculi are in Curry-Howard correspondence with the
  deduction systems for these logics.
- We also give a similar development monoidal t-norm logic and
+ We also give a similar development for monoidal t-norm logic and
  implement the G\"odel-Dummett case using Haskell.
 \end{eabstract}
 
@@ -35,12 +35,13 @@
  同期と非同期と二つのハイパーラムダ計算を与える．
  両者ともに，互いに入力を交換する通信子の対を用いる．
  同期ハイパーラムダ計算では，通信子双方が成功する．
- 非同期ハイパーラムダ計算では，通信子の少くとも片方がもう片方の入力を獲得
+ 非同期ハイパーラムダ計算では，通信子の少な
+ くとも片方がもう片方の入力を獲得
  する．
  同期ハイパーラムダ計算はメッセージパッシング通信とセッション型を実装し，
  非同期ハイパーラムダ計算は共有メモリの無待機計算を特徴づける．
  型付きハイパーラムダ項のプロセスどものうち，同期ハイパーラムダ計算では全
- てが成功するが，非同期ハイパーラムダ計算では少くとも一つが成功する．
+ てが成功するが，非同期ハイパーラムダ計算では少なくとも一つが成功する．
  論理的にプロセスどもは，同期ハイパーラムダ計算では連言で，
  非同期ハイパーラムダ計算では選言で解釈される．
  同期ハイパーラムダ計算はアーベル論理に基づく: 直観主義線形論理

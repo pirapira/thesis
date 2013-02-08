@@ -255,7 +255,7 @@ In any of these six cases, either thread 0 obtains thread 1's input or 1 obtains
 
 We look at the source code of this sample program in Figure~\ref{fig:example}.
 
-For implementing the above described external behaviour,
+For implementing the above-described external behavior,
 an obvious thing to do is to establish a TCP connection.  This is done
 by a function called \verb@handle@.   The input of \verb@handle@ is a
 \verb@PortID@, which is the port number.  The output of \verb@handle@ is
@@ -518,7 +518,7 @@ type JobChannel = [IO ThreadStatus]
 type JobPool =
     Map.Map AbstractThreadId JobChannel
 \end{code}
-The actual conversion is done by \verb@constructJobPool@ which acts
+The actual conversion is done by \verb@constructJobPool@, which acts
 inductively on a list of type \verb@[L]@.
 \begin{code}
 constructJobPool :: [L] -> JobPool
@@ -654,7 +654,7 @@ instance (HLast (HCons lh ll) a heads) =>
               case hLast rest of
                 (x, oldheads) -> (x, HCons y oldheads)
 \end{code}
-Using this type class \verb@HLast@, we can define \verb@cycling@ function
+Using this type class \verb@HLast@, we can define \verb@cycling@ function,
 which moves the last element of a hypersequent to the first position.
 \begin{code}
 cycling_ :: HLast l a heads => l -> HCons a heads
@@ -753,7 +753,7 @@ the shared memory, reads peer's write if possible and then continue
 computation. We split a thread's computation into two parts: one part
 up to the write and the other from the read operation. The former part is
 hidden in the local computation whereas the latter part is stored in the
-hypersequent so that the types of the latest computation is visible to
+hypersequent so that the types of the latest computation are visible to
 the user of the library.
 \verb@comm@ stands for communication.  \verb@comm@ combines two
 hypersequents each containing
@@ -933,7 +933,7 @@ In this case threads 0 and 2 have to compete in order to decide which
 is slower.  In general, either \verb@ZeroT@--\verb@SecondT@ or
 \verb@FirstT@--\verb@SecondT@ competition is required so we do both and
 concatenate the three competitions as one derivation.
-Both of the two thread competition are similar to the simplest nontrivial
+Both of the two-thread competitions are similar to the simplest nontrivial
 waitfree protocol already explained so we omit the details.  The whole
 program is shown in Figure~\ref{fig:complete}.
 \begin{spec}
@@ -1089,7 +1089,7 @@ processes so that we can treat dynamic forking and merging threads rather
 than a finite set of threads specified at compile-time.
 
 Although we were able to implement the participating set problem,
-the implementation is not short nor symmetric.
+the implementation is not short or symmetric.
 There seems to be room for more elegant abstraction for symmetric
 protocols such as
 a rule containing more than two threads and a more direct embedding of the

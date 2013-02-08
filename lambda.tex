@@ -809,7 +809,7 @@ of global terms.
 From a hypersequent $\G_0\tr\tj{\m{M_0}}{\m{\phi_0}}\hmid \cdots \hmid
 \G_n\tr\tj{\m{M_n}}{\m{\phi_n}}$,
 we can construct a hyperterm $(\m{M_i})_{0\le i \le n}$.
-The hyperterm $(\m{M_i})_{0\le i \le n}$ is typeable when the
+The hyperterm $(\m{M_i})_{0\le i \le n}$ is typable when the
 aforementioned hypersequent is derivable for some $\G_i$'s and $\m{\phi_i}$'s.
 
 A \textit{store}\index{store} maps a location to a pure, closed term or $\epsilon$,
@@ -821,7 +821,7 @@ A \textit{configuration}\index{configuration} is a pair $\conf{}\hypert$ of a
 store~$\lstore$ and a hyperterm~$\hypert$.
 A \textit{typed configuration}\index{typed configuration} is a
 configuration $(\epsilon, \mathcal O)$ where $\epsilon$ is the empty
-store and $\mathcal O$ is a typeable hypersequent.
+store and $\mathcal O$ is a typable hypersequent.
 
 To complete the definition of \lgd,
  we define the \textit{reductions} $\reduce_\spadesuit$ of
@@ -1285,7 +1285,7 @@ Ordinary reductions are not symmetric because it allows
 $\conf{}{\imapsto{\cotuple{M,N}}}\areduce \conf{}{\imapsto{M}}$
 but not
 $\conf{}{\imapsto{\cotuple{M,N}}}\areduce \conf{}{\imapsto{N}}$%
-.  This asymmetricity allows us to encode waitfree
+.  This asymmetry allows us to encode waitfree
 computation in our calculus.  However, it is easier to prove strong
 normalization for the symmetric reductions.  When strong normalization
 for the symmetric reductions holds, the same property holds for the
@@ -1615,7 +1615,7 @@ a \textit{typed protocol}\index{typed protocol}\footnote{We formulated this defi
   $\mathbb{Z}/3$, we do not need to introduce a special term, but we can
   define addition using nested \textsf{match} constructs.}
   term that reduce to the sum.
-  The last two sentences of each program writes to the same variable.
+  The last two sentences of each program write to the same variable.
   Although a variable is never updated after being filled, the second
   write is still meaningful because the first write may fail.
   We omit the type assignments $t_0, t_1$ and typing derivations.
@@ -2868,7 +2868,7 @@ component with output of type $A_1.$  The inputs through $\Gamma_1'$ are
 treated similarly.''  He did not mention the possibility of
 any transmission failures, which we exploited
 in order to characterize waitfreedom.
-Ciabattoni, Galatos and Terui~\cite{alg} gives a class of logics
+Ciabattoni, Galatos and Terui~\cite{alg} give a class of logics
 that have hypersequent calculi with cut-elimination.
 Their cut-elimination proof is general but it does not
 obviously reveal the computational content.
@@ -2954,7 +2954,7 @@ If that succeeds for classical logic, it will be interesting%
 \footnote{Kazushige Terui suggested the potential impact for classical logic.}%
 .
 
-Nonetheless there are some more immediate future work.
+Nonetheless there is some more immediate future work.
 It would be better if we explicitly implement $n$-party participating
 set problem using \lgd.
 Another remaining task is to formalize the strong normalization theorem
